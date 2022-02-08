@@ -1,0 +1,202 @@
+<!-- Formulario para registro de los proveedores -->
+
+<div class="col-md-12" *ngFor="let p of proveedor" >
+    <div class="container">
+        <div class="card" style="border-color: black;">
+            <div class="card-header" style="background-color: rgb(143 177 227);">
+                <div class="row justify-content-around">
+                    <div class="col-md-12">
+                        <h1>Proveedor #{{p.idProveedor}}: {{ p.nombre}}</h1>
+                    </div>
+                </div>
+                <div class="row justify-content-end">
+                    <div class="col-auto">
+                        <button type="button" class="btn btn-success" >Download PDF</button>
+                    </div>
+                    <div class="col-auto">
+                        <button type="button" value="Deshabilitados" class="btn btn-warning" [routerLink]="['proveedorDeshabilitado']" >Editar</button>
+                    </div>
+                    
+
+                    <div *ngIf="p.idStatus==1; else elseBlock" class="col-auto">
+                        <form class="form-group" #upstss="ngForm" (ngSubmit)="onSubmitt(upstss)" >
+                            <input class="form-control" type="text" name="idProveedor" #idProveedor="ngModel" [(ngModel)]="provee.idProveedor" hidden>
+                            <input class="form-control" type="text" value="2" name="idStatus" #idStatus="ngModel" [(ngModel)]="provee.idStatus" hidden>
+                            <button type="submit" class="btn btn-danger" >Inhabilitar</button>
+                        </form>
+
+                      </div>
+                      <ng-template #elseBlock>
+                        <div class="col-auto">
+                             <form class="form-group" #upsts="ngForm" (ngSubmit)="onSubmit(upsts)" >
+                                <input class="form-control" type="text" name="idProveedor" #idProveedor="ngModel" [(ngModel)]="prove.idProveedor" hidden>
+                                <input class="form-control" type="text" name="idStatus" #idStatus="ngModel" [(ngModel)]="prove.idStatus" hidden>
+                                <button type="submit" class="btn btn-danger" >Habilitar</button>
+                            </form>
+                        </div>
+                    </ng-template>
+
+                </div>                
+            </div>
+        
+            <div class="card-body">
+                <h2 class="card-subtitle mb-2">Datos del Proveedor</h2>
+                <form>
+                    <label>Dirección</label>                    
+                    <input class="form-control" type="text" value="CALLE {{p.calle}} N°{{p.numero}}, COLONIA {{p.colonia}} {{p.cpostal}} {{p.ciudad}}, {{p.estado}}. {{p.pais}}" aria-label="readonly input example" readonly>
+                    <br>
+                    <div class="row g-4">
+                        <div class="col-auto">
+                            <label>Teléfono</label><input class="form-control" type="text" value="{{p.telefono}}" aria-label="readonly input example" readonly>
+                        </div>
+                        <div class="col-auto">
+                            <label>Crédito (Días)</label><input class="form-control" type="text" value="{{p.creditoDias}}" aria-label="readonly input example" readonly>
+                        </div>
+                        <div class="col-auto">
+                            <label>Crédito (Cantidad)</label><input class="form-control" type="text" value="{{p.creditoCantidad | currency}}" aria-label="readonly input example" readonly>
+                        </div>
+                        <!-- <div class="col-auto">
+                            <label>Status</label><input class="form-control" type="text" value="{{p.idStatus}}" aria-label="readonly input example" readonly>
+                        </div> -->
+                    </div>
+                    <br>
+                </form>
+                <hr>
+                <h2 class="card-subtitle mb-2">Contacto principal</h2>
+                    <div class="row justify-content-end">
+                        <div class="col-auto">
+                            <button type="button" value="verC" class="btn btn-warning" (click)="triggerModal (modalData)" >Ver mas</button>
+                        </div>
+                    </div>
+                <form>
+                    <div class="row">
+                        <div class="col-6">
+                            <label>Nombre</label>                    
+                            <input class="form-control" type="text" value="{{p.nombreCon}}" aria-label="readonly input example" readonly>
+                        </div>
+                        <div class="col-auto">
+                            <label>Teléfono</label><input class="form-control" type="text" value="{{p.telefonoCon}}" aria-label="readonly input example" readonly>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row g-4">
+                        <div class="col-6">
+                            <label>Email</label><input class="form-control" type="text" value="{{p.emailCon}}" aria-label="readonly input example" readonly>
+                        </div>
+                        <div class="col-auto">
+                            <label>Puesto</label><input class="form-control" type="text" value="{{p.puestoCon}}" aria-label="readonly input example" readonly>
+                        </div>
+                    </div>
+                    <br>
+                </form>
+                <hr>
+                <h2 class="card-subtitle mb-2">Números de cuenta principal</h2>
+                <div class="row justify-content-end">
+                    <div class="col-auto">
+                        <button type="button" value="verNCP" class="btn btn-warning" (click)="triggerModal (modalData2)" >Ver mas</button>
+                    </div>
+                </div>
+                <form>
+                    <div class="row">
+                        <div class="col-auto-6">
+                            <label>Beneficiario</label><input class="form-control" type="text" value="{{p.titular}}" aria-label="readonly input example" readonly>
+                        </div>
+                        <div class="col-auto-6">
+                            <label>Número de cuenta</label><input class="form-control" type="text" value="{{p.ncuenta}}" aria-label="readonly input example" readonly>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row g-4">
+                        <div class="col-4">
+                            <label>Banco</label><input class="form-control" type="text" value="{{p.idBanco}}" aria-label="readonly input example" readonly>
+                        </div>
+                        <div class="col-4">
+                            <label>CLABE</label><input class="form-control" type="text" value="{{p.clabe}}" aria-label="readonly input example" readonly>
+                        </div>
+                    </div>
+                    <br>
+                </form>
+            </div>        
+        </div>
+    </div>
+    <br>
+</div>
+<!-- MODAL CONTACTOS -->
+<ng-template #modalData let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Contactos</h4>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">×</span>
+      </button>
+    </div>
+    <div class="modal-body" *ngFor="let c of contacto" >
+        
+        <div *ngIf="c.principal==1; else elseBlock" class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" id="flexSwitchCheckCheckedDisabled" checked disabled>
+            <label class="form-check-label" for="flexSwitchCheckCheckedDisabled">Contacto principal</label>
+          </div>
+          <ng-template #elseBlock>
+            <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" id="flexSwitchCheckDisabled" disabled>
+                <label class="form-check-label" for="flexSwitchCheckDisabled">Contacto principal</label>
+            </div>
+        </ng-template>
+
+        <div class="row">
+            <div class="col-6">
+                <label>Nombre</label>                    
+                <input class="form-control" type="text" value="{{c.nombre}}" aria-label="readonly input example" readonly>
+            </div>
+            <div class="col-auto">
+                <label>Teléfono</label><input class="form-control" type="text" value="{{c.telefono}}" aria-label="readonly input example" readonly>
+            </div>
+        </div>
+        <br>
+        <div class="row g-4">
+            <div class="col-6">
+                <label>Email</label><input class="form-control" type="text" value="{{c.email}}" aria-label="readonly input example" readonly>
+            </div>
+            <div class="col-auto">
+                <label>Puesto</label><input class="form-control" type="text" value="{{c.puesto}}" aria-label="readonly input example" readonly>
+            </div>
+        </div>
+        <hr>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-danger" (click)="modal.close('Save click')">Cerrar</button>
+    </div>
+  </ng-template>
+<!-- FIN MODAL CONTACTOS -->
+<!-- MODAL NUMEROS DE CUENTA -->
+  <ng-template #modalData2 let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Numero de cuenta</h4>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">×</span>
+      </button>
+    </div>
+    <div class="modal-body" *ngFor="let n of ncp" >
+        <div class="row">
+            <div class="col-auto-6">
+                <label>Beneficiario</label><input class="form-control" type="text" value="{{n.titular}}" aria-label="readonly input example" readonly>
+            </div>
+            <div class="col-auto-6">
+                <label>Número de cuenta</label><input class="form-control" type="text" value="{{n.ncuenta}}" aria-label="readonly input example" readonly>
+            </div>
+        </div>
+        <br>
+        <div class="row g-4">
+            <div class="col-4">
+                <label>Banco</label><input class="form-control" type="text" value="{{n.banco}}" aria-label="readonly input example" readonly>
+            </div>
+            <div class="col-4">
+                <label>CLABE</label><input class="form-control" type="text" value="{{n.clabe}}" aria-label="readonly input example" readonly>
+            </div>
+        </div>
+        <hr>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-danger" (click)="modal.close('Save click')">Cerrar</button>
+    </div>
+  </ng-template>
+<!-- FIN MODAL DE NUMEROS DE CUENTA -->

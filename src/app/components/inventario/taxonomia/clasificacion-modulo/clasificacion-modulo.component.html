@@ -1,0 +1,28 @@
+
+<div class="container">
+    <h1>{{page_title}}</h1>
+    <div >
+        
+    </div>
+</div>
+<hr>
+<br>
+<div class="">
+    <ul ngbNav #nav="ngbNav" class="nav-tabs justify-content-center">
+        <li ngbNavItem>
+          <a ngbNavLink>Clasificaciones</a>
+          <ng-template ngbNavContent>
+            <div class="row align-items-start">
+              <div class="col"><app-departamento-ver></app-departamento-ver></div>
+              <div class="col"><app-categoria-ver></app-categoria-ver></div>
+              <div class="col"><app-subcategoria-ver></app-subcategoria-ver></div>
+            </div>
+          </ng-template>
+        </li>
+        <li ngbNavItem><a ngbNavLink>Marcas</a><ng-template ngbNavContent><app-marca-ver></app-marca-ver></ng-template></li>
+        <li ngbNavItem><a ngbNavLink>Medidas</a><ng-template ngbNavContent><app-medida-ver></app-medida-ver></ng-template></li>
+        <li ngbNavItem><a ngbNavLink>Almacen</a><ng-template ngbNavContent><app-almacen-ver></app-almacen-ver></ng-template></li>
+    </ul>
+    <div [ngbNavOutlet]="nav"></div>
+</div>
+<router-outlet></router-outlet>

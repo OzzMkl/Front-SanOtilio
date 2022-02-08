@@ -1,0 +1,146 @@
+<div class="container" *ngFor="let pd of producto">
+    <div class="card" style="border-color: black;">
+        <div class="card-header" style="background-color: rgb(143 177 227);">
+            <div class="justify-content-around">
+                <h1>Producto: {{pd.claveEx}}</h1>
+            </div>
+            <div class="row justify-content-end">
+                <div class="col-auto">
+                    <button type="button" class="btn btn-success" >Download PDF</button>
+                </div>
+                <div class="col-auto">
+                    <button type="button" value="Deshabilitados" class="btn btn-warning" [routerLink]="['../../producto-editar',pd.idProducto]" >Editar</button>
+                </div>
+
+                <div *ngIf="pd.statuss==1; else elseBlock" class="col-auto">
+                    <form class="form-group" #upstss="ngForm" (ngSubmit)="onSubmitt(upstss)">
+                        
+                        <input class="form-control" type="text" name="statuss" value="2" #idStatus="ngModel" [(ngModel)]="prod.statuss" hidden>
+                        <button type="submit" class="btn btn-danger" >Inhabilitar</button>
+                    </form>
+                </div>
+                <ng-template #elseBlock>
+                    <div class="col-auto">
+                        <form class="form-group" #upsts="ngForm" (ngSubmit)="onSubmit(upsts)">
+                            <input class="form-control" type="text" name="idProducto" #idProducto="ngModel" [(ngModel)]="prodd.idProducto" hidden>
+                            <input class="form-control" type="text" name="statuss" #idStatus="ngModel" [(ngModel)]="prodd.statuss" hidden>
+                            <button type="submit" class="btn btn-danger" >Habilitar</button>
+                        </form>
+                    </div>
+                </ng-template>
+
+            </div>  
+        </div>       
+        
+        <div class="card-body">
+            <form action="">
+            <h2 class="text-center">Datos principales</h2>
+            <div class="row g-4">
+                
+                    <div class="col-3">
+                        <label for="claveEx">Clave Externa</label>
+                        <input class="form-control" type="text" value="{{pd.claveEx}}" readonly>
+                    </div>
+                    <div class="col-3">
+                        <label for="Medida">Medida</label>
+                        <input class="form-control" type="text" value="{{pd.nombreMedida}}" readonly>
+                    </div>
+                    <div class="col-3">
+                        <label for="factorConv">Factor de conversión</label>
+                        <input class="form-control" type="text" value="{{pd.factorConv}}" readonly>
+                    </div>
+                    <div class="col-3">
+                        <label for="idps">Medida siguiente</label>
+                        <input class="form-control" type="text" value="{{pd.claveExProductoSiguiente}}" readonly>
+                    </div>
+               
+            </div>
+            <div class="row g-4">
+                <div class="col-4">
+                    <label for="descripcion">Descripcion</label>
+                    <textarea rows="4" class="form-control" type="text" value="{{pd.descripcion}}" readonly></textarea>
+                </div>
+                <div class="col-4">
+                    <label for="marca">Marca</label>
+                    <input class="form-control" type="text" value="{{pd.nombreMarca}}" readonly>
+                   
+                    <label for="idps">Existencia</label>
+                    <input class="form-control" type="text" value="{{pd.existenciaG}}" readonly>
+                
+                </div>
+                <div class="col-4">
+                    <label for="imagen">Imagen</label>
+                    <br>
+                    <img src="{{url + 'productos/getImageProduc/' + pd.imagen}}" width="100px" height="100px">
+                </div>
+               
+                
+            </div>
+            <hr>
+            <h2 class="text-center">Clasificación</h2>
+            <div class="row g-4">
+                <div class="col-4">
+                    <label for="departamento">Departamento</label>
+                    <input class="form-control" type="text" value="{{pd.nombreDep}}" readonly>
+                </div>
+                <div class="col-4">
+                    <label for="categoria">Categoria</label>
+                    <input class="form-control" type="text" value="{{pd.nombreCat}}" readonly>
+                </div>
+                <div class="col-4">
+                    <label for="subcategoria">SubCategoria</label>
+                    <input class="form-control" type="text" value="{{pd.nombreSubCat}}" readonly>
+                </div>
+            </div>
+            <div class="row g-4">
+                <div class="col-4">
+                    <label for="almacen">Ubicación</label>
+                    <textarea rows="3" class="form-control" type="text" value="{{pd.ubicacion}}" readonly></textarea>
+                </div>
+                <div class="col-4">
+                    <label for="almacen">Almacen</label>
+                    <input class="form-control" type="text" value="{{pd.nombreAlmacen}}" readonly>
+                </div>
+                <div class="col-4">
+                    <label for="tentrega">Tiempo de entrega (proveedor)</label>
+                    <input class="form-control" type="text" value="{{pd.tEntrega}}" readonly>
+                </div>
+            </div>
+            <hr>
+            <h2 class="text-center">Precios</h2>
+            <div class="row g-4">
+                <div class="col-4">
+                    <label for="stockmin">Stock Min</label>
+                    <input class="form-control" type="text" value="{{pd.stockMin}}" readonly>
+                </div>
+                <div class="col-4">
+                    <label for="stockmax">Stock Max</label>
+                    <input class="form-control" type="text" value="{{pd.stockMax}}" readonly>
+                </div>
+                <div class="col-4">
+                    <label for="clavesat">Clave sat</label>
+                    <input class="form-control" type="text" value="{{pd.claveSat}}" readonly>
+                </div>
+            </div>
+            <div class="row g-4">
+                <div class="col-4">
+                    <label for="precioR">Precio revendedor</label>
+                    <input class="form-control" type="text" value="{{pd.precioR}}" readonly>
+                </div>
+                <div class="col-4">
+                    <label for="precioS">Precio publico general</label>
+                    <input class="form-control" type="text" value="{{pd.precioS}}" readonly>
+                </div>
+                
+               <hr>
+                <div class="text-center">
+                    <h2 class="text-center">Codigo de barras</h2>
+                    <!-- <label for="clavesat">Codigo de barras</label> -->
+                    <ngx-barcode    [bc-value]="value" [bc-display-value]="true" ></ngx-barcode>
+                </div>
+            </div>
+        </form>
+        </div>
+        
+    </div>
+</div>

@@ -1,0 +1,51 @@
+<div class="container">
+    <h1>{{page_title}}</h1>
+</div>
+<div class="">
+    <div class="loading" *ngIf="!productos">
+        Cargando..
+    </div>
+    <div class="container-fluid" *ngIf="productos">
+        <!--CUADRO DE BUSQUEDA-->
+        <div class="form-group">
+            <input type="text" class="form-control" name="fpd" placeholder="Buscar ..." [(ngModel)]="fpd">
+        </div>
+        <br>
+        <!--  -->
+        <table class="table table-dark table-hover" >
+            <thead>
+                <tr>
+                    <th scope="col">CLAVE EXTERNA</th>
+                    <th scope="col">CODIGO BARRAS</th>
+                    <th scope="col">DESCRIPCION</th>
+                    <th scope="col">PRECIO PUBLICO</th>
+                    <th scope="col">PRECIO REVENDEDOR</th>
+                    <th scope="col">MEDIDA</th>
+                    <th scope="col">MARCA</th>
+                    <th scope="col">DEPARTAMENTO</th>
+                    <th scope="col">CATEGORIA</th>
+                    <th scope="col">SUBCATEGORIA</th>
+                    <th scope="col">IMAGEN</th>
+                    <!-- <th scope="col">ACCION</th> -->
+            </tr>
+            </thead>
+            <tbody *ngFor="let pr of productos | filterProduct:fpd | paginate:{itemsPerPage: 10, currentPage: pageActual}">
+                <tr (click)="selected(pr.idProducto)">
+                    <th scope="row">{{pr.claveEx}}</th>
+                    <th scope="row">{{pr.cbarras}}</th>
+                    <th scope="row">{{pr.descripcion}}</th>
+                    <th scope="row">${{pr.precioS}}</th>
+                    <th scope="row">${{pr.precioR}}</th>
+                    <th scope="row">{{pr.nombreMedida}}</th>
+                    <th scope="row">{{pr.nombreMarca}}</th>
+                    <th scope="row">{{pr.nombreDep}}</th>
+                    <th scope="row">{{pr.nombreCat}}</th>
+                    <th scope="row">{{pr.nombreSubCat}}</th>
+                    <th scope="row"><img src="{{url + 'productos/getImageProduc/' + pr.imagen}}" width="100px" height="100px"></th>
+                    <!-- <th scope="row"> <input type="button" value="Ver" class="btn btn-warning"/></th> -->
+                </tr>
+            </tbody>
+        </table>
+       <pagination-controls (pageChange)="pageActual = $event"></pagination-controls>
+    </div>
+</div>

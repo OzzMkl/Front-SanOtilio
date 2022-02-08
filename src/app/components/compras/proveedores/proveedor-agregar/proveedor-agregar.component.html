@@ -1,0 +1,217 @@
+<!-- Formulario para registro de los proveedores -->
+<div class="container" >
+    <div class="card" style="border-color: rgba(148, 148, 148, 0);">
+
+        <!-- Datos del proveedor -->
+        <div class="card header" style="background-color: rgb(143 177 227); ">
+            <div class="row justify-content-center">
+                <div class="col-md-12">
+                    <h1 style="text-align: center;">{{page_title}}</h1>
+                </div>
+            </div>
+                    
+        </div>
+        <div class="card-body">
+            <form class="form-group" #aProv="ngForm" (ngSubmit)="onSubmit(aProv)">
+                <ngb-accordion #acc="ngbAccordion" activeIds="ngb-panel-0">
+
+                    <ngb-panel id="ngb-panel-0">
+                        <ng-template ngbPanelHeader let-opened="opened">
+                            <div class="d-flex align-items-center justify-content-between">
+                              <h2 class="m-0">{{page_proveedor}}</h2>
+                            </div>
+                        </ng-template>
+                        
+                        <ng-template ngbPanelContent>
+
+                                <div class="row justify-content-center">
+                                    <div class="col-4">
+                                        <br>
+                                        <label for="nombre">Nombre del proveedor</label>
+                                        <input class="form-control form-control-lg" oninput="this.value = this.value.toUpperCase()" type="text" name="nombre" #nombre="ngModel" [(ngModel)]="proveedor.nombre" title="Nombre del proveedor" aria-label=".form-control-lg example">
+                                            <small *ngIf = "!nombre.valid" class="invalid-feedback d-block">Campo requerido</small>
+                                        <br>
+                                        <label for="rfc">RFC</label>
+                                        <input class="form-control" oninput="this.value = this.value.toUpperCase()" type="text" name="rfc" maxlength="13" #rfc="ngModel" [(ngModel)]="proveedor.rfc" title="RFC" aria-label=".form-control-sm example" required pattern="[A-Z0-9-]{12,13}">
+                                            <small *ngIf = "!rfc.valid" class="invalid-feedback d-block">Campo requerido</small>
+                                        <br> 
+                                        <label for="phone">Teléfono</label>
+                                        <input class="form-control" type="phone" maxlength="10" name="telefono" #telefono="ngModel" [(ngModel)]="proveedor.telefono" title="Teléfono" aria-label="default input example" required pattern="[0-9]{10}">
+                                            <small *ngIf = "!telefono.valid" class="invalid-feedback d-block">Campo requerido</small>
+                                        <br> 
+                                        <label for="creditoDias">Crédito (Días)</label>
+                                        <input class="form-control" type="number" name="creditoDias" #creditoDias="ngModel" [(ngModel)]="proveedor.creditoDias" title="Crédito (Días)" aria-label="default input example" required pattern="[0-9]+">
+                                            <small *ngIf = "!creditoDias.valid" class="invalid-feedback d-block">Campo requerido</small>
+                                        <br> 
+                                        <label for="creditoCantidad">Crédito (Cantidad)</label>
+                                        <input class="form-control" type="text" name="creditoCantidad" #creditoCantidad="ngModel" [(ngModel)]="proveedor.creditoCantidad" title="Crédito (Cantidad)" aria-label="default input example" required pattern="[0-9]+">
+                                            <small *ngIf = "!creditoCantidad.valid" class="invalid-feedback d-block">Campo requerido</small>
+                                        <br> 
+                                    </div>
+                                    <div class="col-4">
+                                        <br>
+                                        <label for="pais">País</label>
+                                        <input class="form-control" oninput="this.value = this.value.toUpperCase()" type="text" name="pais" #pais="ngModel" [(ngModel)]="proveedor.pais" title="País" aria-label="default input example" required pattern="[A-Z0-9 .-]+">
+                                            <small *ngIf = "!pais.valid" class="invalid-feedback d-block">Campo requerido</small>
+                                        <br> 
+                                        <label for="estado">Estado</label>
+                                        <input class="form-control" oninput="this.value = this.value.toUpperCase()" type="text" name="estado" #estado="ngModel" [(ngModel)]="proveedor.estado" title="Estado" aria-label="default input example" required pattern="[A-Z0-9 .-]+">
+                                            <small *ngIf = "!estado.valid" class="invalid-feedback d-block">Campo requerido</small>
+                                        <br> 
+                                        <label for="ciudad">Ciudad</label>
+                                        <input class="form-control" oninput="this.value = this.value.toUpperCase()" type="text" name="ciudad" #ciudad="ngModel" [(ngModel)]="proveedor.ciudad" title="Ciudad" aria-label="default input example" required pattern="[A-Z0-9 .-]+">
+                                            <small *ngIf = "!ciudad.valid" class="invalid-feedback d-block">Campo requerido</small>
+                                        <br> 
+                                        <label for="cpostal">Código postal</label>
+                                        <input class="form-control" type="text"  maxlength="5"name="cpostal" #cpostal="ngModel" [(ngModel)]="proveedor.cpostal" title="Código postal" aria-label="default input example" required pattern="[0-9]{5}">
+                                            <small *ngIf = "!cpostal.valid" class="invalid-feedback d-block">Campo requerido</small>
+                                        <br> 
+                                        <label for="colonia">Colonia</label>
+                                        <input class="form-control" oninput="this.value = this.value.toUpperCase()" type="text" name="colonia" #colonia="ngModel" [(ngModel)]="proveedor.colonia" title="Colonia" aria-label="default input example">
+                                            <small *ngIf = "!colonia.valid" class="invalid-feedback d-block">Campo requerido</small>
+                                        <br> 
+                                        <label for="calle">Calle</label>
+                                        <input class="form-control" oninput="this.value = this.value.toUpperCase()" type="text" name="calle" #calle="ngModel" [(ngModel)]="proveedor.calle" title="Calle" aria-label="default input example">
+                                            <small *ngIf = "!calle.valid" class="invalid-feedback d-block">Campo requerido</small>
+                                        <br> 
+                                        <label for="numero">Número</label>
+                                        <input class="form-control" type="text" name="numero" #numero="ngModel" [(ngModel)]="proveedor.numero" title="Número" aria-label="default input example" required pattern="[0-9]+">
+                                            <small *ngIf = "!numero.valid" class="invalid-feedback d-block">Campo requerido</small>
+                                        <br>
+                                    </div>
+                                </div>
+                                
+                                <div class="row justify-content-evenly">
+                                    <div class="col-md-2">
+                                        <button class="btn btn-danger" [routerLink]="['../proveedorBuscar']" >Cancelar</button>
+                                    </div>
+                                    <div class="col-md-2">                
+                                        <button type="button" class="btn btn-success" (click)="acc.collapse('ngb-panel-0');acc.expand('ngb-panel-1');" >Siguiente</button>
+                                    </div>
+                                </div>
+                        
+                        </ng-template>                        
+                    </ngb-panel>
+
+                    <ngb-panel id="ngb-panel-1">
+                        <ng-template ngbPanelHeader let-opened="opened">
+                            <div class="d-flex align-items-center justify-content-between">
+                              <h2 class="m-0">{{page_contacto}}</h2>
+                            </div>
+                        </ng-template>
+                        
+                        <ng-template ngbPanelContent>
+
+                                <div class="row justify-content-center">
+                                    <div class="col-4">
+                                        <br>
+                                        <label for="nombreCon">Nombre</label>
+                                        <input class="form-control form-control-lg" oninput="this.value = this.value.toUpperCase()" type="text" name="nombreCon" #nombreCon="ngModel" [(ngModel)]="proveedor.nombreCon" title="Nombre del contacto" aria-label=".form-control-lg example" required pattern="[A-Z0-9 .]+">
+                                            <small *ngIf = "!nombreCon.valid" class="invalid-feedback d-block">Campo requerido</small>
+                                        <br>
+                                        <label for="emailCon">Correo electrónico</label>
+                                        <input class="form-control" type="email" name="emailCon" #emailCon="ngModel" [(ngModel)]="proveedor.emailCon" title="Correo del contacto" aria-label=".form-control-sm example" required pattern="^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$">
+                                            <small *ngIf = "!emailCon.valid" class="invalid-feedback d-block">Campo requerido</small>
+                                        <br> 
+                                        <label for="telefonoCon">Teléfono</label>
+                                        <input class="form-control" type="phone" maxlength="10" name="telefonoCon" #telefonoCon="ngModel" [(ngModel)]="proveedor.telefonoCon" title="Teléfono del contacto" aria-label="default input example" required pattern="[0-9]{10}">
+                                            <small *ngIf = "!telefonoCon.valid" class="invalid-feedback d-block">Campo requerido</small>
+                                        <br> 
+                                        <label for="puestoCon">Puesto</label>
+                                        <input class="form-control" oninput="this.value = this.value.toUpperCase()" type="text" name="puestoCon" #puestoCon="ngModel" [(ngModel)]="proveedor.puestoCon" title="Puesto del contacto" aria-label="default input example" required pattern="[A-Z0-9 .-]+">
+                                            <small *ngIf = "!puestoCon.valid" class="invalid-feedback d-block">Campo requerido</small>
+                                        <br> 
+                                    </div>
+                                </div>
+                                
+                                <div class="row justify-content-evenly">
+                                    <div class="col-md-2">
+                                        <button type="button" class="btn btn-danger" (click)="acc.collapse('ngb-panel-1');acc.expand('ngb-panel-0');">Regresar</button>
+                                    </div>
+                                    <div class="col-md-2">                    
+                                        <button type="button" class="btn btn-success" (click)="acc.collapse('ngb-panel-1');acc.expand('ngb-panel-2');">Siguiente</button>
+                                    </div>
+                                </div>
+                        
+                        </ng-template>                        
+                    </ngb-panel>
+
+                    <ngb-panel id="ngb-panel-2">
+                        <ng-template ngbPanelHeader let-opened="opened">
+                            <div class="d-flex align-items-center justify-content-between">
+                              <h2 class="m-0">{{page_cuenta}}</h2>
+                            </div>
+                        </ng-template>
+                        <ng-template ngbPanelContent>
+
+                                <div class="row justify-content-center">
+                                    <div class="col-4">
+                                            <br>
+                                            <label for="ncuenta">Número de cuenta</label>
+                                            <input class="form-control form-control-lg" type="text" name="ncuenta" #ncuenta="ngModel" maxlength="10" [(ngModel)]="proveedor.ncuenta" title="Número de cuenta" aria-label=".form-control-lg example" required pattern="[0-9]{10}">
+                                                <small *ngIf = "!ncuenta.valid" class="invalid-feedback d-block">Campo requerido</small>
+                                            <br>
+                                            <label for="Banco">Banco</label>                    
+                                            <!-- <select id="selectBanco" ng-model="banco" ng-options="banco as (banco.idBanco + ' ' + banco.banco ) for banco in bancos track by banco.idBanco ">
+                                            </select> -->
+                                            <!-- <input class="form-control" type="text" name="idBanco" #idBanco="ngModel" [(ngModel)]="proveedor.idBanco" title="RFC" aria-label=".form-control-sm example"> -->
+                
+                                            <select class="form-select" aria-label="Default select example" name="Banco" #idbanco="ngModel" [(ngModel)]="proveedor.idBanco" title="Banco">
+                                                <option selected disabled value="">Abrir para seleccionar</option>
+                                                <option  *ngFor="let p of banco" value={{p.idBanco}}>{{p.banco}}</option>
+                                            </select>
+                
+                                            <!-- <input class="form-control" list="datalistOptions" name="Banco" #idbanco="ngModel" [(ngModel)]="proveedor.idBanco" title="Banco" placeholder="Escriba para buscar...">
+                                            <datalist id="datalistOptions">
+                                                <option *ngFor="let p of banco"  value={{p.banco}} {{p.idBanco}}> 
+                                            </datalist> -->
+                
+                                            <br> 
+                                            <label for="titular">Titular</label>
+                                            <input class="form-control" oninput="this.value = this.value.toUpperCase()" type="text" name="titular" #titular="ngModel" [(ngModel)]="proveedor.titular" title="Teléfono" aria-label="default input example" required pattern="[A-Z0-9 ]+">
+                                                <small *ngIf = "!titular.valid" class="invalid-feedback d-block">Campo requerido</small>
+                                            <br> 
+                                            <label for="clabe">CLABE</label>
+                                            <input class="form-control" type="text" name="clabe" maxlength="19" #clabe="ngModel" [(ngModel)]="proveedor.clabe" title="Crédito (Días)" aria-label="default input example" required pattern="[0-9]{18,19}">
+                                                <small *ngIf = "!clabe.valid" class="invalid-feedback d-block">Campo requerido</small>
+                                            <br> 
+                                    </div>
+                                </div>
+                                <div class="row justify-content-evenly">
+                                    <div class="col-md-2">
+                                        <button type="button" class="btn btn-danger" (click)="acc.collapse('ngb-panel-2');acc.expand('ngb-panel-1');">Regresar</button>
+                                    </div>
+                                    <div class="col-md-2">                    
+                                        <button type="submit" class="btn btn-success" [disabled]="aProv.invalid">Guardar</button>
+                                    </div>
+                                </div>
+
+                        </ng-template>                        
+                    </ngb-panel>
+                </ngb-accordion>
+            </form>
+
+            <br>
+
+        </div>
+    </div>
+    <br>
+
+<!--<ngb-accordion #acc="ngbAccordion" activeIds="ngb-panel-0"> 
+
+        <ngb-panel title="Simple"> 
+            <ng-template ngbPanelContent> Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS. </ng-template>
+        </ngb-panel> 
+        <ngb-panel> 
+            <ng-template ngbPanelTitle> 
+                <span>★ <b>Fancy</b> title ★</span> 
+            </ng-template> 
+            <ng-template ngbPanelContent> Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS. </ng-template> 
+        </ngb-panel> 
+        <ngb-panel title="Disabled" [disabled]="true"> 
+            <ng-template ngbPanelContent> Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS. </ng-template> 
+        </ngb-panel> 
+        
+    </ngb-accordion> -->
+
+</div>

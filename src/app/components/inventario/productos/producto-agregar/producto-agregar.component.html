@@ -1,0 +1,246 @@
+<div class="container">
+  <form class="form-group" #aProd="ngForm" (ngSubmit)="submit(aProd)">
+    <div class="row align-items-start" *ngIf="steps==1">
+      <p><ngb-progressbar type="dark" [value]="0" [striped]="true" [animated]="true">PROGRESO</ngb-progressbar></p>
+      <h4 class="text-center">PRINCIPAL</h4>
+      <div class="col-4">
+        <label for="ClaveExterna"  class="form-label">Clave externa</label>
+        <input type="text" class="form-control" id="ClaveExterna" name="claveEx" #claveEx="ngModel" [(ngModel)]="producto.claveEx" >
+        <br>
+      </div>
+      <div class="col-4">
+        <label for="medida" class="form-label">Medida</label>
+      <select id="medida" aria-label="Default select example" class="form-select" name="idMedida" #idMedida="ngModel" [(ngModel)]="producto.idMedida" title="medida">
+        <option selected disabled value="">Abrir para seleccionar</option>
+        <option  *ngFor="let m of medidas" value={{m.idMedida}}>{{m.nombre}}</option>
+      </select>
+      </div>
+      <div class="col-4">
+        <label for="factorConv" class="form-label">Factor de conversion</label>
+        <input type="number" class="form-control" id="factorConv" name="factorConv" #factorConv="ngModel" [(ngModel)]="producto.factorConv" pattern="[0-9]{5}" maxlength="5">
+        <br>
+      </div>
+  
+      <div class="row align-items-start">
+        <div class="col-4">
+          <label for="descripcion" class="form-label">Descripcion</label>
+          <textarea class="form-control" id="descripcion" rows="3" name="descripcion" #descripcion="ngModel" [(ngModel)]="producto.descripcion"></textarea>
+          <!-- <input type="text" class="form-control" id="descipcion"> -->
+        </div>
+        <div class="col-4">
+          <label for="marca" class="form-label">Marca</label>
+          <select id="marca" class="form-select" name="idMarca" #idMarca="ngModel" [(ngModel)]="producto.idMarca">
+            <option selected>Abrir para seleccionar</option>
+            <option  *ngFor="let mar of marca" value={{mar.idMarca}}>{{mar.nombre}}</option>
+          </select>
+        </div>
+        <div class="col-4">
+          <label for="imagen">Imagen</label>
+          <br>
+          <div >
+              <img src="{{url + 'productos/getImageProduc/' + producto.imagen}}" width="100px" height="100px">
+          </div>
+          <br>
+          <angular-file-uploader
+            [config]="afuConfig"
+            [resetUpload]="true"
+            (ApiResponse)="productImage($event)">
+          </angular-file-uploader>
+          <br>
+    </div>
+      </div> 
+    </div>
+
+    <div *ngIf="steps==2">
+      <div class="row align-items-start" >
+        <p><ngb-progressbar type="dark" [value]="33" [striped]="true" [animated]="true">PROGRESO</ngb-progressbar></p>
+        <h4 class="text-center">CLASIFICACION</h4>
+        <div class="col-4">
+          <label for="departamento" class="form-label">Departamento</label>
+          <select id="departamento" class="form-select" name="idDep" #idDep="ngModel" [(ngModel)]="producto.idDep">
+            <option selected>Abrir para seleccionar</option>
+            <option  *ngFor="let dep of departamentos" value={{dep.idDep}} >{{dep.nombre}}</option>
+          </select>
+        </div>
+        <div class="col-4">
+          <label for="categoria" class="form-label">Categoria</label>
+          <select id="categoria" class="form-select" name="idCat" #idCat="ngModel" [(ngModel)]="producto.idCat">
+            <option selected>Abrir para seleccionar</option>
+            <option  *ngFor="let cat of categoria" value={{cat.idCat}}>{{cat.nombre}}</option>
+          </select>
+        </div>
+        <div class="col-4">
+          <label for="subcategoria" class="form-label">Subcategoria</label>
+          <select id="subcategoria" class="form-select" name="idSubCat" #idSubCat="ngModel" [(ngModel)]="producto.idSubCat">
+            <option selected>Abrir para seleccionar</option>
+            <option  *ngFor="let subc of subcategoria" value={{subc.idSubCat}} >{{subc.nombre}}</option>
+          </select>
+        </div>
+      </div>
+      <br>
+      <div class="row align-items-start">
+        <div class="col-4">
+          <label for="ubicacion" class="form-label">Ubicacion</label>
+          <textarea class="form-control" id="ubicacion" rows="5" name="ubicacion" #ubicacion="ngModel" [(ngModel)]="producto.ubicacion"></textarea>
+        </div>
+        <div class="col-4">
+          <label for="almacen" class="form-label">Almacen</label>
+          <select id="almacen" class="form-select" name="idAlmacen" #idAlmacen="ngModel" [(ngModel)]="producto.idAlmacen">
+            <option selected>Abrir para seleccionar</option>
+            <option  *ngFor="let a of almacenes" value={{a.idAlmacen}} >{{a.nombre}}</option>
+          </select>
+          <br>
+            <label for="tentrega" class="form-label">Tiempo de entrega (Proveedor)</label>
+            <select id="tentrega" class="form-select" name="tEntrega" #tEntrega="ngModel" [(ngModel)]="producto.tEntrega">
+              <option selected>Abrir para seleccionar</option>
+              <option value="1">1 Día</option>
+              <option value="2">2 Días</option>
+              <option value="3">3 Días</option>
+              <option value="4">4 Días</option>
+              <option value="5">5 Días</option>
+              <option value="6">6 Días</option>
+              <option value="7">7 Días</option>
+              <option value="8">8 Días</option>
+              <option value="9">9 Días</option>
+              <option value="10">10 Días</option>
+              <option value="11">11 Días</option>
+              <option value="12">12 Días</option>
+              <option value="13">13 Días</option>
+              <option value="14">14 Días</option>
+              <option value="15">15 Días</option>
+              <option value="16">16 Días</option>
+              <option value="17">17 Días</option>
+              <option value="18">18 Días</option>
+              <option value="19">19 Días</option>
+              <option value="20">20 Días</option>
+              <option value="21">21 Días</option>
+              <option value="22">22 Días</option>
+              <option value="23">23 Días</option>
+              <option value="24">24 Días</option>
+              <option value="25">25 Días</option>
+              <option value="26">26 Días</option>
+              <option value="27">27 Días</option>
+              <option value="28">28 Días</option>
+              <option value="29">29 Días</option>
+              <option value="30">30 Días</option>
+
+            </select>
+          
+        </div>
+      </div>
+      
+     
+    </div>
+     
+  
+    <div *ngIf="steps==3">
+      <div class="row align-items-start">
+        <p><ngb-progressbar type="dark" [value]="66" [striped]="true" [animated]="true">PROGRESO</ngb-progressbar></p>
+        <h4 class="text-center">PRECIOS</h4>
+        <div class="col-4">
+          <label for="stockmin" class="form-label">Stock Min</label>
+          <input type="number" class="form-control" id="stockmin" name="stockMin" #stockMin="ngModel" [(ngModel)]="producto.stockMin" pattern="[0-9]{10}" maxlength="10">
+        </div>
+        <div class="col-4">
+          <label for="stockmax" class="form-label">Stock Max</label>
+          <input type="number" class="form-control" id="stockmax" name="stockMax" #stockMax="ngModel" [(ngModel)]="producto.stockMax" pattern="[0-9]{10}" maxlength="10">
+        </div>
+        <div class="col-4">
+          <label for="idps" class="form-label">Medida siguiente</label>
+          <input type="text" class="form-control" id="idps" name="idProductoS" #idProductoS="ngModel" [(ngModel)]="producto.idProductoS">
+        </div>
+        <!-- <div class="col-2">
+          <div class="form-check form-switch">
+            <br>
+            <label class="form-check-label" for="flexSwitchCheckDefault">¿Tiene lote?</label>
+            <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" name="flexSwitchCheckDefault" value="true" [(ngModel)]="isChecked" (change)="triggerModal (modalData)">
+          </div>
+        </div>
+      
+        <div *ngIf="isChecked==true;" class="col-2">
+          <label for="plote" class="form-label">Lote asignado</label>
+          <select id="plote" class="form-select">
+            <option selected>Abrir para seleccionar</option>
+            <option  *ngFor="let pl of loteC" value={{pl.idLote}}>{{pl.codigo}}</option>
+            // <option >{{lotex.codigo}}</option>
+          </select>
+        </div>
+
+      <ng-template #elseBlock>
+        <div class="col-2">
+          
+          <input type="text" class="form-control" id="plote" value="" hidden>
+        </div>
+    </ng-template> -->
+        
+
+
+      </div>
+      <br>
+      <div class="row align-items-start">
+        <div class="col-3">
+          <label for="precioR" class="form-label">Precio revendedor</label>
+          <input type="number" class="form-control" id="precioR" name="precioR" #precioR="ngModel" [(ngModel)]="producto.precioR" pattern="[0-9]{10}" maxlength="10">
+        </div>
+        <div class="col-3">
+          <label for="precioS" class="form-label">Precio publico general</label>
+          <input type="number" class="form-control" id="precioS" name="precioS" #precioS="ngModel" [(ngModel)]="producto.precioS" pattern="[0-9]{10}" maxlength="10">
+        </div>
+        <div class="col-3">
+          <label for="clavesat" class="form-label">Clave sat</label>
+          <input type="number" class="form-control" id="clavesat" name="claveSat" #claveSat="ngModel" [(ngModel)]="producto.claveSat"pattern="[0-9]{15}" maxlength="15">
+        </div>
+        <div class="col-3">
+          <div class="form-check form-switch">
+            <br>
+            <label class="form-check-label" for="flexSwitchCheckDefault">¿Se factura?</label>
+            <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+          </div>
+        </div>
+
+        
+      </div>
+    </div>
+
+    <br>
+
+      <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+        <button type="button" class="btn btn-warning mx-2" *ngIf="steps !=1" (click)="regresar()">regresar</button>
+          <button type="button" class="btn btn-success mx-2" *ngIf="steps !=3" (click)="siguiente()">siguiente</button>
+          <button type="submit" class="btn btn-primary mx-2" *ngIf="steps == 3">enviar</button>
+      </div>
+  </form>
+</div>
+<!-- MODAL LOTE -->
+<!-- <ng-template  #modalData let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">LOTE</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">×</span>
+    </button>
+  </div>
+  <form class="form-group" #loteF="ngForm" (ngSubmit)="onSubmitt(loteF)">
+  <div class="modal-body">
+
+    
+      <div class="row">
+        <div class="col-6">
+            <label>Codigo</label>                    
+            <input class="form-control" type="text" name="codigo" #codigo="ngModel" [(ngModel)]="lote.codigo">
+        </div>
+        <div class="col-6">
+            <label>Caducidad</label>
+            <div class="form-control">
+              <input type="date" name="caducidad" #codigo="ngModel" [(ngModel)]="lote.caducidad">
+            </div>
+        </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-danger" (click)="modal.close('Save click')">Cerrar</button>
+    <button type="submit" class="btn btn-success" >Guardar</button>
+  </div>
+  
+    </form> 
+</ng-template> -->
+<!-- FIN MODAL LOTE -->

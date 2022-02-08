@@ -1,0 +1,18 @@
+
+<div class="container">
+    <h1>{{page_title}}</h1>
+    <div class="row align-items-center">
+        <div class="col-auto">
+            <button type="button" value="Agregar" class="btn btn-primary" [routerLink]="['compra-agregar']" style="box-sizing: border-box;">Agregar</button>
+        </div>
+        <div class="col-auto">
+            <button type="button" value="Deshabilitados" class="btn btn-primary" style="box-sizing: border-box;">Deshabilitados</button>
+        </div>
+        <div class="col-auto">
+            <button type="button" value="Buscar" class="btn btn-primary" [routerLink]="['compra-buscar']" style="box-sizing: border-box;">Buscar</button>
+        </div>
+    </div>
+</div>
+<hr>
+<br>
+<router-outlet></router-outlet>

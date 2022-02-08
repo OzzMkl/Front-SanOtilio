@@ -1,0 +1,177 @@
+<div class="container" *ngFor="let pd of producto" >
+    <div class="card" style="border-color: black;">
+        <div class="card-header" style="background-color: rgb(143 177 227);">
+            <div class="justify-content-around">
+                <h1>Producto: {{pd.claveEx}}</h1>
+            </div> 
+        </div> 
+        <div class="card-body">
+            <form class="form-group" #FormProductoModificado="ngForm" (ngSubmit)="onSubmit(FormProductoModificado)">
+                <h2 class="text-center">Datos principales</h2>
+            <div class="row g-4">
+                
+                
+                
+                    <div class="col-4" >
+                        <label for="claveEx">Clave Externa</label>
+                        <input class="form-control" type="text"  name="claveEx" #claveEx="ngModel" [(ngModel)]=" productoModificado.claveEx">
+                    </div>
+                    <div class="col-4">
+                        <label for="Medida">Medida</label>                        
+                        <select id="medida" aria-label="Default select example" class="form-select" name="idMedida" #idMedida="ngModel" [(ngModel)]="productoModificado.idMedida">
+                            <option selected disabled value="">Abrir para seleccionar</option>
+                            <option  *ngFor="let m of medidas" value={{m.idMedida}}>{{m.nombre}}</option>
+                        </select>
+                    </div>
+                    <div class="col-4">
+                        <label for="factorConv">Factor de conversión</label>
+                        <input class="form-control" type="text" name="factorConv" #factorConv="ngModel" [(ngModel)]="productoModificado.factorConv">
+                    </div>
+               
+            </div>
+            <div class="row g-4">
+                <div class="col-4">
+                    <label for="descripcion">Descripcion</label>
+                    <textarea rows="3" class="form-control" type="text" name="descripcion" #descripcion="ngModel" [(ngModel)]="productoModificado.descripcion"></textarea>
+                </div>
+                <div class="col-4">
+                    <label for="marca">Marca</label>
+                    <select id="marca" class="form-select" name="idMarca" #idMarca="ngModel" [(ngModel)]="productoModificado.idMarca">
+                        <option selected>Abrir para seleccionar</option>
+                        <option  *ngFor="let mar of marca" value={{mar.idMarca}}>{{mar.nombre}}</option>
+                      </select>
+                </div>
+                <div class="col-4">
+                    <label for="imagen">Imagen</label>
+                    <br>
+                    <img src="{{url + 'productos/getImageProduc/' + pd.imagen}}" width="100px" height="100px">
+                </div>
+            </div>
+            <hr>
+            <h2 class="text-center">Clasificación</h2>
+            <div class="row g-4">
+                <div class="col-4">
+                    <label for="departamento">Departamento</label>
+                    <select id="departamento" class="form-select" name="idDep" #idDep="ngModel" [(ngModel)]="productoModificado.idDep">
+                        <option selected>Abrir para seleccionar</option>
+                        <option  *ngFor="let dep of departamentos" value={{dep.idDep}} >{{dep.nombre}}</option>
+                      </select>
+                </div>
+                <div class="col-4">
+                    <label for="categoria">Categoria</label>
+                    <select id="categoria" class="form-select" name="idCat" #idCat="ngModel" [(ngModel)]="productoModificado.idCat">
+                        <option selected>Abrir para seleccionar</option>
+                        <option  *ngFor="let cat of categoria" value={{cat.idCat}}>{{cat.nombre}}</option>
+                      </select>
+                </div>
+                <div class="col-4">
+                    <label for="subcategoria">SubCategoria</label>
+                    <select id="subcategoria" class="form-select" name="idSubCat" #idSubCat="ngModel" [(ngModel)]="productoModificado.idSubCat">
+                        <option selected>Abrir para seleccionar</option>
+                        <option  *ngFor="let subc of subcategoria" value={{subc.idSubCat}} >{{subc.nombre}}</option>
+                      </select>
+                </div>
+            </div>
+            <div class="row g-4">
+                <div class="col-4">
+                    <label for="almacen">Ubicación</label>
+                    <textarea rows="3" class="form-control" type="text" name="ubicacion" #ubicacion="ngModel" [(ngModel)]="productoModificado.ubicacion"></textarea>
+                </div>
+                <div class="col-4">
+                    <label for="almacen">Almacen</label>
+                    <select id="almacen" class="form-select" name="idAlmacen" #idAlmacen="ngModel" [(ngModel)]="productoModificado.idAlmacen">
+                        <option selected>Abrir para seleccionar</option>
+                        <option  *ngFor="let a of almacenes" value={{a.idAlmacen}} >{{a.nombre}}</option>
+                      </select>
+                </div>
+                <div class="col-4">
+                    <label for="tentrega">Tiempo de entrega (proveedor)</label>
+                    <select id="tentrega" class="form-select" name="tEntrega" #tEntrega="ngModel" [(ngModel)]="productoModificado.tEntrega">
+                        <option selected>Abrir para seleccionar</option>
+                        <option value="1">1 Día</option>
+                        <option value="2">2 Días</option>
+                        <option value="3">3 Días</option>
+                        <option value="4">4 Días</option>
+                        <option value="5">5 Días</option>
+                        <option value="6">6 Días</option>
+                        <option value="7">7 Días</option>
+                        <option value="8">8 Días</option>
+                        <option value="9">9 Días</option>
+                        <option value="10">10 Días</option>
+                        <option value="11">11 Días</option>
+                        <option value="12">12 Días</option>
+                        <option value="13">13 Días</option>
+                        <option value="14">14 Días</option>
+                        <option value="15">15 Días</option>
+                        <option value="16">16 Días</option>
+                        <option value="17">17 Días</option>
+                        <option value="18">18 Días</option>
+                        <option value="19">19 Días</option>
+                        <option value="20">20 Días</option>
+                        <option value="21">21 Días</option>
+                        <option value="22">22 Días</option>
+                        <option value="23">23 Días</option>
+                        <option value="24">24 Días</option>
+                        <option value="25">25 Días</option>
+                        <option value="26">26 Días</option>
+                        <option value="27">27 Días</option>
+                        <option value="28">28 Días</option>
+                        <option value="29">29 Días</option>
+                        <option value="30">30 Días</option>
+          
+                      </select>
+                </div>
+            </div>
+            <hr>
+            <h2 class="text-center">Precios</h2>
+            <div class="row g-4">
+                <div class="col-4">
+                    <label for="stockmin">Stock Min</label>
+                    <input class="form-control" type="text" id="stockmin" name="stockMin" #stockMin="ngModel" [(ngModel)]="productoModificado.stockMin" pattern="[0-9]{10}" maxlength="10">
+                </div>
+                <div class="col-4">
+                    <label for="stockmax">Stock Max</label>
+                    <input type="number" class="form-control" id="stockmax" name="stockMax" #stockMax="ngModel" [(ngModel)]="productoModificado.stockMax" pattern="[0-9]{10}" maxlength="10">
+                </div>
+                <div class="col-4">
+                    <label for="idps">Medida siguiente</label>
+                    <!-- <input type="text" class="form-control" id="idps" name="idProductoS" #idProductoS="ngModel" [(ngModel)]="productoModificado.idProductoS"> -->
+                    <!-- <select id="idps" class="form-select" name="idProductoS" #idProductoS="ngModel" [(ngModel)]="productoModificado.idProductoS">
+                        <option selected>Abrir para seleccionar</option>
+                        <option  *ngFor="let prod of productos" value={{prod.idProducto}} >{{prod.claveEx}}</option>
+                      </select> -->
+                        <input class="form-control" type="text"  list="codes" name="idProductoS" #idProductoS="ngModel" [(ngModel)]="productoModificado.idProductoS" ngbTooltip="Nota aunque aparesca un numero revice">
+                        <datalist id="codes">
+                        <option *ngFor="let prod of productos" [value]="prod.idProducto" >{{prod.claveEx}}</option>
+                        </datalist>
+                </div>
+            </div>
+            <div class="row g-4">
+                <div class="col-4">
+                    <label for="precioR">Precio revendedor</label>
+                    <input type="number" class="form-control" id="precioR" name="precioR" #precioR="ngModel" [(ngModel)]="productoModificado.precioR" pattern="[0-9]{10}" maxlength="10">
+                </div>
+                <div class="col-4">
+                    <label for="precioS">Precio publico general</label>
+                    <input type="number" class="form-control" id="precioS" name="precioS" #precioS="ngModel" [(ngModel)]="productoModificado.precioS" pattern="[0-9]{10}" maxlength="10">
+                </div>
+                <div class="col-4">
+                    <label for="clavesat">Clave sat</label>
+                    <input type="number" class="form-control" id="clavesat" name="claveSat" #claveSat="ngModel" [(ngModel)]="productoModificado.claveSat"pattern="[0-9]{15}" maxlength="15">
+                </div>
+                <hr>
+                <div class="text-center">
+                    <label for="clavesat">Codigo de barras</label>
+                    <ngx-barcode    [bc-value]="value" [bc-display-value]="true" ></ngx-barcode>
+                </div>
+            </div>
+            <hr>
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                <button type="button" class="btn btn-danger" [routerLink]="['/producto-modulo/producto-ver',pd.idProducto]" >CANCELAR</button>
+                <button type="submit" class="btn btn-success" >GUARDAR</button>
+            </div>
+            </form>
+            
+        </div>
+    </div>
+</div>
