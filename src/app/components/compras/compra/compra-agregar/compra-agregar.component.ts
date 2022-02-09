@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 /**Servicios */
 import { ProveedorService } from 'src/app/services/proveedor.service';
 import { MedidaService } from 'src/app/services/medida.service';
+/**MODELOS */
+import { compra } from 'src/app/models/compra'
 
 @Component({
   selector: 'app-compra-agregar',
@@ -13,10 +15,13 @@ export class CompraAgregarComponent implements OnInit {
 
   public proveedores: any;
   public medidas: any;
+  public compra: compra;
 
   constructor( 
     private _proveedorService: ProveedorService,
-    private _medidaService: MedidaService) { }
+    private _medidaService: MedidaService) {
+      this.compra = new compra();
+     }
 
   ngOnInit(): void {
     this.getProvee();
