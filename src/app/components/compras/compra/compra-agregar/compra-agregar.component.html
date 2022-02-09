@@ -6,6 +6,25 @@
             <div class="col-4">
                 <label for="folioProveedor"> Folio del proveedor</label>
                 <input type="text" class="form-control" id="folioProveedor" name="folioProveedor">
+                <br>
+            </div>
+            <div class="col-4">
+                <label for="idProveedor"></label>
+                <select name="idProveedor" id="idProveedor" class="form-select">
+                    <option selected disabled value="">Abrir para seleccionar</option>
+                    <option  *ngFor="let proveedor of proveedores" value={{proveedor.idProveedor}}>{{proveedor.nombre}}</option>
+                </select>
+            </div>
+        </div>
+        <hr>
+        <div class="row align-items-start">
+            <img src="" alt="">
+            <div class="col-3">
+                <label class="form-label" for="prod">Bucar producto</label>
+                <div class="input-group">
+                    <span class="input-group-addon" id="sizing-addon2"><i class="bi-search" style="font-size: 1.5rem; color: black; left: 0;"> </i></span>
+                    <input type="text" name="prod" id="prod" class="form-control" aria-describedby="sizing-addon2">
+                </div>
             </div>
         </div>
     </form>
