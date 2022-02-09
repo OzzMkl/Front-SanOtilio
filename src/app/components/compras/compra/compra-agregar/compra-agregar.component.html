@@ -1,24 +1,37 @@
 <div class="container">
     <form class="form-group">
         <div class="row align-items-start">
-            <p><ngb-progressbar type="dark" [value]="10" [striped]="true" [animated]="true">PROGRESO</ngb-progressbar></p>
+            
             <h4 class="text-center">DATOS DEL PROVEEDOR</h4>
             <div class="col-4">
-                <label for="folioProveedor"> Folio del proveedor</label>
+                <label for="folioProveedor" class="form-label"> Folio del proveedor</label>
                 <input type="text" class="form-control" id="folioProveedor" name="folioProveedor">
                 <br>
             </div>
             <div class="col-4">
-                <label for="idProveedor"></label>
+                <label for="idProveedor" class="form-label">Seleccionar proveedor</label>
                 <select name="idProveedor" id="idProveedor" class="form-select">
                     <option selected disabled value="">Abrir para seleccionar</option>
                     <option  *ngFor="let proveedor of proveedores" value={{proveedor.idProveedor}}>{{proveedor.nombre}}</option>
                 </select>
             </div>
+            <div class="col-4">
+                <label for="rfc" class="form-label">RFC</label>
+                <input type="text" name="rfc" class="form-control" readonly>
+            </div>
+            <div class="col-7">
+                <label for="direccion" class="form-label">Direccion</label>
+                <input type="text" name="direccion" class="form-control" readonly>
+            </div>
+            <div class="col-3">
+                <label for="telefono" class="form-label">Telefono</label>
+                <input type="text" name="telefono" class="form-control" readonly>
+            </div>
         </div>
         <hr>
         <div class="row align-items-start">
-            <img src="" alt="">
+            <h4 class="text-center">PRODUCTO</h4>
+            
             <div class="col-3">
                 <label class="form-label" for="prod">Bucar producto</label>
                 <div class="input-group">
@@ -26,6 +39,49 @@
                     <input type="text" name="prod" id="prod" class="form-control" aria-describedby="sizing-addon2">
                 </div>
             </div>
+            <div class="col-3">
+                <label class="form-label" for="medida">Medida</label>
+                <select name="medida" class="form-select">
+                    <option selected disabled value="">Abrir para seleccionar</option>
+                    <option  *ngFor="let medida of medidas" value={{medida.idMedida}}>{{medida.nombre}}</option>  
+                </select>
+            </div>
+            <div class="col-2">
+                <label for="precio" class="form-label">Precio</label>
+                <input type="text" name="precio" class="form-control">
+            </div>
+            <div class="col-2">
+                <label for="impuesto" class="form-label">Impuesto</label>
+                <input type="text" name="impuesto" class="form-control">
+            </div>
+            <div class="col-2">
+                <label for="cantidad" class="form-label">Cantidad</label>
+                <input type="text" name="cantidad" class="form-control">
+            </div>
+            <div>
+                <label for="descripcion" class="form-label">Descripcion</label>
+                <input type="text" name="descipcion" class="form-control">
+            </div>
+            <div class="col-3">
+                <label for="marca" class="form-label">Marca</label>
+                <input type="text" name="marca" class="form-control">
+            </div>
+            <div class="col-2">
+                <label for="departamento" class="form-label">Departamento</label>
+                <input type="text" name="departamento" class="form-control">
+            </div>
+            <div class="col-2">
+                <label for="categoria" class="form-label">Categoria</label>
+                <input type="text" name="categoria" class="form-control">
+            </div>
+            <div class="col-2">
+                <label for="subcategoria" class="form-label">Subcategoria</label>
+                <input type="text" name="subcategoria" class="form-control">
+            </div>
+            <div class="col-2">
+                <label for="imagen" class="form-label">Imagen</label>
+            </div>
+            <hr>
         </div>
     </form>
 </div>
