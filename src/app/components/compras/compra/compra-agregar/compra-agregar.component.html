@@ -10,23 +10,27 @@
             </div>
             <div class="col-4">
                 <label for="idProveedor" class="form-label">Seleccionar proveedor</label>
-                <select name="idProveedor" id="idProveedor" class="form-select">
+                <select name="idProveedor" id="idProveedor" class="form-select" #idProveedor="ngModel" [(ngModel)]="compra.idProveedor">
                     <option selected disabled value="">Abrir para seleccionar</option>
-                    <option  *ngFor="let proveedor of proveedores" value={{proveedor.idProveedor}}>{{proveedor.nombre}}</option>
+                    <option  *ngFor="let proveedor of proveedoresLista" value={{proveedor.idProveedor}}>{{proveedor.nombre}}</option>
                 </select>
             </div>
-            <div class="col-4">
-                <label for="rfc" class="form-label">RFC</label>
-                <input type="text" name="rfc" class="form-control" readonly>
-            </div>
-            <div class="col-7">
-                <label for="direccion" class="form-label">Direccion</label>
-                <input type="text" name="direccion" class="form-control" readonly>
-            </div>
-            <div class="col-3">
-                <label for="telefono" class="form-label">Telefono</label>
-                <input type="text" name="telefono" class="form-control" readonly>
-            </div>
+
+            
+                <div  class="col-4">
+                    <label for="rfc" class="form-label">RFC</label>
+                    <input type="text" name="rfc" class="form-control" value="" readonly>
+                </div>
+                <div class="col-7">
+                    <label for="direccion" class="form-label">Direccion</label>
+                    <input type="text" name="direccion" class="form-control" readonly>
+                </div>
+                <div class="col-3">
+                    <label for="telefono" class="form-label">Telefono</label>
+                    <input type="text" name="telefono" class="form-control" readonly>
+                </div>
+            
+            
         </div>
         <hr>
         <div class="row align-items-start">

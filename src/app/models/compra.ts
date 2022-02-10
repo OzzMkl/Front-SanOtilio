@@ -1,4 +1,4 @@
-export class Almacen{//Modelo de la compra
+export class Compra{//Modelo de la compra
     constructor(
         public idCompra: number,
         public idOrd: number,

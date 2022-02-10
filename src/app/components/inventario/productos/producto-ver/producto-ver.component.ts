@@ -64,7 +64,7 @@ export class ProductoVerComponent implements OnInit {
         if(response.status == 'success' && response.producto.length > 0){
           this.producto = response.producto;
           this.value = this.producto[0]['cbarras'];
-          console.log(this.producto);
+          //console.log(this.producto);
         }else{
           this._productoService.getProdverDos(id).subscribe(
             response=>{

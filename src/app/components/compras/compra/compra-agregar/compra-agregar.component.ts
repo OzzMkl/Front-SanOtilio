@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { ProveedorService } from 'src/app/services/proveedor.service';
 import { MedidaService } from 'src/app/services/medida.service';
 /**MODELOS */
-import { compra } from 'src/app/models/compra'
+import { Compra } from 'src/app/models/compra'
 
 @Component({
   selector: 'app-compra-agregar',
@@ -13,26 +13,31 @@ import { compra } from 'src/app/models/compra'
 })
 export class CompraAgregarComponent implements OnInit {
 
-  public proveedores: any;
+  public proveedoresLista: any;
+  public proveedorVer: any;
   public medidas: any;
-  public compra: compra;
+  public compra: Compra;
+  public seleccionado : any;
 
   constructor( 
     private _proveedorService: ProveedorService,
     private _medidaService: MedidaService) {
-      this.compra = new compra();
+      this.compra = new Compra(0,0,0,0,0,0,0,0,'',null,'',null);
+      this.seleccionado = '';
      }
 
   ngOnInit(): void {
     this.getProvee();
     this.getMedida();
+    
   }
 /**SERVICIOS */
   getProvee(){
     this._proveedorService.getProveedores().subscribe(
       response => {
         if(response.status == 'success'){
-          this.proveedores = response.proveedores;
+          this.proveedoresLista = response.proveedores;
+          
         }
       },
       error =>{
@@ -52,4 +57,18 @@ export class CompraAgregarComponent implements OnInit {
       }
     );
   }
+ 
+  /** */
+  // getProveeVer(id:any){
+  //   this._proveedorService.getProveedoresVer(id).subscribe(
+  //     response => {
+  //       if(response.status == 'success'){
+  //         this.proveedorVer = response.proveedores;
+  //         console.log(this.proveedorVer);
+  //       }
+  //     }, error =>{
+  //         console.log(error);
+  //     }
+  //   );
+  // }
 }
