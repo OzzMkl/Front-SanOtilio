@@ -17,19 +17,20 @@ export class CompraAgregarComponent implements OnInit {
   public proveedorVer: any;
   public medidas: any;
   public compra: Compra;
-  public seleccionado : any;
 
   constructor( 
     private _proveedorService: ProveedorService,
     private _medidaService: MedidaService) {
-      this.compra = new Compra(0,0,0,0,0,0,0,0,'',null,'',null);
-      this.seleccionado = '';
+      this.compra = new Compra(0,null,null,0,0,0,0,0,'',null,'',null);
      }
 
   ngOnInit(): void {
     this.getProvee();
     this.getMedida();
     
+  }
+  onChange(id:any){//evento que muestra los datos del proveedor al seleccionarlo
+    this.getProveeVer(id);
   }
 /**SERVICIOS */
   getProvee(){
@@ -57,18 +58,18 @@ export class CompraAgregarComponent implements OnInit {
       }
     );
   }
- 
-  /** */
-  // getProveeVer(id:any){
-  //   this._proveedorService.getProveedoresVer(id).subscribe(
-  //     response => {
-  //       if(response.status == 'success'){
-  //         this.proveedorVer = response.proveedores;
-  //         console.log(this.proveedorVer);
-  //       }
-  //     }, error =>{
-  //         console.log(error);
-  //     }
-  //   );
-  // }
+  getProveeVer(id:any){
+    this._proveedorService.getProveedoresVer(id).subscribe(
+      response => {
+        if(response.status == 'success'){
+          this.proveedorVer = response.proveedores;
+          console.log(this.proveedorVer);
+        }
+      }, error =>{
+          console.log(error);
+      }
+    );
+  }
+  
+
 }
