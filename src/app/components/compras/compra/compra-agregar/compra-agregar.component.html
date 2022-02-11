@@ -13,7 +13,7 @@
             </div>
             <div class="col-2">
                 <label for="folioProveedor" class="form-label"> Folio del proveedor</label>
-                <input type="text" class="form-control" id="folioProveedor" name="folioProveedor">
+                <input type="text" class="form-control" id="folioProveedor" name="folioProveedor" #folioProveedor="ngModel" [(ngModel)]="compra.folioProveedor">
                 <br>
             </div>
             <div class="col-4">
@@ -38,21 +38,19 @@
                     <input type="text" name="telefono" class="form-control" value="{{p.telefono}}" readonly>
                 </div>    
             </div>
-               
-            
-            
         </div>
         <hr>
         <div class="row align-items-start">
             <h4 class="text-center">PRODUCTO</h4>
             
             <div class="col-3">
-                <label class="form-label" for="prod">Bucar producto</label>
-                <div class="input-group">
-                    <span class="input-group-addon" id="sizing-addon2"><i class="bi-search" style="font-size: 1.5rem; color: black; left: 0;"> </i></span>
-                    <input type="text" name="prod" id="prod" class="form-control" aria-describedby="sizing-addon2">
-                </div>
+                 <label class="form-label" for="prod">Bucar producto</label>
+                    <div class="input-group">
+                        <span class="input-group-addon" id="sizing-addon2"><i class="bi-search" style="font-size: 1.5rem; color: black; left: 0;"> </i></span>
+                        <input type="text" name="prod" id="prod" class="form-control" aria-describedby="sizing-addon2" (keydown)="Consultar($event)">
+                    </div>
             </div>
+            
             <div class="col-3">
                 <label class="form-label" for="medida">Medida</label>
                 <select name="medida" class="form-select">
@@ -64,39 +62,51 @@
                 <label for="precio" class="form-label">Precio</label>
                 <input type="text" name="precio" class="form-control">
             </div>
-            <div class="col-2">
+            <div class="col-1">
                 <label for="impuesto" class="form-label">Impuesto</label>
                 <input type="text" name="impuesto" class="form-control">
             </div>
-            <div class="col-2">
+            <div class="col-1">
                 <label for="cantidad" class="form-label">Cantidad</label>
                 <input type="text" name="cantidad" class="form-control">
             </div>
-            <div>
-                <label for="descripcion" class="form-label">Descripcion</label>
-                <input type="text" name="descipcion" class="form-control">
-            </div>
-            <div class="col-3">
-                <label for="marca" class="form-label">Marca</label>
-                <input type="text" name="marca" class="form-control">
-            </div>
             <div class="col-2">
-                <label for="departamento" class="form-label">Departamento</label>
-                <input type="text" name="departamento" class="form-control">
+
             </div>
-            <div class="col-2">
-                <label for="categoria" class="form-label">Categoria</label>
-                <input type="text" name="categoria" class="form-control">
+            <!--  -->
+            <div class="row align-items-start" *ngFor="let prod of productoVer">
+                <div>
+                    <label for="descripcion" class="form-label">Descripcion</label>
+                    <input type="text" name="descipcion" class="form-control" value="{{prod.descripcion}}" readonly>
+                </div>
+                <div class="col-3">
+                    <label for="marca" class="form-label">Marca</label>
+                    <input type="text" name="marca" class="form-control" value="{{prod.nombreMarca}}" readonly>
+                </div>
+                <div class="col-2">
+                    <label for="departamento" class="form-label">Departamento</label>
+                    <input type="text" name="departamento" class="form-control" value="{{prod.nombreDep}}" readonly>
+                </div>
+                <div class="col-2">
+                    <label for="categoria" class="form-label">Categoria</label>
+                    <input type="text" name="categoria" class="form-control" value="{{prod.nombreCat}}" readonly>
+                </div>
+                <div class="col-2">
+                    <label for="subcategoria" class="form-label">Subcategoria</label>
+                    <input type="text" name="subcategoria" class="form-control" value="{{prod.nombreSubCat}}" readonly>
+                </div>
+                <div class="col-2">
+                    <label for="imagen" class="form-label">Imagen</label>
+                    <br>
+                    <img src="{{url + 'productos/getImageProduc/' + prod.imagen}}" width="100px" height="100px">
+                </div>
             </div>
-            <div class="col-2">
-                <label for="subcategoria" class="form-label">Subcategoria</label>
-                <input type="text" name="subcategoria" class="form-control">
-            </div>
-            <div class="col-2">
-                <label for="imagen" class="form-label">Imagen</label>
-            </div>
-            <hr>
         </div>
+        <hr>
+        <div class="row align-items-start">
+            <h4 class="text-center">LISTA DE PRODUCTOS</h4>
+        </div>
+        <hr>
     </form>
 </div>
 

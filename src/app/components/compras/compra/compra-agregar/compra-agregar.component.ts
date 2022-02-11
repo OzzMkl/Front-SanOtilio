@@ -2,26 +2,35 @@ import { Component, OnInit } from '@angular/core';
 /**Servicios */
 import { ProveedorService } from 'src/app/services/proveedor.service';
 import { MedidaService } from 'src/app/services/medida.service';
+import { ProductoService } from 'src/app/services/producto.service';
+import { global } from 'src/app/services/global';
 /**MODELOS */
 import { Compra } from 'src/app/models/compra'
+import { compilePipeFromMetadata } from '@angular/compiler';
 
 @Component({
   selector: 'app-compra-agregar',
   templateUrl: './compra-agregar.component.html',
   styleUrls: ['./compra-agregar.component.css'],
-  providers: [ProveedorService, MedidaService]
+  providers: [ProveedorService, MedidaService,
+  ProductoService]
 })
 export class CompraAgregarComponent implements OnInit {
 
   public proveedoresLista: any;
   public proveedorVer: any;
+  public productoVer: any;
   public medidas: any;
   public compra: Compra;
+  public dato:any;
+  public url:any;
 
   constructor( 
     private _proveedorService: ProveedorService,
-    private _medidaService: MedidaService) {
+    private _medidaService: MedidaService,
+    private _productoService: ProductoService) {
       this.compra = new Compra(0,null,null,0,0,0,0,0,'',null,'',null);
+      this.url = global.url;
      }
 
   ngOnInit(): void {
@@ -31,6 +40,14 @@ export class CompraAgregarComponent implements OnInit {
   }
   onChange(id:any){//evento que muestra los datos del proveedor al seleccionarlo
     this.getProveeVer(id);
+  }
+  Consultar(event:any){
+    if (event.keyCode === 13) {
+      //alert('you just pressed the enter key'+event);
+      this.dato=event.target.value;
+      //console.log(this.dato)
+      this.getProd(this.dato);
+    }
   }
 /**SERVICIOS */
   getProvee(){
@@ -67,6 +84,16 @@ export class CompraAgregarComponent implements OnInit {
         }
       }, error =>{
           console.log(error);
+      }
+    );
+  }
+  getProd(id:any){
+    this._productoService.getProdverDos(id).subscribe(
+      response =>{
+        this.productoVer = response.producto;
+        console.log(this.productoVer);
+      },error => {
+        console.log(error);
       }
     );
   }
