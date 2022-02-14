@@ -40,39 +40,45 @@
             </div>
         </div>
         <hr>
-        <div class="row align-items-start">
+        <div >
             <h4 class="text-center">PRODUCTO</h4>
-            
-            <div class="col-3">
-                 <label class="form-label" for="prod">Bucar producto</label>
-                    <div class="input-group">
-                        <span class="input-group-addon" id="sizing-addon2"><i class="bi-search" style="font-size: 1.5rem; color: black; left: 0;"> </i></span>
-                        <input type="text" name="prod" id="prod" class="form-control" aria-describedby="sizing-addon2" (keydown)="Consultar($event)">
-                    </div>
-            </div>
-            
-            <div class="col-3">
-                <label class="form-label" for="medida">Medida</label>
-                <select name="medida" class="form-select">
-                    <option selected disabled value="">Abrir para seleccionar</option>
-                    <option  *ngFor="let medida of medidas" value={{medida.idMedida}}>{{medida.nombre}}</option>  
-                </select>
-            </div>
-            <div class="col-2">
-                <label for="precio" class="form-label">Precio</label>
-                <input type="text" name="precio" class="form-control">
-            </div>
-            <div class="col-1">
-                <label for="impuesto" class="form-label">Impuesto</label>
-                <input type="text" name="impuesto" class="form-control">
-            </div>
-            <div class="col-1">
-                <label for="cantidad" class="form-label">Cantidad</label>
-                <input type="text" name="cantidad" class="form-control">
-            </div>
-            <div class="col-2">
-
-            </div>
+            <!-- <form #agregar_p_lista="ngForm" (ngSubmit)="capturar(agregar_p_lista)"> -->
+                <div class="row align-items-start">
+                    <div class="col-4">
+                        <label class="form-label" for="prod">Bucar producto</label>
+                           <div class="input-group">
+                               <span class="input-group-addon" id="sizing-addon2"><i class="bi-search" style="font-size: 1.5rem; color: black; left: 0;"> </i></span>
+                               <input type="text" name="prod" id="prod" class="form-control" #idProducto="ngModel" [(ngModel)]="producto_compra.idProducto" aria-describedby="sizing-addon2" (keydown)="Consultar($event)">
+                           </div>
+                   </div>
+                   
+                   <!-- <div class="col-3">
+                       <label class="form-label" for="medida">Medida</label>
+                       <select name="medida" class="form-select">
+                           <option selected disabled value="">Abrir para seleccionar</option>
+                           <option  *ngFor="let medida of medidas" value={{medida.idMedida}}>{{medida.nombre}}</option>  
+                       </select>
+                   </div> -->
+                   <div class="col-2">
+                       <label for="precio" class="form-label">Precio</label>
+                       <input type="text" name="precio" class="form-control" #precio="ngModel" [(ngModel)]="producto_compra.precio">
+                   </div>
+                   <div class="col-2">
+                       <label for="impuesto" class="form-label">Impuesto</label>
+                       <input type="text" name="impuesto" class="form-control">
+                   </div>
+                   <div class="col-2">
+                       <label for="cantidad" class="form-label">Cantidad</label>
+                       <input type="text" name="cantidad" class="form-control" #cantidad="ngModel" [(ngModel)]="producto_compra.cantidad">
+                   </div>
+                   
+                   <div class="col-2">
+                        <button type="button" class="btn btn-success" (click)="capturar(producto_compra)">
+                            <i class="bi bi-check-circle-fill"></i>
+                        </button>
+                   </div>
+                </div>
+            <!-- </form> -->
             <!--  -->
             <div class="row align-items-start" *ngFor="let prod of productoVer">
                 <div>
@@ -105,6 +111,28 @@
         <hr>
         <div class="row align-items-start">
             <h4 class="text-center">LISTA DE PRODUCTOS</h4>
+            <table class="table table-dark table-hover">
+               <thead>
+                   <tr>
+                       <th scope="col">CLAVE EXTERNA</th>
+                       <th scope="col">MEDIDA</th>
+                       <th scope="col">CANTIDAD</th>
+                       <th scope="col">PRECIO UNITARIO</th>
+                       <th scope="col">IMPUESTO</th>
+                       <th scope="col">IMPORTE</th>
+                   </tr>
+               </thead>
+               <tbody *ngFor="let p_d of Lista_compras">
+                   <tr>
+                    <th scope="row">{{p_d.idProducto}}</th>
+                    <th scope="row"></th>
+                    <th scope="row">{{p_d.cantidad}}</th>
+                    <th scope="row">{{p_d.precio}}</th>
+                    <th scope="row">{{p_d.idImpuesto}}</th>
+                    <th scope="row">{{p_d.cantidad}}*{{p_d.precio}}</th>
+                   </tr>
+               </tbody>
+            </table>
         </div>
         <hr>
     </form>

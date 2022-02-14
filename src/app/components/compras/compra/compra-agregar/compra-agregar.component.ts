@@ -6,7 +6,7 @@ import { ProductoService } from 'src/app/services/producto.service';
 import { global } from 'src/app/services/global';
 /**MODELOS */
 import { Compra } from 'src/app/models/compra'
-import { compilePipeFromMetadata } from '@angular/compiler';
+import { Producto_compra } from 'src/app/models/producto_compra';
 
 @Component({
   selector: 'app-compra-agregar',
@@ -22,6 +22,9 @@ export class CompraAgregarComponent implements OnInit {
   public productoVer: any;
   public medidas: any;
   public compra: Compra;
+  public Lista_compras: Array<Producto_compra>;
+  public producto_compra: Producto_compra;
+  //public producto_datos_extra:any;
   public dato:any;
   public url:any;
 
@@ -30,6 +33,8 @@ export class CompraAgregarComponent implements OnInit {
     private _medidaService: MedidaService,
     private _productoService: ProductoService) {
       this.compra = new Compra(0,null,null,0,0,0,0,0,'',null,'',null);
+      this.producto_compra = new Producto_compra(0,0,0,0,0,0,null,null,null);
+      this.Lista_compras = [];
       this.url = global.url;
      }
 
@@ -48,6 +53,10 @@ export class CompraAgregarComponent implements OnInit {
       //console.log(this.dato)
       this.getProd(this.dato);
     }
+  }
+  capturar(datos:any){
+    this.Lista_compras.push({...this.producto_compra});
+    console.log(this.Lista_compras);
   }
 /**SERVICIOS */
   getProvee(){
@@ -91,12 +100,10 @@ export class CompraAgregarComponent implements OnInit {
     this._productoService.getProdverDos(id).subscribe(
       response =>{
         this.productoVer = response.producto;
-        console.log(this.productoVer);
+        //console.log(this.productoVer);
       },error => {
         console.log(error);
       }
     );
   }
-  
-
 }
