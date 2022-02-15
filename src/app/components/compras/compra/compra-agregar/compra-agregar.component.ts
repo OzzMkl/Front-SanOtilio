@@ -97,7 +97,7 @@ export class CompraAgregarComponent implements OnInit {
     );
   }
   getProd(id:any){
-    this._productoService.getProdverDos(id).subscribe(
+    this._productoService.getProdclaveex(id).subscribe(
       response =>{
         this.productoVer = response.producto;
         //console.log(this.productoVer);
