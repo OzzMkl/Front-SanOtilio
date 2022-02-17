@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { ProveedorService } from 'src/app/services/proveedor.service';
 import { MedidaService } from 'src/app/services/medida.service';
 import { ProductoService } from 'src/app/services/producto.service';
+import { ImpuestoService } from 'src/app/services/impuesto.service';
 import { global } from 'src/app/services/global';
 /**MODELOS */
 import { Compra } from 'src/app/models/compra'
@@ -13,7 +14,7 @@ import { Producto_compra } from 'src/app/models/producto_compra';
   templateUrl: './compra-agregar.component.html',
   styleUrls: ['./compra-agregar.component.css'],
   providers: [ProveedorService, MedidaService,
-  ProductoService]
+  ProductoService,ImpuestoService]
 })
 export class CompraAgregarComponent implements OnInit {
 
@@ -21,6 +22,7 @@ export class CompraAgregarComponent implements OnInit {
   public proveedorVer: any;
   public productoVer: any;
   public medidas: any;
+  public impuestos: any;
   public compra: Compra;
   public Lista_compras: Array<Producto_compra>;
   public producto_compra: Producto_compra;
@@ -31,9 +33,10 @@ export class CompraAgregarComponent implements OnInit {
   constructor( 
     private _proveedorService: ProveedorService,
     private _medidaService: MedidaService,
-    private _productoService: ProductoService) {
+    private _productoService: ProductoService,
+    private _impuestoService: ImpuestoService) {
       this.compra = new Compra(0,null,null,0,0,0,0,0,'',null,'',null);
-      this.producto_compra = new Producto_compra(0,0,0,0,0,0,null,null,null);
+      this.producto_compra = new Producto_compra(0,0,0,0,0,0,null,null,null,null);
       this.Lista_compras = [];
       this.url = global.url;
      }
@@ -41,6 +44,7 @@ export class CompraAgregarComponent implements OnInit {
   ngOnInit(): void {
     this.getProvee();
     this.getMedida();
+    this.getImpuesto();
     
   }
   onChange(id:any){//evento que muestra los datos del proveedor al seleccionarlo
@@ -102,6 +106,19 @@ export class CompraAgregarComponent implements OnInit {
         this.productoVer = response.producto;
         //console.log(this.productoVer);
       },error => {
+        console.log(error);
+      }
+    );
+  }
+  getImpuesto(){
+    this._impuestoService.getImpuestos().subscribe(
+      response =>{
+        if(response.status == 'success'){
+          this.impuestos = response.impuestos
+          console.log(this.impuestos);
+        }
+      },
+      error => {
         console.log(error);
       }
     );

@@ -48,24 +48,19 @@
                         <label class="form-label" for="prod">Bucar producto</label>
                            <div class="input-group">
                                <span class="input-group-addon" id="sizing-addon2"><i class="bi-search" style="font-size: 1.5rem; color: black; left: 0;"> </i></span>
-                               <input type="text" name="prod" id="prod" class="form-control" #idProducto="ngModel" [(ngModel)]="producto_compra.idProducto" aria-describedby="sizing-addon2" (keydown)="Consultar($event)">
+                               <input type="text" name="prod" id="prod" class="form-control" #claveEx="ngModel" [(ngModel)]="producto_compra.claveEx" aria-describedby="sizing-addon2" (keydown)="Consultar($event)">
                            </div>
                    </div>
-                   
-                   <!-- <div class="col-3">
-                       <label class="form-label" for="medida">Medida</label>
-                       <select name="medida" class="form-select">
-                           <option selected disabled value="">Abrir para seleccionar</option>
-                           <option  *ngFor="let medida of medidas" value={{medida.idMedida}}>{{medida.nombre}}</option>  
-                       </select>
-                   </div> -->
                    <div class="col-2">
                        <label for="precio" class="form-label">Precio</label>
                        <input type="text" name="precio" class="form-control" #precio="ngModel" [(ngModel)]="producto_compra.precio">
                    </div>
                    <div class="col-2">
                        <label for="impuesto" class="form-label">Impuesto</label>
-                       <input type="text" name="impuesto" class="form-control">
+                       <select name="impuesto" id="impuesto" class="form-select" #idImpuesto="ngModel" [(ngModel)]="producto_compra.idImpuesto">
+                        <option selected disabled value="">Abrir para seleccionar</option>
+                        <option  *ngFor="let impuesto of impuestos" value={{impuesto.idImpuesto}}>{{impuesto.nombre}}</option>
+                    </select>
                    </div>
                    <div class="col-2">
                        <label for="cantidad" class="form-label">Cantidad</label>
@@ -81,6 +76,7 @@
             <!-- </form> -->
             <!--  -->
             <div class="row align-items-start" *ngFor="let prod of productoVer">
+
                 <div>
                     <label for="descripcion" class="form-label">Descripcion</label>
                     <input type="text" name="descipcion" class="form-control" value="{{prod.descripcion}}" readonly>
@@ -106,6 +102,11 @@
                     <br>
                     <img src="{{url + 'productos/getImageProduc/' + prod.imagen}}" width="100px" height="100px">
                 </div>
+                <div class="col-2">
+                    <label class="form-label" for="medida">Medida</label>
+                    <input class="form-control" type="text" value="{{prod.nombreMedida}}" readonly>
+                    <input class="form-control" type="text" value="{{prod.idMedida}}" hidden>
+                </div>
             </div>
         </div>
         <hr>
@@ -124,12 +125,12 @@
                </thead>
                <tbody *ngFor="let p_d of Lista_compras">
                    <tr>
-                    <th scope="row">{{p_d.idProducto}}</th>
+                    <th scope="row">{{p_d.claveEx}}</th>
                     <th scope="row"></th>
                     <th scope="row">{{p_d.cantidad}}</th>
                     <th scope="row">{{p_d.precio}}</th>
                     <th scope="row">{{p_d.idImpuesto}}</th>
-                    <th scope="row">{{p_d.cantidad}}*{{p_d.precio}}</th>
+                    <th scope="row">{{p_d.cantidad * p_d.precio}}</th>
                    </tr>
                </tbody>
             </table>
