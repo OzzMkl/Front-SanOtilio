@@ -35,6 +35,7 @@ export class CompraAgregarComponent implements OnInit {
     private _medidaService: MedidaService,
     private _productoService: ProductoService,
     private _impuestoService: ImpuestoService) {
+      
       this.compra = new Compra(0,null,null,0,0,0,0,0,'',null,'',null);
       this.producto_compra = new Producto_compra(0,0,0,0,0,0,null,null,null,null);
       this.Lista_compras = [];

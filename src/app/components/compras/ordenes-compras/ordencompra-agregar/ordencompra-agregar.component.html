@@ -1,1 +1,34 @@
-<p>ordencompra-agregar works!</p>
+<div class="container">
+    <form>
+        <div class="row align-items-start">
+            <h4 class="text-center">DATOS DEL PROVEEDOR</h4>
+            
+            <div class="col-2">
+                <label for="idRequisicion" class="form-label"># Requisicion</label>
+                <input type="text" class="form-control" id="idRequisicion"  readonly>
+            </div>
+            <div class="col-4">
+                <label for="idProveedor" class="form-label">Seleccionar proveedor</label>
+                <select name="idProveedor" id="idProveedor" class="form-select" (ngModelChange)="onChange($event)">
+                    <option selected disabled value="">Abrir para seleccionar</option>
+                    <option  *ngFor="let proveedor of proveedoresLista" value={{proveedor.idProveedor}}>{{proveedor.nombre}}</option>
+                </select>
+            </div>
+           
+            <div *ngFor="let p of proveedorVer" class="row align-items-start">
+                <div class="col-2">
+                    <label for="rfc" class="form-label">RFC</label>
+                    <input type="text" name="rfc" class="form-control" value="{{p.rfc}}" readonly>
+                </div>
+                <div class="col-7">
+                    <label for="direccion" class="form-label">Direccion</label>
+                    <input type="text" name="direccion" class="form-control" value="{{p.estado}} {{p.ciudad}} {{p.colonia}} {{p.calle}} {{p.numero}}" readonly>
+                </div>                    
+                <div class="col-2">
+                    <label for="telefono" class="form-label">Telefono</label>
+                    <input type="text" name="telefono" class="form-control" value="{{p.telefono}}" readonly>
+                </div>    
+            </div>
+        </div>
+    </form>
+</div>
