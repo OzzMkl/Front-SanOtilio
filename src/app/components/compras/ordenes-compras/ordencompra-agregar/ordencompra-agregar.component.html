@@ -9,7 +9,7 @@
             </div>
             <div class="col-4">
                 <label for="idProveedor" class="form-label">Seleccionar proveedor</label>
-                <select name="idProveedor" id="idProveedor" class="form-select" (ngModelChange)="onChange($event)">
+                <select name="idProveedor" id="idProveedor" class="form-select" #idProveedor="ngModel" [(ngModel)]="orden_compra.idProveedor" (ngModelChange)="onChange($event)">
                     <option selected disabled value="">Abrir para seleccionar</option>
                     <option  *ngFor="let proveedor of proveedoresLista" value={{proveedor.idProveedor}}>{{proveedor.nombre}}</option>
                 </select>
@@ -29,6 +29,11 @@
                     <input type="text" name="telefono" class="form-control" value="{{p.telefono}}" readonly>
                 </div>    
             </div>
+        </div>
+        <hr>
+        <div class="row align-items-start">
+            <h4 class="text-center">PRODUCTO</h4>
+            
         </div>
     </form>
 </div>
