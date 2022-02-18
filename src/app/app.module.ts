@@ -46,6 +46,8 @@ import { CompraModuloComponent } from './components/compras/compra/compra-modulo
 import { CompraBuscarComponent } from './components/compras/compra/compra-buscar/compra-buscar.component';
 import { CompraVerComponent } from './components/compras/compra/compra-ver/compra-ver.component';
 import { CompraAgregarComponent } from './components/compras/compra/compra-agregar/compra-agregar.component';
+import { OrdencompraAgregarComponent } from './components/compras/ordenes-compras/ordencompra-agregar/ordencompra-agregar.component';
+import { OrdencompraBuscarComponent } from './components/compras/ordenes-compras/ordencompra-buscar/ordencompra-buscar.component';
 
 
 @NgModule({
@@ -81,6 +83,8 @@ import { CompraAgregarComponent } from './components/compras/compra/compra-agreg
     CompraBuscarComponent,
     CompraVerComponent,
     CompraAgregarComponent,
+    OrdencompraAgregarComponent,
+    OrdencompraBuscarComponent,
   ],
   imports: [
     BrowserModule,

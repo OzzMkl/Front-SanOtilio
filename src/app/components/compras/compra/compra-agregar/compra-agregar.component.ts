@@ -60,7 +60,7 @@ export class CompraAgregarComponent implements OnInit {
   }
   capturar(datos:any){
     this.Lista_compras.push({...this.producto_compra});
-    console.log(this.Lista_compras);
+    //console.log(this.Lista_compras);
   }
 /**SERVICIOS */
   getProvee(){
@@ -93,7 +93,7 @@ export class CompraAgregarComponent implements OnInit {
       response => {
         if(response.status == 'success'){
           this.proveedorVer = response.proveedores;
-          console.log(this.proveedorVer);
+          //console.log(this.proveedorVer);
         }
       }, error =>{
           console.log(error);
@@ -115,7 +115,7 @@ export class CompraAgregarComponent implements OnInit {
       response =>{
         if(response.status == 'success'){
           this.impuestos = response.impuestos
-          console.log(this.impuestos);
+          //console.log(this.impuestos);
         }
       },
       error => {
