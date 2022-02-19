@@ -34,7 +34,7 @@ export class SubcategoriaVerComponent implements OnInit {
    }
 
   ngOnInit(): void {
-    //this.getSubCat();
+    this.getSubCat();
   }
 
   getSubCat(){
@@ -44,11 +44,11 @@ export class SubcategoriaVerComponent implements OnInit {
           this.subcategoria = response.subcategoria;
           //navegacion de paginacion
           
-          console.log(response.subcategoria);
+          //console.log(response.subcategoria);
         }
       },
       error =>{
-        console.log(error);
+        //console.log(error);
       }
     );
   }

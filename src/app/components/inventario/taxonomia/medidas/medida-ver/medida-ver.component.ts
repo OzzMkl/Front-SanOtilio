@@ -45,11 +45,11 @@ export class MedidaVerComponent implements OnInit {
           this.medidas = response.medidas;
           //navegacion de paginacion
           
-          console.log(response.medidas);
+          //console.log(response.medidas);
         }
       },
       error =>{
-        console.log(error);
+        //console.log(error);
       }
     );
   }
