@@ -46,11 +46,11 @@ export class AlmacenVerComponent implements OnInit {
           this.almacenes = response.almacenes;
           //navegacion de paginacion
           
-          //console.log(response.almacenes);
+          console.log(response.almacenes);
         }
       },
       error =>{
-        //console.log(error);
+        console.log(error);
       }
     );
   }

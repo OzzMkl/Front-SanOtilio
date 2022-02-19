@@ -13,8 +13,8 @@
                     <th scope="col">Nombre</th>
                 </tr>
             </thead>
-            <tbody *ngFor="let pr of departamentos | paginate:{itemsPerPage: 15, currentPage: pageActual} " (click)="onFocusEvent($event)">
-                <tr (click)="selected(pr.idDep)" >
+            <tbody *ngFor="let pr of departamentos | paginate:{itemsPerPage: 10, currentPage: pageActual} " (click)="onFocusEvent($event)">
+                <tr (click)="selected(pr.idProducto)" >
                     <th scope="row"  >{{pr.idDep}}</th>
                     <th scope="row">{{pr.nombre}}</th>
                 </tr>
