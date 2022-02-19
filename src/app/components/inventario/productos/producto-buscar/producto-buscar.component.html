@@ -30,7 +30,7 @@
             </tr>
             </thead>
             <tbody *ngFor="let pr of productos | filterProduct:fpd | paginate:{itemsPerPage: 10, currentPage: pageActual}">
-                <tr (click)="selected(pr.idDep)">
+                <tr (click)="selected(pr.idProducto)">
                     <th scope="row">{{pr.claveEx}}</th>
                     <th scope="row">{{pr.cbarras}}</th>
                     <th scope="row">{{pr.descripcion}}</th>

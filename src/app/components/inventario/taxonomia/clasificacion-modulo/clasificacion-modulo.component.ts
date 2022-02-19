@@ -4,20 +4,17 @@ import { DepartamentoVerComponent } from '../clasificaciones/departamentos/depar
 @Component({
   selector: 'app-clasificacion-modulo',
   templateUrl: './clasificacion-modulo.component.html',
-  styleUrls: ['./clasificacion-modulo.component.css'],
+  styleUrls: ['./clasificacion-modulo.component.css']
 })
 export class ClasificacionModuloComponent implements OnInit {
-  public page_title: string; 
+  public page_title: string;
 
-  
   constructor() {
     this.page_title = 'Modulo de Clasificaciones';
-    
-  }
-  
+
+   }
+
   ngOnInit(): void {
-    // Podemos escuchar, también, a los eventos
-    // (des de cualquier punto)
   }
-  
+
 }
