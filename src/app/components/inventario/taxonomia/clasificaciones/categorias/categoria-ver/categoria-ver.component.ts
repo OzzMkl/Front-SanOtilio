@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Categoria } from 'src/app/models/categoria';
 import { CategoriaService } from 'src/app/services/categoria.service';
 import { global } from 'src/app/services/global';
@@ -19,15 +19,15 @@ export class CategoriaVerComponent implements OnInit {
   public page_title: string;
   public url:string;
   public categoria: any;
-  public totalPages: any;
-  public page: any;
-  public next_page: any;
-  public prev_page: any;
-  pageActual: number = 1;
+  public totalPagesC: any;
+  public pageC: any;
+  public next_pageC: any;
+  public prev_pageC: any;
+  pageActualC: number = 1;
   fpv = '';
 
   constructor(
-    private _proveedorService: CategoriaService,
+    private _categoriaService: CategoriaService,
     private _route: ActivatedRoute,
     private _router: Router
   ) {
@@ -41,31 +41,32 @@ export class CategoriaVerComponent implements OnInit {
   }
 
   getCate(){
-    this._proveedorService.getCategorias().subscribe(
+    this._categoriaService.getCategorias().subscribe(
       response =>{
         if(response.status == 'success'){
           this.categoria = response.categoria;
           //navegacion de paginacion
-          console.log(response.categoria);
+          //console.log(response.categoria);
         }
       },
       error =>{
-        console.log(error);
+        //console.log(error);
       }
     );
   }
 
+
   public fillCate(id:any){
-    this._proveedorService.fillCategorias(id).subscribe(
+    this._categoriaService.fillCategorias(id).subscribe(
       response =>{
         if(response.status == 'success'){
           this.categoria = response.categoria;
           //navegacion de paginacion
-          console.log(response.categoria);
+          //console.log(response.categoria);
         }
       },
       error =>{
-        console.log(error);
+        //console.log(error);
       }
     );
   }
