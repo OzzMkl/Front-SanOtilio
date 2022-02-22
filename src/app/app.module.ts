@@ -28,6 +28,7 @@ import { ProductoModuloComponent } from './components/inventario/productos/produ
 import { ProductoBuscarComponent } from './components/inventario/productos/producto-buscar/producto-buscar.component';
 import { FilterProveedoresPipe } from './pipes/filter-proveedores.pipe';
 import { FilterProductPipe } from './pipes/filter-products.pipe';
+import { FilterProductModalPipe } from './pipes/filter-productsModal.pipe';
 
 import { ToastContainerComponent } from './components/toast/toast-container/toast-container.component';
 import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
@@ -69,6 +70,7 @@ import { OrdencompraModuloComponent } from './components/compras/ordenes-compras
     ProductoBuscarComponent,
     FilterProveedoresPipe,
     FilterProductPipe,
+    FilterProductModalPipe,
     ToastContainerComponent,
     ClasificacionModuloComponent,
     DepartamentoVerComponent,
