@@ -50,6 +50,8 @@ import { CompraAgregarComponent } from './components/compras/compra/compra-agreg
 import { OrdencompraAgregarComponent } from './components/compras/ordenes-compras/ordencompra-agregar/ordencompra-agregar.component';
 import { OrdencompraBuscarComponent } from './components/compras/ordenes-compras/ordencompra-buscar/ordencompra-buscar.component';
 import { OrdencompraModuloComponent } from './components/compras/ordenes-compras/ordencompra-modulo/ordencompra-modulo.component';
+import { FilterProductsModalcePipe } from './pipes/filter-products-modalce.pipe';
+import { FilterProductsModalcbarPipe } from './pipes/filter-products-modalcbar.pipe';
 
 
 @NgModule({
@@ -89,6 +91,8 @@ import { OrdencompraModuloComponent } from './components/compras/ordenes-compras
     OrdencompraAgregarComponent,
     OrdencompraBuscarComponent,
     OrdencompraModuloComponent,
+    FilterProductsModalcePipe,
+    FilterProductsModalcbarPipe,
   ],
   imports: [
     BrowserModule,

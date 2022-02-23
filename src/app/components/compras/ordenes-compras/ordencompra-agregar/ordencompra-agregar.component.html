@@ -71,13 +71,22 @@
         <!-- <label class="form-label" for="">Seleccione el metodo a buscar</label> -->
         <div class="input-group mb-2">
             <div class="col-2">
-                <select name="" id="" class="form-select" >
+                <select name="" id="" class="form-select" name="seleccionado" [(ngModel)]="seleccionado">
                     <option value="1" selected>DESCRIPCION</option>
                     <option value="2">CLAVE EXTERNA</option>
                     <option value="3">CODIGO DE BARRAS</option>
                 </select>
             </div>
-            <input type="text" class="form-control" name="buscarProducto" [(ngModel)]="buscarProducto">
+            <div class="col" *ngIf="seleccionado == 1; ">
+                <input type="text" class="form-control" name="buscarProducto" [(ngModel)]="buscarProducto">
+            </div>
+            <div class="col" *ngIf="seleccionado == 2; ">
+                <input type="text" class="form-control" > 
+            </div>
+            <div class="col" *ngIf="seleccionado == 3;  ">
+                <input type="text" class="form-control">
+            </div>
+            
           </div>
           <br>
           <table class="table table-dark table-hover">

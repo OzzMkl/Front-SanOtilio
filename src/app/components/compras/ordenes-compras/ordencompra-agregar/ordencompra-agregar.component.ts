@@ -29,6 +29,7 @@ export class OrdencompraAgregarComponent implements OnInit {
   pageActual: number = 1;
 
   buscarProducto = '';
+  seleccionado:number = 1;
 
   constructor( private _proveedorService: ProveedorService,
       private modalService: NgbModal,
