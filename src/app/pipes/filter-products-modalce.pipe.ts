@@ -5,8 +5,15 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class FilterProductsModalcePipe implements PipeTransform {
 
-  transform(value: unknown, ...args: unknown[]): unknown {
-    return null;
+  transform(value: any, arg: any): any {
+    if(arg == '' || arg.lenght < 3) return value;
+    const resultProduct =[];
+    for(const pr of value){
+      if(pr.claveEx.toLowerCase().indexOf(arg.toLowerCase()) > -1){
+        resultProduct.push(pr);
+      };
+    };
+    return resultProduct;
   }
 
 }

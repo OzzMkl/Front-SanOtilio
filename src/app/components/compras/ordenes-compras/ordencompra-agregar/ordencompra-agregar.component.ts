@@ -27,9 +27,12 @@ export class OrdencompraAgregarComponent implements OnInit {
   public next_page: any;
   public prev_page: any;
   pageActual: number = 1;
-
+//Modelos de pipes
+  seleccionado:number = 1;//para cambiar entre pipes
   buscarProducto = '';
-  seleccionado:number = 1;
+  buscarProductoCE = '';
+  buscarProductoCbar = '';
+  
 
   constructor( private _proveedorService: ProveedorService,
       private modalService: NgbModal,
@@ -44,6 +47,11 @@ export class OrdencompraAgregarComponent implements OnInit {
   }
   onChange(id:any){//evento que muestra los datos del proveedor al seleccionarlo
     this.getProveeVer(id);
+  }
+  cambioSeleccionado(e:any){//limpiamos los inputs
+    this.buscarProducto = '';
+    this.buscarProductoCE = '';
+    this.buscarProductoCbar = '';
   }
   //Servicios
   getProvee(){

@@ -71,7 +71,7 @@
         <!-- <label class="form-label" for="">Seleccione el metodo a buscar</label> -->
         <div class="input-group mb-2">
             <div class="col-2">
-                <select name="" id="" class="form-select" name="seleccionado" [(ngModel)]="seleccionado">
+                <select name="" id="" class="form-select" name="seleccionado" [(ngModel)]="seleccionado" (ngModelChange)="cambioSeleccionado($event)">
                     <option value="1" selected>DESCRIPCION</option>
                     <option value="2">CLAVE EXTERNA</option>
                     <option value="3">CODIGO DE BARRAS</option>
@@ -81,10 +81,10 @@
                 <input type="text" class="form-control" name="buscarProducto" [(ngModel)]="buscarProducto">
             </div>
             <div class="col" *ngIf="seleccionado == 2; ">
-                <input type="text" class="form-control" > 
+                <input type="text" class="form-control" name="buscarProductoCE" [(ngModel)]="buscarProductoCE"> 
             </div>
             <div class="col" *ngIf="seleccionado == 3;  ">
-                <input type="text" class="form-control">
+                <input type="text" class="form-control" name="buscarProductoCbar" [(ngModel)]="buscarProductoCbar">
             </div>
             
           </div>
@@ -99,7 +99,7 @@
                     <th>Marca</th>
                 </tr>
             </thead>
-            <tbody *ngFor="let pr of productos | filterProductModal: buscarProducto| paginate:{itemsPerPage: 5, currentPage: pageActual}">
+            <tbody *ngFor="let pr of productos | filterProductsModalcbar: buscarProductoCbar| filterProductModal: buscarProducto | filterProductsModalce: buscarProductoCE| paginate:{itemsPerPage: 5, currentPage: pageActual}">
                 <tr>
                     <th scope="row">{{pr.claveEx}}</th>
                     <th scope="row">{{pr.cbarras}}</th>
