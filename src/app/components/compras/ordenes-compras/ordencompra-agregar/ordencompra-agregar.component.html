@@ -42,20 +42,19 @@
                         
                     </div>
                 </div>
-                
                 <div class="col-4">
                     <label class="form-label" for="cantidadProducto">Cantidad</label>
-                    <input class="form-control" type="text" name="cantidadProducto" id="cantidadProducto"  #cantidadProducto="ngModel" [(ngModel)]="producto_orden.cantidad">
+                    <input class="form-control" type="number" name="cantidadProducto" id="cantidadProducto"  #cantidadProducto="ngModel" [(ngModel)]="producto_orden.cantidad">
                 </div>
                 <div class="col-2">
                     <label class="form-label" for="cantidadProducto">.</label>
-                    <button class="btn btn-primary form-control" type="button" (click)="capturar(producto_orden)"><i class="bi bi-check-circle-fill"></i>Agregar</button>
+                    <button class="btn btn-success form-control" type="button" (click)="capturar(producto_orden)" [disabled]="isSearch"><i class="bi bi-check-circle-fill"> Agregar</i>     </button>
                   </div>
             </div>
             <div class="row align-items-start" *ngFor="let prod of productoVer">
 
                 <div>
-                    <label for="descripcion" class="form-label">Descripcion</label>
+                    <label for="descipcion" class="form-label">Descripcion</label>
                     <input type="text" name="descipcion" class="form-control" value="{{prod.descripcion}}" readonly>
                 </div>
                 <div class="col-3">
@@ -100,7 +99,7 @@
                         <th scope="col">CANTIDAD</th>
                     </tr>
                 </thead>
-                <tbody *ngFor="let p_d of Lista_compras">
+                <tbody *ngFor="let p_d of Lista_compras | paginate:{itemsPerPage: 5, currentPage: pageActual}">
                     <tr>
                      <th scope="row">{{p_d.claveEx}}</th>
                      <th scope="row">{{p_d.descripcion}}</th>
@@ -109,6 +108,7 @@
                     </tr>
                 </tbody>
             </table>
+            <pagination-controls (pageChange)="pageActual = $event"></pagination-controls>
         </div>
     </form>
 </div>
