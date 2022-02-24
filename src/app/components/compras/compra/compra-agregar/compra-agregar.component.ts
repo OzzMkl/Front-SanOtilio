@@ -61,7 +61,7 @@ export class CompraAgregarComponent implements OnInit {
   }
   capturar(datos:any){
     this.Lista_compras.push({...this.producto_compra});
-    //console.log(this.Lista_compras);
+    console.log(this.Lista_compras);
   }
 /**SERVICIOS */
   getProvee(){

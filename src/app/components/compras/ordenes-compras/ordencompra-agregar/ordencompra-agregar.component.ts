@@ -2,8 +2,10 @@ import { Component, OnInit } from '@angular/core';
 //Servicios
 import { ProveedorService } from 'src/app/services/proveedor.service';
 import { ProductoService } from 'src/app/services/producto.service';
+import { global } from 'src/app/services/global';
 //Modelos
 import { Ordencompra } from 'src/app/models/orden_compra';
+import { Producto_orden } from 'src/app/models/producto_orden';
 //NGBOOTSTRAP
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 
@@ -20,6 +22,8 @@ export class OrdencompraAgregarComponent implements OnInit {
   public proveedoresLista:any;
   public proveedorVer:any;
   public orden_compra: Ordencompra;
+  public producto_orden: Producto_orden;
+  public Lista_compras: Array<Producto_orden>;
   public productos: any;
   /**PAGINATOR */
   public totalPages: any;
@@ -32,6 +36,10 @@ export class OrdencompraAgregarComponent implements OnInit {
   buscarProducto = '';
   buscarProductoCE = '';
   buscarProductoCbar = '';
+  //variables servicios
+  public dato:any;
+  public productoVer: any;
+  public url:any;
   
 
   constructor( private _proveedorService: ProveedorService,
@@ -39,6 +47,9 @@ export class OrdencompraAgregarComponent implements OnInit {
       private _productoService: ProductoService
     ) {
     this.orden_compra = new Ordencompra(0,null,0,'',null,0,0,null);
+    this.producto_orden = new Producto_orden(0,0,0,null,null,null,null);
+    this.Lista_compras = [];
+    this.url = global.url;
    }
 
   ngOnInit(): void {
@@ -52,6 +63,18 @@ export class OrdencompraAgregarComponent implements OnInit {
     this.buscarProducto = '';
     this.buscarProductoCE = '';
     this.buscarProductoCbar = '';
+  }
+  capturar(datos:any){
+    this.Lista_compras.push({...this.producto_orden});
+    //console.log(this.Lista_compras);
+  }
+  consultarProducto(event:any){
+    if (event.keyCode === 13) {
+      //alert('you just pressed the enter key'+event);
+      this.dato=event.target.value;
+      //console.log(this.dato)
+      this.getProd(this.dato);
+    }
   }
   //Servicios
   getProvee(){
@@ -90,6 +113,16 @@ export class OrdencompraAgregarComponent implements OnInit {
         }
       },
       error =>{
+        console.log(error);
+      }
+    );
+  }
+  getProd(id:any){
+    this._productoService.getProdclaveex(id).subscribe(
+      response =>{
+        this.productoVer = response.producto;
+        //console.log(this.productoVer);
+      },error => {
         console.log(error);
       }
     );

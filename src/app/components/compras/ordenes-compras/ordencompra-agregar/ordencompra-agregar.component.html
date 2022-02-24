@@ -38,12 +38,56 @@
                     <label class="form-label" for="">Buscar producto</label>
                     <div class="input-group">
                         <span class="input-group-addon" id="sizing-addon2"><i class="bi-search" style="font-size: 1.5rem; color: black; left: 0;" (click)="open(content)"></i> </span>
-                        <input class="form-control" type="text" >
+                        <input class="form-control" type="text" ngbTooltip="Solo busca por clave externa" name="claveEx" #claveEx="ngModel" [(ngModel)]="producto_orden.claveEx" (keydown)="consultarProducto($event)">
+                        
                     </div>
                 </div>
+                
+                <div class="col-4">
+                    <label class="form-label" for="cantidadProducto">Cantidad</label>
+                    <input class="form-control" type="text" name="cantidadProducto" id="cantidadProducto"  #cantidadProducto="ngModel" [(ngModel)]="producto_orden.cantidad">
+                </div>
+                <div class="col-2">
+                    <label class="form-label" for="cantidadProducto">.</label>
+                    <button class="btn btn-primary form-control" type="button" (click)="capturar(producto_orden)"><i class="bi bi-check-circle-fill"></i>Agregar</button>
+                  </div>
             </div>
-            
+            <div class="row align-items-start" *ngFor="let prod of productoVer">
+
+                <div>
+                    <label for="descripcion" class="form-label">Descripcion</label>
+                    <input type="text" name="descipcion" class="form-control" value="{{prod.descripcion}}" readonly>
+                </div>
+                <div class="col-3">
+                    <label for="marca" class="form-label">Marca</label>
+                    <input type="text" name="marca" class="form-control" value="{{prod.nombreMarca}}" readonly>
+                </div>
+                <div class="col-2">
+                    <label for="departamento" class="form-label">Departamento</label>
+                    <input type="text" name="departamento" class="form-control" value="{{prod.nombreDep}}" readonly>
+                </div>
+                <div class="col-2">
+                    <label for="categoria" class="form-label">Categoria</label>
+                    <input type="text" name="categoria" class="form-control" value="{{prod.nombreCat}}" readonly>
+                </div>
+                <div class="col-2">
+                    <label for="subcategoria" class="form-label">Subcategoria</label>
+                    <input type="text" name="subcategoria" class="form-control" value="{{prod.nombreSubCat}}" readonly>
+                </div>
+                <div class="col-2">
+                    <label for="imagen" class="form-label">Imagen</label>
+                    <br>
+                    <img src="{{url + 'productos/getImageProduc/' + prod.imagen}}" width="100px" height="100px">
+                </div>
+                <div class="col-2">
+                    <label class="form-label" for="medida">Medida</label>
+                    <input class="form-control" type="text" value="{{prod.nombreMedida}}" readonly>
+                    <input class="form-control" type="text" value="{{prod.idMedida}}" hidden>
+                    
+                </div>
+            </div>
         </div>
+
         <hr>
         <div class="row align-items-start">
             <h4 class="text-center">LISTA DE PRODUCTOS</h4>
@@ -56,6 +100,14 @@
                         <th scope="col">CANTIDAD</th>
                     </tr>
                 </thead>
+                <tbody *ngFor="let p_d of Lista_compras">
+                    <tr>
+                     <th scope="row">{{p_d.claveEx}}</th>
+                     <th scope="row">{{p_d.descripcion}}</th>
+                     <th scope="row">{{p_d.nombreMedida}}</th>
+                     <th scope="row">{{p_d.cantidad}}</th>
+                    </tr>
+                </tbody>
             </table>
         </div>
     </form>
@@ -115,4 +167,4 @@
     <div class="modal-footer">
       <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Guardar</button>
     </div>
-  </ng-template>
+</ng-template>
