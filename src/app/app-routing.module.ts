@@ -7,6 +7,10 @@ import { HomeComponent } from './components/home/home.component';
 import { ErrorComponent } from './components/error/error.component';
 import { EmpleadoEditarComponent } from './components/empleado-editar/empleado-editar.component';
 
+import { OrdencompraModuloComponent } from './components/compras/ordenes-compras/ordencompra-modulo/ordencompra-modulo.component';
+import { OrdencompraAgregarComponent } from './components/compras/ordenes-compras/ordencompra-agregar/ordencompra-agregar.component';
+import { OrdencompraBuscarComponent } from './components/compras/ordenes-compras/ordencompra-buscar/ordencompra-buscar.component';
+
 import { CompraModuloComponent } from './components/compras/compra/compra-modulo/compra-modulo.component';
 import { CompraAgregarComponent } from './components/compras/compra/compra-agregar/compra-agregar.component';
 import { CompraBuscarComponent } from './components/compras/compra/compra-buscar/compra-buscar.component';
@@ -34,6 +38,11 @@ const routes: Routes = [
   {path: 'login', component: LoginComponent},
   {path: 'logout/:sure', component: LoginComponent},
   {path: 'ajustes',component: EmpleadoEditarComponent},
+  {path: 'ordencompra-modulo', component: OrdencompraModuloComponent,
+    children:[
+      {path: 'ordencompra-agregar',component: OrdencompraAgregarComponent},
+      {path: 'ordencompra-buscar',component: OrdencompraBuscarComponent}
+    ]},
   {path: 'compra-modulo',component: CompraModuloComponent,
     children:
     [

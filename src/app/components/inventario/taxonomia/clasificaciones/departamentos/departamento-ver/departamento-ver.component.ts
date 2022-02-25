@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChildren } from '@angular/core';
 import { Departamento } from 'src/app/models/departamento';
 import { DepartamentoService } from 'src/app/services/departamento.service';
 import { global } from 'src/app/services/global';
@@ -7,6 +7,8 @@ import { Router,ActivatedRoute,Params } from '@angular/router';
 
 import { Categoria } from 'src/app/models/categoria';
 import { CategoriaService } from 'src/app/services/categoria.service';
+import { Categoria } from 'src/app/models/categoria';
+import { CategoriaVerComponent } from '../../categorias/categoria-ver/categoria-ver.component';
 
 @Component({
   selector: 'app-departamento-ver',
@@ -57,19 +59,19 @@ export class DepartamentoVerComponent implements OnInit {
           this.getCate
           //navegacion de paginacion
           this.totalPages = response.departamentos;
-          
           console.log(this.totalPages.length);
+
         }
       },
       error =>{
-        //console.log(error);
+        console.log(error);
       }
     );
   }
 
   onFocusEvent(event: any){
     //event.srcElement.style.background = "red";
-    //console.log(event.path[0].innerText);
+    console.log(event.path[0].innerText);
     this.findCat = event.path[0].innerText;
     
 
@@ -110,6 +112,9 @@ export class DepartamentoVerComponent implements OnInit {
       }
     );
   }
+  this._router.navigate(['./producto-modulo/producto-ver/'+this.datox]);
+}
+
 
 }
 

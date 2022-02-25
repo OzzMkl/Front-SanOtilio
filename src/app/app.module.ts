@@ -28,6 +28,7 @@ import { ProductoModuloComponent } from './components/inventario/productos/produ
 import { ProductoBuscarComponent } from './components/inventario/productos/producto-buscar/producto-buscar.component';
 import { FilterProveedoresPipe } from './pipes/filter-proveedores.pipe';
 import { FilterProductPipe } from './pipes/filter-products.pipe';
+import { FilterProductModalPipe } from './pipes/filter-productsModal.pipe';
 
 import { ToastContainerComponent } from './components/toast/toast-container/toast-container.component';
 import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
@@ -46,6 +47,11 @@ import { CompraModuloComponent } from './components/compras/compra/compra-modulo
 import { CompraBuscarComponent } from './components/compras/compra/compra-buscar/compra-buscar.component';
 import { CompraVerComponent } from './components/compras/compra/compra-ver/compra-ver.component';
 import { CompraAgregarComponent } from './components/compras/compra/compra-agregar/compra-agregar.component';
+import { OrdencompraAgregarComponent } from './components/compras/ordenes-compras/ordencompra-agregar/ordencompra-agregar.component';
+import { OrdencompraBuscarComponent } from './components/compras/ordenes-compras/ordencompra-buscar/ordencompra-buscar.component';
+import { OrdencompraModuloComponent } from './components/compras/ordenes-compras/ordencompra-modulo/ordencompra-modulo.component';
+import { FilterProductsModalcePipe } from './pipes/filter-products-modalce.pipe';
+import { FilterProductsModalcbarPipe } from './pipes/filter-products-modalcbar.pipe';
 
 
 @NgModule({
@@ -66,6 +72,7 @@ import { CompraAgregarComponent } from './components/compras/compra/compra-agreg
     ProductoBuscarComponent,
     FilterProveedoresPipe,
     FilterProductPipe,
+    FilterProductModalPipe,
     ToastContainerComponent,
     ClasificacionModuloComponent,
     DepartamentoVerComponent,
@@ -81,6 +88,11 @@ import { CompraAgregarComponent } from './components/compras/compra/compra-agreg
     CompraBuscarComponent,
     CompraVerComponent,
     CompraAgregarComponent,
+    OrdencompraAgregarComponent,
+    OrdencompraBuscarComponent,
+    OrdencompraModuloComponent,
+    FilterProductsModalcePipe,
+    FilterProductsModalcbarPipe,
   ],
   imports: [
     BrowserModule,
