@@ -7,13 +7,22 @@
                 <label for="idRequisicion" class="form-label"># Requisicion</label>
                 <input type="text" class="form-control" id="idRequisicion"  readonly>
             </div>
-            <div class="col-4">
+            <div class="col-5">
                 <label for="idProveedor" class="form-label">Seleccionar proveedor</label>
                 <select name="idProveedor" id="idProveedor" class="form-select" #idProveedor="ngModel" [(ngModel)]="orden_compra.idProveedor" (ngModelChange)="onChange($event)">
                     <option selected disabled value="">Abrir para seleccionar</option>
                     <option  *ngFor="let proveedor of proveedoresLista" value={{proveedor.idProveedor}}>{{proveedor.nombre}}</option>
                 </select>
             </div>
+            <div class="col-4">
+                <label class="form-label" for="">Selecciona el dia de entrega aproximado</label>
+                <div class="input-group">
+                  <input class="form-control" placeholder="aaaa-mm-dd"
+                         name="dp" [(ngModel)]="model" ngbDatepicker #d="ngbDatepicker">
+                  <button class="btn btn-outline-secondary" (click)="d.toggle()" type="button"><i class="bi bi-calendar-date-fill"> </i> </button>
+                </div>
+              </div>
+
            
             <div *ngFor="let p of proveedorVer" class="row align-items-start">
                 <div class="col-2">

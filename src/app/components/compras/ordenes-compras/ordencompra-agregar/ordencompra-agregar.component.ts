@@ -8,7 +8,7 @@ import { ToastService } from 'src/app/services/toast.service';
 import { Ordencompra } from 'src/app/models/orden_compra';
 import { Producto_orden } from 'src/app/models/producto_orden';
 //NGBOOTSTRAP
-import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, ModalDismissReasons, NgbDateStruct} from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-ordencompra-agregar',
@@ -42,7 +42,9 @@ export class OrdencompraAgregarComponent implements OnInit {
   public dato:any;
   public productoVer: any;
   public url:any;
-  
+  //modelode bootstrap
+  //modelode bootstrap
+  model!: NgbDateStruct;
 
   constructor( private _proveedorService: ProveedorService,
       private modalService: NgbModal,
