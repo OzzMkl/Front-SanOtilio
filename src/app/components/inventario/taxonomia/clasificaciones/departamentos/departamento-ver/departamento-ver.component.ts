@@ -5,7 +5,6 @@ import { global } from 'src/app/services/global';
 
 import { Router,ActivatedRoute,Params } from '@angular/router';
 
-import { Categoria } from 'src/app/models/categoria';
 import { CategoriaService } from 'src/app/services/categoria.service';
 import { Categoria } from 'src/app/models/categoria';
 import { CategoriaVerComponent } from '../../categorias/categoria-ver/categoria-ver.component';
@@ -112,9 +111,5 @@ export class DepartamentoVerComponent implements OnInit {
       }
     );
   }
-  this._router.navigate(['./producto-modulo/producto-ver/'+this.datox]);
-}
-
-
 }
 
