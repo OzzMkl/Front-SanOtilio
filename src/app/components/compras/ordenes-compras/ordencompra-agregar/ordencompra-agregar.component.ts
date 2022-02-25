@@ -83,14 +83,12 @@ export class OrdencompraAgregarComponent implements OnInit {
     //console.log(this.Lista_compras);
   } 
   consultarProducto(event:any){//mostrar informacion del producto al dar enter
-    if (event.keyCode === 13) {
       //alert('you just pressed the enter key'+event);
       this.dato=event.target.value;
       //console.log(this.dato)
       this.getProd(this.dato);
       this.isSearch = false;
       //console.log(this.producto_orden);
-    }
   }
   consultarProductoModal(dato:any){
     this.getProd(dato);
