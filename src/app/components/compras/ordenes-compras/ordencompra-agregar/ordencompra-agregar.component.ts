@@ -92,6 +92,18 @@ export class OrdencompraAgregarComponent implements OnInit {
       //console.log(this.producto_orden);
     }
   }
+  consultarProductoModal(dato:any){
+    this.getProd(dato);
+    this.isSearch = false;
+  }
+  agregarOrdCompra(form:any,event:any){
+    if(event.keyCode === 13){
+      console.log('ño')
+    }else{
+      console.log(this.orden_compra)
+      console.log(this.Lista_compras)
+    }
+  }
   //Servicios
   getProvee(){
     this._proveedorService.getProveedores().subscribe(
@@ -138,6 +150,7 @@ export class OrdencompraAgregarComponent implements OnInit {
       response =>{
         this.productoVer = response.producto;//informacion completa del producto para recorrerlo atraves del html
         this.producto_orden.descripcion = this.productoVer[0]['descripcion'];//asignamos variables
+        this.producto_orden.claveEx = this.productoVer[0]['claveEx'];
         this.producto_orden.idProducto = this.productoVer[0]['idProducto'];
         this.producto_orden.nombreMedida = this.productoVer[0]['nombreMedida'];
         //console.log(this.productoVer);

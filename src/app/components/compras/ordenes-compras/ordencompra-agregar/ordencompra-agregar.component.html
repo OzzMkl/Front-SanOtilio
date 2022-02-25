@@ -1,5 +1,5 @@
 <div class="container">
-    <form>
+    <form class="form-group" #FormOrdCom="ngForm" (ngSubmit)="agregarOrdCompra(FormOrdCom,$event)">
         <div class="row align-items-start">
             <h4 class="text-center">DATOS DEL PROVEEDOR</h4>
             
@@ -86,7 +86,6 @@
                 </div>
             </div>
         </div>
-
         <hr>
         <div class="row align-items-start">
             <h4 class="text-center">LISTA DE PRODUCTOS</h4>
@@ -109,6 +108,17 @@
                 </tbody>
             </table>
             <pagination-controls (pageChange)="pageActual = $event"></pagination-controls>
+        </div>
+        <hr>
+        <div class="row row-cols-lg-auto g-3 align-items-center">
+            <div class="col-12">
+                <label for="observaciones">Observaciones</label>
+                <textarea class="form-control" name="observaciones" id="observaciones" cols="30" rows="2"></textarea>
+            </div>
+            <br>
+            <div class="col-12">
+                <button  class="btn btn-primary" type="submit">Guardar</button>
+            </div>
         </div>
     </form>
 </div>
@@ -152,7 +162,7 @@
                 </tr>
             </thead>
             <tbody *ngFor="let pr of productos | filterProductsModalcbar: buscarProductoCbar| filterProductModal: buscarProducto | filterProductsModalce: buscarProductoCE| paginate:{itemsPerPage: 5, currentPage: pageActual}">
-                <tr>
+                <tr (click)="consultarProductoModal(pr.claveEx)" (click)="modal.dismiss('Cross click')">
                     <th scope="row">{{pr.claveEx}}</th>
                     <th scope="row">{{pr.cbarras}}</th>
                     <th scope="row">{{pr.descripcion}}</th>
@@ -164,7 +174,7 @@
           <pagination-controls (pageChange)="pageActual = $event"></pagination-controls>
       </form>
     </div>
-    <div class="modal-footer">
+    <!-- <div class="modal-footer">
       <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Guardar</button>
-    </div>
+    </div> -->
 </ng-template>
