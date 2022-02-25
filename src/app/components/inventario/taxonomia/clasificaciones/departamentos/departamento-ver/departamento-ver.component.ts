@@ -4,6 +4,8 @@ import { DepartamentoService } from 'src/app/services/departamento.service';
 import { global } from 'src/app/services/global';
 
 import { Router,ActivatedRoute,Params } from '@angular/router';
+
+import { Categoria } from 'src/app/models/categoria';
 import { CategoriaService } from 'src/app/services/categoria.service';
 
 @Component({
@@ -26,6 +28,8 @@ export class DepartamentoVerComponent implements OnInit {
   fpv = '';
   datox:any;
 
+  public categoria: any;
+
   constructor(
     private _departamentoService: DepartamentoService,
     private _categoriaService: CategoriaService,
@@ -33,9 +37,10 @@ export class DepartamentoVerComponent implements OnInit {
     private _router: Router
 
   ) {
-    this.page_title = 'Departamentos'
+    this.page_title = ''
     this.url = global.url;
     this.departamentos = [];
+    this.categoria = [];
 
    }
 
@@ -49,10 +54,11 @@ export class DepartamentoVerComponent implements OnInit {
       response =>{
         if(response.status == 'success'){
           this.departamentos = response.departamentos;
+          this.getCate
           //navegacion de paginacion
-          this.totalPages = response.departamentos.total;
+          this.totalPages = response.departamentos;
           
-          //console.log(response.departamentos);
+          console.log(this.totalPages.length);
         }
       },
       error =>{
@@ -88,6 +94,22 @@ export class DepartamentoVerComponent implements OnInit {
  selected(dato:any){
   this.datox = dato;
   //this._router.navigate(['./producto-modulo/producto-ver/'+this.datox]);
-}
+  }
+
+  getCate(){
+    this._categoriaService.getCategorias().subscribe(
+      response =>{
+        if(response.status == 'success'){
+          this.categoria = response.categoria;
+          //navegacion de paginacion
+          console.log(response.categoria);
+        }
+      },
+      error =>{
+        //console.log(error);
+      }
+    );
+  }
 
 }
+
