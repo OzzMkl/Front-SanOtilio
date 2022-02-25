@@ -2,6 +2,7 @@ export class Departamento{//Modelo del banco aqui asignamos todas las variables 
     constructor(
         public idDep: number,
         public nombre: string,
+        public imagen: string,
         public updated_at: any
     ){}
 }
