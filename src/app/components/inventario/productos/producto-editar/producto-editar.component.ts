@@ -84,7 +84,7 @@ export class ProductoEditarComponent implements OnInit {
     this.getCategoria();
     this.getSubcategoria();
     this.getAlmacen();
-    this.getAllProduts();
+    //this.getAllProduts();
   }
 
   getIdProduct(){//obtenemos informacion del producto que queremos modificar
@@ -198,6 +198,7 @@ export class ProductoEditarComponent implements OnInit {
     response =>{
       if(response.status == 'success'){
         this.medidas = response.medidas;
+        //console.log(this.medidas);
       }
     },
     error =>{
@@ -210,6 +211,7 @@ getMarca(){
     response =>{
       if(response.status == 'success'){
         this.marca = response.marca;
+        //console.log(this.marca);
       }
     },
     error =>{
@@ -222,6 +224,7 @@ getDepartamentos(){
     response =>{
       if(response.status == 'success'){
         this.departamentos = response.departamentos;
+        //console.log(this.departamentos);
       }
     },
     error =>{
@@ -234,6 +237,7 @@ getCategoria(){
     response =>{
       if(response.status == 'success'){
         this.categoria = response.categoria;
+        //console.log(this.categoria);
       }
     },
     error =>{
@@ -245,7 +249,8 @@ getSubcategoria(){
   this._subcategoriaService.getSubCategorias().subscribe(
     response =>{
       if(response.status == 'success'){
-        this.subcategoria = response.subcategoria;  
+        this.subcategoria = response.subcategoria; 
+        //console.log(this.subcategoria);
       }
     },
     error =>{
@@ -258,6 +263,7 @@ getAlmacen(){
     response =>{
       if(response.status == 'success'){
         this.almacenes = response.almacenes;
+        //console.log(this.almacenes);
       }
     },
     error =>{
@@ -272,7 +278,7 @@ getAllProduts(){
         this.productos = response.productos;
         //navegacion paginacion
         //this.totalPages = response.productos.total;
-        //console.log(response.productos);
+        console.log(response.productos);
       }
     },
     error =>{
@@ -283,3 +289,4 @@ getAllProduts(){
 
 
 }
+/********************************************************* */
