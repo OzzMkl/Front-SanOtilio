@@ -109,9 +109,12 @@ export class OrdencompraAgregarComponent implements OnInit {
 
    this._ordencompraService.registerOrdencompra(this.orden_compra).subscribe(
      response =>{
-       
+      if(response.status == 'success'){
         console.log(response);
-        this.toastService.show('Producto guardado correctamente', { classname: 'bg-success text-light', delay: 5000 });
+        this.toastService.show('Producto guardado correctamente', { classname: 'bg-success text-bold', delay: 5000 });
+      }else{
+        this.toastService.show('Fallo al crear la orden de comrpa', { classname: 'bg-danger text-bold', delay: 5000 });
+      }
      },error =>{
       console.log(<any>error);
       this.toastService.show('Ups... Algo salio mal', { classname: 'bg-danger text-light', delay: 15000 });
