@@ -110,17 +110,17 @@ export class ProductoAgregarComponent implements OnInit {
   }
   submit(form:any){
     this.getLP();
-    console.log(this.pd.cbarras+1);
+    //console.log(this.pd.cbarras+1);
      this.producto.cbarras =  parseInt(this.pd.cbarras) + 1;
      //this.producto.cbarras =  parseInt(this.pd.cbarras) + 1;
     this._productoService.registerProducto(this.producto).subscribe(
       response =>{
-        console.log(response);
+        //console.log(response);
         this._router.navigate(['./producto-modulo/producto-buscar']);
         this.toastService.show('Producto guardado correctamente', { classname: 'bg-success text-light', delay: 5000 });
       },
       error =>{
-        console.log(this.producto);
+        //console.log(this.producto);
         console.log(<any>error);
         this.toastService.show('Ups... Algo salio mal', { classname: 'bg-danger text-light', delay: 15000 });
       }

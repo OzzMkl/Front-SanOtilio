@@ -1,5 +1,5 @@
 <div class="container">
-    <form class="form-group" #FormOrdCom="ngForm" (ngSubmit)="agregarOrdCompra(FormOrdCom,$event)">
+    <form class="form-group" #FormOrdCom="ngForm" (ngSubmit)="agregarOrdCompra(FormOrdCom)">
         <div class="row align-items-start">
             <h4 class="text-center">DATOS DEL PROVEEDOR</h4>
             
@@ -122,7 +122,8 @@
         <div class="row row-cols-lg-auto g-3 align-items-center">
             <div class="col-12">
                 <label for="observaciones">Observaciones</label>
-                <textarea class="form-control" name="observaciones" id="observaciones" cols="30" rows="2"></textarea>
+                <textarea class="form-control" name="observaciones" id="observaciones" cols="30" rows="2" #observaciones="ngModel" [(ngModel)]="orden_compra.observaciones"></textarea>
+                
             </div>
             <br>
             <div class="col-12">

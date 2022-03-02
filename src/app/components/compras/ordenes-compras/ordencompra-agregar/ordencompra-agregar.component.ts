@@ -4,6 +4,8 @@ import { ProveedorService } from 'src/app/services/proveedor.service';
 import { ProductoService } from 'src/app/services/producto.service';
 import { global } from 'src/app/services/global';
 import { ToastService } from 'src/app/services/toast.service';
+import { OrdendecompraService } from 'src/app/services/ordendecompra.service';
+import { EmpleadoService } from 'src/app/services/empleado.service';
 //Modelos
 import { Ordencompra } from 'src/app/models/orden_compra';
 import { Producto_orden } from 'src/app/models/producto_orden';
@@ -14,7 +16,7 @@ import { NgbModal, ModalDismissReasons, NgbDateStruct} from '@ng-bootstrap/ng-bo
   selector: 'app-ordencompra-agregar',
   templateUrl: './ordencompra-agregar.component.html',
   styleUrls: ['./ordencompra-agregar.component.css'],
-  providers:[ProveedorService,ProductoService]
+  providers:[ProveedorService,ProductoService, OrdendecompraService, EmpleadoService]
 })
 export class OrdencompraAgregarComponent implements OnInit {
 
@@ -27,6 +29,7 @@ export class OrdencompraAgregarComponent implements OnInit {
   public Lista_compras: Array<Producto_orden>;
   public productos: any;
   public isSearch: boolean = true;
+  public idUser:any;
   /**PAGINATOR */
   public totalPages: any;
   public page: any;
@@ -42,6 +45,7 @@ export class OrdencompraAgregarComponent implements OnInit {
   public dato:any;
   public productoVer: any;
   public url:any;
+  public identity: any;
   //modelode bootstrap
   //modelode bootstrap
   model!: NgbDateStruct;
@@ -49,9 +53,11 @@ export class OrdencompraAgregarComponent implements OnInit {
   constructor( private _proveedorService: ProveedorService,
       private modalService: NgbModal,
       private _productoService: ProductoService,
-      public toastService: ToastService
+      public toastService: ToastService,
+      private _ordencompraService: OrdendecompraService,
+      public _empleadoService : EmpleadoService
     ) {
-    this.orden_compra = new Ordencompra(0,null,0,'',null,0,0,null);
+    this.orden_compra = new Ordencompra(0,null,0,'',null,0,1,null);
     this.producto_orden = new Producto_orden(0,0,0,null,null,null,null);
     this.Lista_compras = [];
     this.url = global.url;
@@ -60,6 +66,7 @@ export class OrdencompraAgregarComponent implements OnInit {
   ngOnInit(): void {
     this.getProvee();
     this.getAllProducts();
+    this.loadUser();
   }
   onChange(id:any){//evento que muestra los datos del proveedor al seleccionarlo
     this.getProveeVer(id);
@@ -96,13 +103,19 @@ export class OrdencompraAgregarComponent implements OnInit {
     this.getProd(dato);
     this.isSearch = false;
   }
-  agregarOrdCompra(form:any,event:any){
-    if(event.keyCode === 13){
-      console.log('ño')
-    }else{
-      console.log(this.orden_compra)
-      console.log(this.Lista_compras)
-    }
+  agregarOrdCompra(form:any){//Enviar Form insertar en DB
+    this.orden_compra.idEmpleado = this.identity['sub'];//asginamos id de Empleado
+    this.orden_compra.fecha = this.model.year+'-'+this.model.month+'-'+this.model.day;//concatenamos la fecha del datepicker
+
+   this._ordencompraService.registerOrdencompra(this.orden_compra).subscribe(
+     response =>{
+       
+        console.log(response);
+        this.toastService.show('Producto guardado correctamente', { classname: 'bg-success text-light', delay: 5000 });
+     },error =>{
+      console.log(<any>error);
+      this.toastService.show('Ups... Algo salio mal', { classname: 'bg-danger text-light', delay: 15000 });
+     });
   }
   //Servicios
   getProvee(){
@@ -158,6 +171,9 @@ export class OrdencompraAgregarComponent implements OnInit {
         console.log(error);
       }
     );
+  }
+  loadUser(){
+    this.identity = this._empleadoService.getIdentity();
   }
   // Modal
   open(content:any) {
