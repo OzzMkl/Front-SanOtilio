@@ -109,16 +109,31 @@ export class OrdencompraAgregarComponent implements OnInit {
 
    this._ordencompraService.registerOrdencompra(this.orden_compra).subscribe(
      response =>{
-      if(response.status == 'success'){
-        console.log(response);
-        this.toastService.show('Producto guardado correctamente', { classname: 'bg-success text-bold', delay: 5000 });
-      }else{
-        this.toastService.show('Fallo al crear la orden de comrpa', { classname: 'bg-danger text-bold', delay: 5000 });
-      }
+       console.log(response)
+      setTimeout(() => {          
+        if(response.status == 'success'){
+        
+          this.toastService.show(' ⚠ Orden creada', { classname: 'bg-warning  text-bold', delay: 5000 });
+          this._ordencompraService.registerProductoscompra(this.Lista_compras).subscribe(
+            res =>{
+                console.log(res);
+            },error =>{
+              console.log(<any>error);
+              this.toastService.show('Ups... Fallo al agregar los productos a la orden de  compra', { classname: 'bg-danger text-light', delay: 15000 });
+            });
+         }else{
+           console.log(response);
+           this.toastService.show('Fallo al crear la orden de comrpa', { classname: 'bg-danger text-light', delay: 5000 });
+         }
+      }, 10000)
+       
      },error =>{
       console.log(<any>error);
-      this.toastService.show('Ups... Algo salio mal', { classname: 'bg-danger text-light', delay: 15000 });
+      this.toastService.show('Ups... Fallo al crear la Orden de compra', { classname: 'bg-danger text-light', delay: 15000 });
      });
+  }
+  AgregarListadecompra(){
+    
   }
   //Servicios
   getProvee(){
