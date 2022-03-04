@@ -32,7 +32,7 @@ export class CategoriaService{
 
     fillCategorias(id:any):Observable<any>{
         let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');
-        return this._http.get(this.url+'getIdDepa'+id, {headers:headers} );
+        return this._http.get(this.url+'categoria/getIdDepa/'+id, {headers:headers} );
     }
     // getProveedoresDes():Observable<any>{
     //     let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');

@@ -5,7 +5,25 @@
     <div class="loading" *ngIf="!almacenes">
         Cargando..
     </div>
-    <div class="container-fluid" *ngIf="almacenes">
+    <div class="row align-items-start">
+        <div style="width: auto;" *ngFor="let pr of almacenes" >
+            <div class="col" >
+                <!-- <span class="badge rounded-pill bg-success" >{{pr.idDep}} {{pr.nombre}}</span> -->
+                <div class="card" style="width: auto; border-radius: 10px " >
+                    <div class="card-body" style="padding: 0%;">
+                        <div class="row align-items-start" style="width: auto; --padding-bottom: calc(var(--bs-gutter-x) * .5); --padding-top: calc(var(--bs-gutter-x) * .5); margin-right: 0;" >
+                            <div class="col" style="width: 50px; text-align: right;" > <b>{{pr.idAlmacen}}</b></div>
+                            <div class="col-md-4 ms-auto" style="width: fit-content; text-align: left;"> <strong>{{pr.nombre}}</strong> <br> 
+                                <a style="font-size: x-small; color: grey;"> {{pr.direccion}} </a>
+                            </div>
+                        </div>          
+                    </div>          
+                </div>
+            </div>
+            <br>
+        </div>
+    </div>
+    <!-- <div class="container-fluid" *ngIf="almacenes">
         <table class="table table-dark table-hover" >
             <thead>
                 <tr>
@@ -22,5 +40,5 @@
                 </tr>
             </tbody>
         </table>
-    </div>
+    </div> -->
 </div>
