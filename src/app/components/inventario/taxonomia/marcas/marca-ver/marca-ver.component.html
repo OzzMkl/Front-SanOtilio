@@ -6,14 +6,14 @@
         Cargando..
     </div>
     <div class="container-fluid" *ngIf="marca">
-        <table class="table table-dark table-hover" >
+        <table class="table table-dark table-striped " >
             <thead>
                 <tr>
                     <th scope="col">#</th>
                     <th scope="col">Nombre</th>
                 </tr>
             </thead>
-            <tbody *ngFor="let pr of marca | filterProveedores:fpv | paginate:{itemsPerPage: 10, currentPage: pageActual}">
+            <tbody *ngFor="let pr of marca | filterProveedores:fpv | paginate:{itemsPerPage: 15, currentPage: pageActual}">
                 <tr>
                     <th scope="row">{{pr.idMarca}}</th>
                     <th scope="row">{{pr.nombre}}</th>
