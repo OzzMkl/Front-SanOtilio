@@ -32,7 +32,7 @@ export class SubCategoriaService{
 
     fillSubCategorias(id:any):Observable<any>{
         let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');
-        return this._http.get(this.url+'getIdSuca'+id, {headers:headers} );
+        return this._http.get(this.url+'subcategoria/getIdSuca/'+id, {headers:headers} );
     }
 
     // getProveedoresDes():Observable<any>{

@@ -53,6 +53,4 @@ export class MedidaVerComponent implements OnInit {
       }
     );
   }
-
-
 }
