@@ -49,7 +49,7 @@ export class ProveedorAgregarComponent implements OnInit {
     //console.log(this.proveedor);
     this._proveedorService.register(this.proveedor).subscribe(
       response =>{ 
-        console.log(response);
+        //console.log(response);
         this.toastService.show('Proveedor guardado correctamente', { classname: 'bg-success text-light', delay: 5000 }); 
         form.reset();  },
       error => {
@@ -65,7 +65,7 @@ export class ProveedorAgregarComponent implements OnInit {
       response =>{
         if(response.status == 'success'){
           this.banco = response.proveedores;
-          console.log(response.proveedores);
+          //console.log(response.proveedores);
         }
       },
       error =>{
