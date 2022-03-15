@@ -11,6 +11,8 @@ import { Ordencompra } from 'src/app/models/orden_compra';
 import { Producto_orden } from 'src/app/models/producto_orden';
 //NGBOOTSTRAP
 import { NgbModal, ModalDismissReasons, NgbDateStruct} from '@ng-bootstrap/ng-bootstrap';
+//pdf
+import jsPDF from 'jspdf';
 
 @Component({
   selector: 'app-ordencompra-agregar',
@@ -61,13 +63,22 @@ export class OrdencompraAgregarComponent implements OnInit {
     this.producto_orden = new Producto_orden(0,0,0,null,null,null,null);
     this.Lista_compras = [];
     this.url = global.url;
+    
    }
 
   ngOnInit(): void {
     this.getProvee();
     this.getAllProducts();
     this.loadUser();
+    
   }
+  //
+  public downloadPDF():void{
+    const doc = new jsPDF;
+    doc.text('Hello world', 10,10);
+    doc.save('a.pdf')
+  }
+  //
   onChange(id:any){//evento que muestra los datos del proveedor al seleccionarlo
     this.getProveeVer(id);
   }
@@ -116,6 +127,7 @@ export class OrdencompraAgregarComponent implements OnInit {
             res =>{
                 //console.log(res);
                 this.toastService.show(' ⚠ Orden creada exitosamente!', { classname: 'bg-success  text-light', delay: 5000 });
+                this.downloadPDF();
             },error =>{
               console.log(<any>error);
               this.toastService.show('Ups... Fallo al agregar los productos a la orden de  compra', { classname: 'bg-danger text-light', delay: 15000 });
