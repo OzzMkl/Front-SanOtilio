@@ -70,14 +70,9 @@ export class OrdencompraAgregarComponent implements OnInit {
     this.getProvee();
     this.getAllProducts();
     this.loadUser();
-    
+    this.createPDF();
   }
-  //
-  public downloadPDF():void{
-    const doc = new jsPDF;
-    doc.text('Hello world', 10,10);
-    doc.save('a.pdf')
-  }
+  
   //
   onChange(id:any){//evento que muestra los datos del proveedor al seleccionarlo
     this.getProveeVer(id);
@@ -127,7 +122,7 @@ export class OrdencompraAgregarComponent implements OnInit {
             res =>{
                 //console.log(res);
                 this.toastService.show(' ⚠ Orden creada exitosamente!', { classname: 'bg-success  text-light', delay: 5000 });
-                this.downloadPDF();
+                this.createPDF();
             },error =>{
               console.log(<any>error);
               this.toastService.show('Ups... Fallo al agregar los productos a la orden de  compra', { classname: 'bg-danger text-light', delay: 15000 });
@@ -140,6 +135,14 @@ export class OrdencompraAgregarComponent implements OnInit {
       console.log(<any>error);
       this.toastService.show('Ups... Fallo al crear la Orden de compra', { classname: 'bg-danger text-light', delay: 15000 });
      });
+  }
+  //
+  public createPDF():void{
+    const doc = new jsPDF;
+    doc.setLineWidth(2);//ancho de linea
+    doc.line(10,15,200,15);//colocacion de liena
+    doc.text('Hello world', 10,10);
+    doc.save('a.pdf')
   }
   //Servicios
   getProvee(){

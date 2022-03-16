@@ -42,7 +42,6 @@
               "core-js/modules/web.dom-collections.iterator.js",
               "raf",
               "ngx-barcode"
-
             ],
             "assets": [
               "src/favicon.ico",
