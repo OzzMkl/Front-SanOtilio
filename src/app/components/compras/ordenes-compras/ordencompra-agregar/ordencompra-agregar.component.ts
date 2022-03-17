@@ -12,8 +12,11 @@ import { Producto_orden } from 'src/app/models/producto_orden';
 //NGBOOTSTRAP
 import { NgbModal, ModalDismissReasons, NgbDateStruct} from '@ng-bootstrap/ng-bootstrap';
 //pdf
+//import jsPDF from 'jspdf';
+//import 'jspdf-autotable';
 import jsPDF from 'jspdf';
-import { DomSanitizer } from '@angular/platform-browser';
+import autoTable from 'jspdf-autotable';
+
 
 @Component({
   selector: 'app-ordencompra-agregar',
@@ -170,7 +173,8 @@ export class OrdencompraAgregarComponent implements OnInit {
     doc.setFont('Helvetica','normal').setFontSize(10).text('OBSERVACIONES: '+this.orden_compra.observaciones, 10,85);
 
 
-    doc.setLineWidth(1).line(10,90,200,90);
+    doc.setLineWidth(1).line(10,92,200,92);
+    autoTable(doc,{html: '#table_productos',startY:95})
     doc.save('a.pdf')
   }
   //Servicios
