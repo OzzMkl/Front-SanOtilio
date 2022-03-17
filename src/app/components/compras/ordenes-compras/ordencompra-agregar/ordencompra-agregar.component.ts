@@ -13,6 +13,7 @@ import { Producto_orden } from 'src/app/models/producto_orden';
 import { NgbModal, ModalDismissReasons, NgbDateStruct} from '@ng-bootstrap/ng-bootstrap';
 //pdf
 import jsPDF from 'jspdf';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-ordencompra-agregar',
@@ -51,6 +52,8 @@ export class OrdencompraAgregarComponent implements OnInit {
   //modelode bootstrap
   //modelode bootstrap
   model!: NgbDateStruct;
+  //variable para el pdf
+  public fecha : Date = new Date();
 
   constructor( private _proveedorService: ProveedorService,
       private modalService: NgbModal,
@@ -139,9 +142,35 @@ export class OrdencompraAgregarComponent implements OnInit {
   //
   public createPDF():void{
     const doc = new jsPDF;
-    doc.setLineWidth(2);//ancho de linea
-    doc.line(10,15,200,15);//colocacion de liena
-    doc.text('Hello world', 10,10);
+
+    var logo = new Image();//CREAMOS VARIABLE
+    logo.src = 'assets/images/logo-solo.png'//ASIGNAMOS LA UBICACION DE LA IMAGEN
+    var nombreE = this.identity['nombre']+' '+this.identity['apellido']+' '+this.identity['amaterno'] 
+    
+    doc.setDrawColor(255, 145, 0);//AGREGAMOS COLOR NARANJA A LAS LINEAS
+
+    //           ancho linea   x1,y1  x2,y2
+    doc.setLineWidth(2.5).line(10,10,200,10);//colocacion de linea
+    doc.setLineWidth(2.5).line(50,15,160,15);
+    //          tipografia       tamaño letra       texto                         x1,y1
+    doc.setFont('Helvetica').setFontSize(16).text('MATERIALES PARA CONSTRUCCION', 55,25);
+    doc.setFont('Helvetica').setFontSize(16).text(" \"SAN OTILIO\" ", 85,30);
+    // variable con logo, tipo x1,y1, ancho, largo
+    doc.addImage(logo,'PNG',100,32,10,10);
+    doc.setFont('Helvetica').setFontSize(10).text('REPORTE DE ORDEN DE COMPRA', 10,50);
+    doc.setLineWidth(2.5).line(10,53,70,53);
+    //           tipografia,negrita        tamaño          texto              x1,y1
+    doc.setFont('Helvetica','bold').setFontSize(10).text('NO. ORDEN: '+this.orden_compra.idOrd, 10,60);
+    doc.setFont('Helvetica','normal').setFontSize(10).text('FECHA IMP: '+this.fecha.toLocaleDateString(), 50,65);
+    doc.setFont('Helvetica','normal').setFontSize(10).text('FECHA ORD: '+this.orden_compra.fecha, 115,65);  
+
+    doc.setLineWidth(1).line(10,70,200,70);
+    doc.setFont('Helvetica','normal').setFontSize(10).text('REALIZO: '+ nombreE.toUpperCase(), 10,75);
+    doc.setFont('Helvetica','normal').setFontSize(10).text('PROVEEDOR: '+'NOMBRE PROVEEDOR AQUI', 10,80);
+    doc.setFont('Helvetica','normal').setFontSize(10).text('OBSERVACIONES: '+this.orden_compra.observaciones, 10,85);
+
+
+    doc.setLineWidth(1).line(10,90,200,90);
     doc.save('a.pdf')
   }
   //Servicios
