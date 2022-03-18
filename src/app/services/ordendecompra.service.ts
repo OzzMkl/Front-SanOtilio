@@ -32,4 +32,8 @@ export class OrdendecompraService {
     let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');
     return this._http.get(this.url+'ordendecompra/show/'+idOrd, {headers:headers} );
   }
+  getAllOrders():Observable<any>{
+    let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');
+    return this._http.get(this.url+'ordendecompra/index', {headers:headers} );
+  }
 }
