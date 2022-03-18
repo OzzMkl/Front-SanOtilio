@@ -52,6 +52,8 @@ export class OrdencompraAgregarComponent implements OnInit {
   public productoVer: any;
   public url:any;
   public identity: any;
+  public ultimaOrden: any;
+  public detailOrd: any;
   //modelode bootstrap
   //modelode bootstrap
   model!: NgbDateStruct;
@@ -76,7 +78,8 @@ export class OrdencompraAgregarComponent implements OnInit {
     this.getProvee();
     this.getAllProducts();
     this.loadUser();
-    this.createPDF();
+    //this.createPDF();
+    //this.getDetailsOrd();
   }
   
   //
@@ -128,7 +131,8 @@ export class OrdencompraAgregarComponent implements OnInit {
             res =>{
                 //console.log(res);
                 this.toastService.show(' ⚠ Orden creada exitosamente!', { classname: 'bg-success  text-light', delay: 5000 });
-                this.createPDF();
+                this.getDetailsOrd();
+                //this.createPDF();
             },error =>{
               console.log(<any>error);
               this.toastService.show('Ups... Fallo al agregar los productos a la orden de  compra', { classname: 'bg-danger text-light', delay: 15000 });
@@ -144,11 +148,12 @@ export class OrdencompraAgregarComponent implements OnInit {
   }
   //
   public createPDF():void{
+    //this.getDetailsOrd();
     const doc = new jsPDF;
 
     var logo = new Image();//CREAMOS VARIABLE
     logo.src = 'assets/images/logo-solo.png'//ASIGNAMOS LA UBICACION DE LA IMAGEN
-    var nombreE = this.identity['nombre']+' '+this.identity['apellido']+' '+this.identity['amaterno'] 
+    var nombreE = this.identity['nombre']+' '+this.identity['apellido']+' '+this.identity['amaterno']//concatenamos el nombre completo 
     
     doc.setDrawColor(255, 145, 0);//AGREGAMOS COLOR NARANJA A LAS LINEAS
 
@@ -163,14 +168,14 @@ export class OrdencompraAgregarComponent implements OnInit {
     doc.setFont('Helvetica').setFontSize(10).text('REPORTE DE ORDEN DE COMPRA', 10,50);
     doc.setLineWidth(2.5).line(10,53,70,53);
     //           tipografia,negrita        tamaño          texto              x1,y1
-    doc.setFont('Helvetica','bold').setFontSize(10).text('NO. ORDEN: '+this.orden_compra.idOrd, 10,60);
-    doc.setFont('Helvetica','normal').setFontSize(10).text('FECHA IMP: '+this.fecha.toLocaleDateString(), 50,65);
-    doc.setFont('Helvetica','normal').setFontSize(10).text('FECHA ORD: '+this.orden_compra.fecha, 115,65);  
+    doc.setFont('Helvetica','bold').setFontSize(10).text('NO. ORDEN: '+this.detailOrd[0]['idOrd'], 10,60);
+    doc.setFont('Helvetica','normal').setFontSize(10).text('FECHA IMPRESION: '+this.fecha.toLocaleDateString(), 50,65);
+    doc.setFont('Helvetica','normal').setFontSize(10).text('FECHA ESTIMADA: '+this.detailOrd[0]['fecha'], 115,65);  
 
     doc.setLineWidth(1).line(10,70,200,70);
     doc.setFont('Helvetica','normal').setFontSize(10).text('REALIZO: '+ nombreE.toUpperCase(), 10,75);
-    doc.setFont('Helvetica','normal').setFontSize(10).text('PROVEEDOR: '+'NOMBRE PROVEEDOR AQUI', 10,80);
-    doc.setFont('Helvetica','normal').setFontSize(10).text('OBSERVACIONES: '+this.orden_compra.observaciones, 10,85);
+    doc.setFont('Helvetica','normal').setFontSize(10).text('PROVEEDOR: '+this.detailOrd[0]['nombreProveedor'], 10,80);
+    doc.setFont('Helvetica','normal').setFontSize(10).text('OBSERVACIONES: '+this.detailOrd[0]['observaciones'], 10,85);
 
 
     doc.setLineWidth(1).line(10,92,200,92);
@@ -234,6 +239,27 @@ export class OrdencompraAgregarComponent implements OnInit {
   }
   loadUser(){
     this.identity = this._empleadoService.getIdentity();
+  }
+  getDetailsOrd(){
+    this._ordencompraService.getLastOrd().subscribe(
+      response =>{
+        if(response.status == 'success'){
+          this.ultimaOrden = response.ordencompra;
+          this._ordencompraService.getDetalsOrde(this.ultimaOrden['idOrd']).subscribe(
+            response => {
+              this.detailOrd = response.ordencompra;
+              console.log(this.detailOrd)
+              this.createPDF();
+            },error =>{
+              console.log(error);
+            });
+        }else{
+          console.log('fallo');
+        }
+        
+      },error =>{
+        console.log(error);
+      });
   }
   // Modal
   open(content:any) {
