@@ -33,4 +33,9 @@ export class DepartamentoService{
     //     let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');
     //     return this._http.get(this.url+'proveedor/proveedoresDes', {headers:headers} );
     // }
+
+    getLongitud():Observable<any>{
+        let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');
+        return this._http.get(this.url+'departamentos/longitud', {headers:headers} );
+    }
 }
