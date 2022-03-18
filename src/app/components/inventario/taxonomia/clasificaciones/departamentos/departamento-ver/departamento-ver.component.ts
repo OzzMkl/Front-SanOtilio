@@ -28,10 +28,12 @@ export class DepartamentoVerComponent implements OnInit {
   fpv = '';
   datox:any;
   datoy:any;
-  longitud : number = 0; 
+  Tcate : string ='';
+  Tsubcate : string = '';
 
   public categoria: any;
   public subCategoria: any;
+  public long: any;
 
   constructor(
     private _departamentoService: DepartamentoService,
@@ -46,20 +48,70 @@ export class DepartamentoVerComponent implements OnInit {
     this.departamentos = [];
     this.categoria = [];
     this.subCategoria = [];
+    this.long = [];
+    this.Tcate = 'Categorías';
+    this.Tsubcate = 'Subcategorías';
 
    }
 
   ngOnInit(): void {
     this.getDept();
+    //this.getLong();
 
   }
+  
 
   getDept(){
     this._departamentoService.getDepartamentos().subscribe(
       response =>{
         if(response.status == 'success'){
           this.departamentos = response.departamentos;
-          console.log(this.departamentos);          
+          console.log(this.departamentos);
+
+          this._departamentoService.getLongitud().subscribe(
+            response =>{
+              if(response.status == 'success'){
+                this.long = response.long;
+                
+                
+
+                  
+          for(let i = 0; i < this.departamentos.length; i++){///
+            let j = 0
+            if(this.departamentos[i]['idDep'] == this.long[j]['idDep']){
+              j++
+              this.departamentos[i].longitud = this.long[i]['longitud']
+            }else{
+              this.departamentos[i].longitud = 0;
+            }
+          }/////
+
+
+              }
+            },
+            error =>{
+              //console.log(error);
+            }
+          );
+
+          
+
+        }
+        
+      },
+      error =>{
+        //console.log(error);
+      }
+    );
+    return this.departamentos;
+  }
+  
+  getLong(){
+    this._departamentoService.getLongitud().subscribe(
+      response =>{
+        if(response.status == 'success'){
+          this.long = response.long;
+          console.log(this.long);          
         }
       },
       error =>{
@@ -69,19 +121,20 @@ export class DepartamentoVerComponent implements OnInit {
   }
 
   //Evento al hacer clic en Departamentos
-  selected(dato:any){
-    
+  selected(dato:any,dato2:any){
     this.datox = dato;
     //console.log(this.datox);
     this.fillCate(this.datox);
+    this.Tcate = 'Categorías de ' + dato2;
     
   }
 
   //Evento al hacer clic en Categorias
-  selectedCat(dato:any){
+  selectedCat(dato:any,dato2:any){
     this.datoy = dato;
     //console.log(this.datoy);
     this.fillSubCate(this.datoy);
+    this.Tsubcate = 'Subcategorías de ' + dato2;
   }
 
   public fillCate(id:any){
@@ -95,7 +148,6 @@ export class DepartamentoVerComponent implements OnInit {
         //console.log(error);
       }
       );
-      return this.longitud;
   }
 
   public fillSubCate(id:any){

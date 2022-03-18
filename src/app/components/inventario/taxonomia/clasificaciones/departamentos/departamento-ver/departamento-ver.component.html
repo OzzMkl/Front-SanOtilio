@@ -14,12 +14,20 @@
             <div style="width: auto;" *ngFor="let pr of departamentos" >
                 <div class="col" >
                     <!-- <span class="badge rounded-pill bg-success" >{{pr.idDep}} {{pr.nombre}}</span> -->
-                    <div class="card" style="width: auto; border-radius: 10px " (click)="selected(pr.idDep);" >
+                    <div class="card" style="width: auto; border-radius: 10px " (click)="selected(pr.idDep,pr.nombre);" >
                         <div class="card-body" style="padding: 0%;">
                             <div class="row align-items-start" style="width: auto; --padding-bottom: calc(var(--bs-gutter-x) * .5); --padding-top: calc(var(--bs-gutter-x) * .5); margin-right: 0;" >
                                 <div class="col" style="width: 50px; text-align: right;" > <b>{{pr.idDep}}</b></div>
                                 <div class="col-md-4 ms-auto" style="width: fit-content; text-align: left;"> <strong>{{pr.nombre}}</strong> <br> 
-                                    <a style="font-size: x-small; color: grey;"> {{longitud}} Categorías</a>
+                                    <!-- <div *ngFor="let l of long; let i = index">
+
+                                        <div *ngIf="pr.idDep == l.idDep;  else elseBlock">
+                                            <a style="font-size: x-small; color: grey;"> {{l.longitud}} Categorías</a>
+                                        </div>
+                                        <ng-template #elseBlock>
+                                            <a style="font-size: x-small; color: grey;"> 0 Categorías</a>
+                                        </ng-template>
+                                    </div> -->
                                 </div>
                             </div>          
                         </div>          
@@ -29,17 +37,17 @@
             </div>
             <hr>
             <div >
-                <h2 style="text-align: center;">Categorías</h2>
+                <h2 style="text-align: center;">{{Tcate}}</h2>
                 <br>
             </div>
             <div style="width: auto;" *ngFor="let pr of categoria" >
                 <div class="col" >
                     <!-- <span class="badge rounded-pill bg-success" >{{pr.idDep}} {{pr.nombre}}</span> -->
-                    <div class="card" style="width: auto; border-radius: 10px " (click)="selectedCat(pr.idCat)" >
+                    <div class="card" style="width: auto; border-radius: 10px " (click)="selectedCat(pr.idCat , pr.nombre)" >
                         <div class="card-body" style="padding: 0%;">
                             <div class="row align-items-start" style="width: auto; --padding-bottom: calc(var(--bs-gutter-x) * .5); --padding-top: calc(var(--bs-gutter-x) * .5); margin-right: 0;" >
                                 <div class="col" style="width: 50px; text-align: right;" > <b>{{pr.idCat}}</b></div>
-                                <div class="col-md-4 ms-auto" style="width: fit-content; text-align: left;"> <strong>{{pr.nombre}}</strong> <br> <a style="font-size: x-small; color: grey;"> 0 Subategorías</a></div>
+                                <div class="col-md-4 ms-auto" style="width: fit-content; text-align: left;"> <strong>{{pr.nombre}}</strong> <br> <a style="font-size: x-small; color: grey;"> </a></div>
                             </div>          
                         </div>          
                     </div>
@@ -48,13 +56,13 @@
             </div>
             <hr>
             <div >
-                <h2 style="text-align: center;">Subcategorías</h2>
+                <h2 style="text-align: center;">{{Tsubcate}}</h2>
                 <br>
             </div>
             <div style="width: auto;" *ngFor="let pr of subCategoria" >
                 <div class="col" >
                     <!-- <span class="badge rounded-pill bg-success" >{{pr.idDep}} {{pr.nombre}}</span> -->
-                    <div class="card" style="width: auto; border-radius: 10px " (click)="selectedCat(pr.idSubCat)" >
+                    <div class="card" style="width: auto; border-radius: 10px " >
                         <div class="card-body" style="padding: 0%;">
                             <div class="row align-items-start" style="width: auto; --padding-bottom: calc(var(--bs-gutter-x) * .5); --padding-top: calc(var(--bs-gutter-x) * .5); margin-right: 0;" >
                                 <div class="col" style="width: 50px; text-align: right;" > <b>{{pr.idSubCat}}</b></div>
@@ -68,3 +76,4 @@
             <hr>
         </div>    
 </div>
+
