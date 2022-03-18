@@ -22,6 +22,7 @@ export class MedidaVerComponent implements OnInit {
   pageActual: number = 1;
   fpv = '';
 
+
   constructor(
 
     private _proveedorService: MedidaService,
@@ -46,6 +47,7 @@ export class MedidaVerComponent implements OnInit {
           //navegacion de paginacion
           
           console.log(response.medidas);
+
         }
       },
       error =>{

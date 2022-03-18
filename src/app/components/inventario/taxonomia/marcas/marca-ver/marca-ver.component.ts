@@ -48,7 +48,7 @@ export class MarcaVerComponent implements OnInit {
           this.marca = response.marca;
           //navegacion de paginacion
           
-          console.log(response.marca);
+          //console.log(response.marca);
         }
       },
       error =>{

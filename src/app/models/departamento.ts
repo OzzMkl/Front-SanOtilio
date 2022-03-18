@@ -3,6 +3,7 @@ export class Departamento{//Modelo del banco aqui asignamos todas las variables 
         public idDep: number,
         public nombre: string,
         public imagen: string,
+        public longitud: number,
         public updated_at: any
     ){}
 }

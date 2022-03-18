@@ -3,6 +3,7 @@ export class Categoria{//Modelo de las categorias aqui asignamos todas las varia
         public idCat: number,
         public idDep: number,
         public nombre: string,
+        public longitud: number,
         public updated_at: any
     ){}
 }
