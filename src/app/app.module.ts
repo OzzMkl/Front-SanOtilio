@@ -54,6 +54,7 @@ import { FilterProductsModalcePipe } from './pipes/filter-products-modalce.pipe'
 import { FilterProductsModalcbarPipe } from './pipes/filter-products-modalcbar.pipe';
 import { GeneralComponent } from './components/general/general.component';
 import { FilterOrdersPipe } from './pipes/filter-orders.pipe';
+import { FilterOrdersIdordPipe } from './pipes/filter-orders-idord.pipe';
 
 
 @NgModule({
@@ -97,6 +98,7 @@ import { FilterOrdersPipe } from './pipes/filter-orders.pipe';
     FilterProductsModalcbarPipe,
     GeneralComponent,
     FilterOrdersPipe,
+    FilterOrdersIdordPipe,
   ],
   imports: [
     BrowserModule,

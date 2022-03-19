@@ -25,8 +25,11 @@ export class OrdencompraBuscarComponent implements OnInit {
   public next_page: any;
   public prev_page: any;
   pageActual: number = 1;
+  //Pipes
+  tipoBusqueda: number = 1;
+  buscarOrdProveedor='';
+  buscarOrdId='';
   //
-  foc='';
   datox='';
 
 
@@ -45,6 +48,10 @@ export class OrdencompraBuscarComponent implements OnInit {
       },error =>{
         console.log(error);
       });
+  }
+  seleccionTipoBusqueda(e:any){//Limpiar input del tipo de busqueda
+    this.buscarOrdId='';
+    this.buscarOrdProveedor='';
   }
   selected(dato:any){
     this.datox = dato;

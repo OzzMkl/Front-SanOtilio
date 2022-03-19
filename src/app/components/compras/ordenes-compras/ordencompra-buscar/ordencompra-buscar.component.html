@@ -3,23 +3,39 @@
 </div>
 <div>
     <div class="container-fluid" *ngIf="ordenesdecompra">
-        <!--CUADRO DE BUSQUEDA-->
-        <div class="form-group">
-            <input type="text" class="form-control" name="foc" placeholder="Buscar ..." [(ngModel)]="foc">
+        <div class="input-group mb-2">
+            <div class="col-2">
+                <select class="form-select" name="tipoBusqueda" [(ngModel)]="tipoBusqueda" (ngModelChange)="seleccionTipoBusqueda($event)">
+                    <option value="1" selected>Proveedor</option>
+                    <option value="2"># Orden</option>
+                </select>
+            </div>
+            <div class="col" *ngIf="tipoBusqueda==1;">
+                <input type="text" class="form-control" name="buscarOrdProveedor" placeholder="Buscar ..." [(ngModel)]="buscarOrdProveedor">
+            </div>
+            <div class="col" *ngIf="tipoBusqueda==2;">
+                <input type="text" class="form-control" name="buscarOrdId" placeholder="Buscar ...2" [(ngModel)]="buscarOrdId">
+            </div>
         </div>
-        <br>
+        <!--CUADRO DE BUSQUEDA-->
+        <!-- <div class="form-group">
+            <input type="text" class="form-control" name="buscarOrdProveedor" placeholder="Buscar ..." [(ngModel)]="buscarOrdProveedor">
+        </div>
+        <br> -->
         <!--  -->
         <table class="table table-dark table-hover" >
             <thead>
                 <tr>
-                    <th scope="col">id proveedor</th>
-                    <th scope="col">observaciones</th>
-                    <th scope="col">fecha estimada</th>
+                    <th scope="col"># Orden</th>
+                    <th scope="col">PROVEEDOR</th>
+                    <th scope="col">OBSERVACIONES</th>
+                    <th scope="col">FECHA ESTIMADA</th>
             </tr>
             </thead>
-            <tbody *ngFor="let oc of ordenesdecompra | filterOrders:foc | paginate:{itemsPerPage: 10, currentPage: pageActual}">
-                <tr (click)="selected(oc.idProveedor)">
-                    <th scope="row">{{oc.idProveedor}}</th>
+            <tbody *ngFor="let oc of ordenesdecompra | filterOrders:buscarOrdProveedor | filterOrdersIdord:buscarOrdId | paginate:{itemsPerPage: 10, currentPage: pageActual}">
+                <tr (click)="selected(oc.idOrd)">
+                    <th scope="row">{{oc.idOrd}}</th>
+                    <th scope="row">{{oc.nombreProveedor}}</th>
                     <th scope="row">{{oc.observaciones}}</th>
                     <th scope="row">{{oc.fecha}}</th>
                 </tr>
