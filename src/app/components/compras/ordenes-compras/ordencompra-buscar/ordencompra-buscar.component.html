@@ -5,9 +5,26 @@
     <div class="container-fluid" *ngIf="ordenesdecompra">
         <!--CUADRO DE BUSQUEDA-->
         <div class="form-group">
-            <!-- <input type="text" class="form-control" name="fpd" placeholder="Buscar ..." [(ngModel)]="fpd"> -->
+            <input type="text" class="form-control" name="foc" placeholder="Buscar ..." [(ngModel)]="foc">
         </div>
         <br>
         <!--  -->
+        <table class="table table-dark table-hover" >
+            <thead>
+                <tr>
+                    <th scope="col">id proveedor</th>
+                    <th scope="col">observaciones</th>
+                    <th scope="col">fecha estimada</th>
+            </tr>
+            </thead>
+            <tbody *ngFor="let oc of ordenesdecompra | filterOrders:foc | paginate:{itemsPerPage: 10, currentPage: pageActual}">
+                <tr (click)="selected(oc.idProveedor)">
+                    <th scope="row">{{oc.idProveedor}}</th>
+                    <th scope="row">{{oc.observaciones}}</th>
+                    <th scope="row">{{oc.fecha}}</th>
+                </tr>
+            </tbody>
+        </table>
+       <pagination-controls (pageChange)="pageActual = $event"></pagination-controls>
     </div>
 </div>

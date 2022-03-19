@@ -19,7 +19,15 @@ export class OrdencompraBuscarComponent implements OnInit {
   //Variables de servicios
   public ordenesdecompra: any = [];
   public url: string = global.url;
-  //Paginator
+  /**PAGINATOR */
+  public totalPages: any;
+  public page: any;
+  public next_page: any;
+  public prev_page: any;
+  pageActual: number = 1;
+  //
+  foc='';
+  datox='';
 
 
   ngOnInit(): void {
@@ -37,6 +45,10 @@ export class OrdencompraBuscarComponent implements OnInit {
       },error =>{
         console.log(error);
       });
+  }
+  selected(dato:any){
+    this.datox = dato;
+    this._router.navigate(['./producto-modulo/producto-ver/'+this.datox]);
   }
 
 }

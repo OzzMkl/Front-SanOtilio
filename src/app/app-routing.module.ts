@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 //IMPORTAR COMPONENTES
+import { GeneralComponent } from './components/general/general.component';
 import { LoginComponent } from './components/login/login.component';
 import { HomeComponent } from './components/home/home.component';
 import { ErrorComponent } from './components/error/error.component';
@@ -33,7 +34,7 @@ import { ProductoEditarComponent } from './components/inventario/productos/produ
 import { ClasificacionModuloComponent } from './components/inventario/taxonomia/clasificacion-modulo/clasificacion-modulo.component';
 
 const routes: Routes = [
-  {path: '', component: HomeComponent},
+  {path: '', component: GeneralComponent},
   {path: 'inicio', component: HomeComponent},
   {path: 'login', component: LoginComponent},
   {path: 'logout/:sure', component: LoginComponent},
