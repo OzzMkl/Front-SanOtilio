@@ -47,7 +47,7 @@ const routes: Routes = [
   {path: 'compra-modulo',component: CompraModuloComponent,
     children:
     [
-      {path: 'compra-agregar', component: CompraAgregarComponent},
+      {path: 'compra-agregar/:idOrd', component: CompraAgregarComponent},
       {path: 'compra-buscar', component: CompraBuscarComponent},
       {path: 'compra-ver', component: CompraVerComponent}
     ]},

@@ -52,13 +52,29 @@
     </div>
     <div class="modal-body">
       <form>
-          <div *ngFor="let doc of detallesOrdencompra">
-            <h1>{{doc.nombreProveedor}}</h1>
+          <div *ngFor="let doc of detallesOrdencompra" class="container">
+            <div class="col-auto">
+                <h3>{{doc.nombreProveedor}}</h3>
+            </div>
+            <div class="row justify-content-end">
+                
+                <div class="col-auto">
+                    <button type="button" class="btn btn-success" [routerLink]="['../../compra-modulo/compra-agregar',doc.idOrd]">Pasar a compra</button> 
+                </div>
+                <div class="col-auto">
+                    <button type="button" class="btn btn-success">PDF</button>
+                </div>
+                <div class="col-auto">
+                    <button type="button" class="btn btn-success">Editar</button>
+                </div>
+                <div class="col-auto">
+                    <button type="button" class="btn btn-success">Cancelar orden</button>
+                </div>
+            </div>
           </div>
       </form>
     </div>
     <!-- <div class="modal-footer">
       <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Guardar</button>
     </div> -->
-    //
 </ng-template>
