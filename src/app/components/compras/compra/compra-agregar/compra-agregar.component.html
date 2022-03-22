@@ -1,7 +1,9 @@
 <div class="container">
     <form class="form-group">
         <div class="row align-items-start">
-            
+
+            <button class="btn btn-primary" (click)="open(content)">Orden de compra</button>
+
             <h4 class="text-center">DATOS DEL PROVEEDOR</h4>
             <div class="col-2">
                 <label for="idOrd" class="form-label"># Orden</label>
@@ -139,6 +141,41 @@
     </form>
 </div>
 
-
-
+<ng-template #content let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Buscar ordenes de compra</h4>
+      <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+      <form>
+        <div class="input-group mb-2">
+        </div>
+          <br>
+          <table class="table table-dark table-hover">
+            <thead>
+                <tr>
+                    <th>#Orden</th>
+                    <th>#Requisición</th>
+                    <th>Proveedor</th>
+                    <th>Fecha</th>
+                    <th>Observaciones</th>
+                    <th>Empleado</th>
+                    <th>Status</th>
+                    
+                </tr>
+            </thead>
+            <!-- <tbody *ngFor="let pr of productos | filterProductsModalcbar: buscarProductoCbar| filterProductModal: buscarProducto | filterProductsModalce: buscarProductoCE| paginate:{itemsPerPage: 5, currentPage: pageActual}">
+                <tr (click)="consultarProductoModal(pr.claveEx)" (click)="modal.dismiss('Cross click')">
+                    <th scope="row">{{pr.claveEx}}</th>
+                    <th scope="row">{{pr.cbarras}}</th>
+                    <th scope="row">{{pr.descripcion}}</th>
+                    <th scope="row">{{pr.nombreMedida}}</th>
+                    <th scope="row">{{pr.nombreMarca}}</th>
+                </tr>
+            </tbody> -->
+          </table>
+          <!-- <pagination-controls (pageChange)="pageActual = $event"></pagination-controls> -->
+      </form>
+    </div>
+</ng-template>
 

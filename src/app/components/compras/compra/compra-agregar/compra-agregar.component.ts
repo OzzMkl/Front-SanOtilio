@@ -8,6 +8,8 @@ import { global } from 'src/app/services/global';
 /**MODELOS */
 import { Compra } from 'src/app/models/compra'
 import { Producto_compra } from 'src/app/models/producto_compra';
+//NGBOOTSTRAP
+import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-compra-agregar',
@@ -30,11 +32,14 @@ export class CompraAgregarComponent implements OnInit {
   public dato:any;
   public url:any;
 
+  closeResult = '';
+
   constructor( 
     private _proveedorService: ProveedorService,
     private _medidaService: MedidaService,
     private _productoService: ProductoService,
-    private _impuestoService: ImpuestoService) {
+    private _impuestoService: ImpuestoService,
+    private modalService: NgbModal) {
       
       this.compra = new Compra(0,null,null,0,0,0,0,0,'',null,'',null);
       this.producto_compra = new Producto_compra(0,0,0,0,0,0,null,null,null,null);
@@ -46,7 +51,6 @@ export class CompraAgregarComponent implements OnInit {
     this.getProvee();
     this.getMedida();
     this.getImpuesto();
-    
   }
   onChange(id:any){//evento que muestra los datos del proveedor al seleccionarlo
     this.getProveeVer(id);
@@ -63,6 +67,7 @@ export class CompraAgregarComponent implements OnInit {
     this.Lista_compras.push({...this.producto_compra});
     console.log(this.Lista_compras);
   }
+
 /**SERVICIOS */
   getProvee(){
     this._proveedorService.getProveedores().subscribe(
@@ -77,6 +82,7 @@ export class CompraAgregarComponent implements OnInit {
       }
     );
   }
+
   getMedida(){
     this._medidaService.getMedidas().subscribe(
       response =>{
@@ -89,6 +95,7 @@ export class CompraAgregarComponent implements OnInit {
       }
     );
   }
+
   getProveeVer(id:any){
     this._proveedorService.getProveedoresVer(id).subscribe(
       response => {
@@ -101,6 +108,7 @@ export class CompraAgregarComponent implements OnInit {
       }
     );
   }
+
   getProd(id:any){
     this._productoService.getProdclaveex(id).subscribe(
       response =>{
@@ -111,6 +119,7 @@ export class CompraAgregarComponent implements OnInit {
       }
     );
   }
+
   getImpuesto(){
     this._impuestoService.getImpuestos().subscribe(
       response =>{
@@ -124,4 +133,25 @@ export class CompraAgregarComponent implements OnInit {
       }
     );
   }
+
+  
+
+  //Modal para buscar orden de compra
+  open(content:any) {
+    this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
+      this.closeResult = `Closed with: ${result}`;
+    }, (reason) => {
+      this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+    });
+  }
+  private getDismissReason(reason: any): string {
+    if (reason === ModalDismissReasons.ESC) {
+      return 'by pressing ESC';
+    } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
+      return 'by clicking on a backdrop';
+    } else {
+      return `with: ${reason}`;
+    }
+  }
+
 }
