@@ -9,7 +9,7 @@ export class FilterOrdersIdordPipe implements PipeTransform {
     if(arg == '' || arg.lenght < 3) return value;
     const result =[];
     for(const oc of value){
-      if(oc.idOrd.parseInt().toLowerCase().indexOf(arg.toLowerCase()) > -1){
+      if(oc.idOrd.toLowerCase().indexOf(arg.toLowerCase()) > -1){
         result.push(oc);
       };
     };

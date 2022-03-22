@@ -33,7 +33,7 @@
             </tr>
             </thead>
             <tbody *ngFor="let oc of ordenesdecompra | filterOrders:buscarOrdProveedor | filterOrdersIdord:buscarOrdId | paginate:{itemsPerPage: 10, currentPage: pageActual}">
-                <tr (click)="selected(oc.idOrd)">
+                <tr (click)="open(content)" (click)="selected(oc.idOrd)">
                     <th scope="row">{{oc.idOrd}}</th>
                     <th scope="row">{{oc.nombreProveedor}}</th>
                     <th scope="row">{{oc.observaciones}}</th>
@@ -44,3 +44,20 @@
        <pagination-controls (pageChange)="pageActual = $event"></pagination-controls>
     </div>
 </div>
+<!-- Modal -->
+<ng-template #content let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Detalles</h4>
+      <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+      <form>
+          <div *ngFor="let doc of detallesOrdencompra">
+            <h1>{{doc.nombreProveedor}}</h1>
+          </div>
+      </form>
+    </div>
+    <!-- <div class="modal-footer">
+      <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Guardar</button>
+    </div> -->
+</ng-template>
