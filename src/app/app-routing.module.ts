@@ -13,6 +13,7 @@ import { OrdencompraAgregarComponent } from './components/compras/ordenes-compra
 import { OrdencompraBuscarComponent } from './components/compras/ordenes-compras/ordencompra-buscar/ordencompra-buscar.component';
 
 import { CompraModuloComponent } from './components/compras/compra/compra-modulo/compra-modulo.component';
+import { CompraAgregarIdComponent } from './components/compras/compra/compra-agregar-id/compra-agregar-id.component';
 import { CompraAgregarComponent } from './components/compras/compra/compra-agregar/compra-agregar.component';
 import { CompraBuscarComponent } from './components/compras/compra/compra-buscar/compra-buscar.component';
 import { CompraVerComponent } from './components/compras/compra/compra-ver/compra-ver.component';
@@ -47,8 +48,8 @@ const routes: Routes = [
   {path: 'compra-modulo',component: CompraModuloComponent,
     children:
     [
-      {path: 'compra-agregar-id/:idOrd', component: CompraAgregarComponent},
-      {path: 'compra-agregar', component: CompraBuscarComponent},
+      {path: 'compra-agregar-id/:idOrd', component: CompraAgregarIdComponent},
+      {path: 'compra-agregar', component: CompraAgregarComponent},
       {path: 'compra-buscar', component: CompraBuscarComponent},
       {path: 'compra-ver', component: CompraVerComponent}
     ]},
