@@ -55,6 +55,7 @@ import { FilterProductsModalcbarPipe } from './pipes/filter-products-modalcbar.p
 import { GeneralComponent } from './components/general/general.component';
 import { FilterOrdersPipe } from './pipes/filter-orders.pipe';
 import { FilterOrdersIdordPipe } from './pipes/filter-orders-idord.pipe';
+import { CompraAgregarIdComponent } from './components/compras/compra/compra-agregar-id/compra-agregar-id.component';
 
 
 @NgModule({
@@ -99,6 +100,7 @@ import { FilterOrdersIdordPipe } from './pipes/filter-orders-idord.pipe';
     GeneralComponent,
     FilterOrdersPipe,
     FilterOrdersIdordPipe,
+    CompraAgregarIdComponent,
   ],
   imports: [
     BrowserModule,
