@@ -47,7 +47,7 @@ export class OrdencompraBuscarComponent implements OnInit {
       response =>{
         if(response.status == 'success'){
           this.ordenesdecompra = response.ordencompra;
-          //console.log(this.ordenesdecompra);
+          console.log(this.ordenesdecompra);
         }else{
           console.log('Algo salio mal');
         }
@@ -67,9 +67,10 @@ export class OrdencompraBuscarComponent implements OnInit {
       response =>{
         if(response.status == 'success'){
           this.detallesOrdencompra = response.ordencompra;
-          this.productosDOC = response.productosOrden;
+          this.productosDOC = response.productos;
 
-          console.log(this.detallesOrdencompra);
+          //console.log(this.detallesOrdencompra);
+          //console.log(this.productosDOC);
         }else{ console.log('Algo salio mal');}
         
       },error => {
