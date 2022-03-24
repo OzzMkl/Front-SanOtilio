@@ -25,11 +25,12 @@ export class OrdencompraBuscarComponent implements OnInit {
   public productosDOC:any;
   public url: string = global.url;
   /**PAGINATOR */
-  public totalPages: any;
-  public page: any;
-  public next_page: any;
-  public prev_page: any;
+  // public totalPages: any;
+  // public page: any;
+  // public next_page: any;
+  // public prev_page: any;
   pageActual: number = 1;
+  pagina:number =1;
   //Pipes
   tipoBusqueda: number = 1;
   buscarOrdProveedor='';

@@ -32,7 +32,7 @@
                     <th scope="col">FECHA ESTIMADA</th>
             </tr>
             </thead>
-            <tbody *ngFor="let oc of ordenesdecompra | filterOrders:buscarOrdProveedor | filterOrdersIdord:buscarOrdId | paginate:{itemsPerPage: 10, currentPage: pageActual}">
+            <tbody *ngFor="let oc of ordenesdecompra | filterOrders:buscarOrdProveedor | filterOrdersIdord:buscarOrdId | paginate:{id:'paginationOrders',itemsPerPage: 10, currentPage: pageActual}">
                 <tr (click)="open(content)" (click)="selected(oc.idOrd)">
                     <th scope="row">{{oc.idOrd}}</th>
                     <th scope="row">{{oc.nombreProveedor}}</th>
@@ -41,7 +41,7 @@
                 </tr>
             </tbody>
         </table>
-       <pagination-controls (pageChange)="pageActual = $event"></pagination-controls>
+       <pagination-controls id="paginationOrders" (pageChange)="pageActual = $event"></pagination-controls>
     </div>
 </div>
 <!-- Modal -->
@@ -104,7 +104,7 @@
                                 <th scope="col">CANTIDAD</th>
                             </tr>
                         </thead>
-                        <tbody *ngFor="let p_d of productosDOC | paginate:{itemsPerPage: 5, currentPage: pageActual}">
+                        <tbody *ngFor="let p_d of productosDOC | paginate:{ id:'paginationDOC', itemsPerPage: 5, currentPage: pagina}">
                             <tr>
                              <th scope="row">{{p_d.claveexterna}}</th>
                              <th scope="row">{{p_d.descripcion}}</th>
@@ -113,7 +113,7 @@
                             </tr>
                         </tbody> 
                     </table>
-                    <pagination-controls (pageChange)="pageActual = $event"></pagination-controls>
+                    <pagination-controls id="paginationDOC" (pageChange)="pagina = $event"></pagination-controls>
                 </div>
                 </div>
             </form>
