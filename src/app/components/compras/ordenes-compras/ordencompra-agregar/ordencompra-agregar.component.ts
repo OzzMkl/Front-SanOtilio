@@ -25,7 +25,7 @@ import autoTable from 'jspdf-autotable';
   providers:[ProveedorService,ProductoService, OrdendecompraService, EmpleadoService]
 })
 export class OrdencompraAgregarComponent implements OnInit {
-
+//cerrar modal
   closeResult = '';
 
   public proveedoresLista:any;
@@ -260,8 +260,6 @@ export class OrdencompraAgregarComponent implements OnInit {
             response => {
               this.detailOrd = response.ordencompra;
               this.productosdetailOrd = response.productos;
-              console.log(this.detailOrd)
-              console.log(this.productosdetailOrd)
               this.createPDF();
             },error =>{
               console.log(error);

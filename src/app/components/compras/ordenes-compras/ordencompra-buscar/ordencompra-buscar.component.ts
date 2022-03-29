@@ -15,10 +15,12 @@ import { NgbModal, ModalDismissReasons, NgbDateStruct} from '@ng-bootstrap/ng-bo
 })
 export class OrdencompraBuscarComponent implements OnInit {
 
-  constructor( private _ordendecompraService: OrdendecompraService, private _router: Router,
+  constructor( private _ordendecompraService: OrdendecompraService,
+               private _router: Router,
                private modalService: NgbModal) { }
 
-  public page_title: string = 'Ordenes de compra por recibir';
+
+  public fechaActual : Date = new Date();
   //Variables de servicios
   public ordenesdecompra: any = [];
   public detallesOrdencompra:any;
@@ -42,13 +44,14 @@ export class OrdencompraBuscarComponent implements OnInit {
 
   ngOnInit(): void {
     this.getAllOrdenes();
+    console.log(this.fechaActual.toLocaleDateString());
   }
-  getAllOrdenes(){
+  getAllOrdenes(){//obtener todas las ordenes de compras
     this._ordendecompraService.getAllOrders().subscribe(
       response =>{
         if(response.status == 'success'){
           this.ordenesdecompra = response.ordencompra;
-          console.log(this.ordenesdecompra);
+          //console.log(this.ordenesdecompra);
         }else{
           console.log('Algo salio mal');
         }
@@ -60,10 +63,10 @@ export class OrdencompraBuscarComponent implements OnInit {
     this.buscarOrdId='';
     this.buscarOrdProveedor='';
   }
-  selected(dato:any){
+  selected(dato:any){//mandamos el dato seleccionado de la tabla
     this.getDetailsOrder(dato);
   }
-  getDetailsOrder(id:any){
+  getDetailsOrder(id:any){//recibimos el id y traemos informacion de esa orden
     this._ordendecompraService.getDetailsOrdes(id).subscribe(
       response =>{
         if(response.status == 'success'){
@@ -79,14 +82,14 @@ export class OrdencompraBuscarComponent implements OnInit {
       });
   }
   // Modal
-  open(content:any) {
+  open(content:any) {//abre modal
     this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title', size: 'xl'}).result.then((result) => {
       this.closeResult = `Closed with: ${result}`;
     }, (reason) => {
       this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
     });
   }
-  private getDismissReason(reason: any): string {
+  private getDismissReason(reason: any): string {//cierra modal con teclado ESC o al picar fuera del modal
     if (reason === ModalDismissReasons.ESC) {
       return 'by pressing ESC';
     } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {

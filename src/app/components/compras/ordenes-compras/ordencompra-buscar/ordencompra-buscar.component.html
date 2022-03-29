@@ -1,5 +1,5 @@
 <div class="container">
-    <h1>{{page_title}}</h1>
+    <h1>Ordenes de compra por recibir</h1>
 </div>
 <div>
     <div class="container-fluid" *ngIf="ordenesdecompra">
@@ -37,7 +37,7 @@
                     <th scope="row">{{oc.idOrd}}</th>
                     <th scope="row">{{oc.nombreProveedor}}</th>
                     <th scope="row">{{oc.observaciones}}</th>
-                    <th scope="row">{{oc.fecha | date}}</th>
+                    <th  scope="row">{{oc.fecha}}</th>
                 </tr>
             </tbody>
         </table>
