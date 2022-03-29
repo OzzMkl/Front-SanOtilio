@@ -9,11 +9,9 @@ import { EmpleadoService } from 'src/app/services/empleado.service';
 //Modelos
 import { Ordencompra } from 'src/app/models/orden_compra';
 import { Producto_orden } from 'src/app/models/producto_orden';
-//NGBOOTSTRAP
+//NGBOOTSTRAP-modal
 import { NgbModal, ModalDismissReasons, NgbDateStruct} from '@ng-bootstrap/ng-bootstrap';
 //pdf
-//import jsPDF from 'jspdf';
-//import 'jspdf-autotable';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 
