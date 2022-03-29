@@ -64,7 +64,7 @@
                           <button type="button" class="btn btn-success">PDF</button>
                       </div>
                       <div class="col-auto">
-                          <button type="button" class="btn btn-success">Editar</button>
+                          <button type="button" class="btn btn-success" (click)="modal.dismiss('Cross click')" [routerLink]="['../ordencompra-editar',doc.idOrd]">Editar</button>
                       </div>
                       <div class="col-auto">
                           <button type="button" class="btn btn-success">Cancelar orden</button>

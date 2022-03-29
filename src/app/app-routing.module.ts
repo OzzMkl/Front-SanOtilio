@@ -11,6 +11,7 @@ import { EmpleadoEditarComponent } from './components/empleado-editar/empleado-e
 import { OrdencompraModuloComponent } from './components/compras/ordenes-compras/ordencompra-modulo/ordencompra-modulo.component';
 import { OrdencompraAgregarComponent } from './components/compras/ordenes-compras/ordencompra-agregar/ordencompra-agregar.component';
 import { OrdencompraBuscarComponent } from './components/compras/ordenes-compras/ordencompra-buscar/ordencompra-buscar.component';
+import { OrdencompraEditarComponent } from './components/compras/ordenes-compras/ordencompra-editar/ordencompra-editar.component';
 
 import { CompraModuloComponent } from './components/compras/compra/compra-modulo/compra-modulo.component';
 import { CompraAgregarIdComponent } from './components/compras/compra/compra-agregar-id/compra-agregar-id.component';
@@ -43,7 +44,8 @@ const routes: Routes = [
   {path: 'ordencompra-modulo', component: OrdencompraModuloComponent,
     children:[
       {path: 'ordencompra-agregar',component: OrdencompraAgregarComponent},
-      {path: 'ordencompra-buscar',component: OrdencompraBuscarComponent}
+      {path: 'ordencompra-buscar',component: OrdencompraBuscarComponent},
+      {path: 'ordencompra-editar/:idOrd',component: OrdencompraEditarComponent}
     ]},
   {path: 'compra-modulo',component: CompraModuloComponent,
     children:
