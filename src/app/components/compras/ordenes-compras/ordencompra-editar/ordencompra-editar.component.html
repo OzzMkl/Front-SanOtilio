@@ -1,1 +1,93 @@
-<p>ordencompra-editar works!</p>
+<div class="container" >
+    <form class="form-group">
+        <div class="row align-items-start">
+            <h4 class="text-center">DATOS DEL PROVEEDOR</h4>
+            <div class="col-2">
+                <label class="form-label" for="idRequisicion"># Requisicion</label>
+                <input class="form-control" type="text" name="idRequisicion" id="idRequisicion" readonly>
+            </div>
+            <div class="col-5">
+                <label for="idProveedor" class="form-label">Selecciona el proveedor</label>
+                <select name="idProveedor" id="idProveedor" class="form-select" #idProveedor="ngModel" [(ngModel)]="orden_compra.idProveedor" (ngModelChange)="seleccionaProveedor($event)">
+                    <option  *ngFor="let proveedor of proveedoresLista" value={{proveedor.idProveedor}}>{{proveedor.nombre}}</option>
+                </select>
+            </div>
+            <div class="col-4">
+                <label class="form-label" for="">Selecciona el dia de entrega aproximado</label>
+                <div class="input-group">
+                  <input class="form-control" placeholder="aaaa-mm-dd"
+                         name="dp" [(ngModel)]="model" ngbDatepicker #d="ngbDatepicker">
+                  <button class="btn btn-outline-secondary" (click)="d.toggle()" type="button"><i class="bi bi-calendar-date-fill"> </i> </button>
+                </div>
+              </div>
+              <div *ngFor="let p of detallesProveedor" class="row align-items-start">
+                <div class="col-2">
+                    <label for="rfc" class="form-label">RFC</label>
+                    <input type="text" name="rfc" class="form-control" value="{{p.rfc}}" readonly>
+                </div>
+                <div class="col-7">
+                    <label for="direccion" class="form-label">Direccion</label>
+                    <input type="text" name="direccion" class="form-control" value="{{p.estado}} {{p.ciudad}} {{p.colonia}} {{p.calle}} {{p.numero}}" readonly>
+                </div>                    
+                <div class="col-2">
+                    <label for="telefono" class="form-label">Telefono</label>
+                    <input type="text" name="telefono" class="form-control" value="{{p.telefono}}" readonly>
+                </div>    
+            </div>
+        </div>
+        <hr>
+        <div>
+            <h4 class="text-center">PRODUCTO</h4>
+            <div class="row align-items-start">
+                <div class="col-4">
+                    <label for=""></label>
+                    <div class="input-group">
+                        <span class="input-group-addon" id="sizing-addon2"><i class="bi-search" style="font-size: 1.5rem; color: black; left: 0;"></i> </span>
+                        <input class="form-control" type="text" ngbTooltip="Solo busca por clave externa" name="claveEx" #claveEx="ngModel" [(ngModel)]="productosOrden.claveEx">
+                    </div>
+                </div>
+                <div class="col-4">
+                    <label class="form-label" for="cantidadProducto">Cantidad</label>
+                    <input class="form-control" type="number" name="cantidadProducto" id="cantidadProducto"  #cantidadProducto="ngModel" [(ngModel)]="productosOrden.cantidad">
+                </div>
+                <div class="col-2">
+                    <label class="form-label" for="cantidadProducto">.</label>
+                    <button class="btn btn-success form-control" type="button" [disabled]="isSearch"><i class="bi bi-check-circle-fill"> Agregar</i>     </button>
+                  </div>
+            </div>
+        </div>
+        <hr>
+        <div class="row align-items-start">
+            <h4 class="text-center">LISTA DE PRODUCTOS</h4>
+            <table class="table table-dark table-hover" id="table_productos">
+                <thead>
+                    <tr>
+                        <th scope="col">CLAVE EXTERNA</th>
+                        <th scope="col">DESCRIPCION</th>
+                        <th scope="col">MEDIDA</th>
+                        <th scope="col">CANTIDAD</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th scope="row"></th>
+                        <th scope="row"></th>
+                        <th scope="row"></th>
+                        <th scope="row"></th>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <hr>
+        <div class="row row-cols-lg-auto g-3 align-items-center">
+            <div class="col-12">
+                <label for="observaciones">Observaciones</label>
+                <textarea class="form-control" name="observaciones" id="observaciones" cols="30" rows="2" #observaciones="ngModel" [(ngModel)]="orden_compra.observaciones"></textarea>
+            </div>
+        </div>
+        <br>
+        <div class="col-12">
+            <button class="btn btn-primary">Guardar</button>
+        </div>
+    </form>
+</div>
