@@ -9,11 +9,9 @@ import { EmpleadoService } from 'src/app/services/empleado.service';
 //Modelos
 import { Ordencompra } from 'src/app/models/orden_compra';
 import { Producto_orden } from 'src/app/models/producto_orden';
-//NGBOOTSTRAP
+//NGBOOTSTRAP-modal
 import { NgbModal, ModalDismissReasons, NgbDateStruct} from '@ng-bootstrap/ng-bootstrap';
 //pdf
-//import jsPDF from 'jspdf';
-//import 'jspdf-autotable';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 
@@ -25,7 +23,7 @@ import autoTable from 'jspdf-autotable';
   providers:[ProveedorService,ProductoService, OrdendecompraService, EmpleadoService]
 })
 export class OrdencompraAgregarComponent implements OnInit {
-
+//cerrar modal
   closeResult = '';
 
   public proveedoresLista:any;
@@ -42,6 +40,7 @@ export class OrdencompraAgregarComponent implements OnInit {
   public next_page: any;
   public prev_page: any;
   pageActual: number = 1;
+  pageActual2: number = 1;
 //Modelos de pipes
   seleccionado:number = 1;//para cambiar entre pipes
   buscarProducto = '';
@@ -54,6 +53,7 @@ export class OrdencompraAgregarComponent implements OnInit {
   public identity: any;
   public ultimaOrden: any;
   public detailOrd: any;
+  public productosdetailOrd: any;
   //modelode bootstrap
   //modelode bootstrap
   model!: NgbDateStruct;
@@ -150,10 +150,11 @@ export class OrdencompraAgregarComponent implements OnInit {
   public createPDF():void{
     //this.getDetailsOrd();
     const doc = new jsPDF;
-
+    var cabeceras = ["CLAVE EXTERNA","DESCRIPCION","MEDIDA","CANTIDAD"];
+    var rows:any = [];
     var logo = new Image();//CREAMOS VARIABLE
     logo.src = 'assets/images/logo-solo.png'//ASIGNAMOS LA UBICACION DE LA IMAGEN
-    var nombreE = this.identity['nombre']+' '+this.identity['apellido']+' '+this.identity['amaterno']//concatenamos el nombre completo 
+    var nombreE = this.detailOrd[0]['nombreEmpleado']//concatenamos el nombre completo 
     
     doc.setDrawColor(255, 145, 0);//AGREGAMOS COLOR NARANJA A LAS LINEAS
 
@@ -179,7 +180,15 @@ export class OrdencompraAgregarComponent implements OnInit {
 
 
     doc.setLineWidth(1).line(10,92,200,92);
-    autoTable(doc,{html: '#table_productos',startY:95})
+    //recorremos los productos con un foreah
+    this.productosdetailOrd.forEach((element:any) => {
+      var temp = [ element.claveexterna,element.descripcion,element.nombreMedida,element.cantidad];//creamos variable "temporal" y asignamos 
+      rows.push(temp);//añadimos a fila
+    });
+    //generamos la tabla
+    autoTable(doc,{ head:[cabeceras],
+    body:rows, startY:95 })
+    //creamos el pdf
     doc.save('a.pdf')
   }
   //Servicios
@@ -245,10 +254,10 @@ export class OrdencompraAgregarComponent implements OnInit {
       response =>{
         if(response.status == 'success'){
           this.ultimaOrden = response.ordencompra;
-          this._ordencompraService.getDetalsOrde(this.ultimaOrden['idOrd']).subscribe(
+          this._ordencompraService.getDetailsOrdes(this.ultimaOrden['idOrd']).subscribe(
             response => {
               this.detailOrd = response.ordencompra;
-              console.log(this.detailOrd)
+              this.productosdetailOrd = response.productos;
               this.createPDF();
             },error =>{
               console.log(error);
@@ -261,6 +270,7 @@ export class OrdencompraAgregarComponent implements OnInit {
         console.log(error);
       });
   }
+
   // Modal
   open(content:any) {
     this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title', size: 'xl'}).result.then((result) => {

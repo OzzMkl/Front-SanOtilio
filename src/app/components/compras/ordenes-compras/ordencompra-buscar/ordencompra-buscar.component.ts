@@ -15,21 +15,24 @@ import { NgbModal, ModalDismissReasons, NgbDateStruct} from '@ng-bootstrap/ng-bo
 })
 export class OrdencompraBuscarComponent implements OnInit {
 
-  constructor( private _ordendecompraService: OrdendecompraService, private _router: Router,
+  constructor( private _ordendecompraService: OrdendecompraService,
+               private _router: Router,
                private modalService: NgbModal) { }
 
-  public page_title: string = 'Ordenes de compra por recibir';
+
+  public fechaActual : Date = new Date();
   //Variables de servicios
   public ordenesdecompra: any = [];
   public detallesOrdencompra:any;
   public productosDOC:any;
   public url: string = global.url;
   /**PAGINATOR */
-  public totalPages: any;
-  public page: any;
-  public next_page: any;
-  public prev_page: any;
+  // public totalPages: any;
+  // public page: any;
+  // public next_page: any;
+  // public prev_page: any;
   pageActual: number = 1;
+  pagina:number =1;
   //Pipes
   tipoBusqueda: number = 1;
   buscarOrdProveedor='';
@@ -41,8 +44,9 @@ export class OrdencompraBuscarComponent implements OnInit {
 
   ngOnInit(): void {
     this.getAllOrdenes();
+    console.log(this.fechaActual.toLocaleDateString());
   }
-  getAllOrdenes(){
+  getAllOrdenes(){//obtener todas las ordenes de compras
     this._ordendecompraService.getAllOrders().subscribe(
       response =>{
         if(response.status == 'success'){
@@ -59,17 +63,18 @@ export class OrdencompraBuscarComponent implements OnInit {
     this.buscarOrdId='';
     this.buscarOrdProveedor='';
   }
-  selected(dato:any){
+  selected(dato:any){//mandamos el dato seleccionado de la tabla
     this.getDetailsOrder(dato);
   }
-  getDetailsOrder(id:any){
+  getDetailsOrder(id:any){//recibimos el id y traemos informacion de esa orden
     this._ordendecompraService.getDetailsOrdes(id).subscribe(
       response =>{
         if(response.status == 'success'){
           this.detallesOrdencompra = response.ordencompra;
-          this.productosDOC = response.productosOrden;
+          this.productosDOC = response.productos;
 
-          console.log(this.detallesOrdencompra);
+          //console.log(this.detallesOrdencompra);
+          //console.log(this.productosDOC);
         }else{ console.log('Algo salio mal');}
         
       },error => {
@@ -77,14 +82,14 @@ export class OrdencompraBuscarComponent implements OnInit {
       });
   }
   // Modal
-  open(content:any) {
+  open(content:any) {//abre modal
     this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title', size: 'xl'}).result.then((result) => {
       this.closeResult = `Closed with: ${result}`;
     }, (reason) => {
       this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
     });
   }
-  private getDismissReason(reason: any): string {
+  private getDismissReason(reason: any): string {//cierra modal con teclado ESC o al picar fuera del modal
     if (reason === ModalDismissReasons.ESC) {
       return 'by pressing ESC';
     } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {

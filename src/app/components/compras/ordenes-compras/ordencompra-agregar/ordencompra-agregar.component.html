@@ -108,7 +108,7 @@
                         <th scope="col">CANTIDAD</th>
                     </tr>
                 </thead>
-                <tbody *ngFor="let p_d of Lista_compras | paginate:{itemsPerPage: 5, currentPage: pageActual}">
+                <tbody *ngFor="let p_d of Lista_compras | paginate:{id:'pcListaCompras',itemsPerPage: 5, currentPage: pageActual}">
                     <tr>
                      <th scope="row">{{p_d.claveEx}}</th>
                      <th scope="row">{{p_d.descripcion}}</th>
@@ -117,7 +117,7 @@
                     </tr>
                 </tbody>
             </table>
-            <pagination-controls (pageChange)="pageActual = $event"></pagination-controls>
+            <pagination-controls id="pcListaCompras" (pageChange)="pageActual = $event"></pagination-controls>
         </div>
         <hr>
         <div class="row row-cols-lg-auto g-3 align-items-center">
@@ -172,7 +172,7 @@
                     <th>Marca</th>
                 </tr>
             </thead>
-            <tbody *ngFor="let pr of productos | filterProductsModalcbar: buscarProductoCbar| filterProductModal: buscarProducto | filterProductsModalce: buscarProductoCE| paginate:{itemsPerPage: 5, currentPage: pageActual}">
+            <tbody *ngFor="let pr of productos | filterProductsModalcbar: buscarProductoCbar| filterProductModal: buscarProducto | filterProductsModalce: buscarProductoCE| paginate:{id:'pcModal',itemsPerPage: 5, currentPage: pageActual2}">
                 <tr (click)="consultarProductoModal(pr.claveEx)" (click)="modal.dismiss('Cross click')">
                     <th scope="row">{{pr.claveEx}}</th>
                     <th scope="row">{{pr.cbarras}}</th>
@@ -182,7 +182,7 @@
                 </tr>
             </tbody>
           </table>
-          <pagination-controls (pageChange)="pageActual = $event"></pagination-controls>
+          <pagination-controls id="pcModal" (pageChange)="pageActual2 = $event"></pagination-controls>
       </form>
     </div>
     <!-- <div class="modal-footer">

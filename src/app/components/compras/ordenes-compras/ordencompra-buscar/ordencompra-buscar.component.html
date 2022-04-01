@@ -1,5 +1,5 @@
 <div class="container">
-    <h1>{{page_title}}</h1>
+    <h1>Ordenes de compra por recibir</h1>
 </div>
 <div>
     <div class="container-fluid" *ngIf="ordenesdecompra">
@@ -32,47 +32,92 @@
                     <th scope="col">FECHA ESTIMADA</th>
             </tr>
             </thead>
-            <tbody *ngFor="let oc of ordenesdecompra | filterOrders:buscarOrdProveedor | filterOrdersIdord:buscarOrdId | paginate:{itemsPerPage: 10, currentPage: pageActual}">
+            <tbody *ngFor="let oc of ordenesdecompra | filterOrders:buscarOrdProveedor | filterOrdersIdord:buscarOrdId | paginate:{id:'paginationOrders',itemsPerPage: 10, currentPage: pageActual}">
                 <tr (click)="open(content)" (click)="selected(oc.idOrd)">
                     <th scope="row">{{oc.idOrd}}</th>
                     <th scope="row">{{oc.nombreProveedor}}</th>
                     <th scope="row">{{oc.observaciones}}</th>
-                    <th scope="row">{{oc.fecha}}</th>
+                    <th  scope="row">{{oc.fecha}}</th>
                 </tr>
             </tbody>
         </table>
-       <pagination-controls (pageChange)="pageActual = $event"></pagination-controls>
+       <pagination-controls id="paginationOrders" (pageChange)="pageActual = $event"></pagination-controls>
     </div>
 </div>
 <!-- Modal -->
 <ng-template #content let-modal>
-    <div class="modal-header">
-      <h4 class="modal-title" id="modal-basic-title">Detalles</h4>
-      <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
-    </div>
-    <div class="modal-body">
-      <form>
-          <div *ngFor="let doc of detallesOrdencompra" class="container">
-            <div class="col-auto">
-                <h3>{{doc.nombreProveedor}}</h3>
-            </div>
-            <div class="row justify-content-end">
-                
-                <div class="col-auto">
-                    <button type="button" class="btn btn-success" (click)="modal.dismiss('Cross click')" [routerLink]="['../../compra-modulo/compra-agregar',doc.idOrd]">Pasar a compra</button> 
-                </div>
-                <div class="col-auto">
-                    <button type="button" class="btn btn-success">PDF</button>
-                </div>
-                <div class="col-auto">
-                    <button type="button" class="btn btn-success">Editar</button>
-                </div>
-                <div class="col-auto">
-                    <button type="button" class="btn btn-success">Cancelar orden</button>
-                </div>
-            </div>
+    <div *ngFor="let doc of detallesOrdencompra">
+        <div class="modal-header">
+            <h4 class="modal-title" id="modal-basic-title">Detalles orden no. {{doc.idOrd}}</h4>
+            <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
           </div>
-      </form>
+          <div class="modal-body">
+            <form>
+                <div  class="container">
+                  
+                  <div class="row">
+                      <div class="col-6">
+                          <h3>{{doc.nombreProveedor}}</h3>
+                      </div>
+                      
+                      <div class="col-auto">
+                          <button type="button" class="btn btn-success">PDF</button>
+                      </div>
+                      <div class="col-auto">
+                          <button type="button" class="btn btn-success" (click)="modal.dismiss('Cross click')" [routerLink]="['../ordencompra-editar',doc.idOrd]">Editar</button>
+                      </div>
+                      <div class="col-auto">
+                          <button type="button" class="btn btn-success">Cancelar orden</button>
+                      </div>
+                      <div class="col-auto">
+                        <button type="button" class="btn btn-success" (click)="modal.dismiss('Cross click')" [routerLink]="['../../compra-modulo/compra-agregar-id',doc.idOrd]">Pasar a compra</button> 
+                    </div>
+                  </div>
+                  <hr>
+                  <div class="row">
+                      <div class="col-3">
+                        <label for="nombreEmpleado" class="form-label">Realizo</label>
+                        <input id="nombreEmpleado" type="text" class="form-control" value="{{doc.nombreEmpleado}}" readonly>
+                      </div>
+                      <div class="col-3">
+                        <label for="fechaAlta" class="form-label">Fecha de alta</label>
+                        <input type="text" class="form-control" value="{{doc.created_at | date}}" readonly>
+                      </div>
+                      <div class="col-3">
+                        <label for="fechaEstimada" class="form-label">Fecha estimada</label>
+                        <input id="fechaEstimada" type="text" class="form-control" value="{{doc.fecha | date}}" readonly>
+                      </div>
+                      <div class="col">
+                        <label for="observaciones">Observaciones</label>
+                        <textarea class="form-control" name="observaciones" id="observaciones" cols="30" rows="2" value="{{doc.observaciones}}" readonly></textarea>
+                      </div>
+                  </div>
+                  <hr>
+                  <div class="row align-items-start">
+                    <h4 class="text-center">LISTA DE PRODUCTOS</h4>
+                    <table class="table table-dark table-hover" id="table_productos">
+                        <thead>
+                            <tr>
+                                <th scope="col">CLAVE EXTERNA</th>
+                                <th scope="col">DESCRIPCION</th>
+                                <th scope="col">MEDIDA</th>
+                                <th scope="col">CANTIDAD</th>
+                            </tr>
+                        </thead>
+                        <tbody *ngFor="let p_d of productosDOC | paginate:{ id:'paginationDOC', itemsPerPage: 5, currentPage: pagina}">
+                            <tr>
+                             <th scope="row">{{p_d.claveexterna}}</th>
+                             <th scope="row">{{p_d.descripcion}}</th>
+                             <th scope="row">{{p_d.nombreMedida}}</th>
+                             <th scope="row">{{p_d.cantidad}}</th>
+                            </tr>
+                        </tbody> 
+                    </table>
+                    <pagination-controls id="paginationDOC" (pageChange)="pagina = $event"></pagination-controls>
+                </div>
+                </div>
+            </form>
+          </div>
     </div>
     <!-- <div class="modal-footer">
       <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Guardar</button>
