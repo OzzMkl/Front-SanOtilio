@@ -1,8 +1,6 @@
 <div class="container">
-    <form class="form-group">
+    <form class="form-group" #FormCom="ngForm" (ngSubmit)="agregarCompra(FormCom)">
         <div class="row align-items-start">
-
-            <button class="btn btn-primary" (click)="open(content)">Orden de compra</button>
 
             <h4 class="text-center">DATOS DEL PROVEEDOR</h4>
             <div class="col-2">
@@ -44,43 +42,28 @@
         <hr>
         <div >
             <h4 class="text-center">PRODUCTO</h4>
-            <!-- <form #agregar_p_lista="ngForm" (ngSubmit)="capturar(agregar_p_lista)"> -->
-                <div class="row align-items-start">
-                    <div class="col-4">
-                        <label class="form-label" for="prod">Bucar producto</label>
-                           <div class="input-group">
-                               <span class="input-group-addon" id="sizing-addon2"><i class="bi-search" style="font-size: 1.5rem; color: black; left: 0;"> </i></span>
-                               <input type="text" name="prod" id="prod" class="form-control" #claveEx="ngModel" [(ngModel)]="producto_compra.claveEx" aria-describedby="sizing-addon2" (keydown)="Consultar($event)">
-                           </div>
-                   </div>
-                   <div class="col-2">
-                       <label for="precio" class="form-label">Precio</label>
-                       <input type="text" name="precio" class="form-control" #precio="ngModel" [(ngModel)]="producto_compra.precio">
-                   </div>
-                   <div class="col-2">
-                       <label for="impuesto" class="form-label">Impuesto</label>
-                       <select name="impuesto" id="impuesto" class="form-select" #idImpuesto="ngModel" [(ngModel)]="producto_compra.idImpuesto">
-                        <option selected disabled value="">Abrir para seleccionar</option>
-                        <option  *ngFor="let impuesto of impuestos" value={{impuesto.idImpuesto}}>{{impuesto.nombre}}</option>
-                    </select>
-                   </div>
-                   <div class="col-2">
-                       <label for="cantidad" class="form-label">Cantidad</label>
-                       <input type="text" name="cantidad" class="form-control" #cantidad="ngModel" [(ngModel)]="producto_compra.cantidad">
-                   </div>
-                   
-                   <div class="col-2">
-                        <button type="button" class="btn btn-success" (click)="capturar(producto_compra)">
-                            <i class="bi bi-check-circle-fill"></i>
-                        </button>
-                   </div>
+            <div class="row align-items-start">
+                <div class="col-4">
+                    <label class="form-label" for="">Buscar producto</label>
+                    <div class="input-group">
+                        <span class="input-group-addon" id="sizing-addon2"><i class="bi-search" style="font-size: 1.5rem; color: black; left: 0;" (click)="open(content)"></i> </span>
+                        <input class="form-control" type="text" ngbTooltip="Solo busca por clave externa" name="claveEx" #claveEx="ngModel" [(ngModel)]="producto_compra.claveEx" (keydown)="consultarProducto($event)">
+                        
+                    </div>
                 </div>
-            <!-- </form> -->
-            <!--  -->
+                <div class="col-4">
+                    <label class="form-label" for="cantidadProducto">Cantidad</label>
+                    <input class="form-control" type="number" name="cantidadProducto" id="cantidadProducto"  #cantidadProducto="ngModel" [(ngModel)]="producto_compra.cantidad">
+                </div>
+                <div class="col-2">
+                    <label class="form-label" for="cantidadProducto">.</label>
+                    <button class="btn btn-success form-control" type="button" (click)="capturar(producto_compra)" [disabled]="isSearch"><i class="bi bi-check-circle-fill"> Agregar</i>     </button>
+                  </div>
+            </div>
             <div class="row align-items-start" *ngFor="let prod of productoVer">
 
                 <div>
-                    <label for="descripcion" class="form-label">Descripcion</label>
+                    <label for="descipcion" class="form-label">Descripcion</label>
                     <input type="text" name="descipcion" class="form-control" value="{{prod.descripcion}}" readonly>
                 </div>
                 <div class="col-3">
@@ -114,57 +97,80 @@
         <hr>
         <div class="row align-items-start">
             <h4 class="text-center">LISTA DE PRODUCTOS</h4>
-            <table class="table table-dark table-hover">
-               <thead>
-                   <tr>
-                       <th scope="col">CLAVE EXTERNA</th>
-                       <th scope="col">MEDIDA</th>
-                       <th scope="col">CANTIDAD</th>
-                       <th scope="col">PRECIO UNITARIO</th>
-                       <th scope="col">IMPUESTO</th>
-                       <th scope="col">IMPORTE</th>
-                   </tr>
-               </thead>
-               <tbody *ngFor="let p_d of Lista_compras">
-                   <tr>
-                    <th scope="row">{{p_d.claveEx}}</th>
-                    <th scope="row"></th>
-                    <th scope="row">{{p_d.cantidad}}</th>
-                    <th scope="row">{{p_d.precio}}</th>
-                    <th scope="row">{{p_d.idImpuesto}}</th>
-                    <th scope="row">{{p_d.cantidad * p_d.precio}}</th>
-                   </tr>
-               </tbody>
+            <table class="table table-dark table-hover" id="table_productos">
+                <thead>
+                    <tr>
+                        <th scope="col">CLAVE EXTERNA</th>
+                        <th scope="col">DESCRIPCION</th>
+                        <th scope="col">MEDIDA</th>
+                        <th scope="col">CANTIDAD</th>
+                    </tr>
+                </thead>
+                <tbody *ngFor="let p_d of Lista_compras | paginate:{itemsPerPage: 5, currentPage: pageActual}">
+                    <tr>
+                     <th scope="row">{{p_d.claveEx}}</th>
+                     <th scope="row">{{p_d.descripcion}}</th>
+                     <th scope="row">{{p_d.nombreMedida}}</th>
+                     <th scope="row">{{p_d.cantidad}}</th>
+                    </tr>
+                </tbody>
             </table>
+            <pagination-controls (pageChange)="pageActual = $event"></pagination-controls>
         </div>
         <hr>
+        <div class="row row-cols-lg-auto g-3 align-items-center">
+            <div class="col-12">
+                <label for="observaciones">Observaciones</label>
+                <textarea class="form-control" name="observaciones" id="observaciones" cols="30" rows="2" #observaciones="ngModel" [(ngModel)]="orden_compra.observaciones"></textarea>
+                
+            </div>
+            <br>
+            <div class="col-12">
+                <button  class="btn btn-primary" type="submit">Guardar</button>
+            </div>
+        </div>
     </form>
 </div>
-
+<!-- Modal -->
 <ng-template #content let-modal>
     <div class="modal-header">
-      <h4 class="modal-title" id="modal-basic-title">Buscar ordenes de compra</h4>
+      <h4 class="modal-title" id="modal-basic-title">Buscar producto</h4>
       <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
     </div>
     <div class="modal-body">
       <form>
-        <div class="input-group mb-2">
-        </div>
-          <br>
-          <table class="table table-dark table-hover">
+        <!-- <label class="form-label" for="">Seleccione el metodo a buscar</label> -->
+            <div class="input-group mb-2">
+                <div class="col-2">
+                    <select name="" id="" class="form-select" name="seleccionado" [(ngModel)]="seleccionado" (ngModelChange)="cambioSeleccionado($event)">
+                        <option value="1" selected>DESCRIPCION</option>
+                        <option value="2">CLAVE EXTERNA</option>
+                        <option value="3">CODIGO DE BARRAS</option>
+                    </select>
+                </div>
+                <div class="col" *ngIf="seleccionado == 1; ">
+                    <input type="text" class="form-control" name="buscarProducto" [(ngModel)]="buscarProducto">
+                </div>
+                <div class="col" *ngIf="seleccionado == 2; ">
+                    <input type="text" class="form-control" name="buscarProductoCE" [(ngModel)]="buscarProductoCE"> 
+                </div>
+                <div class="col" *ngIf="seleccionado == 3;  ">
+                    <input type="text" class="form-control" name="buscarProductoCbar" [(ngModel)]="buscarProductoCbar">
+                </div>
+            
+            </div>
+            <br>
+            <table class="table table-dark table-hover">
             <thead>
                 <tr>
-                    <th>#Orden</th>
-                    <th>#Requisición</th>
-                    <th>Proveedor</th>
-                    <th>Fecha</th>
-                    <th>Observaciones</th>
-                    <th>Empleado</th>
-                    <th>Status</th>
-                    
+                    <th>Clave externa</th>
+                    <th>Codigo de barras</th>
+                    <th>Descripcion</th>
+                    <th>Medida</th>
+                    <th>Marca</th>
                 </tr>
             </thead>
-            <!-- <tbody *ngFor="let pr of productos | filterProductsModalcbar: buscarProductoCbar| filterProductModal: buscarProducto | filterProductsModalce: buscarProductoCE| paginate:{itemsPerPage: 5, currentPage: pageActual}">
+            <tbody *ngFor="let pr of productos | filterProductsModalcbar: buscarProductoCbar| filterProductModal: buscarProducto | filterProductsModalce: buscarProductoCE| paginate:{itemsPerPage: 5, currentPage: pageActual}">
                 <tr (click)="consultarProductoModal(pr.claveEx)" (click)="modal.dismiss('Cross click')">
                     <th scope="row">{{pr.claveEx}}</th>
                     <th scope="row">{{pr.cbarras}}</th>
@@ -172,10 +178,13 @@
                     <th scope="row">{{pr.nombreMedida}}</th>
                     <th scope="row">{{pr.nombreMarca}}</th>
                 </tr>
-            </tbody> -->
+            </tbody>
           </table>
-          <!-- <pagination-controls (pageChange)="pageActual = $event"></pagination-controls> -->
+          <pagination-controls (pageChange)="pageActual = $event"></pagination-controls>
       </form>
     </div>
+    <!-- <div class="modal-footer">
+      <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Guardar</button>
+    </div> -->
 </ng-template>
 
