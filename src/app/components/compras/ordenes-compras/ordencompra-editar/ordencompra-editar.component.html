@@ -6,20 +6,42 @@
                 <label class="form-label" for="idRequisicion"># Requisicion</label>
                 <input class="form-control" type="text" name="idRequisicion" id="idRequisicion" readonly>
             </div>
-            <div class="col-5">
+            <div class="col-4">
                 <label for="idProveedor" class="form-label">Selecciona el proveedor</label>
                 <select name="idProveedor" id="idProveedor" class="form-select" #idProveedor="ngModel" [(ngModel)]="orden_compra.idProveedor" (ngModelChange)="seleccionaProveedor($event)">
                     <option  *ngFor="let proveedor of proveedoresLista" value={{proveedor.idProveedor}}>{{proveedor.nombre}}</option>
                 </select>
             </div>
-            <div class="col-4">
-                <label class="form-label" for="">Selecciona el dia de entrega aproximado</label>
-                <div class="input-group">
-                  <input class="form-control" placeholder="aaaa-mm-dd"
-                         name="dp" [(ngModel)]="model" ngbDatepicker #d="ngbDatepicker">
-                  <button class="btn btn-outline-secondary" (click)="d.toggle()" type="button"><i class="bi bi-calendar-date-fill"> </i> </button>
+            <div class="col-2"> 
+                
+                    <label class="form-label" for="flexCheckDefault">Cambiar fecha</label>
+                    <br>
+                    <input class="form-check-input" type="checkbox" value="false"  name="test" [(ngModel)]="test" id="flexCheckDefault">
+                   
+            </div>
+
+
+            <div *ngIf="test == false; else elseBlock" class="col-4">
+                <label for="" class="form-label">Fecha de entrega aproximado</label>
+                <input type="text" class="form-control" value="{{date | date: 'dd/MM/yyyy'}}" readonly>
+                
+            </div>
+            <ng-template #elseBlock>
+                <div class="col-4">
+                    <label class="form-label" for="">Selecciona el dia de entrega aproximado</label>
+                    <div class="input-group">
+                      <input class="form-control" placeholder="aaaa-mm-dd"
+                             name="dp" [(ngModel)]="model" value="" ngbDatepicker #d="ngbDatepicker">
+                      <button class="btn btn-outline-secondary" (click)="d.toggle()" type="button"><i class="bi bi-calendar-date-fill"> </i> </button>
+                    </div>
                 </div>
-              </div>
+                
+            </ng-template>
+
+
+              
+
+
               <div *ngFor="let p of detallesProveedor" class="row align-items-start">
                 <div class="col-2">
                     <label for="rfc" class="form-label">RFC</label>
@@ -68,9 +90,9 @@
                         <th scope="col">CANTIDAD</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody >
                     <tr>
-                        <th scope="row"></th>
+                        <th scope="row">{{productosOrden.claveEx}}</th>
                         <th scope="row"></th>
                         <th scope="row"></th>
                         <th scope="row"></th>
