@@ -10,7 +10,8 @@ import { EmpleadoService } from 'src/app/services/empleado.service';
 //modelos
 import { Ordencompra } from 'src/app/models/orden_compra';
 import { Producto_orden } from 'src/app/models/producto_orden';
-import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
+//Modal
+import { NgbDateStruct, NgbModal,ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-ordencompra-editar',
@@ -22,11 +23,14 @@ export class OrdencompraEditarComponent implements OnInit {
 
 //variables servicios
 public url: string = global.url;
+
 public orden_compra: Ordencompra;
 public productosOrden: Producto_orden;
 public lista_productosorden: Array<Producto_orden>;
+
 public detallesProveedor:any;
 public proveedoresLista:any;
+
 public isSearch: boolean = true;
 date!: Date;
 public test: boolean = false;
@@ -38,6 +42,8 @@ public test: boolean = false;
   public next_page: any;
   public prev_page: any;
   pageActual: number = 1;
+  //cerrar modal
+  closeResult = '';
 
   constructor(
     //declaracion de servicios
@@ -47,6 +53,7 @@ public test: boolean = false;
     private _ordencompraService: OrdendecompraService,
     public _empleadoService : EmpleadoService,
     private _route: ActivatedRoute,
+    private modalService: NgbModal
   ) {
     this.orden_compra = new Ordencompra (0,null,0,'',null,0,null,null);
     this.productosOrden = new Producto_orden(0,0,0,null,null,null,null);
@@ -66,9 +73,10 @@ public test: boolean = false;
       this._ordencompraService.getDetailsOrdes(id).subscribe(
         response =>{
           if(response.status  == 'success' && response.ordencompra.length > 0 && response.productos.length > 0){
+
+            //asignamos de uno en uno las propiedades de la orden
             this.orden_compra.idProveedor = response.ordencompra[0]['idProveedor'];
             this.orden_compra.fecha = response.ordencompra[0]['fecha'];
-            //let date: Date = new Date(response.ordencompra[0]['fecha']);
             this.date = new Date(response.ordencompra[0]['fecha']);
             this.orden_compra.idEmpleado = response.ordencompra[0]['idEmpleado'];
             this.orden_compra.idOrd = response.ordencompra[0]['idOrd'];
@@ -76,18 +84,19 @@ public test: boolean = false;
             this.orden_compra.idStatus = response.ordencompra[0]['idStatus'];
             this.orden_compra.observaciones = response.ordencompra[0]['observaciones'];
             this.orden_compra.updated_at = response.ordencompra[0]['updated_at'];
+            //llenamos la lista con la respuesta obtenida
             this.lista_productosorden = response.productos;
          
             //console.log(parseInt(response.ordencompra[0]['fecha'].substr(8,10)));
             //console.log(this.model);
           }
-          console.log(response.productos);
+          //console.log(response.productos);
         },error =>{
           console.log(error);
       });
     });
   }
-  getAllProveedores(){
+  getAllProveedores(){//Rellenamos el select de proveedores
     this._proveedorService.getProveedores().subscribe(
       response =>{
         this.proveedoresLista = response.proveedores;
@@ -96,7 +105,7 @@ public test: boolean = false;
         
       });
   }
-  seleccionaProveedor(id:any){
+  seleccionaProveedor(id:any){//traemos informacion de acuerdo al proveedor seleccionado
     this._proveedorService.getProveedoresVer(id).subscribe(
       response => {
         if(response.status == 'success'){
@@ -105,6 +114,23 @@ public test: boolean = false;
     },error =>{
       console.error(error);
     });
+  }
+   // Modal
+   open(content:any) {
+    this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title', size: 'xl'}).result.then((result) => {
+      this.closeResult = `Closed with: ${result}`;
+    }, (reason) => {
+      this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+    });
+  }
+  private getDismissReason(reason: any): string {
+    if (reason === ModalDismissReasons.ESC) {
+      return 'by pressing ESC';
+    } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
+      return 'by clicking on a backdrop';
+    } else {
+      return `with: ${reason}`;
+    }
   }
 
 }
