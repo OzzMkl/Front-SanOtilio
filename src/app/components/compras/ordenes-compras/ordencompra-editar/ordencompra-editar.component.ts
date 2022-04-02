@@ -24,15 +24,21 @@ export class OrdencompraEditarComponent implements OnInit {
 public url: string = global.url;
 public orden_compra: Ordencompra;
 public productosOrden: Producto_orden;
+public lista_productosorden: Array<Producto_orden>;
 public detallesProveedor:any;
 public proveedoresLista:any;
 public isSearch: boolean = true;
 date!: Date;
 public test: boolean = false;
 //modelode bootstrap datapicker
-  //modelode bootstrap datapicker
-
   model!: NgbDateStruct;
+//paginador
+  public totalPages: any;
+  public page: any;
+  public next_page: any;
+  public prev_page: any;
+  pageActual: number = 1;
+
   constructor(
     //declaracion de servicios
     private _proveedorService: ProveedorService,
@@ -44,7 +50,7 @@ public test: boolean = false;
   ) {
     this.orden_compra = new Ordencompra (0,null,0,'',null,0,null,null);
     this.productosOrden = new Producto_orden(0,0,0,null,null,null,null);
-    
+    this.lista_productosorden = [];
     
    }
 
@@ -70,12 +76,8 @@ public test: boolean = false;
             this.orden_compra.idStatus = response.ordencompra[0]['idStatus'];
             this.orden_compra.observaciones = response.ordencompra[0]['observaciones'];
             this.orden_compra.updated_at = response.ordencompra[0]['updated_at'];
-
-            response.productos.array.forEach((element:any) => {
-              
-              this.productosOrden.claveEx = element.claveexterna;
-            });
-
+            this.lista_productosorden = response.productos;
+         
             //console.log(parseInt(response.ordencompra[0]['fecha'].substr(8,10)));
             //console.log(this.model);
           }

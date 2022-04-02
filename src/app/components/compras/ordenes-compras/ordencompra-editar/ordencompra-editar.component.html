@@ -90,15 +90,16 @@
                         <th scope="col">CANTIDAD</th>
                     </tr>
                 </thead>
-                <tbody >
+                <tbody *ngFor="let lpo of lista_productosorden | paginate:{ id: 'pcEdit', itemsPerPage: 5, currentPage: pageActual}">
                     <tr>
-                        <th scope="row">{{productosOrden.claveEx}}</th>
-                        <th scope="row"></th>
-                        <th scope="row"></th>
-                        <th scope="row"></th>
+                        <th scope="row">{{lpo.claveEx}}</th>
+                        <th scope="row">{{lpo.descripcion}}</th>
+                        <th scope="row">{{lpo.nombreMedida}}</th>
+                        <th scope="row">{{lpo.cantidad}}</th>
                     </tr>
                 </tbody>
             </table>
+            <pagination-controls id="pcEdit" (pageChange)="pageActual = $event"></pagination-controls>
         </div>
         <hr>
         <div class="row row-cols-lg-auto g-3 align-items-center">

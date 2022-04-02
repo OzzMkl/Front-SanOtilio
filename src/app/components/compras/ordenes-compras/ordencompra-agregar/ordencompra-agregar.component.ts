@@ -92,8 +92,8 @@ export class OrdencompraAgregarComponent implements OnInit {
     this.buscarProductoCbar = '';
   }
   capturar(datos:any){//Agregar a lista de compras
-    if(this.producto_orden.cantidad == 0){
-      this.toastService.show('No se pueden agregar productos con cantidad: 0',{classname: 'bg-danger text-light', delay: 6000})
+    if(this.producto_orden.cantidad <= 0){
+      this.toastService.show('No se pueden agregar productos con cantidad 0 ó menor a 0',{classname: 'bg-danger text-light', delay: 6000})
     }else if(this.producto_orden.idProducto == 0){
       this.toastService.show('Ese producto no existe',{classname: 'bg-danger text-light', delay: 6000})
     }else if( this.Lista_compras.find( x => x.idProducto == this.producto_orden.idProducto)){

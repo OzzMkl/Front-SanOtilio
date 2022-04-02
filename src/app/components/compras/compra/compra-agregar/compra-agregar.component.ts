@@ -267,25 +267,25 @@ public createPDF():void{
     this.identity = this._empleadoService.getIdentity();
   }
   getDetailsOrd(){
-    this._ordencompraService.getLastOrd().subscribe(
-      response =>{
-        if(response.status == 'success'){
-          this.ultimaOrden = response.ordencompra;
-          this._ordencompraService.getDetalsOrde(this.ultimaOrden['idOrd']).subscribe(
-            response => {
-              this.detailOrd = response.ordencompra;
-              console.log(this.detailOrd)
-              this.createPDF();
-            },error =>{
-              console.log(error);
-            });
-        }else{
-          console.log('fallo');
-        }
+    // this._ordencompraService.getLastOrd().subscribe(
+    //   response =>{
+    //     if(response.status == 'success'){
+    //       this.ultimaOrden = response.ordencompra;
+    //       this._ordencompraService.getDetalsOrde(this.ultimaOrden['idOrd']).subscribe(
+    //         response => {
+    //           this.detailOrd = response.ordencompra;
+    //           console.log(this.detailOrd)
+    //           this.createPDF();
+    //         },error =>{
+    //           console.log(error);
+    //         });
+    //     }else{
+    //       console.log('fallo');
+    //     }
         
-      },error =>{
-        console.log(error);
-      });
+    //   },error =>{
+    //     console.log(error);
+    //   });
   }
   getImpuesto(){
     this._impuestoService.getImpuestos().subscribe(
