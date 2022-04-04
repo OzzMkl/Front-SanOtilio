@@ -30,6 +30,9 @@ public lista_productosorden: Array<Producto_orden>;
 
 public detallesProveedor:any;
 public proveedoresLista:any;
+public productos: any;
+public productoVer: any;
+public identity: any;
 
 public isSearch: boolean = true;
 date!: Date;
@@ -42,8 +45,14 @@ public test: boolean = false;
   public next_page: any;
   public prev_page: any;
   pageActual: number = 1;
+  pageActual2: number = 1;
   //cerrar modal
   closeResult = '';
+  //Modelos de pipes
+  seleccionado:number = 1;//para cambiar entre pipes
+  buscarProducto = '';
+  buscarProductoCE = '';
+  buscarProductoCbar = '';
 
   constructor(
     //declaracion de servicios
@@ -64,8 +73,42 @@ public test: boolean = false;
   ngOnInit(): void {
     this.getOrdencompra();
     this.getAllProveedores();
+    this.getAllProducts();
   }
-  getOrdencompra(){
+  editarOrdCompra(form:any){
+    this.orden_compra.idEmpleado = this.identity['sub'];//asginamos id de Empleado
+
+    if(this.test == true){
+      this.orden_compra.fecha = this.model.year+'-'+this.model.month+'-'+this.model.day;//concatenamos la fecha del datepicke
+    }else{
+      this.orden_compra.fecha = this.date;
+    }
+
+    //this._ordencompraService
+    
+  }
+  editarProducto(dato:any){
+    this.lista_productosorden = this.lista_productosorden.filter((item) => item.claveEx !== dato);//eliminamos el producto
+    //consultamos la informacion para motrar el producto nuevamente
+    this.getProd(dato);
+    this.isSearch = false;
+  }
+  capturar(datos:any){//Agregar a lista de compras
+    if(this.productosOrden.cantidad <= 0){
+      this.toastService.show('No se pueden agregar productos con cantidad 0 ó menor a 0',{classname: 'bg-danger text-light', delay: 6000})
+    }else if(this.productosOrden.idProducto == 0){
+      this.toastService.show('Ese producto no existe',{classname: 'bg-danger text-light', delay: 6000})
+    }else if( this.lista_productosorden.find( x => x.idProducto == this.productosOrden.idProducto)){
+      //verificamos si la lista de compras ya contiene el producto buscandolo por idProducto
+      this.toastService.show('Ese producto ya esta en la lista',{classname: 'bg-danger text-light', delay: 6000})
+    }else{
+      this.lista_productosorden.push({...this.productosOrden});
+      this.isSearch=true;
+    }
+    
+    //console.log(this.Lista_compras);
+  } 
+  getOrdencompra(){//traemos la informacion de la orden seleccionada
     //Nos suscribimos al url para extraer el id
     this._route.params.subscribe( params =>{
       let id = + params['idOrd'];//la asignamos en una variable
@@ -87,8 +130,6 @@ public test: boolean = false;
             //llenamos la lista con la respuesta obtenida
             this.lista_productosorden = response.productos;
          
-            //console.log(parseInt(response.ordencompra[0]['fecha'].substr(8,10)));
-            //console.log(this.model);
           }
           //console.log(response.productos);
         },error =>{
@@ -115,6 +156,42 @@ public test: boolean = false;
       console.error(error);
     });
   }
+  consultarProductoModal(dato:any){//traemos la informacion del producto seleccionado y lo mostramos
+    this.getProd(dato);
+    this.isSearch = false;
+  }
+  getAllProducts(){//traemos la informacion de todos los productos para el modal
+    this._productoService.getProductos().subscribe(
+      response =>{
+        if(response.status == 'success'){
+          this.productos = response.productos;
+          //navegacion paginacion
+          this.totalPages = response.productos.total;
+          //console.log(response.productos);
+        }
+      },
+      error =>{
+        console.log(error);
+      }
+    );
+  }
+  getProd(id:any){//servicio para obtener detalles del producto a traves de su claveexterna
+    this._productoService.getProdclaveex(id).subscribe(
+      response =>{
+        this.productoVer = response.producto;//informacion completa del producto para recorrerlo atraves del html
+        this.productosOrden.descripcion = this.productoVer[0]['descripcion'];//asignamos variables
+        this.productosOrden.claveEx = this.productoVer[0]['claveEx'];
+        this.productosOrden.idProducto = this.productoVer[0]['idProducto'];
+        this.productosOrden.nombreMedida = this.productoVer[0]['nombreMedida'];
+        //console.log(this.productoVer);
+      },error => {
+        console.log(error);
+      }
+    );
+  }
+  loadUser(){//traemos la informacion del usuario
+    this.identity = this._empleadoService.getIdentity();
+  }
    // Modal
    open(content:any) {
     this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title', size: 'xl'}).result.then((result) => {
@@ -131,6 +208,11 @@ public test: boolean = false;
     } else {
       return `with: ${reason}`;
     }
+  }
+  cambioSeleccionado(e:any){//limpiamos los inputs del modal
+    this.buscarProducto = '';
+    this.buscarProductoCE = '';
+    this.buscarProductoCbar = '';
   }
 
 }
