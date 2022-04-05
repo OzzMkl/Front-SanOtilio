@@ -35,7 +35,7 @@ public productoVer: any;
 public identity: any;
 
 public isSearch: boolean = true;
-date!: Date;
+//date!: Date;
 public test: boolean = false;
 //modelode bootstrap datapicker
   model!: NgbDateStruct;
@@ -74,16 +74,16 @@ public test: boolean = false;
     this.getOrdencompra();
     this.getAllProveedores();
     this.getAllProducts();
+    this.loadUser();
   }
   editarOrdCompra(form:any){
     this.orden_compra.idEmpleado = this.identity['sub'];//asginamos id de Empleado
 
-    if(this.test == true){
+    if(this.test == true){//revisamos si el usuario quiso cambiar de fecha
       this.orden_compra.fecha = this.model.year+'-'+this.model.month+'-'+this.model.day;//concatenamos la fecha del datepicke
-    }else{
-      this.orden_compra.fecha = this.date;
     }
-
+    console.log(this.orden_compra);
+    console.log(this.lista_productosorden);
     //this._ordencompraService
     
   }
@@ -120,7 +120,7 @@ public test: boolean = false;
             //asignamos de uno en uno las propiedades de la orden
             this.orden_compra.idProveedor = response.ordencompra[0]['idProveedor'];
             this.orden_compra.fecha = response.ordencompra[0]['fecha'];
-            this.date = new Date(response.ordencompra[0]['fecha']);
+            //this.date = new Date(response.ordencompra[0]['fecha']);
             this.orden_compra.idEmpleado = response.ordencompra[0]['idEmpleado'];
             this.orden_compra.idOrd = response.ordencompra[0]['idOrd'];
             this.orden_compra.idReq = response.ordencompra[0]['idReq'];
@@ -129,7 +129,7 @@ public test: boolean = false;
             this.orden_compra.updated_at = response.ordencompra[0]['updated_at'];
             //llenamos la lista con la respuesta obtenida
             this.lista_productosorden = response.productos;
-         
+            console.log(this.orden_compra.fecha);
           }
           //console.log(response.productos);
         },error =>{
