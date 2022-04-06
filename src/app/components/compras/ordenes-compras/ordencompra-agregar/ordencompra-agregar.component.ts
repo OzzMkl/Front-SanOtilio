@@ -182,14 +182,14 @@ export class OrdencompraAgregarComponent implements OnInit {
     doc.setLineWidth(1).line(10,92,200,92);
     //recorremos los productos con un foreah
     this.productosdetailOrd.forEach((element:any) => {
-      var temp = [ element.claveexterna,element.descripcion,element.nombreMedida,element.cantidad];//creamos variable "temporal" y asignamos 
+      var temp = [ element.claveEx,element.descripcion,element.nombreMedida,element.cantidad];//creamos variable "temporal" y asignamos 
       rows.push(temp);//añadimos a fila
     });
     //generamos la tabla
     autoTable(doc,{ head:[cabeceras],
     body:rows, startY:95 })
     //creamos el pdf
-    doc.save('a.pdf')
+    doc.save("ordencompra"+this.detailOrd[0]['idOrd']+".pdf");
   }
   //Servicios
   getProvee(){
