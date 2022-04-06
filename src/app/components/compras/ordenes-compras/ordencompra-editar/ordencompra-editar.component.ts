@@ -12,6 +12,9 @@ import { Ordencompra } from 'src/app/models/orden_compra';
 import { Producto_orden } from 'src/app/models/producto_orden';
 //Modal
 import { NgbDateStruct, NgbModal,ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
+//pdf
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 @Component({
   selector: 'app-ordencompra-editar',
@@ -76,18 +79,45 @@ public test: boolean = false;
     this.getAllProducts();
     this.loadUser();
   }
-  editarOrdCompra(form:any){
+  editarOrdCompra(form:any){//registrar edicion de la orden
     this.orden_compra.idEmpleado = this.identity['sub'];//asginamos id de Empleado
 
     if(this.test == true){//revisamos si el usuario quiso cambiar de fecha
       this.orden_compra.fecha = this.model.year+'-'+this.model.month+'-'+this.model.day;//concatenamos la fecha del datepicke
     }
-    console.log(this.orden_compra);
-    console.log(this.lista_productosorden);
-    //this._ordencompraService
+    //console.log(this.orden_compra);
+    //console.log(this.lista_productosorden);
+    this._route.params.subscribe( params =>{
+      let id =+ params['idOrd'];
+      this._ordencompraService.updateOrdenCompra(id,this.orden_compra).subscribe( 
+        response =>{
+          if(response.status == 'success'){
+            //console.log(response);
+             this._ordencompraService.updateProductosOrderC(id,this.lista_productosorden).subscribe( 
+               response=>{
+                 if(response.status == 'success'){
+                  this.toastService.show('Orden editada correcta,emte',{classname: 'bg-success text-light', delay: 3000})
+                   //console.log(response);
+                 }else{
+                  this.toastService.show('Algo salio mal con la lista de productos',{classname: 'bg-danger text-light', delay: 6000})
+                   //console.log('Algo salio mal con la lista de productos');
+                 }
+            
+               },error=>{
+                this.toastService.show('Algo salio mal',{classname: 'bg-danger text-light', delay: 6000})
+               console.log(error);
+             });
+          }else{
+            console.log('Algo salio mal con la orden');
+          }
+          
+        },error =>{ 
+          console.log(error);
+        });
+    });
     
   }
-  editarProducto(dato:any){
+  editarProducto(dato:any){//metodo para editar la lista de compras
     this.lista_productosorden = this.lista_productosorden.filter((item) => item.claveEx !== dato);//eliminamos el producto
     //consultamos la informacion para motrar el producto nuevamente
     this.getProd(dato);
@@ -191,6 +221,13 @@ public test: boolean = false;
   }
   loadUser(){//traemos la informacion del usuario
     this.identity = this._empleadoService.getIdentity();
+  }
+  createPDF():void{
+    const doc = new jsPDF
+    var logo = new Image();//CREAMOS VARIABLE
+    logo.src = 'assets/images/logo-solo.png'//ASIGNAMOS LA UBICACION DE LA IMAGEN
+    //var nombreE = this.detailOrd[0]['nombreEmpleado']//concatenamos el nombre completo
+
   }
    // Modal
    open(content:any) {
