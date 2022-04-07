@@ -19,4 +19,21 @@ export class CompraService {
     return this._http.post(this.url+'compra/register',params, {headers:headers} );
   }
 
+  getLastCompra():Observable<any>{
+    let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');
+    return this._http.get(this.url+'compra/getLastCompra', {headers:headers} );
+  }
+
+  getDetailsCompra(idCompra:any):Observable<any>{
+    let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');
+    return this._http.get(this.url+'compra/showMejorado/'+idCompra, {headers:headers} );
+  }
+
+  registerProductoscompra(Productosorden:any):Observable<any>{
+    let json = JSON.stringify(Productosorden);
+    let params = 'json='+json;
+    let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');//mandamos el json con las cabeceras para que obtengamos el token
+    return this._http.post(this.url+'compra/registerLista',params, {headers:headers} );
+  }
+
 }

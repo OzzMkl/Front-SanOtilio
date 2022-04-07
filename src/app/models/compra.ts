@@ -8,7 +8,7 @@ export class Compra{//Modelo de la compra
         public subtotal: number,
         public total: number,
         public idEmpleadoR: number,
-        public estado: string,
+        public idStatus: number,
         public fechaRecibo: any,
         public observaciones: string,
         public updated_at: any

@@ -4,6 +4,7 @@ import { ProveedorService } from 'src/app/services/proveedor.service';
 import { MedidaService } from 'src/app/services/medida.service';
 import { ProductoService } from 'src/app/services/producto.service';
 import { ImpuestoService } from 'src/app/services/impuesto.service';
+import { CompraService } from 'src/app/services/compra.service';
 import { global } from 'src/app/services/global';
 /**MODELOS */
 import { Compra } from 'src/app/models/compra'
@@ -11,7 +12,6 @@ import { Producto_compra } from 'src/app/models/producto_compra';
 import { ToastService } from 'src/app/services/toast.service';
 import { OrdendecompraService } from 'src/app/services/ordendecompra.service';
 import { EmpleadoService } from 'src/app/services/empleado.service';
-//Modelos
 import { Ordencompra } from 'src/app/models/orden_compra';
 import { Producto_orden } from 'src/app/models/producto_orden';
 //NGBOOTSTRAP
@@ -27,7 +27,7 @@ import autoTable from 'jspdf-autotable';
   selector: 'app-compra-agregar',
   templateUrl: './compra-agregar.component.html',
   styleUrls: ['./compra-agregar.component.css'],
-  providers: [ProveedorService, MedidaService,ProductoService,ImpuestoService, OrdendecompraService, EmpleadoService]
+  providers: [ProveedorService, MedidaService,ProductoService,ImpuestoService, OrdendecompraService, EmpleadoService, CompraService]
 })
 export class CompraAgregarComponent implements OnInit {
   
@@ -61,9 +61,8 @@ export class CompraAgregarComponent implements OnInit {
   public productoVer: any;
   public url:any;
   public identity: any;
-  public ultimaOrden: any;
+  public ultimaCompra: any;
   public detailOrd: any;
-  //modelode bootstrap
   //modelode bootstrap
   model!: NgbDateStruct;
   //variable para el pdf
@@ -77,12 +76,13 @@ export class CompraAgregarComponent implements OnInit {
     private modalService: NgbModal,
     public toastService: ToastService,
     private _ordencompraService: OrdendecompraService,
-    public _empleadoService : EmpleadoService
+    public _empleadoService : EmpleadoService,
+    public _compraService : CompraService
     ) {
       this.orden_compra = new Ordencompra(0,null,0,'',null,0,1,null);
       this.producto_orden = new Producto_orden(0,0,0,null,null,null,null);
-      this.compra = new Compra(0,null,null,0,0,0,0,0,'',null,'',null);
-      this.producto_compra = new Producto_compra(0,0,0,0,0,0,null,null,null,null,null,0);
+      this.compra = new Compra(0,null,null,0,0,0,0,0,0,null,'',null);
+      this.producto_compra = new Producto_compra(0,0,0,0,1,0,null,null,null,null,null,0);
       this.Lista_compras = [];
       this.url = global.url;
      }
@@ -94,14 +94,21 @@ export class CompraAgregarComponent implements OnInit {
     this.getAllProducts();
     this.loadUser();
   }
+
   onChange(id:any){//evento que muestra los datos del proveedor al seleccionarlo
     this.getProveeVer(id);
   }
+
+  onChangeI(id:any){//evento que muestra los datos del impuesto al seleccionarlo
+    this.getImpuesto();
+  }
+
   cambioSeleccionado(e:any){//limpiamos los inputs del modal
     this.buscarProducto = '';
     this.buscarProductoCE = '';
     this.buscarProductoCbar = '';
   }
+
   capturar(datos:any){//Agregar a lista de compras
     if(this.producto_compra.cantidad == 0){
       this.toastService.show('No se pueden agregar productos con cantidad: 0',{classname: 'bg-danger text-light', delay: 6000})
@@ -116,7 +123,8 @@ export class CompraAgregarComponent implements OnInit {
       this.isSearch=true;
     }
     console.log(this.Lista_compras);
-  } 
+  }
+
   consultarProducto(event:any){//mostrar informacion del producto al dar enter
     //alert('you just pressed the enter key'+event);
     this.dato=event.target.value;
@@ -124,75 +132,79 @@ export class CompraAgregarComponent implements OnInit {
     this.getProd(this.dato);
     this.isSearch = false;
     //console.log(this.producto_orden);
-}
-consultarProductoModal(dato:any){
-  this.getProd(dato);
-  this.isSearch = false;
-}
-agregarCompra(form:any){//Enviar Form insertar en DB
-  this.compra.idEmpleadoR = this.identity['sub'];//asginamos id de Empleado
-  this.compra.fechaRecibo = this.model.year+'-'+this.model.month+'-'+this.model.day;//concatenamos la fecha del datepicker
-
- this._ordencompraService.registerOrdencompra(this.orden_compra).subscribe(
-   response =>{
-     if(response.status == 'Success!'){
-      // console.log(response)       
-      //   this.toastService.show(' ⚠ Orden creada', { classname: 'bg-warning  text-bold', delay: 5000 });
-        this._ordencompraService.registerProductoscompra(this.Lista_compras).subscribe(
-          res =>{
-              //console.log(res);
-              this.toastService.show(' ⚠ Orden creada exitosamente!', { classname: 'bg-success  text-light', delay: 5000 });
-              this.getDetailsOrd();
-              //this.createPDF();
-          },error =>{
-            console.log(<any>error);
-            this.toastService.show('Ups... Fallo al agregar los productos a la orden de  compra', { classname: 'bg-danger text-light', delay: 15000 });
-          });
-     }else{
-      console.log('fallo');  
-      console.log(response);
-     }
-   },error =>{
-    console.log(<any>error);
-    this.toastService.show('Ups... Fallo al crear la Orden de compra', { classname: 'bg-danger text-light', delay: 15000 });
-   });
-}
-//
-public createPDF():void{
-  //this.getDetailsOrd();
-  const doc = new jsPDF;
-
-  var logo = new Image();//CREAMOS VARIABLE
-  logo.src = 'assets/images/logo-solo.png'//ASIGNAMOS LA UBICACION DE LA IMAGEN
-  var nombreE = this.identity['nombre']+' '+this.identity['apellido']+' '+this.identity['amaterno']//concatenamos el nombre completo 
   
-  doc.setDrawColor(255, 145, 0);//AGREGAMOS COLOR NARANJA A LAS LINEAS
+  }
 
-  //           ancho linea   x1,y1  x2,y2
-  doc.setLineWidth(2.5).line(10,10,200,10);//colocacion de linea
-  doc.setLineWidth(2.5).line(50,15,160,15);
-  //          tipografia       tamaño letra       texto                         x1,y1
-  doc.setFont('Helvetica').setFontSize(16).text('MATERIALES PARA CONSTRUCCION', 55,25);
-  doc.setFont('Helvetica').setFontSize(16).text(" \"SAN OTILIO\" ", 85,30);
-  // variable con logo, tipo x1,y1, ancho, largo
-  doc.addImage(logo,'PNG',100,32,10,10);
-  doc.setFont('Helvetica').setFontSize(10).text('REPORTE DE ORDEN DE COMPRA', 10,50);
-  doc.setLineWidth(2.5).line(10,53,70,53);
-  //           tipografia,negrita        tamaño          texto              x1,y1
-  doc.setFont('Helvetica','bold').setFontSize(10).text('NO. ORDEN: '+this.detailOrd[0]['idOrd'], 10,60);
-  doc.setFont('Helvetica','normal').setFontSize(10).text('FECHA IMPRESION: '+this.fecha.toLocaleDateString(), 50,65);
-  doc.setFont('Helvetica','normal').setFontSize(10).text('FECHA ESTIMADA: '+this.detailOrd[0]['fecha'], 115,65);  
+  consultarProductoModal(dato:any){
+    this.getProd(dato);
+    this.isSearch = false;
+  }
 
-  doc.setLineWidth(1).line(10,70,200,70);
-  doc.setFont('Helvetica','normal').setFontSize(10).text('REALIZO: '+ nombreE.toUpperCase(), 10,75);
-  doc.setFont('Helvetica','normal').setFontSize(10).text('PROVEEDOR: '+this.detailOrd[0]['nombreProveedor'], 10,80);
-  doc.setFont('Helvetica','normal').setFontSize(10).text('OBSERVACIONES: '+this.detailOrd[0]['observaciones'], 10,85);
+  agregarCompra(form:any){//Enviar Form insertar en DB
+    this.compra.idEmpleadoR = this.identity['sub'];//asginamos id de Empleado
+    this.compra.fechaRecibo = this.model.year+'-'+this.model.month+'-'+this.model.day;//concatenamos la fecha del datepicker
+    this.compra.idStatus = 1;
+    //console.log(this.compra);
+    this._compraService.registrerCompra(this.compra).subscribe(
+    response =>{
+      if(response.status == 'Success!'){
+        // console.log(response)       
+        //   this.toastService.show(' ⚠ Orden creada', { classname: 'bg-warning  text-bold', delay: 5000 });
+          this._compraService.registerProductoscompra(this.Lista_compras).subscribe(
+            res =>{
+                console.log(res);
+                this.toastService.show(' ⚠ Compra creada exitosamente!', { classname: 'bg-success  text-light', delay: 5000 });
+                this.getDetailsOrd();
+                //this.createPDF();
+            },error =>{
+              console.log(<any>error);
+              this.toastService.show('Ups... Fallo al agregar los productos a la compra', { classname: 'bg-danger text-light', delay: 15000 });
+            });
+      }else{
+        console.log('fallo');  
+        console.log(response);
+      }
+    },error =>{
+      console.log(<any>error);
+      this.toastService.show('Ups... Fallo al crear la compra', { classname: 'bg-danger text-light', delay: 15000 });
+    });
+  }
+
+  public createPDF():void{
+    //this.getDetailsOrd();
+    const doc = new jsPDF;
+
+    var logo = new Image();//CREAMOS VARIABLE
+    logo.src = 'assets/images/logo-solo.png'//ASIGNAMOS LA UBICACION DE LA IMAGEN
+    var nombreE = this.identity['nombre']+' '+this.identity['apellido']+' '+this.identity['amaterno']//concatenamos el nombre completo 
+    
+    doc.setDrawColor(255, 145, 0);//AGREGAMOS COLOR NARANJA A LAS LINEAS
+
+    //           ancho linea   x1,y1  x2,y2
+    doc.setLineWidth(2.5).line(10,10,200,10);//colocacion de linea
+    doc.setLineWidth(2.5).line(50,15,160,15);
+    //          tipografia       tamaño letra       texto                         x1,y1
+    doc.setFont('Helvetica').setFontSize(16).text('MATERIALES PARA CONSTRUCCION', 55,25);
+    doc.setFont('Helvetica').setFontSize(16).text(" \"SAN OTILIO\" ", 85,30);
+    // variable con logo, tipo x1,y1, ancho, largo
+    doc.addImage(logo,'PNG',100,32,10,10);
+    doc.setFont('Helvetica').setFontSize(10).text('REPORTE DE ORDEN DE COMPRA', 10,50);
+    doc.setLineWidth(2.5).line(10,53,70,53);
+    //           tipografia,negrita        tamaño          texto              x1,y1
+    doc.setFont('Helvetica','bold').setFontSize(10).text('NO. ORDEN: '+this.detailOrd[0]['idOrd'], 10,60);
+    doc.setFont('Helvetica','normal').setFontSize(10).text('FECHA IMPRESION: '+this.fecha.toLocaleDateString(), 50,65);
+    doc.setFont('Helvetica','normal').setFontSize(10).text('FECHA ESTIMADA: '+this.detailOrd[0]['fecha'], 115,65);  
+
+    doc.setLineWidth(1).line(10,70,200,70);
+    doc.setFont('Helvetica','normal').setFontSize(10).text('REALIZO: '+ nombreE.toUpperCase(), 10,75);
+    doc.setFont('Helvetica','normal').setFontSize(10).text('PROVEEDOR: '+this.detailOrd[0]['nombreProveedor'], 10,80);
+    doc.setFont('Helvetica','normal').setFontSize(10).text('OBSERVACIONES: '+this.detailOrd[0]['observaciones'], 10,85);
 
 
-  doc.setLineWidth(1).line(10,92,200,92);
-  autoTable(doc,{html: '#table_productos',startY:95})
-  doc.save('a.pdf')
-} 
+    doc.setLineWidth(1).line(10,92,200,92);
+    autoTable(doc,{html: '#table_productos',startY:95})
+    doc.save('a.pdf')
+  } 
 
 /**SERVICIOS */
   getProvee(){
@@ -204,19 +216,6 @@ public createPDF():void{
         }
       },
       error =>{
-        console.log(error);
-      }
-    );
-  }
-
-  getMedida(){
-    this._medidaService.getMedidas().subscribe(
-      response =>{
-        if(response.status == 'success'){
-          this.medidas = response.medidas
-        }
-      },
-      error => {
         console.log(error);
       }
     );
@@ -234,6 +233,20 @@ public createPDF():void{
       }
     );
   }
+
+  getMedida(){
+    this._medidaService.getMedidas().subscribe(
+      response =>{
+        if(response.status == 'success'){
+          this.medidas = response.medidas
+        }
+      },
+      error => {
+        console.log(error);
+      }
+    );
+  }
+
   getAllProducts(){
     this._productoService.getProductos().subscribe(
       response =>{
@@ -249,6 +262,7 @@ public createPDF():void{
       }
     );
   }
+
   getProd(id:any){
     this._productoService.getProdclaveex(id).subscribe(
       response =>{
@@ -263,15 +277,17 @@ public createPDF():void{
       }
     );
   }
+  
   loadUser(){
     this.identity = this._empleadoService.getIdentity();
   }
+
   getDetailsOrd(){
-    this._ordencompraService.getLastOrd().subscribe(
+    this._compraService.getLastCompra().subscribe(
       response =>{
         if(response.status == 'success'){
-          this.ultimaOrden = response.ordencompra;
-          this._ordencompraService.getDetalsOrde(this.ultimaOrden['idOrd']).subscribe(
+          this.ultimaCompra = response.ordencompra;
+          this._compraService.getDetailsCompra(this.ultimaCompra['idCompra']).subscribe(
             response => {
               this.detailOrd = response.ordencompra;
               console.log(this.detailOrd)
@@ -282,17 +298,18 @@ public createPDF():void{
         }else{
           console.log('fallo');
         }
-        
+     
       },error =>{
         console.log(error);
       });
   }
+
   getImpuesto(){
     this._impuestoService.getImpuestos().subscribe(
       response =>{
         if(response.status == 'success'){
           this.impuestos = response.impuestos
-          //console.log(this.impuestos);
+          console.log(this.impuestos);
         }
       },
       error => {
@@ -300,15 +317,19 @@ public createPDF():void{
       }
     );
   }
-    // Modal
-    open(content:any) {
+
+  
+  
+// Modal
+  open(content:any) {
       this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title', size: 'xl'}).result.then((result) => {
         this.closeResult = `Closed with: ${result}`;
       }, (reason) => {
         this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
       });
-    }
-    private getDismissReason(reason: any): string {
+  }
+
+  private getDismissReason(reason: any): string {
       if (reason === ModalDismissReasons.ESC) {
         return 'by pressing ESC';
       } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
@@ -316,7 +337,7 @@ public createPDF():void{
       } else {
         return `with: ${reason}`;
       }
-    }
+  }
 
 }
 
