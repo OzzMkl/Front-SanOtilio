@@ -35,6 +35,13 @@ import { ProductoEditarComponent } from './components/inventario/productos/produ
 
 import { ClasificacionModuloComponent } from './components/inventario/taxonomia/clasificacion-modulo/clasificacion-modulo.component';
 
+import { PuntoDeVentaComponent } from './components/ventas/punto-de-venta/punto-de-venta.component';
+
+import { ClienteModuloComponent } from './components/ventas/clientes/cliente-modulo/cliente-modulo.component';
+import { ClienteBuscarComponent } from './components/ventas/clientes/cliente-buscar/cliente-buscar.component';
+import { ClienteAgregarComponent } from './components/ventas/clientes/cliente-agregar/cliente-agregar.component';
+import { ClienteEditarComponent } from './components/ventas/clientes/cliente-editar/cliente-editar.component';
+
 const routes: Routes = [
   {path: '', component: GeneralComponent},
   {path: 'inicio', component: HomeComponent},
@@ -65,7 +72,14 @@ const routes: Routes = [
       {path: 'proveedorEditar',component: ProveedorModificarComponent},
       {path: 'proveedorVer/:idProveedor',component: ProveedorVerComponent}
     ]},
-    
+  {path: 'punto-de-venta',component: PuntoDeVentaComponent},
+  {path: 'cliente-modulo',component: ClienteModuloComponent,
+      children:
+    [
+      {path: 'cliente-buscar',component: ClienteBuscarComponent},
+      {path: 'cliente-agregar',component:ClienteAgregarComponent},
+      {path: 'cliente-editar',component: ClienteEditarComponent}
+    ]},
   {path: 'producto-modulo', component: ProductoModuloComponent,
    children:
    [
