@@ -40,4 +40,16 @@ export class OrdendecompraService {
     let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');
     return this._http.get(this.url+'ordendecompra/index', {headers:headers} );
   }
+  updateOrdenCompra(idOrd:any,orden:any):Observable<any>{
+    let json = JSON.stringify(orden);
+    let params = 'json='+json;
+    let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');//mandamos el json con las cabeceras para que obtengamos el token
+    return this._http.put(this.url+'ordendecompra/updateOrder/'+idOrd,params, {headers:headers} );
+  }
+  updateProductosOrderC(idOrd:any, productosOrden:any):Observable<any>{
+    let json = JSON.stringify(productosOrden);
+    let params = 'json='+json;
+    let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');//mandamos el json con las cabeceras para que obtengamos el token
+    return this._http.put(this.url+'ordendecompra/updateProductsOrder/'+idOrd,params, {headers:headers} );
+  }
 }

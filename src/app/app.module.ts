@@ -57,6 +57,11 @@ import { FilterOrdersPipe } from './pipes/filter-orders.pipe';
 import { FilterOrdersIdordPipe } from './pipes/filter-orders-idord.pipe';
 import { CompraAgregarIdComponent } from './components/compras/compra/compra-agregar-id/compra-agregar-id.component';
 import { OrdencompraEditarComponent } from './components/compras/ordenes-compras/ordencompra-editar/ordencompra-editar.component';
+import { PuntoDeVentaComponent } from './components/ventas/punto-de-venta/punto-de-venta.component';
+import { ClienteModuloComponent } from './components/ventas/clientes/cliente-modulo/cliente-modulo.component';
+import { ClienteAgregarComponent } from './components/ventas/clientes/cliente-agregar/cliente-agregar.component';
+import { ClienteEditarComponent } from './components/ventas/clientes/cliente-editar/cliente-editar.component';
+import { ClienteBuscarComponent } from './components/ventas/clientes/cliente-buscar/cliente-buscar.component';
 
 
 @NgModule({
@@ -103,6 +108,11 @@ import { OrdencompraEditarComponent } from './components/compras/ordenes-compras
     FilterOrdersIdordPipe,
     CompraAgregarIdComponent,
     OrdencompraEditarComponent,
+    PuntoDeVentaComponent,
+    ClienteModuloComponent,
+    ClienteAgregarComponent,
+    ClienteEditarComponent,
+    ClienteBuscarComponent,
   ],
   imports: [
     BrowserModule,

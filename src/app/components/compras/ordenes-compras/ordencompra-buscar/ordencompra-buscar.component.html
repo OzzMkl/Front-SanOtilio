@@ -37,7 +37,7 @@
                     <th scope="row">{{oc.idOrd}}</th>
                     <th scope="row">{{oc.nombreProveedor}}</th>
                     <th scope="row">{{oc.observaciones}}</th>
-                    <th  scope="row">{{oc.fecha}}</th>
+                    <th  scope="row">{{oc.fecha | date: 'dd/MM/yyyy'}}</th>
                 </tr>
             </tbody>
         </table>
@@ -106,7 +106,7 @@
                         </thead>
                         <tbody *ngFor="let p_d of productosDOC | paginate:{ id:'paginationDOC', itemsPerPage: 5, currentPage: pagina}">
                             <tr>
-                             <th scope="row">{{p_d.claveexterna}}</th>
+                             <th scope="row">{{p_d.claveEx}}</th>
                              <th scope="row">{{p_d.descripcion}}</th>
                              <th scope="row">{{p_d.nombreMedida}}</th>
                              <th scope="row">{{p_d.cantidad}}</th>

@@ -318,7 +318,7 @@ export class CompraAgregarComponent implements OnInit {
     );
   }
 
-  
+
   
 // Modal
   open(content:any) {

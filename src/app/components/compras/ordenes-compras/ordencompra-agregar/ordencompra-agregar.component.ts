@@ -92,8 +92,8 @@ export class OrdencompraAgregarComponent implements OnInit {
     this.buscarProductoCbar = '';
   }
   capturar(datos:any){//Agregar a lista de compras
-    if(this.producto_orden.cantidad == 0){
-      this.toastService.show('No se pueden agregar productos con cantidad: 0',{classname: 'bg-danger text-light', delay: 6000})
+    if(this.producto_orden.cantidad <= 0){
+      this.toastService.show('No se pueden agregar productos con cantidad 0 ó menor a 0',{classname: 'bg-danger text-light', delay: 6000})
     }else if(this.producto_orden.idProducto == 0){
       this.toastService.show('Ese producto no existe',{classname: 'bg-danger text-light', delay: 6000})
     }else if( this.Lista_compras.find( x => x.idProducto == this.producto_orden.idProducto)){
@@ -182,14 +182,14 @@ export class OrdencompraAgregarComponent implements OnInit {
     doc.setLineWidth(1).line(10,92,200,92);
     //recorremos los productos con un foreah
     this.productosdetailOrd.forEach((element:any) => {
-      var temp = [ element.claveexterna,element.descripcion,element.nombreMedida,element.cantidad];//creamos variable "temporal" y asignamos 
+      var temp = [ element.claveEx,element.descripcion,element.nombreMedida,element.cantidad];//creamos variable "temporal" y asignamos 
       rows.push(temp);//añadimos a fila
     });
     //generamos la tabla
     autoTable(doc,{ head:[cabeceras],
     body:rows, startY:95 })
     //creamos el pdf
-    doc.save('a.pdf')
+    doc.save("ordencompra"+this.detailOrd[0]['idOrd']+".pdf");
   }
   //Servicios
   getProvee(){
