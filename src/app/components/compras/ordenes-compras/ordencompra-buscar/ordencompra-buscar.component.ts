@@ -2,8 +2,6 @@ import { Component, OnInit } from '@angular/core';
 //Servicio
 import { OrdendecompraService } from 'src/app/services/ordendecompra.service';
 import { global } from 'src/app/services/global';
-//router
-import { Router } from '@angular/router';
 //NGBOOTSTRAP
 import { NgbModal, ModalDismissReasons, NgbDateStruct} from '@ng-bootstrap/ng-bootstrap';
 
@@ -16,7 +14,6 @@ import { NgbModal, ModalDismissReasons, NgbDateStruct} from '@ng-bootstrap/ng-bo
 export class OrdencompraBuscarComponent implements OnInit {
 
   constructor( private _ordendecompraService: OrdendecompraService,
-               private _router: Router,
                private modalService: NgbModal) { }
 
 
@@ -44,7 +41,7 @@ export class OrdencompraBuscarComponent implements OnInit {
 
   ngOnInit(): void {
     this.getAllOrdenes();
-    console.log(this.fechaActual.toLocaleDateString());
+    //console.log(this.fechaActual.toLocaleDateString());
   }
   getAllOrdenes(){//obtener todas las ordenes de compras
     this._ordendecompraService.getAllOrders().subscribe(
