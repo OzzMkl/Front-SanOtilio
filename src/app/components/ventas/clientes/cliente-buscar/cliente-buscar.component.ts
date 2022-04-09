@@ -26,7 +26,7 @@ export class ClienteBuscarComponent implements OnInit {
       response =>{
         if(response.status == 'success'){
           this.clientes = response.clientes;
-          //console.log(this.clientes);
+          console.log(this.clientes);
         }
       },error =>{
       console.log(error);

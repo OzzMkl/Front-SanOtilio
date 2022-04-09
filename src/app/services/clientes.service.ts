@@ -14,4 +14,8 @@ export class ClientesService {
     let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');
     return this._http.get(this.url+'clientes/index', {headers:headers} );
   }
+ getTipocliente():Observable<any> {
+  let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');
+  return this._http.get(this.url+'clientes/indexTipocliente', {headers:headers} );
+ }
 }

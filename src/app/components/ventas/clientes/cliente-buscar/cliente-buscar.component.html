@@ -14,12 +14,12 @@
                 <th scope="col">TIPO CLIENTE</th>
             </tr>
         </thead>
-        <tbody>
+        <tbody *ngFor="let c of clientes">
             <tr>
-                <th scope="row"></th>
-                <th scope="row"></th>
-                <th scope="row"></th>
-                <th scope="row"></th>
+                <th scope="row">{{c.nombre}} {{c.aPaterno }} {{c.aMaterno}}</th>
+                <th scope="row">{{c.rfc}}</th>
+                <th scope="row">{{c.telefono}}</th>
+                <th scope="row">{{c.nombreTipoC}}</th>
             </tr>
         </tbody>
     </table>
