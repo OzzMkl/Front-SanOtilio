@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 //servicio
 import { ClientesService } from 'src/app/services/clientes.service';
+import { ToastService } from 'src/app/services/toast.service';
 //modelo
 import { Cliente } from 'src/app/models/cliente';
 import { Cdireccion} from 'src/app/models/cdireccion'
@@ -29,9 +30,10 @@ export class ClienteAgregarComponent implements OnInit {
   // hoy : Date= new Date();
 
   constructor( private _clienteService: ClientesService,
-               private modalService:NgbModal) { 
+               private modalService:NgbModal,
+               public toastService: ToastService) { 
     this.cliente = new Cliente (0,'','','','','',0,1,0);
-    this.cdireccion = new Cdireccion (0,'Mexico','Puebla','','','','','','','','','','');
+    this.cdireccion = new Cdireccion (0,'Mexico','Puebla','','','','','','',0,'',0,1);
   }
 
   ngOnInit(): void {
@@ -47,9 +49,22 @@ export class ClienteAgregarComponent implements OnInit {
       });
   }
   guardarCliente(){//guardamos la informacion capturada del cliente
-    this._clienteService.postCliente(this.cliente,this.cdireccion).subscribe( 
+    this._clienteService.postCliente(this.cliente).subscribe( 
       response =>{
-        console.log(response);
+        console.log(this.cliente)
+        if(response.status == 'success'){
+            this._clienteService.postCdireccion(this.cdireccion).subscribe( 
+              response=>{
+                this.toastService.show('Cliente registrado correctamente',{classname: 'bg-success text-light', delay: 3000});
+                //console.log(response);
+              },error=>{
+                this.toastService.show('Algo salio mal',{classname: 'bg-danger text-light', delay: 6000})
+                console.log(error);
+              });
+        }else{
+          this.toastService.show('Algo salio mal',{classname: 'bg-danger text-light', delay: 6000})
+          console.log('Algo salio mal');
+        }
       },error=>{
         console.log(error);
     });
