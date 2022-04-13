@@ -18,6 +18,7 @@ export class ClienteAgregarComponent implements OnInit {
   //variables servicios
   public tipocliente :any;
   //variable formulario
+  public isCompany: boolean = false;
   public isCredito: boolean = false;
   //modelo
   public cliente: Cliente;

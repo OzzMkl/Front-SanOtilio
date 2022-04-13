@@ -1,19 +1,40 @@
 <div class="container">
-    <h4 class="text-center">DATOS PERSONALES</h4>
+    <div class="row">
+        <div class="col">
+        <h4 class="text-center">DATOS PERSONALES</h4>
+        </div>
+        <div class="col">
+            <div class="form-check form-switch">
+                <label class="form-check-label" for="flexSwitchCheckDefault">¿Es una empresa?</label>
+                <input class="form-check-input" type="checkbox" role="switch"  id="flexSwitchCheckDefault" name="isCompany" [(ngModel)]="isCompany">
+              </div>
+        </div>
+    </div>
+    <br>
+    
     <form class="form-group" #FormCliente="ngForm" (ngSubmit)="guardarCliente()">
         <div class="row align-items-start">
-            <div class="col-4">
-                <label class="form-label" for="">Nombre(s)</label>
-                <input class="form-control" type="text" name="nombre" #nombre="ngModel" [(ngModel)]="cliente.nombre">
+            <div *ngIf="isCompany == false; else elseBlock" class="row">
+                <div class="col-4">
+                    <label class="form-label" for="">Nombre(s)</label>
+                    <input class="form-control" type="text" name="nombre" #nombre="ngModel" [(ngModel)]="cliente.nombre">
+                </div>
+                <div class="col-3">
+                    <label class="form-label" for="">Apellido paterno</label>
+                    <input class="form-control" type="text" name="aPaterno" #aPaterno="ngModel" [(ngModel)]="cliente.aPaterno">
+                </div>
+                <div class="col-3">
+                    <label class="form-label" for="">Apellido materno</label>
+                    <input class="form-control" type="text" name="aMaterno" #aMaterno="ngModel" [(ngModel)]="cliente.aMaterno">
+                </div>
             </div>
-            <div class="col-3">
-                <label class="form-label" for="">Apellido paterno</label>
-                <input class="form-control" type="text" name="aPaterno" #aPaterno="ngModel" [(ngModel)]="cliente.aPaterno">
-            </div>
-            <div class="col-3">
-                <label class="form-label" for="">Apellido materno</label>
-                <input class="form-control" type="text" name="aMaterno" #aMaterno="ngModel" [(ngModel)]="cliente.aMaterno">
-            </div>
+            <ng-template #elseBlock>
+                <div class="col-12">
+                    <label class="form-label" for="">Nombre de empresa</label>
+                    <input class="form-control" type="text">
+                </div>
+            </ng-template>
+            
             <div class="col-3">
                 <label class="form-label" for="">Correo</label>
                 <input class="form-control" type="text" name="correo" #correo="ngModel" [(ngModel)]="cliente.correo">
