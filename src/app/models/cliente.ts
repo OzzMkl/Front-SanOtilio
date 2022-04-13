@@ -8,7 +8,6 @@ export class Cliente{//Modelo de cliente
         public correo: string,
         public credito: number,
         public idStatus: number,
-        public idTipo: number,
-        public fechaAlta: any
+        public idTipo: number
     ){}
 }
