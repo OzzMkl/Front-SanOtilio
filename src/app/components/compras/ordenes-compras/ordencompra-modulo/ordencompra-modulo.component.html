@@ -1,14 +1,13 @@
 <div class="container">
-    <h1>{{page_title}}</h1>
+    <br>
     <div class="row align-items-center">
-        <div class="col-auto">
-            <button type="button" value="Agregar" class="btn btn-primary" [routerLink]="['ordencompra-agregar']" style="box-sizing: border-box;">Agregar</button>
+        <div class="col-7">
+            <h1>{{page_title}}</h1>
         </div>
-        <div class="col-auto">
-            <button type="button" value="Deshabilitados" class="btn btn-primary" style="box-sizing: border-box;">Deshabilitados</button>
-        </div>
-        <div class="col-auto">
-            <button type="button" value="Buscar" class="btn btn-primary" [routerLink]="['ordencompra-buscar']" style="box-sizing: border-box;">Buscar</button>
+        <div class="col-4">
+            <button type="button" value="Agregar" class="btn btn-success me-md-2" [routerLink]="['ordencompra-agregar']" style="box-sizing: border-box;"><i class="bi bi-plus-circle"></i><br>Agregar</button>
+            <button type="button" value="Buscar" class="btn btn-primary me-md-2" [routerLink]="['ordencompra-buscar']" style="box-sizing: border-box;"><i class="bi bi-search"></i><br>Buscar</button>
+            <button type="button" value="Deshabilitados" class="btn btn-danger me-md-2" style="box-sizing: border-box;"><i class="bi bi-search"></i><br>Deshabilitados</button>
         </div>
     </div>
 </div>

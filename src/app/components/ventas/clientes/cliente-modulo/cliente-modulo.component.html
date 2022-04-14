@@ -1,12 +1,15 @@
 
 <div class="container">
-    <h1>Modulo de clientes</h1>
-    <div class="row align-items-center">
-        <div class="col-auto">
-            <button type="button" value="Agregar" class="btn btn-primary" [routerLink]="['cliente-agregar']" style="box-sizing: border-box;">Agregar</button>
+    <br>
+    <div class="row justify-content-between">
+        <div class="col-5">
+            <h1>Modulo de clientes</h1>
         </div>
-        <div class="col-auto">
-            <button type="button" value="Buscar" class="btn btn-primary" [routerLink]="['cliente-buscar']"  style="box-sizing: border-box;">Buscar</button>
+        <div class="col-4">
+            
+            <button type="button" value="Agregar" class="btn btn-success me-md-2" [routerLink]="['cliente-agregar']" style="box-sizing: border-box;"><i class="bi bi-plus-circle"></i><br> Agregar</button>
+            
+            <button type="button" value="Buscar" class="btn btn-primary" [routerLink]="['cliente-buscar']"  style="box-sizing: border-box;"><i class="bi bi-search"></i><br>Buscar</button>
         </div>
     </div>
 </div>
