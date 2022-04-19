@@ -12,12 +12,12 @@
     </div>
     <br>
     
-    <form class="form-group" #FormCliente="ngForm" (ngSubmit)="guardarCliente()">
+    <form class="form-group" #FormCliente="ngForm" (ngSubmit)="guardarCliente(FormCliente)">
         <div class="row align-items-start">
             <div *ngIf="isCompany == false; else elseBlock" class="row">
                 <div class="col-4">
                     <label class="form-label" for="">Nombre(s)</label>
-                    <input class="form-control" type="text" name="nombre" #nombre="ngModel" [(ngModel)]="cliente.nombre">
+                    <input class="form-control" type="text" name="nombre" #nombre="ngModel" [(ngModel)]="cliente.nombre" ngModel required>
                 </div>
                 <div class="col-3">
                     <label class="form-label" for="">Apellido paterno</label>
@@ -31,17 +31,17 @@
             <ng-template #elseBlock>
                 <div class="col-12">
                     <label class="form-label" for="">Nombre de empresa</label>
-                    <input class="form-control" type="text" name="nombre" #nombre="ngModel" [(ngModel)]="cliente.nombre">
+                    <input class="form-control" type="text" name="nombre" #nombre="ngModel" [(ngModel)]="cliente.nombre" ngModel required>
                 </div>
             </ng-template>
             
             <div class="col-3">
                 <label class="form-label" for="">Correo</label>
-                <input class="form-control" type="text" name="correo" #correo="ngModel" [(ngModel)]="cliente.correo">
+                <input class="form-control" type="email" name="correo" #correo="ngModel" [(ngModel)]="cliente.correo" ngModel required>
             </div>
             <div class="col-3">
                 <label class="form-label" for="">Tipo cliente</label>
-                <select class="form-select" name="idTipo" #idTipo="ngModel" [(ngModel)]="cliente.idTipo">
+                <select class="form-select" name="idTipo" #idTipo="ngModel" [(ngModel)]="cliente.idTipo" ngModel required>
                     <option selected disabled>Abrir para seleccionar</option>
                     <option *ngFor="let tp of tipocliente" value="{{tp.idTipo}}">{{tp.nombre}}</option>
                 </select>
@@ -77,7 +77,7 @@
         <br>
         <div>
             <div class="col-12">
-                <button  class="btn btn-primary" type="submit">Guardar</button>
+                <button  class="btn btn-primary" type="submit" [disabled]="FormCliente.invalid">Guardar</button>
             </div>
         </div>
 

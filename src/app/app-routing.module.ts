@@ -78,7 +78,7 @@ const routes: Routes = [
     [
       {path: 'cliente-buscar',component: ClienteBuscarComponent},
       {path: 'cliente-agregar',component:ClienteAgregarComponent},
-      {path: 'cliente-editar',component: ClienteEditarComponent}
+      {path: 'cliente-editar/:idCliente',component: ClienteEditarComponent}
     ]},
   {path: 'producto-modulo', component: ProductoModuloComponent,
    children:

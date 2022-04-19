@@ -30,4 +30,8 @@ export class ClientesService {
   let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');//mandamos el json con las cabeceras para que obtengamos el token
   return this._http.post(this.url+'clientes/registerCdireccion',params, {headers:headers} );
  }
+ getDetallesCliente(idCliente:any):Observable<any>{
+  let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');
+  return this._http.get(this.url+'clientes/getDetallesCliente/'+idCliente, {headers:headers} );
+ }
 }

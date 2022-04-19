@@ -48,7 +48,7 @@ export class ClienteAgregarComponent implements OnInit {
         console.log(error);
       });
   }
-  guardarCliente(){//guardamos la informacion capturada del cliente
+  guardarCliente(form:any){//guardamos la informacion capturada del cliente
     this._clienteService.postCliente(this.cliente).subscribe( 
       response =>{
         console.log(this.cliente)
