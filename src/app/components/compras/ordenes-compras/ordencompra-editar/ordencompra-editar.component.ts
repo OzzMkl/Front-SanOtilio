@@ -164,7 +164,7 @@ public test: boolean = false;
             this.orden_compra.updated_at = response.ordencompra[0]['updated_at'];
             //llenamos la lista con la respuesta obtenida
             this.lista_productosorden = response.productos;
-            console.log(this.orden_compra.fecha);
+            //console.log(this.orden_compra.fecha);
           }
           //console.log(response.productos);
         },error =>{

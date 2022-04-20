@@ -1,1 +1,164 @@
-<p>cliente-editar works!</p>
+<div class="container">
+    <div class="row">
+        <div class="col">
+        <h4 class="text-center">DATOS PERSONALES</h4>
+        </div>
+        <div class="col">
+            <div class="form-check form-switch">
+                <label class="form-check-label" for="flexSwitchCheckDefault">¿Es una empresa?</label>
+                <input class="form-check-input" type="checkbox" role="switch"  id="flexSwitchCheckDefault" name="isCompany" [(ngModel)]="isCompany">
+              </div>
+        </div>
+    </div>
+    <br>
+    
+    <form class="form-group" #FormCliente="ngForm">
+        <div class="row align-items-start">
+            <div *ngIf="isCompany == false; else elseBlock" class="row">
+                <div class="col-4">
+                    <label class="form-label" for="">Nombre(s)</label>
+                    <input class="form-control" type="text" name="nombre" #nombre="ngModel" [(ngModel)]="clienteEditado.nombre" >
+                </div>
+                <div class="col-3">
+                    <label class="form-label" for="">Apellido paterno</label>
+                    <input class="form-control" type="text" name="aPaterno" #aPaterno="ngModel" [(ngModel)]="clienteEditado.aPaterno" >
+                </div>
+                <div class="col-3">
+                    <label class="form-label" for="">Apellido materno</label>
+                    <input class="form-control" type="text" name="aMaterno" #aMaterno="ngModel" [(ngModel)]="clienteEditado.aMaterno">
+                </div>
+            </div>
+            <ng-template #elseBlock>
+                <div class="col-12">
+                    <label class="form-label" for="">Nombre de empresa</label>
+                    <input class="form-control" type="text" name="nombre" #nombre="ngModel" [(ngModel)]="clienteEditado.nombre">
+                </div>
+            </ng-template>
+            
+            <div class="col-3">
+                <label class="form-label" for="">Correo</label>
+                <input class="form-control" type="email" name="correo" #correo="ngModel" [(ngModel)]="clienteEditado.correo" >
+            </div>
+            <div class="col-3">
+                <label class="form-label" for="">Tipo cliente</label>
+                <select class="form-select" name="idTipo" #idTipo="ngModel" [(ngModel)]="clienteEditado.idTipo">
+                    <option selected disabled>Abrir para seleccionar</option>
+                    <option *ngFor="let tp of tipocliente" value="{{tp.idTipo}}">{{tp.nombre}}</option>
+                </select>
+            </div>
+            <div class="col-2">
+                <label class="form-label" for="">.</label>
+                <button class="btn btn-success form-control" type="button" (click)="open(content)"> Agregar dirección</button>
+            </div>
+        </div>
+        <hr>
+        <div class="row align-items-start">
+            <div class="col-4">
+                <label class="form-label" for="">RFC</label>
+                <input class="form-control" type="text" name="rfc" #rfc="ngModel" [(ngModel)]="clienteEditado.rfc">
+            </div>
+            <div class="col-3">
+                    <label class="form-label" for="flexCheckDefault">Tiene credito</label>
+                    <br>
+                    <input class="form-check-input" type="checkbox"   name="test" [(ngModel)]="isCredito" id="flexCheckDefault"  >
+            </div>
+
+            <div *ngIf="isCredito == true ;" class="col-3">
+                <label class="form-label" for="">Cantidad de credito</label>
+                <input class="form-control" type="number" name="credito" #credito="ngModel" [(ngModel)]="clienteEditado.credito">
+            </div>
+            
+        </div>
+        <hr>
+        <table class="table table-dark table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">DIRECCION</th>
+                    <th scope="col">REFERENCIA</th>
+                    <th scope="col">TELEFONO</th>
+                    <th scope="col">ZONA</th>
+                </tr>
+            </thead>
+            <tbody *ngFor="let dc of dirEditada">
+                <tr>
+                    <th scope="row">{{dc.estado}}, {{dc.ciudad}}, {{dc.colonia}}, CALLE {{dc.calle}}, #{{dc.numExt}} interior {{dc.numInt}}</th>
+                    <th scope="row">{{dc.referencia}}</th>
+                    <th scope="row">{{dc.telefono}}</th>
+                    <th scope="row">{{dc.nombreZona}}</th>
+                </tr>
+            </tbody>
+        </table>
+        <br>
+        <div>
+            <div class="col-12">
+                <button  class="btn btn-primary" type="submit">Guardar</button>
+            </div>
+        </div>
+
+    </form>
+</div>
+
+<!-- Modal -->
+<ng-template #content let-modal>
+    <form >
+    <div>
+        <div class="modal-header">
+            <h4 class="modal-title" id="modal-basic-title">Agregar direccion</h4>
+            <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+          </div>
+          <div class="modal-body">
+            
+                <div  class="row align-items-start">
+                  <div class="col-3">
+                      <label class="form-label" for="">Pais</label>
+                      <input class="form-control" type="text" value="Mexico" name="pais" >
+                    </div>
+                  <div class="col-3">
+                    <label class="form-label" for="">Estado</label>
+                    <input class="form-control" type="text" value="Puebla" name="estado"  readonly>
+                  </div>
+                  <div class="col-3">
+                    <label class="form-label" for="">Ciudad</label>
+                    <input class="form-control" type="text" name="ciudad" >
+                  </div>
+                  <div class="col-3">
+                    <label class="form-label" for="">Colonia</label>
+                    <input class="form-control" type="text" name="colonia">
+                  </div>
+                  <div class="col-3">
+                    <label class="form-label" for="">Calle</label>
+                    <input class="form-control" type="text" name="calle"  >
+                  </div>
+                  <div class="col-3">
+                    <label class="form-label" for="">Numero exterior</label>
+                    <input class="form-control" type="text" name="numExt">
+                  </div>
+                  <div class="col-3">
+                    <label class="form-label" for="">Numero interior</label>
+                    <input class="form-control" type="text" name="numInt" >
+                  </div>
+                  <div class="col-3">
+                    <label class="form-label" for="">Entre calles</label>
+                    <input class="form-control" type="text" name="entreCalles" >
+                  </div>
+                  <div class="col-3">
+                    <label class="form-label" for="">Codigo postal</label>
+                    <input class="form-control" type="text" name="cp"  >
+                  </div>
+                  <div class="col-3">
+                    <label class="form-label" for="">Telefono</label>
+                    <input class="form-control" type="text" name="telefono" >
+                  </div>
+                  <div class="col">
+                    <label class="form-label" for="">Referencia</label>
+                    <textarea class="form-control" name="" id="" cols="30" rows="2" name="referencia"></textarea>
+                  </div>
+                </div>
+            
+          </div>
+    </div>
+    <div class="modal-footer">
+      <button type="submit" class="btn btn-success" >Guardar</button>
+    </div>  
+    </form>
+</ng-template>

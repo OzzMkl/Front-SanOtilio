@@ -12,6 +12,8 @@ export class Cdireccion{//Modelo de cliente
         public cp: number,
         public referencia: string,
         public telefono: number,
-        public idZona: number
+        public idZona: number,
+        //extras
+        public nombreZona: string
     ){}
 }

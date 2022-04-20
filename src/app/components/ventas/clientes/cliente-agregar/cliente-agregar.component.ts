@@ -33,7 +33,7 @@ export class ClienteAgregarComponent implements OnInit {
                private modalService:NgbModal,
                public toastService: ToastService) { 
     this.cliente = new Cliente (0,'','','','','',0,1,0);
-    this.cdireccion = new Cdireccion (0,'Mexico','Puebla','','','','','','',0,'',0,1);
+    this.cdireccion = new Cdireccion (0,'Mexico','Puebla','','','','','','',0,'',0,1,'');
   }
 
   ngOnInit(): void {
