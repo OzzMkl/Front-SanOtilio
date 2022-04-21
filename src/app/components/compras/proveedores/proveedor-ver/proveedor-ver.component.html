@@ -11,18 +11,15 @@
                 </div>
                 <div class="row justify-content-end">
                     <div class="col-auto">
-                        <button type="button" class="btn btn-success" >Download PDF</button>
+                        <button type="button" class="btn btn-secondary me-md-2"><i class="bi bi-file-earmark-pdf"></i><br>PDF</button>
+                        <button type="button" value="Deshabilitados" class="btn btn-warning me-md-2" ><i class="bi bi-pencil-square"></i><br>Editar</button>
                     </div>
-                    <div class="col-auto">
-                        <button type="button" value="Deshabilitados" class="btn btn-warning" [routerLink]="['proveedorDeshabilitado']" >Editar</button>
-                    </div>
-                    
 
                     <div *ngIf="p.idStatus==1; else elseBlock" class="col-auto">
                         <form class="form-group" #upstss="ngForm" (ngSubmit)="onSubmitt(upstss)" >
                             <input class="form-control" type="text" name="idProveedor" #idProveedor="ngModel" [(ngModel)]="provee.idProveedor" hidden>
                             <input class="form-control" type="text" value="2" name="idStatus" #idStatus="ngModel" [(ngModel)]="provee.idStatus" hidden>
-                            <button type="submit" class="btn btn-danger" >Inhabilitar</button>
+                            <button type="submit" class="btn btn-danger" ><i class="bi bi-exclamation-circle"></i><br>Inhabilitar</button>
                         </form>
 
                       </div>
@@ -31,7 +28,7 @@
                              <form class="form-group" #upsts="ngForm" (ngSubmit)="onSubmit(upsts)" >
                                 <input class="form-control" type="text" name="idProveedor" #idProveedor="ngModel" [(ngModel)]="prove.idProveedor" hidden>
                                 <input class="form-control" type="text" name="idStatus" #idStatus="ngModel" [(ngModel)]="prove.idStatus" hidden>
-                                <button type="submit" class="btn btn-danger" >Habilitar</button>
+                                <button type="submit" class="btn btn-danger" ><i class="bi bi-exclamation-circle"></i><br>Habilitar</button>
                             </form>
                         </div>
                     </ng-template>

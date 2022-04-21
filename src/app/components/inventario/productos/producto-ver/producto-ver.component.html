@@ -6,17 +6,14 @@
             </div>
             <div class="row justify-content-end">
                 <div class="col-auto">
-                    <button type="button" class="btn btn-success" >Download PDF</button>
+                    <button type="button" class="btn btn-secondary me-md-2"><i class="bi bi-file-earmark-pdf"></i><br></button>
+                    <button type="button" value="Deshabilitados" class="btn btn-warning me-md-2" [routerLink]="['../../producto-editar',pd.idProducto]"><i class="bi bi-pencil-square"></i><br></button>
                 </div>
-                <div class="col-auto">
-                    <button type="button" value="Deshabilitados" class="btn btn-warning" [routerLink]="['../../producto-editar',pd.idProducto]" >Editar</button>
-                </div>
-
                 <div *ngIf="pd.statuss==1; else elseBlock" class="col-auto">
                     <form class="form-group" #upstss="ngForm" (ngSubmit)="onSubmitt(upstss)">
                         
                         <input class="form-control" type="text" name="statuss" value="2" #idStatus="ngModel" [(ngModel)]="prod.statuss" hidden>
-                        <button type="submit" class="btn btn-danger" >Inhabilitar</button>
+                        <button type="submit" class="btn btn-danger" ><i class="bi bi-exclamation-triangle"></i><br></button>
                     </form>
                 </div>
                 <ng-template #elseBlock>
@@ -24,7 +21,7 @@
                         <form class="form-group" #upsts="ngForm" (ngSubmit)="onSubmit(upsts)">
                             <input class="form-control" type="text" name="idProducto" #idProducto="ngModel" [(ngModel)]="prodd.idProducto" hidden>
                             <input class="form-control" type="text" name="statuss" #idStatus="ngModel" [(ngModel)]="prodd.statuss" hidden>
-                            <button type="submit" class="btn btn-danger" >Habilitar</button>
+                            <button type="submit" class="btn btn-danger" ><i class="bi bi-exclamation-triangle"></i><br></button>
                         </form>
                     </div>
                 </ng-template>

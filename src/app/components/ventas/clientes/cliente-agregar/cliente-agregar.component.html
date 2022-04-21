@@ -1,1 +1,150 @@
-<p>cliente-agregar works!</p>
+<div class="container">
+    <div class="row">
+        <div class="col">
+        <h4 class="text-center">DATOS PERSONALES</h4>
+        </div>
+        <div class="col">
+            <div class="form-check form-switch">
+                <label class="form-check-label" for="flexSwitchCheckDefault">¿Es una empresa?</label>
+                <input class="form-check-input" type="checkbox" role="switch"  id="flexSwitchCheckDefault" name="isCompany" [(ngModel)]="isCompany">
+              </div>
+        </div>
+    </div>
+    <br>
+    
+    <form class="form-group" #FormCliente="ngForm" (ngSubmit)="guardarCliente(FormCliente)">
+        <div class="row align-items-start">
+            <div *ngIf="isCompany == false; else elseBlock" class="row">
+                <div class="col-4">
+                    <label class="form-label" for="">Nombre(s)</label>
+                    <input class="form-control" type="text" name="nombre" #nombre="ngModel" [(ngModel)]="cliente.nombre" ngModel required>
+                </div>
+                <div class="col-3">
+                    <label class="form-label" for="">Apellido paterno</label>
+                    <input class="form-control" type="text" name="aPaterno" #aPaterno="ngModel" [(ngModel)]="cliente.aPaterno">
+                </div>
+                <div class="col-3">
+                    <label class="form-label" for="">Apellido materno</label>
+                    <input class="form-control" type="text" name="aMaterno" #aMaterno="ngModel" [(ngModel)]="cliente.aMaterno">
+                </div>
+            </div>
+            <ng-template #elseBlock>
+                <div class="col-12">
+                    <label class="form-label" for="">Nombre de empresa</label>
+                    <input class="form-control" type="text" name="nombre" #nombre="ngModel" [(ngModel)]="cliente.nombre" ngModel required>
+                </div>
+            </ng-template>
+            
+            <div class="col-3">
+                <label class="form-label" for="">Correo</label>
+                <input class="form-control" type="email" name="correo" #correo="ngModel" [(ngModel)]="cliente.correo" ngModel required>
+            </div>
+            <div class="col-3">
+                <label class="form-label" for="">Tipo cliente</label>
+                <select class="form-select" name="idTipo" #idTipo="ngModel" [(ngModel)]="cliente.idTipo" ngModel required>
+                    <option selected disabled>Abrir para seleccionar</option>
+                    <option *ngFor="let tp of tipocliente" value="{{tp.idTipo}}">{{tp.nombre}}</option>
+                </select>
+            </div>
+            <div class="col-2">
+                <label class="form-label" for="">.</label>
+                <button class="btn btn-success form-control" type="button" (click)="open(content)"> Agregar dirección</button>
+            </div>
+        </div>
+        <hr>
+        <div class="row align-items-start">
+            <div class="col-4">
+                <label class="form-label" for="">RFC</label>
+                <input class="form-control" type="text" name="rfc" #rfc="ngModel" [(ngModel)]="cliente.rfc">
+            </div>
+            <div class="col-3">
+                    <label class="form-label" for="flexCheckDefault">Tiene credito</label>
+                    <br>
+                    <input class="form-check-input" type="checkbox" value="false"  name="test" [(ngModel)]="isCredito" id="flexCheckDefault">
+            </div>
+
+            <div *ngIf="isCredito == true;" class="col-3">
+                <label class="form-label" for="">Cantidad de credito</label>
+                <input class="form-control" type="number" name="credito" #credito="ngModel" [(ngModel)]="cliente.credito">
+            </div>
+            
+        </div>
+        <hr>
+        <div >
+            <h5>Direccion</h5>
+            <input type="text" class="form-control" value="{{cdireccion.pais}} {{cdireccion.estado}} {{cdireccion.colonia}} {{cdireccion.calle}} {{cdireccion.numExt}} {{cdireccion.numInt}} entre {{cdireccion.entreCalles}}" readonly>
+        </div>
+        <br>
+        <div>
+            <div class="col-12">
+                <button  class="btn btn-primary" type="submit" [disabled]="FormCliente.invalid">Guardar</button>
+            </div>
+        </div>
+
+    </form>
+</div>
+
+<!-- Modal -->
+<ng-template #content let-modal>
+    <form (ngSubmit)="capturarDireccion()">
+    <div>
+        <div class="modal-header">
+            <h4 class="modal-title" id="modal-basic-title">Agregar direccion</h4>
+            <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+          </div>
+          <div class="modal-body">
+            
+                <div  class="row align-items-start">
+                  <div class="col-3">
+                      <label class="form-label" for="">Pais</label>
+                      <input class="form-control" type="text" value="Mexico" name="pais" #pais="ngModel" [(ngModel)]="cdireccion.pais" readonly>
+                  </div>
+                  <div class="col-3">
+                    <label class="form-label" for="">Estado</label>
+                    <input class="form-control" type="text" value="Puebla" name="estado" #estado="ngModel" [(ngModel)]="cdireccion.estado" readonly>
+                  </div>
+                  <div class="col-3">
+                    <label class="form-label" for="">Ciudad</label>
+                    <input class="form-control" type="text" name="ciudad" #ciudad="ngModel" [(ngModel)]="cdireccion.ciudad" >
+                  </div>
+                  <div class="col-3">
+                    <label class="form-label" for="">Colonia</label>
+                    <input class="form-control" type="text" name="colonia" #colonia="ngModel" [(ngModel)]="cdireccion.colonia" >
+                  </div>
+                  <div class="col-3">
+                    <label class="form-label" for="">Calle</label>
+                    <input class="form-control" type="text" name="calle" #calle="ngModel" [(ngModel)]="cdireccion.calle" >
+                  </div>
+                  <div class="col-3">
+                    <label class="form-label" for="">Numero exterior</label>
+                    <input class="form-control" type="text" name="numExt" #numExt="ngModel" [(ngModel)]="cdireccion.numExt" >
+                  </div>
+                  <div class="col-3">
+                    <label class="form-label" for="">Numero interior</label>
+                    <input class="form-control" type="text" name="numInt" #numInt="ngModel" [(ngModel)]="cdireccion.numInt" >
+                  </div>
+                  <div class="col-3">
+                    <label class="form-label" for="">Entre calles</label>
+                    <input class="form-control" type="text" name="entreCalles" #entreCalles="ngModel" [(ngModel)]="cdireccion.entreCalles" >
+                  </div>
+                  <div class="col-3">
+                    <label class="form-label" for="">Codigo postal</label>
+                    <input class="form-control" type="text" name="cp" #cp="ngModel" [(ngModel)]="cdireccion.cp" >
+                  </div>
+                  <div class="col-3">
+                    <label class="form-label" for="">Telefono</label>
+                    <input class="form-control" type="text" name="telefono" #telefono="ngModel" [(ngModel)]="cdireccion.telefono" >
+                  </div>
+                  <div class="col">
+                    <label class="form-label" for="">Referencia</label>
+                    <textarea class="form-control" name="" id="" cols="30" rows="2" name="referencia" #referencia="ngModel" [(ngModel)]="cdireccion.referencia"></textarea>
+                  </div>
+                </div>
+            
+          </div>
+    </div>
+    <div class="modal-footer">
+      <button type="submit" class="btn btn-success" (click)="modal.close('Save click')" >Guardar</button>
+    </div>  
+    </form>
+</ng-template>
