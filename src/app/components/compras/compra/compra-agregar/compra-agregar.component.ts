@@ -15,7 +15,7 @@ import { EmpleadoService } from 'src/app/services/empleado.service';
 import { Ordencompra } from 'src/app/models/orden_compra';
 import { Producto_orden } from 'src/app/models/producto_orden';
 //NGBOOTSTRAP
-import { NgbModal, ModalDismissReasons, NgbDateStruct} from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, ModalDismissReasons, NgbDateStruct, NgbCalendar} from '@ng-bootstrap/ng-bootstrap';
 //pdf
 //import jsPDF from 'jspdf';
 //import 'jspdf-autotable';
@@ -39,6 +39,7 @@ export class CompraAgregarComponent implements OnInit {
   public proveedorVer: any;
   public medidas: any;
   public impuestos: any;
+  public impuestoVer: any;
   public compra: Compra;
   public Lista_compras: Array<Producto_compra>;
   public producto_compra: Producto_compra;
@@ -63,10 +64,12 @@ export class CompraAgregarComponent implements OnInit {
   public identity: any;
   public ultimaCompra: any;
   public detailOrd: any;
-  //modelode bootstrap
+  //modelo de bootstrap
   model!: NgbDateStruct;
+  today = this.calendar.getToday();
   //variable para el pdf
   public fecha : Date = new Date();
+
 
   constructor( 
     private _proveedorService: ProveedorService,
@@ -77,12 +80,13 @@ export class CompraAgregarComponent implements OnInit {
     public toastService: ToastService,
     private _ordencompraService: OrdendecompraService,
     public _empleadoService : EmpleadoService,
-    public _compraService : CompraService
+    public _compraService : CompraService,
+    private calendar: NgbCalendar
     ) {
       this.orden_compra = new Ordencompra(0,null,0,'',null,0,1,null);
       this.producto_orden = new Producto_orden(0,0,0,null,null,null,null);
       this.compra = new Compra(0,null,null,0,0,0,0,0,0,null,'',null);
-      this.producto_compra = new Producto_compra(0,0,0,0,1,0,null,null,null,null,null,0);
+      this.producto_compra = new Producto_compra(0,0,0,0,1,null,null,null,null,null,null,0);
       this.Lista_compras = [];
       this.url = global.url;
      }
@@ -100,7 +104,13 @@ export class CompraAgregarComponent implements OnInit {
   }
 
   onChangeI(id:any){//evento que muestra los datos del impuesto al seleccionarlo
-    this.getImpuesto();
+    this.getImpuestoVer(id);    
+    // console.log(id);
+  }
+
+  onChangeT(subtotal:any){//evento que
+    this.producto_compra.subtotal = this.producto_compra.cantidad * this.producto_compra.precio;
+    this.producto_compra.subtotal = this.producto_compra.subtotal + (this.producto_compra.subtotal * (this.producto_compra.valorImpuesto / 100)); 
   }
 
   cambioSeleccionado(e:any){//limpiamos los inputs del modal
@@ -110,8 +120,8 @@ export class CompraAgregarComponent implements OnInit {
   }
 
   capturar(datos:any){//Agregar a lista de compras
-    if(this.producto_compra.cantidad == 0){
-      this.toastService.show('No se pueden agregar productos con cantidad: 0',{classname: 'bg-danger text-light', delay: 6000})
+    if(this.producto_compra.cantidad <= 0 || this.producto_compra.precio <= 0 || this.producto_compra.subtotal <= 0){
+      this.toastService.show('No se pueden agregar productos con cantidad, precio o importe menor o igual a 0',{classname: 'bg-danger text-light', delay: 6000})
     }else if(this.producto_compra.idProducto == 0){
       this.toastService.show('Ese producto no existe',{classname: 'bg-danger text-light', delay: 6000})
     }else if( this.Lista_compras.find( x => x.idProducto == this.producto_compra.idProducto)){
@@ -317,8 +327,28 @@ export class CompraAgregarComponent implements OnInit {
       }
     );
   }
-
-
+  
+  getImpuestoVer(id:any){
+    //console.log(id);
+    this._impuestoService.getImpuestoVer(id).subscribe(
+      response => {
+        if(response.status == 'success'){
+          this.impuestoVer = response.impuesto;
+          this.producto_compra.NombreImpuesto = response.impuesto[0]['nombre'];
+          this.producto_compra.valorImpuesto = response.impuesto[0]['valor'];
+          if(this.producto_compra.valorImpuesto > 0){
+            // subtotal = subtotal + ( subtotal *( valorImpuesto /100));
+            this.producto_compra.subtotal = this.producto_compra.cantidad * this.producto_compra.precio;
+            this.producto_compra.subtotal = this.producto_compra.subtotal + (this.producto_compra.subtotal * (this.producto_compra.valorImpuesto / 100)); 
+          }
+          // console.log('Nombreimpuesto: ',this.producto_compra.NombreImpuesto);
+          // console.log('valorImpuesto: ',this.producto_compra.valorImpuesto);
+        }
+      }, error =>{
+          console.log(error);
+      }
+    );
+  }
   
 // Modal
   open(content:any) {

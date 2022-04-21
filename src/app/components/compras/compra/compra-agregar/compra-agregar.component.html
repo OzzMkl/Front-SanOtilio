@@ -28,7 +28,7 @@
                 <label class="form-label" for="">Selecciona la fecha de recepción</label>
                 <div class="input-group">
                   <input class="form-control" placeholder="aaaa-mm-dd"
-                         name="dp" [(ngModel)]="model" ngbDatepicker #d="ngbDatepicker">
+                         name="dp" [(ngModel)]="model" ngbDatepicker [footerTemplate]="footerTemplate" #d="ngbDatepicker">
                   <button class="btn btn-outline-secondary" (click)="d.toggle()" type="button"><i class="bi bi-calendar-date-fill"> </i> </button>
                 </div>
             </div>
@@ -49,7 +49,7 @@
             </div>
         </div>
         <hr>
-        <div >
+        <div>
             <h4 class="text-center">PRODUCTO</h4>
             <div class="row align-items-start">
                 <div class="col-4">
@@ -57,12 +57,11 @@
                     <div class="input-group">
                         <span class="input-group-addon" id="sizing-addon2"><i class="bi-search" style="font-size: 1.5rem; color: black; left: 0;" (click)="open(content)"></i> </span>
                         <input class="form-control" type="text" ngbTooltip="Solo busca por clave externa" name="claveEx" #claveEx="ngModel" [(ngModel)]="producto_compra.claveEx" (keydown)="consultarProducto($event)">
-                        
                     </div>
                 </div>
                 <div class="col-4">
                     <label class="form-label" for="cantidadProducto">Cantidad</label>
-                    <input class="form-control" type="number" name="cantidadProducto" id="cantidadProducto"  #cantidadProducto="ngModel" [(ngModel)]="producto_compra.cantidad">
+                    <input class="form-control" min="0" type="number" name="cantidadProducto" id="cantidadProducto"  #cantidadProducto="ngModel" [(ngModel)]="producto_compra.cantidad" (ngModelChange)="onChangeT($event)">
                 </div>
                 <div class="col-2">
                     <label class="form-label" for="cantidadProducto">.</label>
@@ -103,29 +102,32 @@
                 </div>
                 <div class="col-2">
                     <label for="precio" class="form-label"> Precio</label>
-                    <input type="text" name="precioProducto" class="form-control" >
+                    <input type="number" min="0" name="precioProducto" class="form-control" id="precioProducto" #precioProducto="ngModel" [(ngModel)]="producto_compra.precio" (ngModelChange)="onChangeT($event)" >
                     <br>
                 </div>
 
                 <div class="col-2">
-                    <label for="idImpuesto" class="form-label">Seleccionar impuesto</label>
-                    <select name="idImpuesto" id="idImpuesto" class="form-select" #idImpuesto="ngModel" [(ngModel)]="prod.idImpuesto" (ngModelChange)="onChangeI($event)">
+                    <label for="" class="form-label">Seleccionar impuesto</label>
+                    <select name="idImpuesto" id="idImpuesto" class="form-select" #idImpuesto="ngModel" [(ngModel)]="prod.idImpuesto" [(ngModel)]="producto_compra.NombreImpuesto"  (ngModelChange)="onChangeI($event)" >
                         <option selected disabled value="">Abrir para seleccionar</option>
                         <option  *ngFor="let imp of impuestos" value={{imp.idImpuesto}}>{{imp.nombre}}</option>
                     </select>
-                </div>
 
-                <!-- <div class="col-2">
-                    <label for="impuesto" class="form-label"> % Impuesto</label>
-                    <input class="form-control" type="text"  value="{{imp.valor}}" readonly> 
-                    <br>
-                </div> -->
+                </div>
+            
+                <div *ngFor="let impu of impuestoVer" class="col-2">
+                    <label for="impuestoV" class="form-label"> % Impuesto</label>
+                    <input class="form-control" type="text" value="{{impu.valor}}" name="valorImpuesto" #valorImpuesto="ngModel" [(ngModel)]="producto_compra.valorImpuesto"  readonly>
+                </div>
+                
+                
                 <div class="col-2">
-                    <label for="subtotal" class="form-label"> Subtotal</label>
-                    <input class="form-control" type="text" name="subtotalProducto" readonly> 
+                    <label for="subtotal" class="form-label"> Importe</label>
+                    <input class="form-control" type="number" min="0" name="subtotal" value="{{producto_compra.cantidad * producto_compra.precio }}" id="subtotal" #subtotal="ngModel" 
+                        [(ngModel)]="producto_compra.subtotal" readonly> 
                     <br>
                 </div>
-            </div>
+            </div> 
         </div>
         <hr>
         <div class="row align-items-start">
@@ -148,6 +150,10 @@
                      <th scope="row">{{p_d.descripcion}}</th>
                      <th scope="row">{{p_d.nombreMedida}}</th>
                      <th scope="row">{{p_d.cantidad}}</th>
+                     <th scope="row">{{p_d.precio}}</th>
+                     <th scope="row">{{p_d.NombreImpuesto}}</th>
+                     <th scope="row">{{p_d.subtotal}}</th>
+
                     </tr>
                 </tbody>
             </table>
@@ -224,3 +230,7 @@
     </div> -->
 </ng-template>
 
+<ng-template #footerTemplate>
+    <hr class="my-0">
+    <button class="btn btn-primary btn-sm m-2 float-start" (click)="model = today; d.close()">Hoy</button>
+</ng-template>

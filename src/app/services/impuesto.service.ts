@@ -19,4 +19,9 @@ export class ImpuestoService{
         let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');
         return this._http.get(this.url+'impuesto/index', {headers:headers} );
     }
+
+    getImpuestoVer(idImpuesto:any):Observable<any>{
+        let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');
+        return this._http.get(this.url+'impuesto/show/'+idImpuesto, {headers:headers} );
+    }
 }
