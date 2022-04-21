@@ -30,7 +30,8 @@ export class ClienteBuscarComponent implements OnInit {
   buscarCliente ='';
   //cerrar mdal
   closeResult='';
-
+  //modelo para buscar
+  
 
   constructor( private _clienteService: ClientesService, private modalService: NgbModal ) { }
 

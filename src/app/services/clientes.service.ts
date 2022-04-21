@@ -34,4 +34,16 @@ export class ClientesService {
   let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');
   return this._http.get(this.url+'clientes/getDetallesCliente/'+idCliente, {headers:headers} );
  }
+ updateCliente(cliente:any, idCliente:any):Observable<any>{
+  let json = JSON.stringify(cliente);
+  let params = 'json='+json;
+  let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');
+  return this._http.put(this.url + 'clientes/updateCliente/'+idCliente,params,{headers: headers});
+ }
+ updateCdireccion(cdireccion:any,idCliente:any):Observable<any>{
+  let json = JSON.stringify(cdireccion);
+  let params = 'json='+json;
+  let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');
+  return this._http.put(this.url + 'clientes/updateCdireccion/'+idCliente,params,{headers: headers});
+ }
 }

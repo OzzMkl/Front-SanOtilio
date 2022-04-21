@@ -12,7 +12,7 @@
     </div>
     <br>
     
-    <form class="form-group" #FormCliente="ngForm">
+    <form class="form-group" #FormCliente="ngForm" (ngSubmit)="actualizarCliente()">
         <div class="row align-items-start">
             <div *ngIf="isCompany == false; else elseBlock" class="row">
                 <div class="col-4">
@@ -79,8 +79,8 @@
                     <th scope="col">ZONA</th>
                 </tr>
             </thead>
-            <tbody *ngFor="let dc of dirEditada">
-                <tr>
+            <tbody *ngFor="let dc of listaDirecciones">
+                <tr (click)="editarDireccion(dc.colonia,content)">
                     <th scope="row">{{dc.estado}}, {{dc.ciudad}}, {{dc.colonia}}, CALLE {{dc.calle}}, #{{dc.numExt}} interior {{dc.numInt}}</th>
                     <th scope="row">{{dc.referencia}}</th>
                     <th scope="row">{{dc.telefono}}</th>
@@ -91,7 +91,7 @@
         <br>
         <div>
             <div class="col-12">
-                <button  class="btn btn-primary" type="submit">Guardar</button>
+                <button  class="btn btn-primary" type="submit" >Guardar</button>
             </div>
         </div>
 
@@ -111,54 +111,54 @@
                 <div  class="row align-items-start">
                   <div class="col-3">
                       <label class="form-label" for="">Pais</label>
-                      <input class="form-control" type="text" value="Mexico" name="pais" >
+                      <input class="form-control" type="text" value="Mexico" name="pais" #pais="ngModel" [(ngModel)]="dirEditada.pais" readonly>
                     </div>
                   <div class="col-3">
                     <label class="form-label" for="">Estado</label>
-                    <input class="form-control" type="text" value="Puebla" name="estado"  readonly>
+                    <input class="form-control" type="text" value="Puebla" name="estado" #estado="ngModel" [(ngModel)]="dirEditada.estado" readonly>
                   </div>
                   <div class="col-3">
                     <label class="form-label" for="">Ciudad</label>
-                    <input class="form-control" type="text" name="ciudad" >
+                    <input class="form-control" type="text" name="ciudad" #ciudad="ngModel" [(ngModel)]="dirEditada.ciudad" >
                   </div>
                   <div class="col-3">
                     <label class="form-label" for="">Colonia</label>
-                    <input class="form-control" type="text" name="colonia">
+                    <input class="form-control" type="text" name="colonia" #colonia="ngModel" [(ngModel)]="dirEditada.colonia">
                   </div>
                   <div class="col-3">
                     <label class="form-label" for="">Calle</label>
-                    <input class="form-control" type="text" name="calle"  >
+                    <input class="form-control" type="text" name="calle" #calle="ngModel" [(ngModel)]="dirEditada.calle" >
                   </div>
                   <div class="col-3">
                     <label class="form-label" for="">Numero exterior</label>
-                    <input class="form-control" type="text" name="numExt">
+                    <input class="form-control" type="text" name="numExt" #numExt="ngModel" [(ngModel)]="dirEditada.numExt">
                   </div>
                   <div class="col-3">
                     <label class="form-label" for="">Numero interior</label>
-                    <input class="form-control" type="text" name="numInt" >
+                    <input class="form-control" type="text" name="numInt" #numInt="ngModel" [(ngModel)]="dirEditada.numInt" >
                   </div>
                   <div class="col-3">
                     <label class="form-label" for="">Entre calles</label>
-                    <input class="form-control" type="text" name="entreCalles" >
+                    <input class="form-control" type="text" name="entreCalles" #entreCalles="ngModel" [(ngModel)]="dirEditada.entreCalles" >
                   </div>
                   <div class="col-3">
                     <label class="form-label" for="">Codigo postal</label>
-                    <input class="form-control" type="text" name="cp"  >
+                    <input class="form-control" type="text" name="cp" #cp="ngModel" [(ngModel)]="dirEditada.cp" >
                   </div>
                   <div class="col-3">
                     <label class="form-label" for="">Telefono</label>
-                    <input class="form-control" type="text" name="telefono" >
+                    <input class="form-control" type="text" name="telefono" #telefono="ngModel" [(ngModel)]="dirEditada.telefono" >
                   </div>
                   <div class="col">
                     <label class="form-label" for="">Referencia</label>
-                    <textarea class="form-control" name="" id="" cols="30" rows="2" name="referencia"></textarea>
+                    <textarea class="form-control" name="" id="" cols="30" rows="2" name="referencia" #referencia="ngModel" [(ngModel)]="dirEditada.referencia"></textarea>
                   </div>
                 </div>
             
           </div>
     </div>
     <div class="modal-footer">
-      <button type="submit" class="btn btn-success" >Guardar</button>
+      <button type="submit" class="btn btn-success" (click)="modal.dismiss('Cross click')" (click)="capturarDireccion()">Guardar</button>
     </div>  
     </form>
 </ng-template>

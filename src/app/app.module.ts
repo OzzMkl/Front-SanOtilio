@@ -62,6 +62,7 @@ import { ClienteModuloComponent } from './components/ventas/clientes/cliente-mod
 import { ClienteAgregarComponent } from './components/ventas/clientes/cliente-agregar/cliente-agregar.component';
 import { ClienteEditarComponent } from './components/ventas/clientes/cliente-editar/cliente-editar.component';
 import { ClienteBuscarComponent } from './components/ventas/clientes/cliente-buscar/cliente-buscar.component';
+import { FilterClientesPipe } from './pipes/filter-clientes.pipe';
 
 
 @NgModule({
@@ -113,6 +114,7 @@ import { ClienteBuscarComponent } from './components/ventas/clientes/cliente-bus
     ClienteAgregarComponent,
     ClienteEditarComponent,
     ClienteBuscarComponent,
+    FilterClientesPipe,
   ],
   imports: [
     BrowserModule,

@@ -25,13 +25,15 @@ export class ClienteEditarComponent implements OnInit {
   closeResult ='';
   //Modelos 
   public clienteEditado: Cliente;
-  public dirEditada: Array<Cdireccion>;
+  public dirEditada: Cdireccion;
+  public listaDirecciones: Array<Cdireccion>;
 
   constructor(private _clienteService: ClientesService, private modalService:NgbModal,
     public toastService: ToastService, private _route: ActivatedRoute) {
 
       this.clienteEditado = new Cliente (0,'','','','','',0,1,0);
-      this.dirEditada = [];
+      this.dirEditada = new Cdireccion (0,'Mexico','Puebla','','','','','','',0,'',0,1,'');
+      this.listaDirecciones = [];
      }
 
   ngOnInit(): void {
@@ -56,7 +58,7 @@ export class ClienteEditarComponent implements OnInit {
           this.clienteEditado.idStatus = response.cliente[0]['idStatus'];
           this.clienteEditado.idTipo = response.cliente[0]['idTipo'];
           //se asigna la direcciones
-          this.dirEditada = response.cdireccion;
+          this.listaDirecciones = response.cdireccion;
           //Si cuenta con credito habilitamos el check
           if(this.clienteEditado.credito > 0){
             this.isCredito = true;
@@ -78,6 +80,55 @@ export class ClienteEditarComponent implements OnInit {
       response =>{
         this.tipocliente = response.tipocliente;
       },error =>{
+        console.log(error);
+      });
+  }
+  capturarDireccion(){//agregamos la direccion a la lista de direcciones
+    this.listaDirecciones.push({...this.dirEditada})
+  }
+  editarDireccion(colonia:any,content:any){//edcion de la direccion al dar click
+    //creamos variable
+    let k;
+    //buscamos dentro del array el nombre de la colonia y ya encontrado
+    //asignamos todo el objeto a la variable que creamos
+    k = this.listaDirecciones.find((item) => item.colonia == colonia);
+    //asignamos una por una a las propiedades del modelo dirEditada
+    this.dirEditada.idCliente = k!.idCliente;
+    this.dirEditada.pais = k!.pais;
+    this.dirEditada.estado = k!.estado;
+    this.dirEditada.ciudad = k!.ciudad;
+    this.dirEditada.colonia = k!.colonia;
+    this.dirEditada.calle = k!.calle;
+    this.dirEditada.entreCalles = k!.entreCalles;
+    this.dirEditada.numExt = k!.numExt;
+    this.dirEditada.numInt = k!.numInt;
+    this.dirEditada.cp = k!.cp;
+    this.dirEditada.referencia = k!.referencia;
+    this.dirEditada.telefono = k!.telefono;
+    this.dirEditada.idZona = k!.idZona;
+    //eliminamos de la lista la direccion seleccionada
+    this.listaDirecciones = this.listaDirecciones.filter((item) => item.colonia !== colonia);
+    //mandammos a abrir el modal para editar la direccion
+    this.open(content);
+  }
+  actualizarCliente(){
+    //console.log(this.listaDirecciones);
+    this._clienteService.updateCliente(this.clienteEditado,this.clienteEditado.idCliente).subscribe( 
+      response =>{
+        if(response.status == 'success'){
+          this._clienteService.updateCdireccion(this.listaDirecciones,this.clienteEditado.idCliente).subscribe(
+            response =>{
+              if(response.status == 'success'){
+                this.toastService.show('Cliente actualizado correctamente',{classname: 'bg-success text-light', delay: 3000});
+              }
+              console.log(response)
+            },error=>{console.log(error);})
+        }else{
+          this.toastService.show('Algo salio mal al actualizar el cliente',{classname: 'bg-danger text-light', delay: 6000});
+        }
+        //console.log(response);
+      },error=>{
+        this.toastService.show('Algo salio mal',{classname: 'bg-danger text-light', delay: 6000});
         console.log(error);
       });
   }

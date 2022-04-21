@@ -49,6 +49,10 @@ export class ClienteAgregarComponent implements OnInit {
       });
   }
   guardarCliente(form:any){//guardamos la informacion capturada del cliente
+    if(this.isCompany == true ){
+      this.cliente.aMaterno ='';
+      this.cliente.aPaterno='';
+    }
     this._clienteService.postCliente(this.cliente).subscribe( 
       response =>{
         console.log(this.cliente)
@@ -70,7 +74,7 @@ export class ClienteAgregarComponent implements OnInit {
     });
   }
   capturarDireccion(){
-    console.log(this.cdireccion);
+    //console.log(this.cdireccion);
   }
   // Modal
   open(content:any) {//abre modal
