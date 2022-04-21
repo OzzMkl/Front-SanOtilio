@@ -65,11 +65,18 @@
                     <input class="form-control" type="text" value="{{pd.existenciaG}}" readonly>
                 
                 </div>
-                <div class="col-4">
+                <div class="col-4" *ngIf=" pd.image != null; else elseBlock2">
                     <label for="imagen">Imagen</label>
                     <br>
                     <img src="{{url + 'productos/getImageProduc/' + pd.imagen}}" width="100px" height="100px">
                 </div>
+                <ng-template #elseBlock2>
+                    <div class="col-4">
+                        <label for="imagen">Imagen</label>
+                        <br>
+                        <img src="{{url + 'productos/getImageProduc/1650558444no-image.png'}}" width="100px" height="100px">
+                    </div>
+                </ng-template>
                
                 
             </div>

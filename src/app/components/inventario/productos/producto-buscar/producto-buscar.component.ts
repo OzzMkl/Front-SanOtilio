@@ -42,6 +42,7 @@ export class ProductoBuscarComponent implements OnInit {
       response =>{
         if(response.status == 'success'){
           this.productos = response.productos;
+          console.log(this.productos)
           //navegacion paginacion
           this.totalPages = response.productos.total;
           //console.log(response.productos);

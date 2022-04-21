@@ -22,9 +22,10 @@
                     <th scope="col">PRECIO REVENDEDOR</th>
                     <th scope="col">MEDIDA</th>
                     <th scope="col">MARCA</th>
-                    <th scope="col">DEPARTAMENTO</th>
-                    <th scope="col">CATEGORIA</th>
-                    <th scope="col">SUBCATEGORIA</th>
+                    <th scope="col">EXISTENCIA</th>
+                    <!-- <th scope="col">DEPARTAMENTO</th> -->
+                    <!-- <th scope="col">CATEGORIA</th> -->
+                    <!-- <th scope="col">SUBCATEGORIA</th> -->
                     <th scope="col">IMAGEN</th>
                     <!-- <th scope="col">ACCION</th> -->
             </tr>
@@ -38,10 +39,14 @@
                     <th scope="row">${{pr.precioR}}</th>
                     <th scope="row">{{pr.nombreMedida}}</th>
                     <th scope="row">{{pr.nombreMarca}}</th>
-                    <th scope="row">{{pr.nombreDep}}</th>
-                    <th scope="row">{{pr.nombreCat}}</th>
-                    <th scope="row">{{pr.nombreSubCat}}</th>
-                    <th scope="row"><img src="{{url + 'productos/getImageProduc/' + pr.imagen}}" width="100px" height="100px"></th>
+                    <th scope="row">{{pr.existenciaG}}</th>
+                    <!-- <th scope="row">{{pr.nombreDep}}</th> -->
+                    <!-- <th scope="row">{{pr.nombreCat}}</th> -->
+                    <!-- <th scope="row">{{pr.nombreSubCat}}</th> -->
+                    <th scope="row" *ngIf="pr.imagen != null; else elseBlock"><img src="{{url + 'productos/getImageProduc/' + pr.imagen}}" width="100px" height="100px"></th>
+                    <ng-template #elseBlock>
+                        <th scope="row"><img src="{{url + 'productos/getImageProduc/1650558444no-image.png'}}" width="100px" height="100px"></th>
+                    </ng-template>
                     <!-- <th scope="row"> <input type="button" value="Ver" class="btn btn-warning"/></th> -->
                 </tr>
             </tbody>
