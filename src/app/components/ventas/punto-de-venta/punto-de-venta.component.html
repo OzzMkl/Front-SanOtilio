@@ -1,1 +1,93 @@
-<p>punto-de-venta works!</p>
+<div class="container">
+    <div>
+        <h5 class="text-center">DATOS DEL CLIENTE</h5>
+        <div class="row align-items-start" >
+            <div class="col-4">
+                <label class="form-label" for="">Buscar cliente</label>
+                    <div class="input-group">
+                        <span class="input-group-addon" id="sizing-addon2"><i class="bi-search" style="font-size: 1.5rem; color: black; left: 0;" (click)="open(content)"></i></span>
+                        <input class="form-control" type="text" name="nomreCliente" #nombreCliente="ngModel" [(ngModel)]="ventag.nombreCliente" readonly>
+                    </div>
+            </div>
+            <div class="col-1">
+                <br>
+                <button class="btn btn-success" (click)="open(content2)"><i class="bi bi-plus-circle-dotted" style="font-size: 1.3rem; color: rgb(255, 249, 249); left: 0;"></i></button>
+            </div>
+            <div class="col-2" *ngFor="let c of cliente">
+                <label class="form-label">RFC</label>
+                <input class="form-control" type="text" value="{{c.rfc}}"  readonly>
+            </div>
+            <div class="col-2" *ngFor="let c of cliente">
+                <label class="form-label">Tipo cliente</label>
+                <input class="form-control" type="text" value="{{c.nombreTipoC}}"  readonly>
+            </div>
+            <!-- <div class="col-1" *ngFor="let c of cliente">
+                <p>{{c.nombreStatus}}</p>
+            </div> -->
+            <div *ngIf="ventag.nombreCliente.length > 0" class="col-2">
+                <label class="form-label" for="flexSwitchCheckDefault">¿Se envia?</label>
+                <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+                  </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal buscar clientes-->
+<ng-template #content let-modal>
+    <div class="modal-header">
+      <h5 class="modal-title" id="modal-basic-title">Buscar cliente</h5>
+      <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+        <div>
+            <div class="col">
+                <input type="text" class="form-control" name="buscarCliente" placeholder="buscar ..." [(ngModel)]="buscarCliente">
+            </div>
+            <br>
+            <table class="table table-dark table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col">NOMBRE</th>
+                        <th scope="col">RFC</th>
+                        <th scope="col">TELEFONO</th>
+                        <th scope="col">TIPO CLIENTE</th>
+                    </tr>
+                </thead>
+                <tbody *ngFor="let c of clientes | filterClientes: buscarCliente | paginate:{id:'pagCliente',itemsPerPage: 10, currentPage: pageActual}">
+                    <tr (click)="seleccionarCliente(c.idCliente)" (click)="modal.dismiss('Cross click')">
+                        <th scope="row">{{c.nombre}} {{c.aPaterno }} {{c.aMaterno}}</th>
+                        <th scope="row">{{c.rfc}}</th>
+                        <th scope="row">{{c.telefono}}</th>
+                        <th scope="row">{{c.nombreTipoC}}</th>
+                    </tr>
+                </tbody>
+            </table>
+            <pagination-controls id="pagCliente" (pageChange)="pageActual = $event"></pagination-controls>
+        </div>
+        
+    </div>
+    <!-- <div class="modal-footer">
+      <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Guardar</button>
+    </div> -->
+</ng-template>
+<!-- Modal agregar cliente-->
+<ng-template #content2 let-modal>
+    <div class="modal-header">
+      <h5 class="modal-title" id="modal-basic-title">Agregar cliente</h5>
+      <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+      <form>
+       
+          
+      </form>
+    </div>
+    <!-- <div class="modal-footer">
+      <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Guardar</button>
+    </div> -->
+</ng-template>
+<!-- Modal para elegir direccion del cliente -->
+<ng-template #buscarDireccion let-modal>
+
+</ng-template>
