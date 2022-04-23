@@ -27,9 +27,26 @@
             <div *ngIf="ventag.nombreCliente.length > 0" class="col-2">
                 <label class="form-label" for="flexSwitchCheckDefault">¿Se envia?</label>
                 <div class="form-check form-switch">
-                    <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+                    <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" value="true" name="seEnvia" [(ngModel)]="seEnvia" (change)="modalSeEnvia(buscarDireccion)" >
                   </div>
             </div>
+        </div>
+    </div>
+    <hr>
+    <div class="row align-items-start">
+        <h5 class="text-center">LISTA DE PRODUCTOS</h5>
+        <div class="col-4">
+            <label class="form-label" for="">Buscar producto</label>
+                <div class="input-group">
+                    <span class="input-group-addon" id="sizing-addon2"><i class="bi-search" style="font-size: 1.5rem; color: black; left: 0;"></i></span>
+                    <input class="form-control" type="text" readonly>
+                </div>
+                <!-- tabla -->
+                <table>
+                    <thead>
+                        <tr></tr>
+                    </thead>
+                </table>
         </div>
     </div>
 </div>
@@ -89,5 +106,28 @@
 </ng-template>
 <!-- Modal para elegir direccion del cliente -->
 <ng-template #buscarDireccion let-modal>
-
+    <div class="modal-header">
+        <h5 class="modal-title" id="modal-basic-title">Agregar direccion</h5>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+      </div>
+      <div class="modal-body">
+        <table class="table table-dark table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">DIRECCION</th>
+                    <th scope="col">REFERENCIA</th>
+                    <th scope="col">TELEFONO</th>
+                    <th scope="col">ZONA</th>
+                </tr>
+            </thead>
+            <tbody *ngFor="let dc of dirCliente">
+                <tr>
+                    <th scope="row">{{dc.estado}}, {{dc.ciudad}}, {{dc.colonia}}, CALLE {{dc.calle}}, #{{dc.numExt}} interior {{dc.numInt}}</th>
+                    <th scope="row">{{dc.referencia}}</th>
+                    <th scope="row">{{dc.telefono}}</th>
+                    <th scope="row">{{dc.nombreZona}}</th>
+                </tr>
+            </tbody>
+        </table>
+      </div>
 </ng-template>

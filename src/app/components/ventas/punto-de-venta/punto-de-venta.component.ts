@@ -33,7 +33,7 @@ export class PuntoDeVentaComponent implements OnInit {
 
 
   constructor( private modalService: NgbModal, private _clienteService: ClientesService) {
-    this.ventag = new Ventag(0,0,0,0,'',0,null,0,'');
+    this.ventag = new Ventag(0,0,0,0,'',0,null,0,'','');
    }
 
   ngOnInit(): void {
@@ -50,6 +50,9 @@ export class PuntoDeVentaComponent implements OnInit {
       console.log(error);
     });
   }
+  getDireccionCliente(){
+  
+  }
   //traemos la informacion del cliente seleccionado
   seleccionarCliente(idCliente:any){
     this._clienteService.getDetallesCliente(idCliente).subscribe( 
@@ -58,10 +61,11 @@ export class PuntoDeVentaComponent implements OnInit {
           this.cliente = response.cliente;
           this.dirCliente= response.cdireccion;
           this.ventag.nombreCliente = this.cliente[0]['nombre']+' '+this.cliente[0]['aPaterno']+' '+this.cliente[0]['aMaterno'];
+          this.ventag.idCliente = this.cliente[0]['idCliente'];
         }else{
           console.log('algo salio mal'+response);
         }
-        console.log(response.cliente);
+        //console.log(response.cliente);
         //console.log(response.cdireccion);
       },error=>{
         console.log(error);
@@ -83,6 +87,16 @@ export class PuntoDeVentaComponent implements OnInit {
       return 'by clicking on a backdrop';
     } else {
       return `with: ${reason}`;
+    }
+  }
+  modalSeEnvia(content:any){
+    if(this.seEnvia == true){
+      this.getClientes();
+      this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title', size: 'xl'}).result.then((result) => {
+        this.closeResult = `Closed with: ${result}`;
+      }, (reason) => {
+        this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+      });
     }
   }
 }
