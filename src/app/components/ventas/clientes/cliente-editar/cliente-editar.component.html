@@ -80,7 +80,7 @@
                 </tr>
             </thead>
             <tbody *ngFor="let dc of listaDirecciones">
-                <tr (click)="editarDireccion(dc.colonia,content)">
+                <tr (click)="editarDireccion(dc.colonia + dc.calle + dc.numExt,content)">
                     <th scope="row">{{dc.estado}}, {{dc.ciudad}}, {{dc.colonia}}, CALLE {{dc.calle}}, #{{dc.numExt}} interior {{dc.numInt}}</th>
                     <th scope="row">{{dc.referencia}}</th>
                     <th scope="row">{{dc.telefono}}</th>
