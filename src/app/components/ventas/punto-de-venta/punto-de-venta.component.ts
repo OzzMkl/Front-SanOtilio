@@ -1,8 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 //servicio
 import { ClientesService } from 'src/app/services/clientes.service';
+import { ToastService } from 'src/app/services/toast.service';
 //modelos
 import { Ventag } from 'src/app/models/ventag';
+import { Cliente } from 'src/app/models/cliente';
+import { Cdireccion } from 'src/app/models/cdireccion';
 //NGBOOTSTRAP-modal
 import { NgbModal, ModalDismissReasons, NgbDateStruct} from '@ng-bootstrap/ng-bootstrap';
 
@@ -18,6 +21,7 @@ export class PuntoDeVentaComponent implements OnInit {
   public clientes:any;//getClientes
   public cliente:any;//seleccionarCliente
   public dirCliente:any;//seleccionarCliente
+  public tipocliente :any;
    /**PAGINATOR */
    public totalPages: any;
    public page: any;
@@ -27,16 +31,24 @@ export class PuntoDeVentaComponent implements OnInit {
    //pipe de busqueda en modal
    buscarCliente ='';
    //modelo de venta
-   public ventag: Ventag;
-   //
+  public ventag: Ventag;
+  public modeloCliente: Cliente;
+  public cdireccion: Cdireccion;
+   //variables html
    public seEnvia: boolean = false;
+   public isCompany: boolean = false;
+   public isCredito: boolean = false;
 
 
-  constructor( private modalService: NgbModal, private _clienteService: ClientesService) {
+  constructor( private modalService: NgbModal, private _clienteService: ClientesService,
+    public toastService: ToastService) {
     this.ventag = new Ventag(0,0,0,0,'',0,null,0,'','');
+    this.modeloCliente = new Cliente (0,'','','','','',0,1,0);
+    this.cdireccion = new Cdireccion (0,'Mexico','Puebla','','','','','','',0,'',0,1,'');
    }
 
   ngOnInit(): void {
+    this.getTipocliente();
   }
   //traemos todos los clientes
   getClientes(){
@@ -49,6 +61,15 @@ export class PuntoDeVentaComponent implements OnInit {
       },error =>{
       console.log(error);
     });
+  }
+  //obtenemos los tipos de clientes para el select
+  getTipocliente(){
+    this._clienteService.getTipocliente().subscribe(
+      response =>{
+        this.tipocliente = response.tipocliente;
+      },error =>{
+        console.log(error);
+      });
   }
   getDireccionCliente(){
   
@@ -70,6 +91,31 @@ export class PuntoDeVentaComponent implements OnInit {
       },error=>{
         console.log(error);
       });
+  }
+  guardarCliente(){
+    
+    if(this.isCompany == true ){
+      this.modeloCliente.aMaterno ='';
+      this.modeloCliente.aPaterno='';
+    }
+    this._clienteService.postCliente(this.modeloCliente).subscribe( 
+      response =>{
+        if(response.status == 'success'){
+            this._clienteService.postCdireccion(this.cdireccion).subscribe( 
+              response=>{
+                this.toastService.show('Cliente registrado correctamente',{classname: 'bg-success text-light', delay: 3000});
+                //console.log(response);
+              },error=>{
+                this.toastService.show('Algo salio mal',{classname: 'bg-danger text-light', delay: 6000})
+                console.log(error);
+              });
+        }else{
+          this.toastService.show('Algo salio mal',{classname: 'bg-danger text-light', delay: 6000})
+          console.log('Algo salio mal');
+        }
+      },error=>{
+        console.log(error);
+    });
   }
   // Modal
   open(content:any) {
@@ -100,3 +146,4 @@ export class PuntoDeVentaComponent implements OnInit {
     }
   }
 }
+//programa que complemente el suso del diesel redimiento
