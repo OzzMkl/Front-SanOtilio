@@ -10,7 +10,7 @@
             <tr>
                 <th scope="col">NOMBRE</th>
                 <th scope="col">RFC</th>
-                <th scope="col">TELEFONO</th>
+                <th scope="col">CREDITO</th>
                 <th scope="col">TIPO CLIENTE</th>
             </tr>
         </thead>
@@ -18,7 +18,7 @@
             <tr (click)="open(content)" (click)="seleccionarCliente(c.idCliente)">
                 <th scope="row">{{c.nombre}} {{c.aPaterno }} {{c.aMaterno}}</th>
                 <th scope="row">{{c.rfc}}</th>
-                <th scope="row">{{c.telefono}}</th>
+                <th scope="row">{{c.credito | currency}}</th>
                 <th scope="row">{{c.nombreTipoC}}</th>
             </tr>
         </tbody>

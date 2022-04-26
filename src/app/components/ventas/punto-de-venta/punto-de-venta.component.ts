@@ -20,24 +20,24 @@ export class PuntoDeVentaComponent implements OnInit {
   //variable de servicios
   public clientes:any;//getClientes
   public cliente:any;//seleccionarCliente
-  public dirCliente:any;//seleccionarCliente
+  public listaDireccionesC:any;//seleccionarCliente
   public tipocliente :any;
-   /**PAGINATOR */
-   public totalPages: any;
-   public page: any;
-   public next_page: any;
-   public prev_page: any;
-   pageActual: number = 1;
-   //pipe de busqueda en modal
-   buscarCliente ='';
-   //modelo de venta
+  /**PAGINATOR */
+  public totalPages: any;
+  public page: any;
+  public next_page: any;
+  public prev_page: any;
+  pageActual: number = 1;
+  //pipe de busqueda en modal
+  buscarCliente ='';
+  //modelo de venta
   public ventag: Ventag;
   public modeloCliente: Cliente;
   public cdireccion: Cdireccion;
-   //variables html
-   public seEnvia: boolean = false;
-   public isCompany: boolean = false;
-   public isCredito: boolean = false;
+  //variables html
+  public seEnvia: boolean = false;
+  public isCompany: boolean = false;
+  public isCredito: boolean = false;
 
 
   constructor( private modalService: NgbModal, private _clienteService: ClientesService,
@@ -71,16 +71,28 @@ export class PuntoDeVentaComponent implements OnInit {
         console.log(error);
       });
   }
-  getDireccionCliente(){
-  
+  //obtener direcciones del cliente si es que se envia la venta
+  getDireccionCliente(idCliente:any){
+  this._clienteService.getDireccionCliente(idCliente).subscribe( 
+    response => {
+      if(response.status == 'success'){
+        this.listaDireccionesC = response.direccion;
+      }
+      //this.listaDireccionesC = response.
+    },error =>{
+      console.log(error);
+    });
   }
   //traemos la informacion del cliente seleccionado
   seleccionarCliente(idCliente:any){
+    this.ventag.dirCliente = '';
+    this.seEnvia == false;
+
     this._clienteService.getDetallesCliente(idCliente).subscribe( 
       response =>{
         if(response.status == 'success'){
           this.cliente = response.cliente;
-          this.dirCliente= response.cdireccion;
+          //this.dirCliente= response.cdireccion;
           this.ventag.nombreCliente = this.cliente[0]['nombre']+' '+this.cliente[0]['aPaterno']+' '+this.cliente[0]['aMaterno'];
           this.ventag.idCliente = this.cliente[0]['idCliente'];
         }else{
@@ -92,6 +104,10 @@ export class PuntoDeVentaComponent implements OnInit {
         console.log(error);
       });
   }
+  seleccionarDireccion(direccion:any){
+    this.ventag.dirCliente=direccion;
+  }
+  //accion de guardar el cliente del modal
   guardarCliente(){
     
     if(this.isCompany == true ){
@@ -117,7 +133,7 @@ export class PuntoDeVentaComponent implements OnInit {
         console.log(error);
     });
   }
-  // Modal
+  // Metodos del  modal
   open(content:any) {
     this.getClientes();
     this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title', size: 'xl'}).result.then((result) => {
@@ -143,6 +159,8 @@ export class PuntoDeVentaComponent implements OnInit {
       }, (reason) => {
         this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
       });
+    }else{
+      this.ventag.dirCliente = '';
     }
   }
 }
