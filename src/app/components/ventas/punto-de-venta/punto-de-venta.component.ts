@@ -38,6 +38,7 @@ export class PuntoDeVentaComponent implements OnInit {
   public seEnvia: boolean = false;
   public isCompany: boolean = false;
   public isCredito: boolean = false;
+  public checkDireccion: boolean = false;
 
 
   constructor( private modalService: NgbModal, private _clienteService: ClientesService,
@@ -117,6 +118,7 @@ export class PuntoDeVentaComponent implements OnInit {
     this._clienteService.postCliente(this.modeloCliente).subscribe( 
       response =>{
         if(response.status == 'success'){
+          if(this.checkDireccion == true){
             this._clienteService.postCdireccion(this.cdireccion).subscribe( 
               response=>{
                 this.toastService.show('Cliente registrado correctamente',{classname: 'bg-success text-light', delay: 3000});
@@ -125,6 +127,9 @@ export class PuntoDeVentaComponent implements OnInit {
                 this.toastService.show('Cliente registrado, pero sin direccion',{classname: 'bg-danger text-light', delay: 6000})
                 console.log(error);
               });
+          }else{
+            this.toastService.show('Cliente registrado, pero sin direccion',{classname: 'bg-success text-light', delay: 3000});
+          }
         }else{
           this.toastService.show('Algo salio mal',{classname: 'bg-danger text-light', delay: 6000})
           //console.log('Algo salio mal');
