@@ -258,7 +258,8 @@
 <!-- Modal para elegir direccion del cliente -->
 <ng-template #buscarDireccion let-modal>
     <div class="modal-header">
-        <h5 class="modal-title" id="modal-basic-title">Agregar direccion</h5>
+        <h5 class="modal-title" id="modal-basic-title">Seleccionar direccion</h5>
+        <button class="btn btn-success col-auto offset-md-8" ngbTooltip="Agregar direccion" (click)="modalAgregarDireccion(nuevaDireccion)"><i class="bi bi-plus-circle-dotted" style="font-size: 1.3rem; color: rgb(255, 249, 249); left: 0;"></i></button>
         <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
       </div>
       <div class="modal-body">
@@ -281,4 +282,68 @@
             </tbody>
         </table>
       </div>
+</ng-template>
+<!-- Agregar nueva direccion  -->
+<ng-template #nuevaDireccion let-modal>
+    <form>
+        <div>
+            <div class="modal-header">
+                <h4 class="modal-title" id="modal-basic-title">Agregar direccion</h4>
+                <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+              </div>
+              <div class="modal-body">
+                
+                    <div  class="row align-items-start">
+                      <div class="col-3">
+                          <label class="form-label" for="">Pais</label>
+                          <input class="form-control" type="text" value="Mexico" name="pais" #pais="ngModel" [(ngModel)]="nuevaDir.pais" readonly>
+                      </div>
+                      <div class="col-3">
+                        <label class="form-label" for="">Estado</label>
+                        <input class="form-control" type="text" value="Puebla" name="estado" #estado="ngModel" [(ngModel)]="nuevaDir.estado" readonly>
+                      </div>
+                      <div class="col-3">
+                        <label class="form-label" for="">Ciudad</label>
+                        <input class="form-control" type="text" name="ciudad" #ciudad="ngModel" [(ngModel)]="nuevaDir.ciudad" >
+                      </div>
+                      <div class="col-3">
+                        <label class="form-label" for="">Colonia</label>
+                        <input class="form-control" type="text" name="colonia" #colonia="ngModel" [(ngModel)]="nuevaDir.colonia" >
+                      </div>
+                      <div class="col-3">
+                        <label class="form-label" for="">Calle</label>
+                        <input class="form-control" type="text" name="calle" #calle="ngModel" [(ngModel)]="nuevaDir.calle" >
+                      </div>
+                      <div class="col-3">
+                        <label class="form-label" for="">Numero exterior</label>
+                        <input class="form-control" type="text" name="numExt" #numExt="ngModel" [(ngModel)]="nuevaDir.numExt" >
+                      </div>
+                      <div class="col-3">
+                        <label class="form-label" for="">Numero interior</label>
+                        <input class="form-control" type="text" name="numInt" #numInt="ngModel" [(ngModel)]="nuevaDir.numInt" >
+                      </div>
+                      <div class="col-3">
+                        <label class="form-label" for="">Entre calles</label>
+                        <input class="form-control" type="text" name="entreCalles" #entreCalles="ngModel" [(ngModel)]="nuevaDir.entreCalles" >
+                      </div>
+                      <div class="col-3">
+                        <label class="form-label" for="">Codigo postal</label>
+                        <input class="form-control" type="text" name="cp" #cp="ngModel" [(ngModel)]="nuevaDir.cp" >
+                      </div>
+                      <div class="col-3">
+                        <label class="form-label" for="">Telefono</label>
+                        <input class="form-control" type="text" name="telefono" #telefono="ngModel" [(ngModel)]="nuevaDir.telefono" >
+                      </div>
+                      <div class="col">
+                        <label class="form-label" for="">Referencia</label>
+                        <textarea class="form-control" name="" id="" cols="30" rows="2" name="referencia" #referencia="ngModel" [(ngModel)]="nuevaDir.referencia"></textarea>
+                      </div>
+                    </div>
+                
+              </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-success" (click)="modal.close('Save click')" (click)="guardarNuevaDireccion()" >Guardar</button>
+            </div>  
+        </form>
 </ng-template>

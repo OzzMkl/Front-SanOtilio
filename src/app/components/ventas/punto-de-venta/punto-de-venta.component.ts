@@ -21,7 +21,7 @@ export class PuntoDeVentaComponent implements OnInit {
   public clientes:any;//getClientes
   public cliente:any;//seleccionarCliente
   public listaDireccionesC:any;//seleccionarCliente
-  public tipocliente :any;
+  public tipocliente :any;//tipocliente
   /**PAGINATOR */
   public totalPages: any;
   public page: any;
@@ -30,26 +30,31 @@ export class PuntoDeVentaComponent implements OnInit {
   pageActual: number = 1;
   //pipe de busqueda en modal
   buscarCliente ='';
-  //modelo de venta
+  //modelos
   public ventag: Ventag;
   public modeloCliente: Cliente;
   public cdireccion: Cdireccion;
-  //variables html
+  public nuevaDir: Cdireccion;
+  //variables html checks
   public seEnvia: boolean = false;
   public isCompany: boolean = false;
   public isCredito: boolean = false;
   public checkDireccion: boolean = false;
 
 
-  constructor( private modalService: NgbModal, private _clienteService: ClientesService,
+  constructor( 
+    //declaramos servicios
+    private modalService: NgbModal,
+    private _clienteService: ClientesService,
     public toastService: ToastService) {
+    //declaramos modelos
     this.ventag = new Ventag(0,0,0,0,'',0,null,0,'','');
     this.modeloCliente = new Cliente (0,'','','','','',0,1,0);
     this.cdireccion = new Cdireccion (0,'Mexico','Puebla','','','','','','',0,'',0,1,'');
+    this.nuevaDir = new Cdireccion (0,'Mexico','Puebla','','','','','','',0,'',0,1,'');
    }
 
   ngOnInit(): void {
-    this.getTipocliente();
   }
   //traemos todos los clientes
   getClientes(){
@@ -105,10 +110,11 @@ export class PuntoDeVentaComponent implements OnInit {
         console.log(error);
       });
   }
+  //cargamos la informacion selccionada a la propiedad de venta.dirCliente direccion del cliente
   seleccionarDireccion(direccion:any){
     this.ventag.dirCliente=direccion;
   }
-  //accion de guardar el cliente del modal
+  //accion de guardar el nuevo cliente del modal
   guardarCliente(){
     
     if(this.isCompany == true ){
@@ -138,16 +144,31 @@ export class PuntoDeVentaComponent implements OnInit {
         console.log(error);
     });
   }
+  //guarda una nueva direccion
+  guardarNuevaDireccion(){
+    this.nuevaDir.idCliente = this.ventag.idCliente;
+    this._clienteService.postNuevaDireccion(this.nuevaDir).subscribe( 
+      response=>{
+        if(response.status == 'success'){
+          this.toastService.show('Direccion registrada correctamente',{classname: 'bg-success text-light', delay: 3000});
+        }
+        //console.log(response)
+       }, error =>{
+      console.log(error);
+    });
+    //this.getDireccionCliente(this.ventag.idCliente);
+  }
   // Metodos del  modal
-  open(content:any) {
+  open(content:any) {//abrir modal aplica para la mayoria de los modales
     this.getClientes();
+    this.getTipocliente();
     this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title', size: 'xl'}).result.then((result) => {
       this.closeResult = `Closed with: ${result}`;
     }, (reason) => {
       this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
     });
   }
-  private getDismissReason(reason: any): string {
+  private getDismissReason(reason: any): string {//cerrarmodal
     if (reason === ModalDismissReasons.ESC) {
       return 'by pressing ESC';
     } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
@@ -156,7 +177,8 @@ export class PuntoDeVentaComponent implements OnInit {
       return `with: ${reason}`;
     }
   }
-  modalSeEnvia(content:any){
+  modalSeEnvia(content:any){//abre modal para seleccionaar direccion del cliente
+    //si el chek de se envia es true abrimos modal
     if(this.seEnvia == true){
       this.getClientes();
       this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title', size: 'xl'}).result.then((result) => {
@@ -165,8 +187,15 @@ export class PuntoDeVentaComponent implements OnInit {
         this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
       });
     }else{
+      //si el check es falso ponemos vacia la propiedad de direccion cliente
       this.ventag.dirCliente = '';
     }
   }
+  modalAgregarDireccion(content:any){
+    this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title', size: 'xl'}).result.then((result) => {
+      this.closeResult = `Closed with: ${result}`;
+    }, (reason) => {
+      this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+    });
+  }
 }
-//programa que complemente el suso del diesel redimiento
