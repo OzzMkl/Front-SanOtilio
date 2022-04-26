@@ -122,12 +122,12 @@ export class PuntoDeVentaComponent implements OnInit {
                 this.toastService.show('Cliente registrado correctamente',{classname: 'bg-success text-light', delay: 3000});
                 //console.log(response);
               },error=>{
-                this.toastService.show('Algo salio mal',{classname: 'bg-danger text-light', delay: 6000})
+                this.toastService.show('Cliente registrado, pero sin direccion',{classname: 'bg-danger text-light', delay: 6000})
                 console.log(error);
               });
         }else{
           this.toastService.show('Algo salio mal',{classname: 'bg-danger text-light', delay: 6000})
-          console.log('Algo salio mal');
+          //console.log('Algo salio mal');
         }
       },error=>{
         console.log(error);

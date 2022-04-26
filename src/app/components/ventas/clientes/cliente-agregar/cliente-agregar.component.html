@@ -46,10 +46,15 @@
                     <option *ngFor="let tp of tipocliente" value="{{tp.idTipo}}">{{tp.nombre}}</option>
                 </select>
             </div>
-            <div class="col-2">
-                <label class="form-label" for="">.</label>
-                <button class="btn btn-success form-control" type="button" (click)="open(content)"> Agregar dirección</button>
+            <!--  -->
+            <div class="col-2 ">
+                <label class="form-label" for="">¿Agregar direccion?</label>
+                <div class="col-md-3 offset-md-3">
+                  <input class="form-check-input" type="checkbox" name="checkDireccion" [(ngModel)]="checkDireccion" id="flexCheckDefault2" (change)="open(content)">
+                </div>
+                <!-- <button class="btn btn-success form-control" type="button" (click)="open(content)"> Agregar dirección</button> -->
             </div>
+            <!--  -->
         </div>
         <hr>
         <div class="row align-items-start">
@@ -59,18 +64,19 @@
             </div>
             <div class="col-3">
                     <label class="form-label" for="flexCheckDefault">Tiene credito</label>
-                    <br>
-                    <input class="form-check-input" type="checkbox" value="false"  name="test" [(ngModel)]="isCredito" id="flexCheckDefault">
+                    <div class="col-md-2 offset-md-2">
+                      <input class="form-check-input" type="checkbox" value="false"  name="test" [(ngModel)]="isCredito" id="flexCheckDefault">
+                    </div>
             </div>
 
-            <div *ngIf="isCredito == true;" class="col-3">
+            <div *ngIf="isCredito == true;" class="col-3 ">
                 <label class="form-label" for="">Cantidad de credito</label>
                 <input class="form-control" type="number" name="credito" #credito="ngModel" [(ngModel)]="cliente.credito">
             </div>
             
         </div>
         <hr>
-        <div >
+        <div *ngIf="checkDireccion == true" >
             <h5>Direccion</h5>
             <input type="text" class="form-control" value="{{cdireccion.pais}} {{cdireccion.estado}} {{cdireccion.colonia}} {{cdireccion.calle}} {{cdireccion.numExt}} {{cdireccion.numInt}} entre {{cdireccion.entreCalles}}" readonly>
         </div>
