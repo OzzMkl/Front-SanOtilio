@@ -46,7 +46,7 @@
         <div class="col-4">
             <label class="form-label" for="">Buscar producto</label>
                 <div class="input-group">
-                    <span class="input-group-addon" id="sizing-addon2"><i class="bi-search" style="font-size: 1.5rem; color: black; left: 0;"></i></span>
+                    <span class="input-group-addon" id="sizing-addon2" (click)="modalBuscarProducto(buscarProducto)"><i class="bi-search" style="font-size: 1.5rem; color: black; left: 0;"></i></span>
                     <input class="form-control" type="text" readonly>
                 </div>
                 <!-- tabla -->
@@ -346,4 +346,58 @@
                 <button type="submit" class="btn btn-success" (click)="modal.close('Save click')" (click)="guardarNuevaDireccion()" >Guardar</button>
             </div>  
         </form>
+</ng-template>
+<!-- Modal productos -->
+<ng-template #buscarProducto let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Buscar producto</h4>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+      </div>
+      <div class="modal-body">
+        <div class="input-group mb-2">
+            <div class="col-2">
+                <select name="" id="" class="form-select" name="seleccionado" [(ngModel)]="seleccionado" (ngModelChange)="cambioSeleccionado($event)">
+                    <option value="1" selected>DESCRIPCION</option>
+                    <option value="2">CLAVE EXTERNA</option>
+                    <option value="3">CODIGO DE BARRAS</option>
+                </select>
+            </div>
+            <!-- <div class="col" *ngIf="seleccionado == 1; ">
+                <input type="text" class="form-control" name="buscarProducto" [(ngModel)]="buscarProducto">
+            </div>
+            <div class="col" *ngIf="seleccionado == 2; ">
+                <input type="text" class="form-control" name="buscarProductoCE" [(ngModel)]="buscarProductoCE"> 
+            </div>
+            <div class="col" *ngIf="seleccionado == 3;  ">
+                <input type="text" class="form-control" name="buscarProductoCbar" [(ngModel)]="buscarProductoCbar">
+            </div> -->
+            
+          </div>
+          <br>
+          <table class="table table-dark table-hover">
+            <thead>
+                <tr>
+                    <th>Clave externa</th>
+                    <th>Codigo de barras</th>
+                    <th>Descripcion</th>
+                    <th>Medida</th>
+                    <th>Marca</th>
+                    <th>precio</th>
+                    <th>Existencia</th>
+                </tr>
+            </thead>
+            <tbody *ngFor="let pr of productos paginate:{id:'pcModal',itemsPerPage: 5, currentPage: pageActual2}">
+                <tr  (click)="modal.dismiss('Cross click')">
+                    <th scope="row">{{pr.claveEx}}</th>
+                    <th scope="row">{{pr.cbarras}}</th>
+                    <th scope="row">{{pr.descripcion}}</th>
+                    <th scope="row">{{pr.nombreMedida}}</th>
+                    <th scope="row">{{pr.nombreMarca}}</th>
+                    <th scope="row">{{pr.precioS}}</th>
+                    <th scope="row">{{pr.existenciaG}}</th>
+                </tr>
+            </tbody>
+          </table>
+          <pagination-controls id="pcModal" (pageChange)="pageActual2 = $event"></pagination-controls>
+      </div>
 </ng-template>

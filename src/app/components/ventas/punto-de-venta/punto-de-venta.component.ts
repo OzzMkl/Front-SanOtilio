@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 //servicio
 import { ClientesService } from 'src/app/services/clientes.service';
 import { ToastService } from 'src/app/services/toast.service';
+import { ProductoService } from 'src/app/services/producto.service';
 //modelos
 import { Ventag } from 'src/app/models/ventag';
 import { Cliente } from 'src/app/models/cliente';
@@ -12,7 +13,8 @@ import { NgbModal, ModalDismissReasons, NgbDateStruct} from '@ng-bootstrap/ng-bo
 @Component({
   selector: 'app-punto-de-venta',
   templateUrl: './punto-de-venta.component.html',
-  styleUrls: ['./punto-de-venta.component.css']
+  styleUrls: ['./punto-de-venta.component.css'],
+  providers:[ProductoService]
 })
 export class PuntoDeVentaComponent implements OnInit {
   //cerrar modal
@@ -22,14 +24,20 @@ export class PuntoDeVentaComponent implements OnInit {
   public cliente:any;//seleccionarCliente
   public listaDireccionesC:any;//seleccionarCliente
   public tipocliente :any;//tipocliente
+  public productos:any;//getProductos
   /**PAGINATOR */
   public totalPages: any;
   public page: any;
   public next_page: any;
   public prev_page: any;
   pageActual: number = 1;
-  //pipe de busqueda en modal
-  buscarCliente ='';
+  pageActual2: number = 1;
+  //pipes de busqueda en modal
+  buscarCliente ='';//modal cliente
+  seleccionado:number = 1;//para cambiar entre pipes de buscarProducto
+  buscarProducto = '';//modal de buscar producto
+  buscarProductoCE = '';//modal de buscar producto
+  buscarProductoCbar = '';//modal de buscar producto
   //modelos
   public ventag: Ventag;
   public modeloCliente: Cliente;
@@ -46,7 +54,8 @@ export class PuntoDeVentaComponent implements OnInit {
     //declaramos servicios
     private modalService: NgbModal,
     private _clienteService: ClientesService,
-    public toastService: ToastService) {
+    public toastService: ToastService,
+    public _productoService:ProductoService) {
     //declaramos modelos
     this.ventag = new Ventag(0,0,0,0,'',0,null,0,'','');
     this.modeloCliente = new Cliente (0,'','','','','',0,1,0);
@@ -55,6 +64,8 @@ export class PuntoDeVentaComponent implements OnInit {
    }
 
   ngOnInit(): void {
+//    this.getProductos();
+this.getProductos();
   }
   //traemos todos los clientes
   getClientes(){
@@ -158,6 +169,20 @@ export class PuntoDeVentaComponent implements OnInit {
     });
     //this.getDireccionCliente(this.ventag.idCliente);
   }
+
+  getProductos(){
+    this._productoService.getProductos().subscribe( 
+      response => {
+        if(response.status == 'success'){
+          this.productos = response.productos;
+          console.log(response)
+        }
+      }, error =>{
+      console.log(error);
+    });
+  }
+
+
   // Metodos del  modal
   open(content:any) {//abrir modal aplica para la mayoria de los modales
     this.getClientes();
@@ -197,5 +222,18 @@ export class PuntoDeVentaComponent implements OnInit {
     }, (reason) => {
       this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
     });
+  }
+  modalBuscarProducto(content:any){
+    
+    this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title', size: 'xl'}).result.then((result) => {
+      this.closeResult = `Closed with: ${result}`;
+    }, (reason) => {
+      this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+    });
+  }
+  cambioSeleccionado(e:any){//limpiamos los inputs del modal
+    this.buscarProducto = '';
+    this.buscarProductoCE = '';
+    this.buscarProductoCbar = '';
   }
 }
