@@ -7,6 +7,7 @@ import { ProductoService } from 'src/app/services/producto.service';
 import { Ventag } from 'src/app/models/ventag';
 import { Cliente } from 'src/app/models/cliente';
 import { Cdireccion } from 'src/app/models/cdireccion';
+import { Producto_ventasg } from 'src/app/models/productoVentag';
 //NGBOOTSTRAP-modal
 import { NgbModal, ModalDismissReasons, NgbDateStruct} from '@ng-bootstrap/ng-bootstrap';
 
@@ -25,6 +26,7 @@ export class PuntoDeVentaComponent implements OnInit {
   public listaDireccionesC:any;//seleccionarCliente
   public tipocliente :any;//tipocliente
   public productos:any;//getProductos
+  public producto:any;
   /**PAGINATOR */
   public totalPages: any;
   public page: any;
@@ -43,11 +45,13 @@ export class PuntoDeVentaComponent implements OnInit {
   public modeloCliente: Cliente;
   public cdireccion: Cdireccion;
   public nuevaDir: Cdireccion;
+  public productoVentag: Producto_ventasg;
   //variables html checks
   public seEnvia: boolean = false;
   public isCompany: boolean = false;
   public isCredito: boolean = false;
   public checkDireccion: boolean = false;
+  public subtotal:number =0;
 
 
   constructor( 
@@ -61,11 +65,11 @@ export class PuntoDeVentaComponent implements OnInit {
     this.modeloCliente = new Cliente (0,'','','','','',0,1,0);
     this.cdireccion = new Cdireccion (0,'Mexico','Puebla','','','','','','',0,'',0,1,'');
     this.nuevaDir = new Cdireccion (0,'Mexico','Puebla','','','','','','',0,'',0,1,'');
+    this.productoVentag = new Producto_ventasg(0,0,'',0,0,0,'','');
    }
 
   ngOnInit(): void {
 //    this.getProductos();
-this.getProductos();
   }
   //traemos todos los clientes
   getClientes(){
@@ -169,17 +173,38 @@ this.getProductos();
     });
     //this.getDireccionCliente(this.ventag.idCliente);
   }
-
+  //obtenemos todos los productos
   getProductos(){
-    this._productoService.getProductos().subscribe( 
+    this._productoService.getProductosPV().subscribe( 
       response => {
         if(response.status == 'success'){
           this.productos = response.productos;
-          console.log(response)
+          //console.log(response);
         }
       }, error =>{
       console.log(error);
     });
+  }
+  seleccionarProducto(idProducto:any){
+    //console.log(idProducto);
+    this._productoService.getProdverDos(idProducto).subscribe( response => {
+      //console.log(response);
+      if(response.status == 'success'){
+        this.producto = response.producto;
+        this.productoVentag.claveEx = this.producto[0]['claveEx'];
+        this.productoVentag.nombreMedida = this.producto[0]['nombreMedida'];
+        this.productoVentag.precio = this.producto[0]['precioS'];
+      }
+    },error =>{
+      console.log(error);
+    });
+  }
+  calculaSubtotal(){
+    if(this.productoVentag.precio < this.producto[0]['precioR']){
+      this.toastService.show('nO SE PUEDE',{classname: 'bg-danger text-light', delay: 6000})
+    }else{
+      this.subtotal= (this.productoVentag.cantidad * this.productoVentag.precio)- this.productoVentag.descuento;
+    }
   }
 
 
@@ -224,7 +249,7 @@ this.getProductos();
     });
   }
   modalBuscarProducto(content:any){
-    
+    this.getProductos();
     this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title', size: 'xl'}).result.then((result) => {
       this.closeResult = `Closed with: ${result}`;
     }, (reason) => {

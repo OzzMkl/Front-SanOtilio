@@ -42,19 +42,40 @@
     </div>
     <hr>
     <div class="row align-items-start">
-        <h5 class="text-center">LISTA DE PRODUCTOS</h5>
-        <div class="col-4">
+        <h5 class="text-center">AGREGAR PRODUCTO</h5>
+        <div class="col-2">
             <label class="form-label" for="">Buscar producto</label>
                 <div class="input-group">
-                    <span class="input-group-addon" id="sizing-addon2" (click)="modalBuscarProducto(buscarProducto)"><i class="bi-search" style="font-size: 1.5rem; color: black; left: 0;"></i></span>
-                    <input class="form-control" type="text" readonly>
+                    <span class="input-group-addon" id="sizing-addon2" (click)="modalBuscarProducto(mBuscarProducto)" ><i class="bi-search" style="font-size: 1.5rem; color: black; left: 0;"></i></span>
+                    <input class="form-control" type="text" name="claveEx" #claveEx="ngModel" [(ngModel)]="productoVentag.claveEx" readonly>
                 </div>
-                <!-- tabla -->
-                <table>
-                    <thead>
-                        <tr></tr>
-                    </thead>
-                </table>
+        </div>
+        <div class="col-2">
+            <label class="form-label">Medida</label>
+            <input class="form-control" type="text" name="nombreMedida" #nombreMedida="ngModel" [(ngModel)]="productoVentag.nombreMedida" readonly>
+        </div>
+        <div class="col-2">
+            <label class="form-label">Precio</label>
+            <input class="form-control" type="number" name="precio" #precio="ngModel" [(ngModel)]="productoVentag.precio" (change)="calculaSubtotal()" >
+        </div>
+        <div class="col-2">
+            <label class="form-label">Cantidad</label>
+            <input class="form-control" type="number" name="cantidad" #cantidad="ngModel" [(ngModel)]="productoVentag.cantidad" (change)="calculaSubtotal()">
+        </div>
+        <div class="col-2">
+            <label class="form-label">Descuento</label>
+            <input class="form-control" type="number" name="descuento" #descuento="ngModel" [(ngModel)]="productoVentag.descuento" (change)="calculaSubtotal()">
+        </div>
+        <div class="col-2">
+            <label class="form-label">Subtotal</label>
+            <input class="form-control" type="number" value="{{subtotal}}" readonly >
+        </div>
+        <div class="col">
+            <label for=""></label>
+        </div>
+        <div class="col-2">
+            <label class="form-label">.</label>
+            <button class="btn btn-success form-control" type="button"><i class="bi bi-check-circle-fill"> Agregar</i>     </button>
         </div>
     </div>
 </div>
@@ -347,8 +368,10 @@
             </div>  
         </form>
 </ng-template>
+
+
 <!-- Modal productos -->
-<ng-template #buscarProducto let-modal>
+ <ng-template #mBuscarProducto let-modal>
     <div class="modal-header">
         <h4 class="modal-title" id="modal-basic-title">Buscar producto</h4>
         <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
@@ -362,7 +385,7 @@
                     <option value="3">CODIGO DE BARRAS</option>
                 </select>
             </div>
-            <!-- <div class="col" *ngIf="seleccionado == 1; ">
+             <div class="col" *ngIf="seleccionado == 1; ">
                 <input type="text" class="form-control" name="buscarProducto" [(ngModel)]="buscarProducto">
             </div>
             <div class="col" *ngIf="seleccionado == 2; ">
@@ -370,30 +393,30 @@
             </div>
             <div class="col" *ngIf="seleccionado == 3;  ">
                 <input type="text" class="form-control" name="buscarProductoCbar" [(ngModel)]="buscarProductoCbar">
-            </div> -->
+            </div>
             
           </div>
           <br>
           <table class="table table-dark table-hover">
             <thead>
                 <tr>
-                    <th>Clave externa</th>
-                    <th>Codigo de barras</th>
-                    <th>Descripcion</th>
-                    <th>Medida</th>
-                    <th>Marca</th>
-                    <th>precio</th>
-                    <th>Existencia</th>
+                    <th>CLAVE EXTERNA</th>
+                    <th>CODIGO DE BARRAS</th>
+                    <th>DESCRIPCION</th>
+                    <th>MEDIDA</th>
+                    <th>MARCA</th>
+                    <th>PRECIOS</th>
+                    <th>EXISTENCIA</th>
                 </tr>
             </thead>
-            <tbody *ngFor="let pr of productos paginate:{id:'pcModal',itemsPerPage: 5, currentPage: pageActual2}">
-                <tr  (click)="modal.dismiss('Cross click')">
+            <tbody *ngFor="let pr of productos | filterProductsModalcbar: buscarProductoCbar| filterProductModal: buscarProducto | filterProductsModalce: buscarProductoCE | paginate:{id:'pcModal',itemsPerPage: 5, currentPage: pageActual2}">
+                <tr (click)="seleccionarProducto(pr.idProducto)"  (click)="modal.dismiss('Cross click')">
                     <th scope="row">{{pr.claveEx}}</th>
                     <th scope="row">{{pr.cbarras}}</th>
                     <th scope="row">{{pr.descripcion}}</th>
                     <th scope="row">{{pr.nombreMedida}}</th>
                     <th scope="row">{{pr.nombreMarca}}</th>
-                    <th scope="row">{{pr.precioS}}</th>
+                    <th scope="row">{{pr.precioS}} ~ {{pr.precioR}}</th>
                     <th scope="row">{{pr.existenciaG}}</th>
                 </tr>
             </tbody>

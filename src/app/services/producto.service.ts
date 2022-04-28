@@ -24,6 +24,12 @@ export class ProductoService{
         let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');
         return this._http.get(this.url+'productos/index', {headers:headers} );
     }
+    
+    getProductosPV():Observable<any>{
+        let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');
+        return this._http.get(this.url+'productos/indexPV', {headers:headers} );
+    }
+
     getProductosDes():Observable<any>{
         let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');
         return this._http.get(this.url+'productos/productosDes', {headers:headers} );
