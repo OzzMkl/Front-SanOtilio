@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { ClientesService } from 'src/app/services/clientes.service';
 import { ToastService } from 'src/app/services/toast.service';
 import { ProductoService } from 'src/app/services/producto.service';
+import { VentasService } from 'src/app/services/ventas.service';
 //modelos
 import { Ventag } from 'src/app/models/ventag';
 import { Cliente } from 'src/app/models/cliente';
@@ -21,6 +22,7 @@ export class PuntoDeVentaComponent implements OnInit {
   //cerrar modal
   closeResult = '';
   //variable de servicios
+  public tipopago:any;//getTipopago
   public clientes:any;//getClientes
   public cliente:any;//seleccionarCliente
   public listaDireccionesC:any;//seleccionarCliente
@@ -59,7 +61,8 @@ export class PuntoDeVentaComponent implements OnInit {
     private modalService: NgbModal,
     private _clienteService: ClientesService,
     public toastService: ToastService,
-    public _productoService:ProductoService) {
+    private _productoService:ProductoService,
+    private _ventasService: VentasService) {
     //declaramos modelos
     this.ventag = new Ventag(0,0,0,0,'',0,null,0,'','');
     this.modeloCliente = new Cliente (0,'','','','','',0,1,0);
@@ -70,6 +73,19 @@ export class PuntoDeVentaComponent implements OnInit {
 
   ngOnInit(): void {
 //    this.getProductos();
+this.getTipopago();
+  }
+  getTipopago(){
+    this._ventasService.getTipoventa().subscribe( 
+      response =>{
+        
+        if(response.status == 'success'){
+          this.tipopago = response.tipo_pago;
+          //console.log(this.tipopago);
+        }
+      },error =>{
+        console.log(error);
+      });
   }
   //traemos todos los clientes
   getClientes(){
@@ -194,6 +210,7 @@ export class PuntoDeVentaComponent implements OnInit {
         this.productoVentag.claveEx = this.producto[0]['claveEx'];
         this.productoVentag.nombreMedida = this.producto[0]['nombreMedida'];
         this.productoVentag.precio = this.producto[0]['precioS'];
+        this.productoVentag.descripcion = this.producto[0]['descripcion'];
       }
     },error =>{
       console.log(error);
@@ -201,7 +218,7 @@ export class PuntoDeVentaComponent implements OnInit {
   }
   calculaSubtotal(){
     if(this.productoVentag.precio < this.producto[0]['precioR']){
-      this.toastService.show('nO SE PUEDE',{classname: 'bg-danger text-light', delay: 6000})
+      this.toastService.show('nO SE PUEDE',{classname: 'bg-danger text-light', delay: 6000});
     }else{
       this.subtotal= (this.productoVentag.cantidad * this.productoVentag.precio)- this.productoVentag.descuento;
     }

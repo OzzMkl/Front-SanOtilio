@@ -56,7 +56,7 @@
         </div>
         <div class="col-2">
             <label class="form-label">Precio</label>
-            <input class="form-control" type="number" name="precio" #precio="ngModel" [(ngModel)]="productoVentag.precio" (change)="calculaSubtotal()" >
+            <input class="form-control" type="number" min="" name="precio" #precio="ngModel" [(ngModel)]="productoVentag.precio" (change)="calculaSubtotal()" >
         </div>
         <div class="col-2">
             <label class="form-label">Cantidad</label>
@@ -71,11 +71,67 @@
             <input class="form-control" type="number" value="{{subtotal}}" readonly >
         </div>
         <div class="col">
-            <label for=""></label>
+            <label for="">Descripcion</label>
+            <input type="text" class="form-control" name="descripcion" #descripcion="ngModel" [(ngModel)]="productoVentag.descripcion" readonly>
         </div>
         <div class="col-2">
             <label class="form-label">.</label>
             <button class="btn btn-success form-control" type="button"><i class="bi bi-check-circle-fill"> Agregar</i>     </button>
+        </div>
+    </div>
+    <hr>
+    <div>
+        <h5 class="text-center">LISTA DE PRODUCTOS</h5>
+        <table class="table table-dark table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">CLAVE EXTERNA</th>
+                    <th scope="col">DESCRIPCION</th>
+                    <th scope="col">MEDIDA</th>
+                    <th scope="col">PRECIO</th>
+                    <th scope="col">CANTIDAD</th>
+                    <th scope="col">DESCUENTO</th>
+                    <th scope="col">SUBTOTAL</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th scope="row"></th>
+                    <th scope="row"></th>
+                    <th scope="row"></th>
+                    <th scope="row"></th>
+                    <th scope="row"></th>
+                    <th scope="row"></th>
+                    <th scope="row"></th>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-5">
+            <label class="form-label">Observaciones</label>
+            <textarea class="form-control" rows="3"></textarea>
+        </div>
+        <div class="col-2">
+            <label class="form-label">Tipo de pago</label>
+            <select name="idTipopago" class="form-select" #idTipopago="ngModel" [(ngModel)]="ventag.idTipoPago">
+                <option selected value="">Abrir para seleccionar</option>
+                <option *ngFor="let tp of tipopago" value="{{tp.idt}}">{{tp.tipo}}</option>
+            </select>
+        </div>
+        <div class="col-2">
+            <label for="">Subtotal</label>
+            <input class="form-control" type="text">
+            <label for="">IVA</label>
+            <input class="form-control" type="text">
+            <label for="">TOTAL</label>
+            <input class="form-control" type="text">
+        </div>
+        <div class="col-2">
+            <button class="btn btn-secondary">Cotizacion</button> <br>
+            <button class="btn btn-success">Ticket</button> <br>
+            <button class="btn btn-success">Pedido</button>
         </div>
     </div>
 </div>
@@ -368,7 +424,6 @@
             </div>  
         </form>
 </ng-template>
-
 
 <!-- Modal productos -->
  <ng-template #mBuscarProducto let-modal>
