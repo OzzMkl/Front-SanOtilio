@@ -56,19 +56,19 @@
         </div>
         <div class="col-2">
             <label class="form-label">Precio</label>
-            <input class="form-control" type="number" min="" name="precio" #precio="ngModel" [(ngModel)]="productoVentag.precio" (change)="calculaSubtotal()" >
+            <input class="form-control" type="number" min="" name="precio" #precio="ngModel" [(ngModel)]="productoVentag.precio" (change)="calculaSubtotalPP()" >
         </div>
         <div class="col-2">
             <label class="form-label">Cantidad</label>
-            <input class="form-control" type="number" name="cantidad" #cantidad="ngModel" [(ngModel)]="productoVentag.cantidad" (change)="calculaSubtotal()">
+            <input class="form-control" type="number" name="cantidad" #cantidad="ngModel" [(ngModel)]="productoVentag.cantidad" (change)="calculaSubtotalPP()">
         </div>
         <div class="col-2">
             <label class="form-label">Descuento</label>
-            <input class="form-control" type="number" name="descuento" #descuento="ngModel" [(ngModel)]="productoVentag.descuento" (change)="calculaSubtotal()">
+            <input class="form-control" type="number" name="descuento" #descuento="ngModel" [(ngModel)]="productoVentag.descuento" (change)="calculaSubtotalPP()">
         </div>
         <div class="col-2">
             <label class="form-label">Subtotal</label>
-            <input class="form-control" type="number" value="{{subtotal}}" readonly >
+            <input class="form-control" type="number" value="{{productoVentag.subtotal}}" readonly >
         </div>
         <div class="col">
             <label for="">Descripcion</label>
@@ -76,7 +76,7 @@
         </div>
         <div class="col-2">
             <label class="form-label">.</label>
-            <button class="btn btn-success form-control" type="button"><i class="bi bi-check-circle-fill"> Agregar</i>     </button>
+            <button class="btn btn-success form-control" type="button" (click)="agregarProductoLista()"><i class="bi bi-check-circle-fill" > Agregar</i>     </button>
         </div>
     </div>
     <hr>
@@ -94,15 +94,15 @@
                     <th scope="col">SUBTOTAL</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody *ngFor="let producto of lista_productoVentag">
                 <tr>
-                    <th scope="row"></th>
-                    <th scope="row"></th>
-                    <th scope="row"></th>
-                    <th scope="row"></th>
-                    <th scope="row"></th>
-                    <th scope="row"></th>
-                    <th scope="row"></th>
+                    <th scope="row">{{producto.claveEx}}</th>
+                    <th scope="row">{{producto.descripcion}}</th>
+                    <th scope="row">{{producto.nombreMedida}}</th>
+                    <th scope="row">{{producto.precio}}</th>
+                    <th scope="row">{{producto.cantidad}}</th>
+                    <th scope="row">{{producto.descuento}}</th>
+                    <th scope="row">{{producto.subtotal}}</th>
                 </tr>
             </tbody>
         </table>
@@ -122,16 +122,24 @@
         </div>
         <div class="col-2">
             <label for="">Subtotal</label>
-            <input class="form-control" type="text">
-            <label for="">IVA</label>
-            <input class="form-control" type="text">
+            <input class="form-control" type="text" value="{{subtotalVenta}}" readonly>
+            <label for="">DESCUENTO</label>
+            <input class="form-control" type="text" value="{{descuentoVenta}}" readonly>
             <label for="">TOTAL</label>
-            <input class="form-control" type="text">
+            <input class="form-control" type="text" readonly>
         </div>
         <div class="col-2">
-            <button class="btn btn-secondary">Cotizacion</button> <br>
-            <button class="btn btn-success">Ticket</button> <br>
-            <button class="btn btn-success">Pedido</button>
+            <div class="col">
+                <button class="btn btn-secondary form-control"><i class="bi bi-file-earmark-medical"></i> Cotizacion</button>
+            </div>
+            <br>
+            <div class="col">
+                <button class="btn btn-success form-control"><i class="bi bi-receipt-cutoff"> </i> Ticket</button>
+            </div>
+            <br>
+            <div class="col">
+                <button class="btn btn-info form-control"><i class="bi bi-truck"></i> Pedido</button>
+            </div>
         </div>
     </div>
 </div>

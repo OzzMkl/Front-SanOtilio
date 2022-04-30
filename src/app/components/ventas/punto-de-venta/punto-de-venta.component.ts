@@ -48,12 +48,14 @@ export class PuntoDeVentaComponent implements OnInit {
   public cdireccion: Cdireccion;
   public nuevaDir: Cdireccion;
   public productoVentag: Producto_ventasg;
+  public lista_productoVentag: Array<Producto_ventasg>;
   //variables html checks
   public seEnvia: boolean = false;
   public isCompany: boolean = false;
   public isCredito: boolean = false;
   public checkDireccion: boolean = false;
-  public subtotal:number =0;
+  public subtotalVenta:number =0;
+  public descuentoVenta:number = 0;
 
 
   constructor( 
@@ -68,7 +70,8 @@ export class PuntoDeVentaComponent implements OnInit {
     this.modeloCliente = new Cliente (0,'','','','','',0,1,0);
     this.cdireccion = new Cdireccion (0,'Mexico','Puebla','','','','','','',0,'',0,1,'');
     this.nuevaDir = new Cdireccion (0,'Mexico','Puebla','','','','','','',0,'',0,1,'');
-    this.productoVentag = new Producto_ventasg(0,0,'',0,0,0,'','');
+    this.productoVentag = new Producto_ventasg(0,0,'',0,0,0,'','',0);
+    this.lista_productoVentag = [];
    }
 
   ngOnInit(): void {
@@ -201,6 +204,7 @@ this.getTipopago();
       console.log(error);
     });
   }
+  //cargamos la informacion al modelo del producto que se seleccion con el click
   seleccionarProducto(idProducto:any){
     //console.log(idProducto);
     this._productoService.getProdverDos(idProducto).subscribe( response => {
@@ -211,18 +215,27 @@ this.getTipopago();
         this.productoVentag.nombreMedida = this.producto[0]['nombreMedida'];
         this.productoVentag.precio = this.producto[0]['precioS'];
         this.productoVentag.descripcion = this.producto[0]['descripcion'];
+        this.productoVentag.cantidad = 0;
+        this.calculaSubtotalPP();
       }
     },error =>{
       console.log(error);
     });
   }
-  calculaSubtotal(){
+  //calculamos el subtotal por producto
+  calculaSubtotalPP(){
     if(this.productoVentag.precio < this.producto[0]['precioR']){
       this.toastService.show('nO SE PUEDE',{classname: 'bg-danger text-light', delay: 6000});
     }else{
-      this.subtotal= (this.productoVentag.cantidad * this.productoVentag.precio)- this.productoVentag.descuento;
+      this.productoVentag.subtotal = (this.productoVentag.cantidad * this.productoVentag.precio)- this.productoVentag.descuento;
     }
   }
+//agregar producto a lista de ventas
+  agregarProductoLista(){
+    this.subtotalVenta = this.subtotalVenta + this.productoVentag.subtotal;
+    this.descuentoVenta = this.descuentoVenta + this.productoVentag.descuento;
+    this.lista_productoVentag.push({...this.productoVentag});
+  }   
 
 
   // Metodos del  modal
