@@ -16,4 +16,20 @@ export class VentasService {
     let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');
     return this._http.get(this.url+'ventas/indexTP', {headers:headers} );
   }
+  //COTIZACIONES
+  postCotizaciones(cotizacion:any):Observable<any>{
+    let json = JSON.stringify(cotizacion);
+    let params = 'json='+json;
+    let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');//mandamos el json con las cabeceras para que obtengamos el token
+    return this._http.post(this.url+'cotizaciones/guardarCotizacion',params, {headers:headers} );
+  }
+  postProductosCotiza(productosCotiza:any):Observable<any>{
+    let json = JSON.stringify(productosCotiza);
+    let params = 'json='+json;
+    let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');//mandamos el json con las cabeceras para que obtengamos el token
+    return this._http.post(this.url+'cotizaciones/guardarProductosCotiza',params, {headers:headers} );
+  }
+  getLastCotiza(){
+    
+  }
 }

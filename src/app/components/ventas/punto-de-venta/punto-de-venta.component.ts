@@ -4,6 +4,7 @@ import { ClientesService } from 'src/app/services/clientes.service';
 import { ToastService } from 'src/app/services/toast.service';
 import { ProductoService } from 'src/app/services/producto.service';
 import { VentasService } from 'src/app/services/ventas.service';
+import { EmpleadoService } from 'src/app/services/empleado.service';
 //modelos
 import { Ventag } from 'src/app/models/ventag';
 import { Cliente } from 'src/app/models/cliente';
@@ -11,6 +12,7 @@ import { Cdireccion } from 'src/app/models/cdireccion';
 import { Producto_ventasg } from 'src/app/models/productoVentag';
 //NGBOOTSTRAP-modal
 import { NgbModal, ModalDismissReasons, NgbDateStruct} from '@ng-bootstrap/ng-bootstrap';
+
 
 @Component({
   selector: 'app-punto-de-venta',
@@ -22,13 +24,13 @@ export class PuntoDeVentaComponent implements OnInit {
   //cerrar modal
   closeResult = '';
   //variable de servicios
-  public tipopago:any;//getTipopago
   public clientes:any;//getClientes
   public cliente:any;//seleccionarCliente
   public listaDireccionesC:any;//seleccionarCliente
   public tipocliente :any;//tipocliente
   public productos:any;//getProductos
   public producto:any;
+  public identity: any;//loadUser
   /**PAGINATOR */
   public totalPages: any;
   public page: any;
@@ -36,6 +38,7 @@ export class PuntoDeVentaComponent implements OnInit {
   public prev_page: any;
   pageActual: number = 1;
   pageActual2: number = 1;
+  pageActual3: number = 1;
   //pipes de busqueda en modal
   buscarCliente ='';//modal cliente
   seleccionado:number = 1;//para cambiar entre pipes de buscarProducto
@@ -54,8 +57,10 @@ export class PuntoDeVentaComponent implements OnInit {
   public isCompany: boolean = false;
   public isCredito: boolean = false;
   public checkDireccion: boolean = false;
-  public subtotalVenta:number =0;
-  public descuentoVenta:number = 0;
+
+  //public descuentoVenta:number = 0;
+  //public subtotalVenta:number =0;
+  public isSearch: boolean = true;
 
 
   constructor( 
@@ -64,32 +69,22 @@ export class PuntoDeVentaComponent implements OnInit {
     private _clienteService: ClientesService,
     public toastService: ToastService,
     private _productoService:ProductoService,
-    private _ventasService: VentasService) {
+    private _ventasService: VentasService,
+    private _empleadoService : EmpleadoService) {
     //declaramos modelos
-    this.ventag = new Ventag(0,0,0,0,'',0,null,0,'','');
+    this.ventag = new Ventag(0,0,2,'',1,null,0,0,0,0,'','');
     this.modeloCliente = new Cliente (0,'','','','','',0,1,0);
     this.cdireccion = new Cdireccion (0,'Mexico','Puebla','','','','','','',0,'',0,1,'');
     this.nuevaDir = new Cdireccion (0,'Mexico','Puebla','','','','','','',0,'',0,1,'');
-    this.productoVentag = new Producto_ventasg(0,0,'',0,0,0,'','',0);
+    this.productoVentag = new Producto_ventasg(0,0,'',0,0,0,'','',0,0);
     this.lista_productoVentag = [];
    }
 
   ngOnInit(): void {
 //    this.getProductos();
-this.getTipopago();
+  this.loadUser();
   }
-  getTipopago(){
-    this._ventasService.getTipoventa().subscribe( 
-      response =>{
-        
-        if(response.status == 'success'){
-          this.tipopago = response.tipo_pago;
-          //console.log(this.tipopago);
-        }
-      },error =>{
-        console.log(error);
-      });
-  }
+ 
   //traemos todos los clientes
   getClientes(){
     this._clienteService.getAllClientes().subscribe( 
@@ -204,7 +199,7 @@ this.getTipopago();
       console.log(error);
     });
   }
-  //cargamos la informacion al modelo del producto que se seleccion con el click
+  //cargamos la informacion al modelo del producto que se selecciono con el click
   seleccionarProducto(idProducto:any){
     //console.log(idProducto);
     this._productoService.getProdverDos(idProducto).subscribe( response => {
@@ -212,11 +207,14 @@ this.getTipopago();
       if(response.status == 'success'){
         this.producto = response.producto;
         this.productoVentag.claveEx = this.producto[0]['claveEx'];
+        this.productoVentag.idProducto = this.producto[0]['idProducto']
         this.productoVentag.nombreMedida = this.producto[0]['nombreMedida'];
         this.productoVentag.precio = this.producto[0]['precioS'];
         this.productoVentag.descripcion = this.producto[0]['descripcion'];
+        this.productoVentag.precioMinimo = this.producto[0]['precioR']
         this.productoVentag.cantidad = 0;
         this.calculaSubtotalPP();
+        this.isSearch=false;
       }
     },error =>{
       console.log(error);
@@ -225,19 +223,94 @@ this.getTipopago();
   //calculamos el subtotal por producto
   calculaSubtotalPP(){
     if(this.productoVentag.precio < this.producto[0]['precioR']){
-      this.toastService.show('nO SE PUEDE',{classname: 'bg-danger text-light', delay: 6000});
+      this.toastService.show('El precio minimo permitido es de: $'+this.producto[0]['precioR'],{classname: 'bg-danger text-light', delay: 6000});
+      this.isSearch=true;
     }else{
       this.productoVentag.subtotal = (this.productoVentag.cantidad * this.productoVentag.precio)- this.productoVentag.descuento;
+      this.isSearch=false;
     }
   }
 //agregar producto a lista de ventas
   agregarProductoLista(){
-    this.subtotalVenta = this.subtotalVenta + this.productoVentag.subtotal;
-    this.descuentoVenta = this.descuentoVenta + this.productoVentag.descuento;
-    this.lista_productoVentag.push({...this.productoVentag});
-  }   
+    if( this.productoVentag.cantidad <= 0){
+      this.toastService.show('No se pueden agregar productos con cantidad 0 ó menor a 0',{classname: 'bg-danger text-light', delay: 6000})
+    }else if( this.productoVentag.idProducto == 0){
+      this.toastService.show('Ese producto no existe',{classname: 'bg-danger text-light', delay: 6000});
+    }else if (this.lista_productoVentag.find(x => x.idProducto == this.productoVentag.idProducto)){
+      //verificamos si la lista de compras ya contiene el producto buscandolo por idProducto
+      this.toastService.show('Ese producto ya esta en la lista',{classname: 'bg-danger text-light', delay: 6000});
+    }else{
 
+      this.ventag.subtotal = this.ventag.subtotal + this.productoVentag.precio;
+      //this.subtotalVenta = this.subtotalVenta + this.productoVentag.subtotal;
+      this.ventag.descuento = this.ventag.descuento + this.productoVentag.descuento;
+      //this.descuentoVenta = this.descuentoVenta + this.productoVentag.descuento;
+      this.ventag.total = this.ventag.total + this.productoVentag.subtotal;
+      this.lista_productoVentag.push({...this.productoVentag});
+      this.isSearch = true;
+    }
 
+  }
+  loadUser(){
+    this.identity = this._empleadoService.getIdentity();
+  }
+  //editar/eliminar producto de la lista de compras
+  editarProductoLista(dato:any){
+    //buscamos el producto a eliminar para traer sus propiedades
+    this.productoVentag = this.lista_productoVentag.find(x => x.idProducto == dato)!;
+    //re calculamos los importes de la venta 
+    this.ventag.subtotal = this.ventag.subtotal - this.productoVentag.precio;
+    this.ventag.descuento = this.ventag.descuento - this.productoVentag.descuento;
+    this.ventag.total = this.ventag.total - this.productoVentag.subtotal;
+    //cremos nuevo array eliminando el producto que se selecciono
+    this.lista_productoVentag = this.lista_productoVentag.filter((item) => item.idProducto !== dato);
+    this._productoService.getProdverDos(dato).subscribe( 
+      response =>{
+        this.producto = response.producto;
+        this.productoVentag.claveEx = this.producto[0]['claveEx'];
+        this.productoVentag.idProducto = this.producto[0]['idProducto']
+        this.productoVentag.nombreMedida = this.producto[0]['nombreMedida'];
+        this.productoVentag.precio = this.producto[0]['precioS'];
+        this.productoVentag.descripcion = this.producto[0]['descripcion'];
+        this.productoVentag.precioMinimo = this.producto[0]['precioR']
+        this.productoVentag.cantidad = 0;
+        this.productoVentag.descuento = 0;
+        this.calculaSubtotalPP();
+        this.isSearch=false;
+      },error =>{
+        console.log(error);
+      });
+  }
+  //generar cotizacion
+  creaCotizacion(){
+    //asignamos id del empleado
+    this.ventag.idEmpleado = this.identity['sub'];
+    if(this.lista_productoVentag.length == 0){
+      this.toastService.show('No puedes generar una venta sin productos!',{classname: 'bg-danger text-light', delay: 6000})
+    }else{
+      this._ventasService.postCotizaciones(this.ventag).subscribe( response=>{
+        if(response.status == 'success'){
+          this._ventasService.postProductosCotiza(this.lista_productoVentag).subscribe( response =>{
+            if(response.status == 'success'){
+              this.toastService.show(' ⚠ Cotizacion creada exitosamente!', { classname: 'bg-success  text-light', delay: 5000 });
+              //console.log(response);
+            }
+          },error=>{
+            console.log(error);
+          });
+        }
+      },error =>{
+        console.log(error);
+      });
+    }
+
+    //console.log(this.ventag);
+    //console.log(this.lista_productoVentag);
+  }
+  creaPDFcotizacion(){
+
+  }
+  /***************************************************************************************************************************** */
   // Metodos del  modal
   open(content:any) {//abrir modal aplica para la mayoria de los modales
     this.getClientes();

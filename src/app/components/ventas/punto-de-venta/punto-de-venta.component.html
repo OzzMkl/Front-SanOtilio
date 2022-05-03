@@ -56,15 +56,15 @@
         </div>
         <div class="col-2">
             <label class="form-label">Precio</label>
-            <input class="form-control" type="number" min="" name="precio" #precio="ngModel" [(ngModel)]="productoVentag.precio" (change)="calculaSubtotalPP()" >
+            <input class="form-control" type="number" min="{{productoVentag.precioMinimo}}" name="precio" #precio="ngModel" [(ngModel)]="productoVentag.precio" (change)="calculaSubtotalPP()" >
         </div>
         <div class="col-2">
             <label class="form-label">Cantidad</label>
-            <input class="form-control" type="number" name="cantidad" #cantidad="ngModel" [(ngModel)]="productoVentag.cantidad" (change)="calculaSubtotalPP()">
+            <input class="form-control" type="number" min="0" name="cantidad" #cantidad="ngModel" [(ngModel)]="productoVentag.cantidad" (change)="calculaSubtotalPP()">
         </div>
         <div class="col-2">
             <label class="form-label">Descuento</label>
-            <input class="form-control" type="number" name="descuento" #descuento="ngModel" [(ngModel)]="productoVentag.descuento" (change)="calculaSubtotalPP()">
+            <input class="form-control" type="number" min="0" name="descuento" #descuento="ngModel" [(ngModel)]="productoVentag.descuento" (change)="calculaSubtotalPP()">
         </div>
         <div class="col-2">
             <label class="form-label">Subtotal</label>
@@ -75,8 +75,9 @@
             <input type="text" class="form-control" name="descripcion" #descripcion="ngModel" [(ngModel)]="productoVentag.descripcion" readonly>
         </div>
         <div class="col-2">
-            <label class="form-label">.</label>
-            <button class="btn btn-success form-control" type="button" (click)="agregarProductoLista()"><i class="bi bi-check-circle-fill" > Agregar</i>     </button>
+            <!-- <label class="form-label">.</label> -->
+            <br>
+            <button class="btn btn-success form-control" type="button" [disabled]="isSearch" (click)="agregarProductoLista()"><i class="bi bi-check-circle-fill" > Agregar</i>     </button>
         </div>
     </div>
     <hr>
@@ -94,43 +95,43 @@
                     <th scope="col">SUBTOTAL</th>
                 </tr>
             </thead>
-            <tbody *ngFor="let producto of lista_productoVentag">
-                <tr>
+            <tbody *ngFor="let producto of lista_productoVentag | paginate:{id:'tablePV', itemsPerPage: 5, currentPage:pageActual3}">
+                <tr (click)="editarProductoLista(producto.idProducto)">
                     <th scope="row">{{producto.claveEx}}</th>
                     <th scope="row">{{producto.descripcion}}</th>
                     <th scope="row">{{producto.nombreMedida}}</th>
-                    <th scope="row">{{producto.precio}}</th>
+                    <th scope="row">{{producto.precio | currency}}</th>
                     <th scope="row">{{producto.cantidad}}</th>
-                    <th scope="row">{{producto.descuento}}</th>
-                    <th scope="row">{{producto.subtotal}}</th>
+                    <th scope="row">{{producto.descuento | currency}}</th>
+                    <th scope="row">{{producto.subtotal | currency}}</th>
                 </tr>
             </tbody>
         </table>
+        <pagination-controls id="tablePV" (pageChange)="pageActual3 = $event"></pagination-controls>
     </div>
     <hr>
     <div class="row">
-        <div class="col-5">
+        <div class="col-10">
             <label class="form-label">Observaciones</label>
-            <textarea class="form-control" rows="3"></textarea>
-        </div>
-        <div class="col-2">
-            <label class="form-label">Tipo de pago</label>
-            <select name="idTipopago" class="form-select" #idTipopago="ngModel" [(ngModel)]="ventag.idTipoPago">
-                <option selected value="">Abrir para seleccionar</option>
-                <option *ngFor="let tp of tipopago" value="{{tp.idt}}">{{tp.tipo}}</option>
-            </select>
-        </div>
-        <div class="col-2">
-            <label for="">Subtotal</label>
-            <input class="form-control" type="text" value="{{subtotalVenta}}" readonly>
-            <label for="">DESCUENTO</label>
-            <input class="form-control" type="text" value="{{descuentoVenta}}" readonly>
-            <label for="">TOTAL</label>
-            <input class="form-control" type="text" readonly>
+            <textarea class="form-control" rows="2" name="observaciones" #observaciones="ngModel" [(ngModel)]="ventag.observaciones"></textarea>
+            <div class="row">
+                <div class="col-3">
+                    <label for="">Subtotal</label>
+                    <input class="form-control" type="text" value="{{ventag.subtotal | currency}}" readonly>
+                </div>
+                <div class="col-3">
+                    <label for="">DESCUENTO</label>
+                    <input class="form-control" type="text" value="{{ventag.descuento | currency}}" readonly>
+                </div>
+                <div class="col-3">
+                    <label for="">TOTAL</label>
+                    <input class="form-control" type="text" value="{{ventag.total | currency}}" readonly>
+                </div>
+            </div>
         </div>
         <div class="col-2">
             <div class="col">
-                <button class="btn btn-secondary form-control"><i class="bi bi-file-earmark-medical"></i> Cotizacion</button>
+                <button class="btn btn-secondary form-control" (click)="creaCotizacion()"><i class="bi bi-file-earmark-medical"></i> Cotizacion</button>
             </div>
             <br>
             <div class="col">

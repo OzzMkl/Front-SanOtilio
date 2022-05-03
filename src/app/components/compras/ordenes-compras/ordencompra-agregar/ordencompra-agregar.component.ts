@@ -123,7 +123,7 @@ export class OrdencompraAgregarComponent implements OnInit {
     this.orden_compra.fecha = this.model.year+'-'+this.model.month+'-'+this.model.day;//concatenamos la fecha del datepicker
     
     if(this.Lista_compras.length == 0){
-      this.toastService.show('No se puede crear Orden de compra si no tiene productos :c',{classname: 'bg-danger text-light', delay: 6000})
+      this.toastService.show('No se puede crear Orden de compra si no tiene productos',{classname: 'bg-danger text-light', delay: 6000})
     }else{
       this._ordencompraService.registerOrdencompra(this.orden_compra).subscribe(
         response =>{
