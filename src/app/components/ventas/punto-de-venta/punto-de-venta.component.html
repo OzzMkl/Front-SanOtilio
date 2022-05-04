@@ -113,7 +113,7 @@
     <div class="row">
         <div class="col-10">
             <label class="form-label">Observaciones</label>
-            <textarea class="form-control" rows="2" name="observaciones" #observaciones="ngModel" [(ngModel)]="ventag.observaciones"></textarea>
+            <textarea class="form-control" rows="2" maxlength="254" name="observaciones" #observaciones="ngModel" [(ngModel)]="ventag.observaciones" (keydown)="omitirEnter($event)"></textarea>
             <div class="row">
                 <div class="col-3">
                     <label for="">Subtotal</label>
