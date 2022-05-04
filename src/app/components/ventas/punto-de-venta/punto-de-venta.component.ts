@@ -5,6 +5,7 @@ import { ToastService } from 'src/app/services/toast.service';
 import { ProductoService } from 'src/app/services/producto.service';
 import { VentasService } from 'src/app/services/ventas.service';
 import { EmpleadoService } from 'src/app/services/empleado.service';
+import { EmpresaService } from 'src/app/services/empresa.service';
 //modelos
 import { Ventag } from 'src/app/models/ventag';
 import { Cliente } from 'src/app/models/cliente';
@@ -12,6 +13,10 @@ import { Cdireccion } from 'src/app/models/cdireccion';
 import { Producto_ventasg } from 'src/app/models/productoVentag';
 //NGBOOTSTRAP-modal
 import { NgbModal, ModalDismissReasons, NgbDateStruct} from '@ng-bootstrap/ng-bootstrap';
+//pdf
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
+
 
 
 @Component({
@@ -31,6 +36,10 @@ export class PuntoDeVentaComponent implements OnInit {
   public productos:any;//getProductos
   public producto:any;
   public identity: any;//loadUser
+  public UltimaCotizacion: any;//obtenerultimacotiza
+  public detallesCotiza:any;//ontederultimacotiza
+  public productosdCotiza:any;
+  public empresa:any;//getDetallesEmpresa
   /**PAGINATOR */
   public totalPages: any;
   public page: any;
@@ -70,7 +79,8 @@ export class PuntoDeVentaComponent implements OnInit {
     public toastService: ToastService,
     private _productoService:ProductoService,
     private _ventasService: VentasService,
-    private _empleadoService : EmpleadoService) {
+    private _empleadoService : EmpleadoService,
+    private _empresaService: EmpresaService) {
     //declaramos modelos
     this.ventag = new Ventag(0,0,2,'',1,null,0,0,0,0,'','');
     this.modeloCliente = new Cliente (0,'','','','','',0,1,0);
@@ -83,8 +93,18 @@ export class PuntoDeVentaComponent implements OnInit {
   ngOnInit(): void {
 //    this.getProductos();
   this.loadUser();
+  this.getDatosEmpresa();
+  //this.creaPDFcotizacion();
   }
- 
+ getDatosEmpresa(){
+   this._empresaService.getDatosEmpresa().subscribe( 
+     response => {
+       if(response.status == 'success'){
+          this.empresa = response.empresa;
+          console.log(this.empresa)
+       }
+     },error => {console.log(error)});
+ }
   //traemos todos los clientes
   getClientes(){
     this._clienteService.getAllClientes().subscribe( 
@@ -251,6 +271,7 @@ export class PuntoDeVentaComponent implements OnInit {
     }
 
   }
+  //traemos la informacion del usuario logeado
   loadUser(){
     this.identity = this._empleadoService.getIdentity();
   }
@@ -281,7 +302,7 @@ export class PuntoDeVentaComponent implements OnInit {
         console.log(error);
       });
   }
-  //generar cotizacion
+  //guardamos cotizacion en DB
   creaCotizacion(){
     //asignamos id del empleado
     this.ventag.idEmpleado = this.identity['sub'];
@@ -293,6 +314,7 @@ export class PuntoDeVentaComponent implements OnInit {
           this._ventasService.postProductosCotiza(this.lista_productoVentag).subscribe( response =>{
             if(response.status == 'success'){
               this.toastService.show(' ⚠ Cotizacion creada exitosamente!', { classname: 'bg-success  text-light', delay: 5000 });
+              this.obtenerUltimaCotiza();
               //console.log(response);
             }
           },error=>{
@@ -307,8 +329,68 @@ export class PuntoDeVentaComponent implements OnInit {
     //console.log(this.ventag);
     //console.log(this.lista_productoVentag);
   }
+  //Obtener detalles de cotizacion registrada
+  obtenerUltimaCotiza(){
+    this._ventasService.getLastCotiza().subscribe( 
+      response =>{
+        if(response.status == 'success'){
+          this.UltimaCotizacion = response.Cotizacion;
+          this._ventasService.getDetallesCotiza(this.UltimaCotizacion['idCotiza']).subscribe( response => {
+            this.detallesCotiza = response.Cotizacion;
+            this.productosdCotiza = response.productos_cotiza;
+            this.creaPDFcotizacion();
+          },error =>{
+            console.log(error)
+          });
+        }
+      },error =>{
+        console.log(error);
+      });
+  }
   creaPDFcotizacion(){
+    const doc = new jsPDF;
+    var cabeceras = ["CLAVE EXTERNA","DESCRIPCION","MEDIDA","PRECIO","CANTIDAD","DESCUENTO","SUBTOTAL"];
+    var rows:any = [];
+    var logo = new Image();//CREAMOS VARIABLE
+    logo.src = 'assets/images/logo-solo.png';//ASIGNAMOS LA UBICACION DE LA IMAGEN
+    var nombreEmpleado = this.detallesCotiza[0]['nombreEmpleado'];
+    //var nombreEmpleado = "FRANCISCO SALOMON COLEMENARES COLMENARES";
+    // variable con logo, tipo x1,y1, ancho, largo
+    doc.addImage(logo,'PNG',10,9,25,25);
+    doc.setDrawColor(255, 145, 0);//AGREGAMOS COLOR NARANJA A LAS LINEAS
+    //          tipografia       tamaño letra       texto                         x1,y1
+    doc.setFont('Helvetica').setFontSize(18).text('MATERIALES PARA CONSTRUCCION \"SAN OTILIO\"', 40,15);
+    doc.setFont('Helvetica').setFontSize(9).text(this.empresa[0]['nombreCorto']+': COLONIA '+this.empresa[0]['colonia']+', CALLE '+ this.empresa[0]['calle']+' #'+this.empresa[0]['numero']+', '+this.empresa[0]['ciudad']+', '+this.empresa[0]['estado'], 45,20);
+    doc.setFont('Helvetica').setFontSize(9).text('CORREOS: '+this.empresa[0]['correo1']+', '+this.empresa[0]['correo2'],60,25);
+    doc.setFont('Helvetica').setFontSize(9).text('TELEFONOS: '+this.empresa[0]['telefono']+' ó '+this.empresa[0]['telefono2']+'   RFC: '+this.empresa[0]['rfc'],68,30);
+    //           ancho linea   x1,y1  x2,y2
+    doc.setLineWidth(2.5).line(10,37,200,37);//colocacion de linea
+    doc.setLineWidth(5).line(10,43,55,43);//colocacion de linea
+    doc.setFont('Helvetica','bold').setFontSize(12).text('COTIZACION #'+this.detallesCotiza[0]['idCotiza'], 12,45);
+    doc.setFont('Helvetica','normal').setFontSize(9).text('VENDEDOR: '+this.detallesCotiza[0]['nombreEmpleado'].toUpperCase(), 60,45);
+    doc.setFont('Helvetica','normal').setFontSize(9).text('FECHA: '+this.detallesCotiza[0]['created_at'].substring(0,10), 170,45);
+    doc.setLineWidth(2.5).line(10,50,200,50);//colocacion de linea
+    doc.setFont('Helvetica','normal').setFontSize(9).text('CLIENTE: '+this.detallesCotiza[0]['nombreCliente'], 10,55);
+    doc.setFont('Helvetica','normal').setFontSize(9).text('RFC: '+this.detallesCotiza[0]['clienteRFC'], 165,55);
+    ///
+    doc.setFont('Helvetica','normal').setFontSize(9).text('DIRECCION: '+this.detallesCotiza[0]['cdireccion'], 10,60);
+    ///
+    doc.setFont('Helvetica','normal').setFontSize(9).text('TELEFONO: 0000000000', 10,65);
+    doc.setFont('Helvetica','normal').setFontSize(9).text('EMAIL: '+this.detallesCotiza[0]['clienteCorreo'], 60,65);
+    doc.setFont('Helvetica','normal').setFontSize(9).text('TIPO CLIENTE: '+this.detallesCotiza[0]['tipocliente'], 130,65);
+    doc.setLineWidth(2.5).line(10,70,200,70);//colocacion de linea
+    //recorremos los productos
+    this.productosdCotiza.forEach((element:any) =>{
+      var temp = [element.claveEx,element.descripcion,element.nombreMedida,element.precio,element.cantidad,element.descuento,element.total];
+      rows.push(temp);
+    });
+    //generamos la tabla
+    autoTable(doc,{ head:[cabeceras],
+      body:rows, startY:75 });
 
+///    let f = autoTable(doc.fi)
+  
+    doc.save("cotizacion"+".pdf");
   }
   /***************************************************************************************************************************** */
   // Metodos del  modal

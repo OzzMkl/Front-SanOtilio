@@ -29,7 +29,12 @@ export class VentasService {
     let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');//mandamos el json con las cabeceras para que obtengamos el token
     return this._http.post(this.url+'cotizaciones/guardarProductosCotiza',params, {headers:headers} );
   }
-  getLastCotiza(){
-    
+  getLastCotiza():Observable<any>{
+    let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');
+    return this._http.get(this.url+'cotizaciones/consultaUltimaCotiza', {headers:headers} );
+  }
+  getDetallesCotiza(idCotiza:any):Observable<any>{
+    let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');
+    return this._http.get(this.url+'cotizaciones/detallesCotizacion/'+idCotiza, {headers:headers} );
   }
 }
