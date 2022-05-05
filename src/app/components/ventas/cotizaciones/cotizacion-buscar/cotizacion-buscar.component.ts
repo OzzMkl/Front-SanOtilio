@@ -17,6 +17,10 @@ export class CotizacionBuscarComponent implements OnInit {
   public next_page:any;
   public prev_page:any;
   public pageActual:any;
+  //pipe
+  tipoBusqueda: number = 1;
+  buscarNomC ='';
+  buscarFolio='';
   
   constructor( private _ventasService: VentasService) { }
 
@@ -34,6 +38,10 @@ export class CotizacionBuscarComponent implements OnInit {
       },error=>{
         console.log(error)
       });
+  }
+  seleccionTipoBusqueda(e:any){
+    this.buscarFolio='';
+    this.buscarNomC='';
   }
 
 }

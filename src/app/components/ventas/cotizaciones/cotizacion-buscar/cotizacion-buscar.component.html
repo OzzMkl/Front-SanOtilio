@@ -2,9 +2,18 @@
     <h4 class="text-center">Buscar cotizaciones</h4>
 </div>
 <div class="container-fluid">
-    <div class="row">
-        <div class="col">
-            <input type="text" class="form-control">
+    <div class="input-group mb-2">
+        <div class="col-2">
+            <select class="form-select" name="tipoBusqueda" [(ngModel)]="tipoBusqueda" (ngModelChange)="seleccionTipoBusqueda($event)">
+                <option value="1" selected>Cliente</option>
+                <option value="2"># Folio</option>
+            </select>
+        </div>
+        <div class="col" *ngIf="tipoBusqueda==1;">
+            <input type="text" class="form-control" name="buscarNomC" placeholder="Buscar . . ." [(ngModel)]="buscarNomC">
+        </div>
+        <div class="col" *ngIf="tipoBusqueda==2;">
+            <input type="text" class="form-control" name="bucarFolio" placeholder="Buscar . . ." [(ngModel)]="buscarFolio" pattern="[0-9]+">
         </div>
     </div>
     <br>
@@ -19,7 +28,7 @@
                 <th scope="col">STATUS</th>
             </tr>
         </thead>
-        <tbody *ngFor="let cotiza of cotizaciones | paginate:{id:'paginationCotiza',itemsPerPage: 10, currentPage: pageActual}">
+        <tbody *ngFor="let cotiza of cotizaciones | filterCotizacionesNomC: buscarNomC | filterCotizacionesIdCotiza: buscarFolio | paginate:{id:'paginationCotiza',itemsPerPage: 10, currentPage: pageActual}">
             <tr>
                 <th scope="row">{{cotiza.idCotiza}}</th>
                 <th scope="row">{{cotiza.created_at | date: 'dd/MM/yyyy'}}</th>
