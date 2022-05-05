@@ -1,1 +1,34 @@
-<p>cotizacion-buscar works!</p>
+<div class="container">
+    <h4 class="text-center">Buscar cotizaciones</h4>
+</div>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col">
+            <input type="text" class="form-control">
+        </div>
+    </div>
+    <br>
+    <table class="table table-dark table-hover">
+        <thead>
+            <tr>
+                <th scope="col">FOLIO</th>
+                <th scope="col">FECHA</th>
+                <th scope="col">CLIENTE</th>
+                <th scope="col">VENDEDOR</th>
+                <th scope="col">TOTAL</th>
+                <th scope="col">STATUS</th>
+            </tr>
+        </thead>
+        <tbody *ngFor="let cotiza of cotizaciones | paginate:{id:'paginationCotiza',itemsPerPage: 10, currentPage: pageActual}">
+            <tr>
+                <th scope="row">{{cotiza.idCotiza}}</th>
+                <th scope="row">{{cotiza.created_at | date: 'dd/MM/yyyy'}}</th>
+                <th scope="row">{{cotiza.nombreCliente}}</th>
+                <th scope="row">{{cotiza.nombreEmpleado}}</th>
+                <th scope="row">{{cotiza.total | currency}}</th>
+                <th scope="row">{{cotiza.nombreStatus}}</th>
+            </tr>
+        </tbody>
+    </table>
+    <pagination-controls id="paginationCotiza" (pageChange)="pageActual = $event"></pagination-controls>
+</div>

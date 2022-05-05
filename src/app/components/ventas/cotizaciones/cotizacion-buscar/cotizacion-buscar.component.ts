@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+//Servicios
+import { VentasService } from 'src/app/services/ventas.service';
 
 @Component({
   selector: 'app-cotizacion-buscar',
@@ -7,9 +9,31 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CotizacionBuscarComponent implements OnInit {
 
-  constructor() { }
+  //variable servicios
+  public cotizaciones:any;
+  //paginador
+  public totalPages:any;
+  public page:any;
+  public next_page:any;
+  public prev_page:any;
+  public pageActual:any;
+  
+  constructor( private _ventasService: VentasService) { }
 
   ngOnInit(): void {
+    this.getCotizaciones();
+  }
+
+  getCotizaciones(){
+    this._ventasService.getIndexCotiza().subscribe( 
+      response =>{
+        if(response.status == 'success'){
+          this.cotizaciones = response.Cotizaciones;
+          console.log(this.cotizaciones);
+        }
+      },error=>{
+        console.log(error)
+      });
   }
 
 }
