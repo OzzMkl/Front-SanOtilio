@@ -205,21 +205,21 @@
                 <div *ngIf="isCompany == false; else elseBlock" class="row">
                     <div class="col-4">
                         <label class="form-label" for="">Nombre(s)</label>
-                        <input class="form-control" type="text" name="nombre" #nombre="ngModel" [(ngModel)]="modeloCliente.nombre" ngModel required>
+                        <input class="form-control" oninput="this.value = this.value.toUpperCase()" type="text" name="nombre" #nombre="ngModel" [(ngModel)]="modeloCliente.nombre" ngModel required>
                     </div>
                     <div class="col-3">
                         <label class="form-label" for="">Apellido paterno</label>
-                        <input class="form-control" type="text" name="aPaterno" #aPaterno="ngModel" [(ngModel)]="modeloCliente.aPaterno">
+                        <input class="form-control" oninput="this.value = this.value.toUpperCase()" type="text" name="aPaterno" #aPaterno="ngModel" [(ngModel)]="modeloCliente.aPaterno">
                     </div>
                     <div class="col-3">
                         <label class="form-label" for="">Apellido materno</label>
-                        <input class="form-control" type="text" name="aMaterno" #aMaterno="ngModel" [(ngModel)]="modeloCliente.aMaterno">
+                        <input class="form-control" oninput="this.value = this.value.toUpperCase()" type="text" name="aMaterno" #aMaterno="ngModel" [(ngModel)]="modeloCliente.aMaterno">
                     </div>
                 </div>
                 <ng-template #elseBlock>
                     <div class="col-12">
                         <label class="form-label" for="">Nombre de empresa</label>
-                        <input class="form-control" type="text" name="nombre" #nombre="ngModel" [(ngModel)]="modeloCliente.nombre" ngModel required>
+                        <input class="form-control" oninput="this.value = this.value.toUpperCase()" type="text" name="nombre" #nombre="ngModel" [(ngModel)]="modeloCliente.nombre" ngModel required>
                     </div>
                 </ng-template>
                 
@@ -246,7 +246,7 @@
             <div class="row align-items-start">
                 <div class="col-4">
                     <label class="form-label" for="">RFC</label>
-                    <input class="form-control" type="text" name="rfc" #rfc="ngModel" [(ngModel)]="modeloCliente.rfc">
+                    <input class="form-control" oninput="this.value = this.value.toUpperCase()" type="text" name="rfc" #rfc="ngModel" [(ngModel)]="modeloCliente.rfc">
                 </div>
                 <div class="col-3">
                         <label class="form-label" for="flexCheckDefault">Tiene credito</label>
@@ -290,47 +290,47 @@
                     <div  class="row align-items-start">
                       <div class="col-3">
                           <label class="form-label" for="">Pais</label>
-                          <input class="form-control" type="text" value="Mexico" name="pais" #pais="ngModel" [(ngModel)]="cdireccion.pais" readonly>
+                          <input class="form-control" oninput="this.value = this.value.toUpperCase()" type="text" value="Mexico" name="pais" #pais="ngModel" [(ngModel)]="cdireccion.pais" readonly>
                       </div>
                       <div class="col-3">
                         <label class="form-label" for="">Estado</label>
-                        <input class="form-control" type="text" value="Puebla" name="estado" #estado="ngModel" [(ngModel)]="cdireccion.estado" readonly>
+                        <input class="form-control" oninput="this.value = this.value.toUpperCase()" type="text" value="Puebla" name="estado" #estado="ngModel" [(ngModel)]="cdireccion.estado" readonly>
                       </div>
                       <div class="col-3">
                         <label class="form-label" for="">Ciudad</label>
-                        <input class="form-control" type="text" name="ciudad" #ciudad="ngModel" [(ngModel)]="cdireccion.ciudad" >
+                        <input class="form-control" oninput="this.value = this.value.toUpperCase()" type="text" name="ciudad" #ciudad="ngModel" [(ngModel)]="cdireccion.ciudad" >
                       </div>
                       <div class="col-3">
                         <label class="form-label" for="">Colonia</label>
-                        <input class="form-control" type="text" name="colonia" #colonia="ngModel" [(ngModel)]="cdireccion.colonia" >
+                        <input class="form-control" oninput="this.value = this.value.toUpperCase()" type="text" name="colonia" #colonia="ngModel" [(ngModel)]="cdireccion.colonia" >
                       </div>
                       <div class="col-3">
                         <label class="form-label" for="">Calle</label>
-                        <input class="form-control" type="text" name="calle" #calle="ngModel" [(ngModel)]="cdireccion.calle" >
+                        <input class="form-control" oninput="this.value = this.value.toUpperCase()" type="text" name="calle" #calle="ngModel" [(ngModel)]="cdireccion.calle" >
                       </div>
                       <div class="col-3">
                         <label class="form-label" for="">Numero exterior</label>
-                        <input class="form-control" type="text" name="numExt" #numExt="ngModel" [(ngModel)]="cdireccion.numExt" >
+                        <input class="form-control" oninput="this.value = this.value.toUpperCase()" type="text" name="numExt" #numExt="ngModel" [(ngModel)]="cdireccion.numExt" >
                       </div>
                       <div class="col-3">
                         <label class="form-label" for="">Numero interior</label>
-                        <input class="form-control" type="text" name="numInt" #numInt="ngModel" [(ngModel)]="cdireccion.numInt" >
+                        <input class="form-control" oninput="this.value = this.value.toUpperCase()" type="text" name="numInt" #numInt="ngModel" [(ngModel)]="cdireccion.numInt" >
                       </div>
                       <div class="col-3">
                         <label class="form-label" for="">Entre calles</label>
-                        <input class="form-control" type="text" name="entreCalles" #entreCalles="ngModel" [(ngModel)]="cdireccion.entreCalles" >
+                        <input class="form-control" oninput="this.value = this.value.toUpperCase()" type="text" name="entreCalles" #entreCalles="ngModel" [(ngModel)]="cdireccion.entreCalles" >
                       </div>
                       <div class="col-3">
                         <label class="form-label" for="">Codigo postal</label>
-                        <input class="form-control" type="text" name="cp" #cp="ngModel" [(ngModel)]="cdireccion.cp" >
+                        <input class="form-control" type="number" min="0" maxlength="5" name="cp" #cp="ngModel" [(ngModel)]="cdireccion.cp" >
                       </div>
                       <div class="col-3">
                         <label class="form-label" for="">Telefono</label>
-                        <input class="form-control" type="text" name="telefono" #telefono="ngModel" [(ngModel)]="cdireccion.telefono" >
+                        <input class="form-control" type="number" maxlength="10" name="telefono" #telefono="ngModel" [(ngModel)]="cdireccion.telefono" >
                       </div>
                       <div class="col">
                         <label class="form-label" for="">Referencia</label>
-                        <textarea class="form-control" name="" id="" cols="30" rows="2" name="referencia" #referencia="ngModel" [(ngModel)]="cdireccion.referencia"></textarea>
+                        <textarea class="form-control" oninput="this.value = this.value.toUpperCase()" name="" id="" cols="30" rows="2" name="referencia" #referencia="ngModel" [(ngModel)]="cdireccion.referencia"></textarea>
                       </div>
                     </div>
                 
@@ -382,47 +382,47 @@
                     <div  class="row align-items-start">
                       <div class="col-3">
                           <label class="form-label" for="">Pais</label>
-                          <input class="form-control" type="text" value="Mexico" name="pais" #pais="ngModel" [(ngModel)]="nuevaDir.pais" readonly>
+                          <input class="form-control" type="text" oninput="this.value = this.value.toUpperCase()" value="Mexico" name="pais" #pais="ngModel" [(ngModel)]="nuevaDir.pais" readonly>
                       </div>
                       <div class="col-3">
                         <label class="form-label" for="">Estado</label>
-                        <input class="form-control" type="text" value="Puebla" name="estado" #estado="ngModel" [(ngModel)]="nuevaDir.estado" readonly>
+                        <input class="form-control" type="text" oninput="this.value = this.value.toUpperCase()" value="Puebla" name="estado" #estado="ngModel" [(ngModel)]="nuevaDir.estado" readonly>
                       </div>
                       <div class="col-3">
                         <label class="form-label" for="">Ciudad</label>
-                        <input class="form-control" type="text" name="ciudad" #ciudad="ngModel" [(ngModel)]="nuevaDir.ciudad" >
+                        <input class="form-control" type="text" oninput="this.value = this.value.toUpperCase()" name="ciudad" #ciudad="ngModel" [(ngModel)]="nuevaDir.ciudad" >
                       </div>
                       <div class="col-3">
                         <label class="form-label" for="">Colonia</label>
-                        <input class="form-control" type="text" name="colonia" #colonia="ngModel" [(ngModel)]="nuevaDir.colonia" >
+                        <input class="form-control" type="text" oninput="this.value = this.value.toUpperCase()" name="colonia" #colonia="ngModel" [(ngModel)]="nuevaDir.colonia" >
                       </div>
                       <div class="col-3">
                         <label class="form-label" for="">Calle</label>
-                        <input class="form-control" type="text" name="calle" #calle="ngModel" [(ngModel)]="nuevaDir.calle" >
+                        <input class="form-control" type="text" oninput="this.value = this.value.toUpperCase()" name="calle" #calle="ngModel" [(ngModel)]="nuevaDir.calle" >
                       </div>
                       <div class="col-3">
                         <label class="form-label" for="">Numero exterior</label>
-                        <input class="form-control" type="text" name="numExt" #numExt="ngModel" [(ngModel)]="nuevaDir.numExt" >
+                        <input class="form-control" type="text" oninput="this.value = this.value.toUpperCase()" name="numExt" #numExt="ngModel" [(ngModel)]="nuevaDir.numExt" >
                       </div>
                       <div class="col-3">
                         <label class="form-label" for="">Numero interior</label>
-                        <input class="form-control" type="text" name="numInt" #numInt="ngModel" [(ngModel)]="nuevaDir.numInt" >
+                        <input class="form-control" type="text" oninput="this.value = this.value.toUpperCase()" name="numInt" #numInt="ngModel" [(ngModel)]="nuevaDir.numInt" >
                       </div>
                       <div class="col-3">
                         <label class="form-label" for="">Entre calles</label>
-                        <input class="form-control" type="text" name="entreCalles" #entreCalles="ngModel" [(ngModel)]="nuevaDir.entreCalles" >
+                        <input class="form-control" type="text" oninput="this.value = this.value.toUpperCase()" name="entreCalles" #entreCalles="ngModel" [(ngModel)]="nuevaDir.entreCalles" >
                       </div>
                       <div class="col-3">
                         <label class="form-label" for="">Codigo postal</label>
-                        <input class="form-control" type="text" name="cp" #cp="ngModel" [(ngModel)]="nuevaDir.cp" >
+                        <input class="form-control" type="number" min="0" maxlength="5" name="cp" #cp="ngModel" [(ngModel)]="nuevaDir.cp" >
                       </div>
                       <div class="col-3">
                         <label class="form-label" for="">Telefono</label>
-                        <input class="form-control" type="text" name="telefono" #telefono="ngModel" [(ngModel)]="nuevaDir.telefono" >
+                        <input class="form-control" type="number" maxlength="10"  name="telefono" #telefono="ngModel" [(ngModel)]="nuevaDir.telefono" >
                       </div>
                       <div class="col">
                         <label class="form-label" for="">Referencia</label>
-                        <textarea class="form-control" name="" id="" cols="30" rows="2" name="referencia" #referencia="ngModel" [(ngModel)]="nuevaDir.referencia"></textarea>
+                        <textarea class="form-control" oninput="this.value = this.value.toUpperCase()"  cols="30" rows="2" name="referencia" #referencia="ngModel" [(ngModel)]="nuevaDir.referencia"></textarea>
                       </div>
                     </div>
                 

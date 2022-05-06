@@ -169,32 +169,37 @@ export class PuntoDeVentaComponent implements OnInit {
   //accion de guardar el nuevo cliente del modal
   guardarCliente(){
     
-    if(this.isCompany == true ){
-      this.modeloCliente.aMaterno ='';
-      this.modeloCliente.aPaterno='';
-    }
-    this._clienteService.postCliente(this.modeloCliente).subscribe( 
-      response =>{
-        if(response.status == 'success'){
-          if(this.checkDireccion == true){
-            this._clienteService.postCdireccion(this.cdireccion).subscribe( 
-              response=>{
-                this.toastService.show('Cliente registrado correctamente',{classname: 'bg-success text-light', delay: 3000});
-                //console.log(response);
-              },error=>{
-                this.toastService.show('Cliente registrado, pero sin direccion',{classname: 'bg-danger text-light', delay: 6000})
-                console.log(error);
-              });
+    if(this.modeloCliente.correo.length <= 0 || this.modeloCliente.rfc.length <= 0 || this.modeloCliente.idTipo == 0 ){
+      this.toastService.show('Datos incompletos',{classname: 'bg-warning', delay: 3000});
+    }else{
+      if(this.isCompany == true ){
+        this.modeloCliente.aMaterno ='';
+        this.modeloCliente.aPaterno='';
+      }
+      this._clienteService.postCliente(this.modeloCliente).subscribe( 
+        response =>{
+          if(response.status == 'success'){
+            if(this.checkDireccion == true){
+              this._clienteService.postCdireccion(this.cdireccion).subscribe( 
+                response=>{
+                  this.toastService.show('Cliente registrado correctamente',{classname: 'bg-success text-light', delay: 3000});
+                  //console.log(response);
+                },error=>{
+                  this.toastService.show('Cliente registrado, pero sin direccion',{classname: 'bg-danger text-light', delay: 6000})
+                  console.log(error);
+                });
+            }else{
+              this.toastService.show('Cliente registrado, pero sin direccion',{classname: 'bg-success text-light', delay: 3000});
+            }
           }else{
-            this.toastService.show('Cliente registrado, pero sin direccion',{classname: 'bg-success text-light', delay: 3000});
+            this.toastService.show('Algo salio mal',{classname: 'bg-danger text-light', delay: 6000})
+            //console.log('Algo salio mal');
           }
-        }else{
-          this.toastService.show('Algo salio mal',{classname: 'bg-danger text-light', delay: 6000})
-          //console.log('Algo salio mal');
-        }
-      },error=>{
-        console.log(error);
-    });
+        },error=>{
+          console.log(error);
+      });
+    }
+    
   }
   //guarda una nueva direccion
   guardarNuevaDireccion(){
@@ -248,6 +253,9 @@ export class PuntoDeVentaComponent implements OnInit {
     if(this.productoVentag.precio < this.producto[0]['precioR']){
       this.toastService.show('El precio minimo permitido es de: $'+this.producto[0]['precioR'],{classname: 'bg-danger text-light', delay: 6000});
       this.isSearch=true;
+    }else if(this.productoVentag.descuento < 0){
+      this.toastService.show('No puedes agregar descuento negativo',{classname: 'bg-danger text-light', delay: 6000});
+      this.isSearch=true;
     }else{
       this.productoVentag.subtotal = (this.productoVentag.cantidad * this.productoVentag.precio)- this.productoVentag.descuento;
       this.isSearch=false;
@@ -262,9 +270,11 @@ export class PuntoDeVentaComponent implements OnInit {
     }else if (this.lista_productoVentag.find(x => x.idProducto == this.productoVentag.idProducto)){
       //verificamos si la lista de compras ya contiene el producto buscandolo por idProducto
       this.toastService.show('Ese producto ya esta en la lista',{classname: 'bg-danger text-light', delay: 6000});
+    }else if(this.productoVentag.descuento < 0){
+      this.toastService.show('No puedes agregar descuento negativo',{classname: 'bg-danger text-light', delay: 6000});
     }else{
-
-      this.ventag.subtotal = this.ventag.subtotal + this.productoVentag.precio;
+      
+      this.ventag.subtotal = this.ventag.subtotal + (this.productoVentag.precio * this.productoVentag.cantidad);
       //this.subtotalVenta = this.subtotalVenta + this.productoVentag.subtotal;
       this.ventag.descuento = this.ventag.descuento + this.productoVentag.descuento;
       //this.descuentoVenta = this.descuentoVenta + this.productoVentag.descuento;
@@ -291,7 +301,7 @@ export class PuntoDeVentaComponent implements OnInit {
     //buscamos el producto a eliminar para traer sus propiedades
     this.productoVentag = this.lista_productoVentag.find(x => x.idProducto == dato)!;
     //re calculamos los importes de la venta 
-    this.ventag.subtotal = this.ventag.subtotal - this.productoVentag.precio;
+    this.ventag.subtotal = this.ventag.subtotal - (this.productoVentag.precio * this.productoVentag.cantidad);
     this.ventag.descuento = this.ventag.descuento - this.productoVentag.descuento;
     this.ventag.total = this.ventag.total - this.productoVentag.subtotal;
     //cremos nuevo array eliminando el producto que se selecciono
@@ -348,7 +358,8 @@ export class PuntoDeVentaComponent implements OnInit {
       response =>{
         if(response.status == 'success'){
           this.UltimaCotizacion = response.Cotizacion;
-          this._ventasService.getDetallesCotiza(this.UltimaCotizacion['idCotiza']).subscribe( response => {
+          this._ventasService.getDetallesCotiza(this.UltimaCotizacion['idCotiza']).subscribe( 
+            response => {
             this.detallesCotiza = response.Cotizacion;
             this.productosdCotiza = response.productos_cotiza;
             this.creaPDFcotizacion();
@@ -416,7 +427,7 @@ export class PuntoDeVentaComponent implements OnInit {
       doc.setFont('Helvetica','bold').setFontSize(9).text('*** PRECIOS SUJETOS A CAMBIOS SIN PREVIO AVISO ***', 60,posY+48);
     //doc.autoPrint();
     //GUARDAMOS PDF
-    doc.save("cotizacion"+".pdf");
+    doc.save("cotizacion-"+this.detallesCotiza[0]['idCotiza']+".pdf");
   }
   // Metodos del  modal
   open(content:any) {//abrir modal aplica para la mayoria de los modales
