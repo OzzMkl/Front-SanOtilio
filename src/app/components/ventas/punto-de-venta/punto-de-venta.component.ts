@@ -68,6 +68,7 @@ export class PuntoDeVentaComponent implements OnInit {
   public seEnvia: boolean = false;
   public isCompany: boolean = false;
   public isCredito: boolean = false;
+  public isRFC: boolean = false;
   public checkDireccion: boolean = false;
 
   //public descuentoVenta:number = 0;
@@ -168,13 +169,12 @@ export class PuntoDeVentaComponent implements OnInit {
   }
   //accion de guardar el nuevo cliente del modal
   guardarCliente(){
-    
-    if(this.modeloCliente.correo.length <= 0 || this.modeloCliente.rfc.length <= 0 || this.modeloCliente.idTipo == 0 ){
-      this.toastService.show('Datos incompletos',{classname: 'bg-warning', delay: 3000});
-    }else{
       if(this.isCompany == true ){
         this.modeloCliente.aMaterno ='';
         this.modeloCliente.aPaterno='';
+      }
+      if(this.isRFC == false){
+        this.modeloCliente.rfc = 'XAXX010101000';
       }
       this._clienteService.postCliente(this.modeloCliente).subscribe( 
         response =>{
@@ -198,7 +198,7 @@ export class PuntoDeVentaComponent implements OnInit {
         },error=>{
           console.log(error);
       });
-    }
+    
     
   }
   //guarda una nueva direccion

@@ -21,6 +21,7 @@ export class ClienteAgregarComponent implements OnInit {
   //variable formulario
   public isCompany: boolean = false;
   public isCredito: boolean = false;
+  public isRFC: boolean = false;
   public checkDireccion: boolean = false;
   //modelo
   public cliente: Cliente;
@@ -50,9 +51,13 @@ export class ClienteAgregarComponent implements OnInit {
       });
   }
   guardarCliente(form:any){//guardamos la informacion capturada del cliente
+    
     if(this.isCompany == true ){
       this.cliente.aMaterno ='';
       this.cliente.aPaterno='';
+    }
+    if(this.isRFC == false){
+      this.cliente.rfc ='XAXX010101000';
     }
     this._clienteService.postCliente(this.cliente).subscribe( 
       response =>{
