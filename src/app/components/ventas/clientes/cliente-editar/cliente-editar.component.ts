@@ -21,6 +21,7 @@ export class ClienteEditarComponent implements OnInit {
   //variable formulario
   public isCompany: boolean = false;
   public isCredito: boolean = false;
+  public isRFC: boolean = false;
   //cerrar modal
   closeResult ='';
   //Modelos 
@@ -67,6 +68,9 @@ export class ClienteEditarComponent implements OnInit {
           if(this.clienteEditado.aPaterno.length == 0 && this.clienteEditado.aMaterno.length == 0){
             this.isCompany = true;
           }
+          if(this.clienteEditado.rfc != 'XAXX010101000'){
+            this.isRFC = true;
+          }
         }else{
           console.log('algo salio mal');
         }
@@ -112,6 +116,13 @@ export class ClienteEditarComponent implements OnInit {
     this.open(content);
   }
   actualizarCliente(){
+    if(this.isCompany == true ){
+      this.clienteEditado.aMaterno ='';
+      this.clienteEditado.aPaterno='';
+    }
+    if(this.isRFC == false){
+      this.clienteEditado.rfc ='XAXX010101000';
+    }
     //console.log(this.listaDirecciones);
     this._clienteService.updateCliente(this.clienteEditado,this.clienteEditado.idCliente).subscribe( 
       response =>{
