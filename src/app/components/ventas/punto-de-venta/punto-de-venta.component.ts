@@ -43,6 +43,7 @@ export class PuntoDeVentaComponent implements OnInit {
   public detallesCotiza:any;//ontederultimacotiza
   public productosdCotiza:any;
   public empresa:any;//getDetallesEmpresa
+  public productoEG:any;
   /**PAGINATOR */
   public totalPages: any;
   public page: any;
@@ -90,7 +91,7 @@ export class PuntoDeVentaComponent implements OnInit {
     this.modeloCliente = new Cliente (0,'','','','','',0,1,0);
     this.cdireccion = new Cdireccion (0,'Mexico','Puebla','','','','','','',0,'',0,1,'');
     this.nuevaDir = new Cdireccion (0,'Mexico','Puebla','','','','','','',0,'',0,1,'');
-    this.productoVentag = new Producto_ventasg(0,0,'',0,0,0,'','',0,0);
+    this.productoVentag = new Producto_ventasg(0,0,'',0,0,0,'','',0,0,true);
     this.lista_productoVentag = [];
    }
 
@@ -235,11 +236,12 @@ export class PuntoDeVentaComponent implements OnInit {
       if(response.status == 'success'){
         this.producto = response.producto;
         this.productoVentag.claveEx = this.producto[0]['claveEx'];
-        this.productoVentag.idProducto = this.producto[0]['idProducto']
+        this.productoVentag.idProducto = this.producto[0]['idProducto'];
         this.productoVentag.nombreMedida = this.producto[0]['nombreMedida'];
         this.productoVentag.precio = this.producto[0]['precioS'];
         this.productoVentag.descripcion = this.producto[0]['descripcion'];
-        this.productoVentag.precioMinimo = this.producto[0]['precioR']
+        this.productoVentag.precioMinimo = this.producto[0]['precioR'];
+        //this.productoVentag.tieneStock = this.producto[0]['existenciaG']
         this.productoVentag.cantidad = 0;
         this.calculaSubtotalPP();
         this.isSearch=false;
@@ -274,6 +276,19 @@ export class PuntoDeVentaComponent implements OnInit {
       this.toastService.show('No puedes agregar descuento negativo',{classname: 'bg-danger text-light', delay: 6000});
     }else{
       
+      this._productoService.getExistenciaG(this.productoVentag.idProducto).subscribe(
+        response =>{
+          this.productoEG = response.producto;
+        }, error =>{
+          console.log(error);
+        }
+      );
+
+      if(this.productoEG[0]['existenciaG']< this.productoVentag.cantidad){
+        this.toastService.show('Stock insuficiente',{classname: 'bg-warning', delay: 6000});
+        this.productoVentag.tieneStock = false;
+      }
+
       this.ventag.subtotal = this.ventag.subtotal + (this.productoVentag.precio * this.productoVentag.cantidad);
       //this.subtotalVenta = this.subtotalVenta + this.productoVentag.subtotal;
       this.ventag.descuento = this.ventag.descuento + this.productoVentag.descuento;
@@ -325,6 +340,7 @@ export class PuntoDeVentaComponent implements OnInit {
   }
   //guardamos cotizacion en DB
   creaCotizacion(){
+
     //asignamos id del empleado
     this.ventag.idEmpleado = this.identity['sub'];
     if(this.lista_productoVentag.length == 0){
@@ -429,6 +445,9 @@ export class PuntoDeVentaComponent implements OnInit {
     //GUARDAMOS PDF
     doc.save("cotizacion-"+this.detallesCotiza[0]['idCotiza']+".pdf");
   }
+  creaTicket(){
+    
+  }
   // Metodos del  modal
   open(content:any) {//abrir modal aplica para la mayoria de los modales
     this.getClientes();
@@ -476,6 +495,22 @@ export class PuntoDeVentaComponent implements OnInit {
     }, (reason) => {
       this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
     });
+  }
+  modalAlertaExistencia(content:any){
+    
+    let encontrado = this.lista_productoVentag.find(x => x.tieneStock == false);
+    
+    if(typeof(encontrado) == 'object'){
+      this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title', size: 'sm'}).result.then((result) => {
+        this.closeResult = `Closed with: ${result}`;
+      }, (reason) => {
+        this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+      });
+    }else{
+      this.creaCotizacion();
+    }
+
+    
   }
   cambioSeleccionado(e:any){//limpiamos los inputs del modal
     this.buscarProducto = '';

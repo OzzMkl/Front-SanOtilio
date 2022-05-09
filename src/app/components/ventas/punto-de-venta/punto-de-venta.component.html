@@ -96,7 +96,7 @@
                 </tr>
             </thead>
             <tbody *ngFor="let producto of lista_productoVentag | paginate:{id:'tablePV', itemsPerPage: 5, currentPage:pageActual3}">
-                <tr (click)="editarProductoLista(producto.idProducto)">
+                <tr (click)="editarProductoLista(producto.idProducto)" >
                     <th scope="row">{{producto.claveEx}}</th>
                     <th scope="row">{{producto.descripcion}}</th>
                     <th scope="row">{{producto.nombreMedida}}</th>
@@ -131,7 +131,7 @@
         </div>
         <div class="col-2">
             <div class="col">
-                <button class="btn btn-secondary form-control" (click)="creaCotizacion()"><i class="bi bi-file-earmark-medical"></i> Cotizacion</button>
+                <button class="btn btn-secondary form-control" (click)="modalAlertaExistencia(mAlertaExistencia)"><i class="bi bi-file-earmark-medical"></i> Cotizacion</button>
             </div>
             <br>
             <div class="col">
@@ -455,7 +455,6 @@
             </div>  
         </form>
 </ng-template>
-
 <!-- Modal productos -->
  <ng-template #mBuscarProducto let-modal>
     <div class="modal-header">
@@ -509,4 +508,23 @@
           </table>
           <pagination-controls id="pcModal" (pageChange)="pageActual2 = $event"></pagination-controls>
       </div>
+</ng-template>
+<!-- Modal alerta de existencia -->
+<ng-template #mAlertaExistencia let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">Alerta</h4>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+        <p class="text-center">Algunos productos no cuenta con stock suficiente o estan agotados. ¿Seguro que desea continuar?</p>
+    </div>
+    <div class="modal-footer">
+        <div class="col">
+
+            <button class="btn btn-danger form-control" (click)="modal.dismiss('Cross click')">Cancelar</button>
+        </div>
+        <div class="col">
+            <button class="btn btn-success form-control" (click)="creaCotizacion()"(click)="modal.dismiss('Cross click')">Si</button>
+        </div>
+    </div>
 </ng-template>

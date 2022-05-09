@@ -10,6 +10,7 @@ export class Producto_ventasg{//Modelo de la compra
         public claveEx:string,
         public nombreMedida:string,
         public precioMinimo:number,
-        public subtotal:number
+        public subtotal:number,
+        public tieneStock: boolean
     ){}
 }
