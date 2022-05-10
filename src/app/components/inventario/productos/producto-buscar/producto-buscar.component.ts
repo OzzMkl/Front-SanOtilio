@@ -23,6 +23,9 @@ export class ProductoBuscarComponent implements OnInit {
   fpd='';
   datox:any;
 
+  //spinner
+  public isLoading:boolean = false;
+
   constructor(
     private _productoService: ProductoService,
     private _router: Router
@@ -38,6 +41,7 @@ export class ProductoBuscarComponent implements OnInit {
   }
 
   getProd(){
+    this.isLoading = true;
     this._productoService.getProductos().subscribe(
       response =>{
         if(response.status == 'success'){
@@ -46,6 +50,7 @@ export class ProductoBuscarComponent implements OnInit {
           //navegacion paginacion
           this.totalPages = response.productos.total;
           //console.log(response.productos);
+          this.isLoading = false;
         }
       },
       error =>{

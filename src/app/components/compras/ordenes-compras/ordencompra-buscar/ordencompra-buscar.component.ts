@@ -36,6 +36,8 @@ export class OrdencompraBuscarComponent implements OnInit {
   buscarOrdId='';
   //modal
   closeResult = '';
+  //spinner
+  public isLoading: boolean = false;
 
 
 
@@ -44,11 +46,13 @@ export class OrdencompraBuscarComponent implements OnInit {
     //console.log(this.fechaActual.toLocaleDateString());
   }
   getAllOrdenes(){//obtener todas las ordenes de compras
+    this.isLoading = true;
     this._ordendecompraService.getAllOrders().subscribe(
       response =>{
         if(response.status == 'success'){
           this.ordenesdecompra = response.ordencompra;
           //console.log(this.ordenesdecompra);
+          this.isLoading = false;
         }else{
           console.log('Algo salio mal');
         }

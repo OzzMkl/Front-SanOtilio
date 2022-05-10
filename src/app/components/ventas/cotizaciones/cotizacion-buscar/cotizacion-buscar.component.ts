@@ -33,6 +33,8 @@ export class CotizacionBuscarComponent implements OnInit {
   tipoBusqueda: number = 1;
   buscarNomC ='';
   buscarFolio='';
+  //spinner
+  public isLoading: boolean = false;
   
   constructor( private _ventasService: VentasService,private modalService: NgbModal,
     private _empresaService: EmpresaService) { }
@@ -43,11 +45,13 @@ export class CotizacionBuscarComponent implements OnInit {
   }
   //obtenemos array con todas las cotizaciones
   getCotizaciones(){
+    this.isLoading = true;
     this._ventasService.getIndexCotiza().subscribe( 
       response =>{
         if(response.status == 'success'){
           this.cotizaciones = response.Cotizaciones;
           //console.log(this.cotizaciones);
+          this.isLoading = false;
         }
       },error=>{
         console.log(error)

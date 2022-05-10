@@ -2,10 +2,13 @@
     <h1>{{page_title}}</h1>
 </div>
 <div class="">
-    <div class="loading" *ngIf="!productos">
-        Cargando..
+    <div class="text-center text-primary" *ngIf="isLoading">
+        <div class="spinner-border" role="status" >
+            <span class="visually-hidden">Loading...</span>
+          </div>
     </div>
-    <div class="container-fluid" *ngIf="productos">
+    
+    <div class="container-fluid" *ngIf="!isLoading">
         <!--CUADRO DE BUSQUEDA-->
         <div class="form-group">
             <input type="text" class="form-control" name="fpd" placeholder="Buscar ..." [(ngModel)]="fpd">

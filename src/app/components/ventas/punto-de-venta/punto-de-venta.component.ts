@@ -75,6 +75,8 @@ export class PuntoDeVentaComponent implements OnInit {
   //public descuentoVenta:number = 0;
   //public subtotalVenta:number =0;
   public isSearch: boolean = true;
+  public isLoadingProductos: boolean = false;
+  public isLoadingClientes: boolean = false;
 
 
   constructor( 
@@ -112,11 +114,13 @@ export class PuntoDeVentaComponent implements OnInit {
  }
   //traemos todos los clientes
   getClientes(){
+    this.isLoadingClientes = true;
     this._clienteService.getAllClientes().subscribe( 
       response =>{
         if(response.status == 'success'){
           this.clientes = response.clientes;
           //console.log(this.clientes);
+          this.isLoadingClientes = false;
         }
       },error =>{
       console.log(error);
@@ -218,11 +222,13 @@ export class PuntoDeVentaComponent implements OnInit {
   }
   //obtenemos todos los productos
   getProductos(){
+    this.isLoadingProductos=true;
     this._productoService.getProductosPV().subscribe( 
       response => {
         if(response.status == 'success'){
           this.productos = response.productos;
           //console.log(response);
+          this.isLoadingProductos = false;
         }
       }, error =>{
       console.log(error);

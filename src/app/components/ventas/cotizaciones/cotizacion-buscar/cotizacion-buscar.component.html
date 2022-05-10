@@ -17,29 +17,36 @@
         </div>
     </div>
     <br>
-    <table class="table table-dark table-hover">
-        <thead>
-            <tr>
-                <th scope="col">FOLIO</th>
-                <th scope="col">FECHA</th>
-                <th scope="col">CLIENTE</th>
-                <th scope="col">VENDEDOR</th>
-                <th scope="col">TOTAL</th>
-                <th scope="col">STATUS</th>
-            </tr>
-        </thead>
-        <tbody *ngFor="let cotiza of cotizaciones | filterCotizacionesNomC: buscarNomC | filterCotizacionesIdCotiza: buscarFolio | paginate:{id:'paginationCotiza',itemsPerPage: 10, currentPage: pageActual}">
-            <tr (click)="open(mDetallesCotiza)" (click)="getDetallesCotiza(cotiza.idCotiza)">
-                <th scope="row">{{cotiza.idCotiza}}</th>
-                <th scope="row">{{cotiza.created_at | date: 'dd/MM/yyyy'}}</th>
-                <th scope="row">{{cotiza.nombreCliente}}</th>
-                <th scope="row">{{cotiza.nombreEmpleado}}</th>
-                <th scope="row">{{cotiza.total | currency}}</th>
-                <th scope="row">{{cotiza.nombreStatus}}</th>
-            </tr>
-        </tbody>
-    </table>
-    <pagination-controls id="paginationCotiza" (pageChange)="pageActual = $event"></pagination-controls>
+    <div class="text-center text-primary" *ngIf="isLoading">
+        <div class="spinner-border" role="status" >
+            <span class="visually-hidden">Loading...</span>
+          </div>
+    </div>
+    <div *ngIf="!isLoading">
+        <table class="table table-dark table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">FOLIO</th>
+                    <th scope="col">FECHA</th>
+                    <th scope="col">CLIENTE</th>
+                    <th scope="col">VENDEDOR</th>
+                    <th scope="col">TOTAL</th>
+                    <th scope="col">STATUS</th>
+                </tr>
+            </thead>
+            <tbody *ngFor="let cotiza of cotizaciones | filterCotizacionesNomC: buscarNomC | filterCotizacionesIdCotiza: buscarFolio | paginate:{id:'paginationCotiza',itemsPerPage: 10, currentPage: pageActual}">
+                <tr (click)="open(mDetallesCotiza)" (click)="getDetallesCotiza(cotiza.idCotiza)">
+                    <th scope="row">{{cotiza.idCotiza}}</th>
+                    <th scope="row">{{cotiza.created_at | date: 'dd/MM/yyyy'}}</th>
+                    <th scope="row">{{cotiza.nombreCliente}}</th>
+                    <th scope="row">{{cotiza.nombreEmpleado}}</th>
+                    <th scope="row">{{cotiza.total | currency}}</th>
+                    <th scope="row">{{cotiza.nombreStatus}}</th>
+                </tr>
+            </tbody>
+        </table>
+        <pagination-controls id="paginationCotiza" (pageChange)="pageActual = $event"></pagination-controls>
+    </div>
 </div>
 <ng-template #mDetallesCotiza let-modal>
     <div *ngFor="let dc of detallesCotiza">
