@@ -81,7 +81,7 @@ const routes: Routes = [
   children:
   [
     {path: 'cotizacion-buscar', component: CotizacionBuscarComponent},
-    {path: 'cotizacion-editar', component: CotizacionEditarComponent}
+    {path: 'cotizacion-editar/:idCotiza', component: CotizacionEditarComponent}
   ]},
   {path: 'cliente-modulo',component: ClienteModuloComponent,
       children:

@@ -66,7 +66,7 @@
                 </div>
                 <div class="col" >
                     <button type="button" class="btn btn-secondary me-md-2" style="box-sizing: border-box;" (click)="generaPDF()"><i class="bi bi-file-earmark-pdf"></i><br>PDF</button>
-                    <button type="button" class="btn btn-warning me-md-2" ><i class="bi bi-pencil-square"></i><br>EDITAR</button>
+                    <button type="button" class="btn btn-warning me-md-2" [routerLink]="['../cotizacion-editar',dc.idCotiza]" (click)="modal.dismiss('Cross click')"><i class="bi bi-pencil-square" ></i><br>EDITAR</button>
                 </div>
             </div>
             <hr>
