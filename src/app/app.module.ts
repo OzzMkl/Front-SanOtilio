@@ -124,7 +124,7 @@ import { FilterCotizacionesIdCotizaPipe } from './pipes/filter-cotizaciones-id-c
     CotizacionEditarComponent,
     CotizacionModuloComponent,
     FilterCotizacionesNomCPipe,
-    FilterCotizacionesIdCotizaPipe,
+    FilterCotizacionesIdCotizaPipe
   ],
   imports: [
     BrowserModule,

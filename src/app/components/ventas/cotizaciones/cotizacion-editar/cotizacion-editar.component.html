@@ -1,1 +1,39 @@
-<p>cotizacion-editar works!</p>
+<div class="container">
+    <div>
+        <h5 class="text-center">DATOS DEL CLIENTE</h5>
+        <div class="row align-items-start">
+            <div class="col-4">
+                <label class="form-label">Buscar cliente</label>
+                <div class="input-group">
+                    <span class="input-group-addon" id="sizing-addon2"><i class="bi-search" style="font-size: 1.5rem; color: black; left: 0;"></i></span>
+                    <input class="form-control" type="text" name="nombreCliente" #nombreCliente="ngModel" [(ngModel)]="cotizacion_editada.nombreCliente" id="" readonly>
+                </div>
+            </div>
+            <div class="col-1">
+                <br>
+                <button class="btn btn-success" ngbTooltip="Agregar cliente"><i class="bi bi-plus-circle-dotted" style="font-size: 1.3rem; color: rgb(255, 249, 249); left: 0;"></i></button>
+            </div>
+            <div class="col-2" *ngFor="let c of cliente">
+                <label class="form-label">RFC</label>
+                <input class="form-control" type="text" value="{{c.rfc}}"  readonly>
+            </div>
+            <div class="col-2" *ngFor="let c of cliente">
+                <label class="form-label">Tipo cliente</label>
+                <input class="form-control" type="text" value="{{c.nombreTipoC}}"  readonly>
+            </div>
+            <div *ngIf="cotizacion_editada.nombreCliente.length > 0" class="col-2">
+                <label class="form-label" for="flexSwitchCheckDefault">¿Se envia?</label>
+                <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" name="seEnvia" [(ngModel)]="seEnvia">
+                  </div>
+            </div>
+        </div>
+        <div *ngIf="seEnvia == true" class="row">
+            <div class="col">
+                <label class="form-label">Direccion del cliente</label>
+                <!-- <input type="text" class="form-control" value="{{ventag.dirCliente}}" readonly> -->
+                <textarea class="form-control" value="{{cotizacion_editada.cdireccion}}" readonly></textarea>
+            </div>
+        </div>
+    </div>
+</div>

@@ -126,7 +126,7 @@ export class PuntoDeVentaComponent implements OnInit {
       console.log(error);
     });
   }
-  //obtenemos los tipos de clientes para el select
+  //obtenemos los tipos de clientes para el select del modal para agregar nuevos clientes
   getTipocliente(){
     this._clienteService.getTipocliente().subscribe(
       response =>{
