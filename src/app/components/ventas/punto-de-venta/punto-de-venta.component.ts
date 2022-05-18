@@ -476,7 +476,7 @@ export class PuntoDeVentaComponent implements OnInit {
   modalSeEnvia(content:any){//abre modal para seleccionaar direccion del cliente
     //si el chek de se envia es true abrimos modal
     if(this.seEnvia == true){
-      this.getClientes();
+      //this.getClientes();
       this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title', size: 'xl'}).result.then((result) => {
         this.closeResult = `Closed with: ${result}`;
       }, (reason) => {

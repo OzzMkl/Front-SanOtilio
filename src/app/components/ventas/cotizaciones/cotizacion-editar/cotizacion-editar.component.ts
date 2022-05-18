@@ -10,8 +10,12 @@ import { EmpresaService } from 'src/app/services/empresa.service';
 //modelos
 import { Ventag } from 'src/app/models/ventag';
 import { Producto_ventasg } from 'src/app/models/productoVentag';
+import { Cliente } from 'src/app/models/cliente';
+import { Cdireccion } from 'src/app/models/cdireccion';
 //NGBOOTSTRAP-modal
 import { NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
+
+
 
 @Component({
   selector: 'app-cotizacion-editar',
@@ -20,16 +24,24 @@ import { NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
   providers:[ProductoService]
 })
 export class CotizacionEditarComponent implements OnInit {
-  //variables servicios
+  
+      //modelos
   public cotizacion_editada: Ventag;//getDetallesCotiza
   public productos_cotizacion_e: Array<Producto_ventasg>;//getDetallesCotiza
+  public modeloCliente: Cliente;
+  public cdireccion: Cdireccion;
+  //variables servicios
   public empresa:any;//getDatosempresa
   public clientes:any;
   public cliente:any;//getDetallesCliente
   public listaDireccionesC:any;
   public tipocliente :any;//gettipocliente
   //Variables html
-  public seEnvia: boolean = false
+  public seEnvia: boolean = false;
+  public isCompany: boolean = false;
+  public isRFC: boolean = false;
+  public checkDireccion: boolean = false;
+  public isCredito: boolean = false;
   //spinners
   public isLoadingClientes: boolean = false;
   public isLoadingDatos: boolean = false;
@@ -51,6 +63,8 @@ export class CotizacionEditarComponent implements OnInit {
                private _route: ActivatedRoute, private modalService: NgbModal ) {
                  this.cotizacion_editada = new Ventag(0,0,2,'',1,null,0,0,0,0,'','');
                  this.productos_cotizacion_e = [];
+                 this.modeloCliente = new Cliente (0,'','','','','',0,1,0);
+                 this.cdireccion = new Cdireccion (0,'Mexico','Puebla','','','','','','',0,'',0,1,'');
                }
 
   ngOnInit(): void {
@@ -78,7 +92,6 @@ export class CotizacionEditarComponent implements OnInit {
             this.seleccionarCliente(this.cotizacion_editada.idCliente);
             
             this.isLoadingDatos = false;
-            this.seEnvia== true
             
           }
           console.log(this.cotizacion_editada);
@@ -144,7 +157,9 @@ export class CotizacionEditarComponent implements OnInit {
         if(response.status == 'success'){
           this.cliente = response.cliente;
           this.cotizacion_editada.nombreCliente = this.cliente[0]['nombre']+' '+this.cliente[0]['aPaterno']+' '+this.cliente[0]['aMaterno'];
-          //this.cotizacion_editada.dirCliente = '';
+          if(this.cotizacion_editada.idCliente != idCliente){
+            this.cotizacion_editada.dirCliente = '';
+          }
         }else{
           console.log('Algo salio mal '+response);
         }
@@ -160,6 +175,40 @@ export class CotizacionEditarComponent implements OnInit {
       
     }
   }
+  //accion de guardar el nuevo cliente del modal
+  guardarCliente(){
+    if(this.isCompany == true ){
+      this.modeloCliente.aMaterno ='';
+      this.modeloCliente.aPaterno='';
+    }
+    if(this.isRFC == false){
+      this.modeloCliente.rfc = 'XAXX010101000';
+    }
+    this._clienteService.postCliente(this.modeloCliente).subscribe( 
+      response =>{
+        if(response.status == 'success'){
+          if(this.checkDireccion == true){
+            this._clienteService.postCdireccion(this.cdireccion).subscribe( 
+              response=>{
+                this.toastService.show('Cliente registrado correctamente',{classname: 'bg-success text-light', delay: 3000});
+                //console.log(response);
+              },error=>{
+                this.toastService.show('Cliente registrado, pero sin direccion',{classname: 'bg-danger text-light', delay: 6000})
+                console.log(error);
+              });
+          }else{
+            this.toastService.show('Cliente registrado, pero sin direccion',{classname: 'bg-success text-light', delay: 3000});
+          }
+        }else{
+          this.toastService.show('Algo salio mal',{classname: 'bg-danger text-light', delay: 6000})
+          //console.log('Algo salio mal');
+        }
+      },error=>{
+        console.log(error);
+    });
+  
+  
+}
   //modales
   open(content:any) {//abrir modal
     this.getClientes();
@@ -173,7 +222,7 @@ export class CotizacionEditarComponent implements OnInit {
   modalSeEnvia(content:any){//abre modal para seleccionaar direccion del cliente
     //si el chek de se envia es true abrimos modal
     if(this.seEnvia == true){
-      this.getClientes();
+      //this.getClientes();
       this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title', size: 'xl'}).result.then((result) => {
         this.closeResult = `Closed with: ${result}`;
       }, (reason) => {
