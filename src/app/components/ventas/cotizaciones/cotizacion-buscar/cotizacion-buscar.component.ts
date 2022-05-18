@@ -117,7 +117,7 @@ export class CotizacionBuscarComponent implements OnInit {
     doc.setLineWidth(2.5).line(10,75,200,75);//colocacion de linea
     //recorremos los productos
     this.productosdCotiza.forEach((element:any) =>{
-      var temp = [element.claveEx,element.descripcion,element.nombreMedida,element.precio,element.cantidad,element.descuento,element.total];
+      var temp = [element.claveEx,element.descripcion,element.nombreMedida,element.precio,element.cantidad,element.descuento,element.subtotal];
       rows.push(temp);
     });
     //generamos la tabla
