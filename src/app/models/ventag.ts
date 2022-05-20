@@ -12,6 +12,7 @@ export class Ventag{//Modelo de las medidas aqui asignamos todas las variables d
         public total:number,
         //extras
         public nombreCliente:string,
-        public dirCliente: string
+        public cdireccion: string,
+        public idCotiza: number
     ){}
 }

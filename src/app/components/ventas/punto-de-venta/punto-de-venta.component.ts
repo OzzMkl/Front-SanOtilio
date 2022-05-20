@@ -89,7 +89,7 @@ export class PuntoDeVentaComponent implements OnInit {
     private _empleadoService : EmpleadoService,
     private _empresaService: EmpresaService) {
     //declaramos modelos
-    this.ventag = new Ventag(0,0,2,'',1,null,0,0,0,0,'','');
+    this.ventag = new Ventag(0,0,2,'',1,null,0,0,0,0,'','',0);
     this.modeloCliente = new Cliente (0,'','','','','',0,1,0);
     this.cdireccion = new Cdireccion (0,'Mexico','Puebla','','','','','','',0,'',0,1,'');
     this.nuevaDir = new Cdireccion (0,'Mexico','Puebla','','','','','','',0,'',0,1,'');
@@ -149,7 +149,7 @@ export class PuntoDeVentaComponent implements OnInit {
   }
   //traemos la informacion del cliente seleccionado
   seleccionarCliente(idCliente:any){
-    this.ventag.dirCliente = '';
+    this.ventag.cdireccion = '';
     this.seEnvia == false;
 
     this._clienteService.getDetallesCliente(idCliente).subscribe( 
@@ -170,7 +170,7 @@ export class PuntoDeVentaComponent implements OnInit {
   }
   //cargamos la informacion selccionada a la propiedad de venta.dirCliente direccion del cliente
   seleccionarDireccion(direccion:any){
-    this.ventag.dirCliente=direccion;
+    this.ventag.cdireccion=direccion;
   }
   //accion de guardar el nuevo cliente del modal
   guardarCliente(){
@@ -327,6 +327,7 @@ export class PuntoDeVentaComponent implements OnInit {
     this.ventag.total = this.ventag.total - this.productoVentag.subtotal;
     //cremos nuevo array eliminando el producto que se selecciono
     this.lista_productoVentag = this.lista_productoVentag.filter((item) => item.idProducto !== dato);
+    //consultamos el producto a editar
     this._productoService.getProdverDos(dato).subscribe( 
       response =>{
         this.producto = response.producto;
@@ -484,7 +485,7 @@ export class PuntoDeVentaComponent implements OnInit {
       });
     }else{
       //si el check es falso ponemos vacia la propiedad de direccion cliente
-      this.ventag.dirCliente = '';
+      this.ventag.cdireccion = '';
     }
   }
   modalAgregarDireccion(content:any){

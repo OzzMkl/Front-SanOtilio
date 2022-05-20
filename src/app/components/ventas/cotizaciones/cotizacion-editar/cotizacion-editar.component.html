@@ -33,11 +33,11 @@
                   </div>
             </div>
         </div>
-        <div *ngIf="seEnvia == true || cotizacion_editada.dirCliente.length > 0" class="row">
+        <div *ngIf="seEnvia == true || cotizacion_editada.cdireccion.length > 0" class="row">
             <div class="col">
                 <label class="form-label">Direccion del cliente</label>
                 <!-- <input type="text" class="form-control" value="{{ventag.dirCliente}}" readonly> -->
-                <textarea class="form-control" value="{{cotizacion_editada.dirCliente}}" readonly></textarea>
+                <textarea class="form-control" value="{{cotizacion_editada.cdireccion}}" readonly></textarea>
             </div>
         </div>
     </div>
@@ -47,13 +47,38 @@
         <div class="col-2">
             <label class="form-label">Buscar producto</label>
             <div class="input-group">
-                <span class="input-group-addon" id="sizing-addon2"><i class="bi-search" style="font-size: 1.5rem; color: black; left: 0;"></i></span>
-                <input class="form-control" type="text" readonly>
+                <span class="input-group-addon" id="sizing-addon2" (click)="modalBuscarProducto(mBuscarProducto)"><i class="bi-search" style="font-size: 1.5rem; color: black; left: 0;"></i></span>
+                <input class="form-control" type="text" name="claveEx" #claveEx="ngModel" [(ngModel)]="productoVentag.claveEx" readonly>
             </div>
         </div>
         <div class="col-2">
             <label class="form-label">Medida</label>
-            <input class="form-control" type="text" readonly>
+            <input class="form-control" type="text" name="nombreMedida" #nombreMedida="ngModel" [(ngModel)]="productoVentag.nombreMedida" readonly>
+        </div>
+        <div class="col-2">
+            <label class="form-label">Precio</label>
+            <input class="form-control" type="number" min="{{productoVentag.precioMinimo}}" name="precio" #precio="ngModel" [(ngModel)]="productoVentag.precio" (change)="calculaSubtotalPP()" >
+        </div>
+        <div class="col-2">
+            <label class="form-label">Cantidad</label>
+            <input class="form-control" type="number" min="0" name="cantidad" #cantidad="ngModel" [(ngModel)]="productoVentag.cantidad" (change)="calculaSubtotalPP()">
+        </div>
+        <div class="col-2">
+            <label class="form-label">Descuento</label>
+            <input class="form-control" type="number" min="0" name="descuento" #descuento="ngModel" [(ngModel)]="productoVentag.descuento" (change)="calculaSubtotalPP()">
+        </div>
+        <div class="col-2">
+            <label class="form-label">Subtotal</label>
+            <input class="form-control" type="number" value="{{productoVentag.subtotal}}" readonly >
+        </div>
+        <div class="col">
+            <label for="">Descripcion</label>
+            <input type="text" class="form-control" name="descripcion" #descripcion="ngModel" [(ngModel)]="productoVentag.descripcion" readonly>
+        </div>
+        <div class="col-2">
+            <!-- <label class="form-label">.</label> -->
+            <br>
+            <button class="btn btn-success form-control" type="button" [disabled]="isSearch" (click)="agregarProductoLista()"><i class="bi bi-check-circle-fill" > Agregar</i>     </button>
         </div>
     </div>
     <hr>
@@ -72,7 +97,7 @@
                 </tr>
             </thead>
             <tbody *ngFor="let pce of productos_cotizacion_e    | paginate: { id:'tablePV', itemsPerPage: 5, currentPage: pagePV }">
-                <tr>
+                <tr (click)="editarProductoLista(pce.idProducto)">
                     <th scope="row">{{pce.claveEx}}</th>
                     <th scope="row">{{pce.descripcion}}</th>
                     <th scope="row">{{pce.nombreMedida}}</th>
@@ -107,7 +132,8 @@
         </div>
         <div class="col-2">
             <div class="col">
-                <button class="btn btn-secondary form-control" ><i class="bi bi-file-earmark-medical"></i> <br> Guardar</button>
+                <!-- <button class="btn btn-secondary form-control" (click)="modalAlertaExistencia(mAlertaExistencia)" ><i class="bi bi-file-earmark-medical"></i> <br> Guardar</button> -->
+                <button class="btn btn-secondary form-control"  ><i class="bi bi-file-earmark-medical"></i> <br> Guardar</button>
             </div>
             <br>
             <div class="col">
@@ -344,7 +370,7 @@
 <ng-template #buscarDireccion let-modal>
     <div class="modal-header">
         <h5 class="modal-title" id="modal-basic-title">Seleccionar direccion</h5>
-        <!-- <button class="btn btn-success col-auto offset-md-8" ngbTooltip="Agregar direccion" (click)="modalAgregarDireccion(nuevaDireccion)"><i class="bi bi-plus-circle-dotted" style="font-size: 1.3rem; color: rgb(255, 249, 249); left: 0;"></i></button> -->
+        <button class="btn btn-success col-auto offset-md-8" ngbTooltip="Agregar direccion" (click)="modalAgregarDireccion(nuevaDireccion)"><i class="bi bi-plus-circle-dotted" style="font-size: 1.3rem; color: rgb(255, 249, 249); left: 0;"></i></button>
         <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
       </div>
       <div class="modal-body">
@@ -367,4 +393,149 @@
             </tbody>
         </table>
       </div>
+</ng-template>
+<!-- Agregar nueva direccion  -->
+<ng-template #nuevaDireccion let-modal>
+    <form>
+        <div>
+            <div class="modal-header">
+                <h4 class="modal-title" id="modal-basic-title">Agregar direccion</h4>
+                <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+              </div>
+              <div class="modal-body">
+                
+                    <div  class="row align-items-start">
+                      <div class="col-3">
+                          <label class="form-label" for="">Pais</label>
+                          <input class="form-control" type="text" oninput="this.value = this.value.toUpperCase()" value="Mexico" name="pais" #pais="ngModel" [(ngModel)]="nuevaDir.pais" readonly>
+                      </div>
+                      <div class="col-3">
+                        <label class="form-label" for="">Estado</label>
+                        <input class="form-control" type="text" oninput="this.value = this.value.toUpperCase()" value="Puebla" name="estado" #estado="ngModel" [(ngModel)]="nuevaDir.estado" readonly>
+                      </div>
+                      <div class="col-3">
+                        <label class="form-label" for="">Ciudad</label>
+                        <input class="form-control" type="text" oninput="this.value = this.value.toUpperCase()" name="ciudad" #ciudad="ngModel" [(ngModel)]="nuevaDir.ciudad" >
+                      </div>
+                      <div class="col-3">
+                        <label class="form-label" for="">Colonia</label>
+                        <input class="form-control" type="text" oninput="this.value = this.value.toUpperCase()" name="colonia" #colonia="ngModel" [(ngModel)]="nuevaDir.colonia" >
+                      </div>
+                      <div class="col-3">
+                        <label class="form-label" for="">Calle</label>
+                        <input class="form-control" type="text" oninput="this.value = this.value.toUpperCase()" name="calle" #calle="ngModel" [(ngModel)]="nuevaDir.calle" >
+                      </div>
+                      <div class="col-3">
+                        <label class="form-label" for="">Numero exterior</label>
+                        <input class="form-control" type="text" oninput="this.value = this.value.toUpperCase()" name="numExt" #numExt="ngModel" [(ngModel)]="nuevaDir.numExt" >
+                      </div>
+                      <div class="col-3">
+                        <label class="form-label" for="">Numero interior</label>
+                        <input class="form-control" type="text" oninput="this.value = this.value.toUpperCase()" name="numInt" #numInt="ngModel" [(ngModel)]="nuevaDir.numInt" >
+                      </div>
+                      <div class="col-3">
+                        <label class="form-label" for="">Entre calles</label>
+                        <input class="form-control" type="text" oninput="this.value = this.value.toUpperCase()" name="entreCalles" #entreCalles="ngModel" [(ngModel)]="nuevaDir.entreCalles" >
+                      </div>
+                      <div class="col-3">
+                        <label class="form-label" for="">Codigo postal</label>
+                        <input class="form-control" type="number" min="0" maxlength="5" name="cp" #cp="ngModel" [(ngModel)]="nuevaDir.cp" >
+                      </div>
+                      <div class="col-3">
+                        <label class="form-label" for="">Telefono</label>
+                        <input class="form-control" type="number" maxlength="10"  name="telefono" #telefono="ngModel" [(ngModel)]="nuevaDir.telefono" >
+                      </div>
+                      <div class="col">
+                        <label class="form-label" for="">Referencia</label>
+                        <textarea class="form-control" oninput="this.value = this.value.toUpperCase()"  cols="30" rows="2" name="referencia" #referencia="ngModel" [(ngModel)]="nuevaDir.referencia"></textarea>
+                      </div>
+                    </div>
+                
+              </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-success" (click)="modal.close('Save click')" (click)="guardarNuevaDireccion()" >Guardar</button>
+            </div>  
+        </form>
+</ng-template>
+<!-- Modal productos -->
+<ng-template #mBuscarProducto let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Buscar producto</h4>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+      </div>
+      <div class="modal-body">
+        <div class="text-center text-primary" *ngIf="isLoadingProductos">
+            <div class="spinner-border" role="status" >
+                <span class="visually-hidden">Loading...</span>
+              </div>
+        </div>
+
+        <div *ngIf="!isLoadingProductos">
+            <div class="input-group mb-2">
+                <div class="col-2">
+                    <select name="" id="" class="form-select" name="seleccionado" [(ngModel)]="seleccionado" (ngModelChange)="cambioSeleccionado($event)">
+                        <option value="1" selected>DESCRIPCION</option>
+                        <option value="2">CLAVE EXTERNA</option>
+                        <option value="3">CODIGO DE BARRAS</option>
+                    </select>
+                </div>
+                 <div class="col" *ngIf="seleccionado == 1; ">
+                    <input type="text" class="form-control" name="buscarProducto" [(ngModel)]="buscarProducto">
+                </div>
+                <div class="col" *ngIf="seleccionado == 2; ">
+                    <input type="text" class="form-control" name="buscarProductoCE" [(ngModel)]="buscarProductoCE"> 
+                </div>
+                <div class="col" *ngIf="seleccionado == 3;  ">
+                    <input type="text" class="form-control" name="buscarProductoCbar" [(ngModel)]="buscarProductoCbar">
+                </div>
+                
+              </div>
+              <br>
+              <table class="table table-dark table-hover">
+                <thead>
+                    <tr>
+                        <th>CLAVE EXTERNA</th>
+                        <th>CODIGO DE BARRAS</th>
+                        <th>DESCRIPCION</th>
+                        <th>MEDIDA</th>
+                        <th>MARCA</th>
+                        <th>PRECIOS</th>
+                        <th>EXISTENCIA</th>
+                    </tr>
+                </thead>
+                <tbody *ngFor="let pr of productos | filterProductsModalcbar: buscarProductoCbar| filterProductModal: buscarProducto | filterProductsModalce: buscarProductoCE | paginate:{id:'pcModal',itemsPerPage: 5, currentPage: pageActual2}">
+                    <tr (click)="seleccionarProducto(pr.idProducto)"  (click)="modal.dismiss('Cross click')">
+                        <th scope="row">{{pr.claveEx}}</th>
+                        <th scope="row">{{pr.cbarras}}</th>
+                        <th scope="row">{{pr.descripcion}}</th>
+                        <th scope="row">{{pr.nombreMedida}}</th>
+                        <th scope="row">{{pr.nombreMarca}}</th>
+                        <th scope="row">{{pr.precioS}} ~ {{pr.precioR}}</th>
+                        <th scope="row">{{pr.existenciaG}}</th>
+                    </tr>
+                </tbody>
+              </table>
+              <pagination-controls id="pcModal" (pageChange)="pageActual2 = $event"></pagination-controls>
+        </div>
+      </div>
+</ng-template>
+<!-- Modal alerta de existencia -->
+<ng-template #mAlertaExistencia let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">Alerta</h4>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+        <p class="text-center">Algunos productos no cuenta con stock suficiente o estan agotados. ¿Seguro que desea continuar?</p>
+    </div>
+    <div class="modal-footer">
+        <div class="col">
+
+            <button class="btn btn-danger form-control" (click)="modal.dismiss('Cross click')">Cancelar</button>
+        </div>
+        <div class="col">
+            <button class="btn btn-success form-control" (click)="modal.dismiss('Cross click')">Si</button>
+        </div>
+    </div>
 </ng-template>
