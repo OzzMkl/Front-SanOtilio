@@ -41,6 +41,7 @@ export class CotizacionEditarComponent implements OnInit {
   public productos:any;//getProductos
   public producto:any;//seleccionar producto
   public productoEG:any;//agregarProductoLista
+  public identity: any;//loadUser
   //Variables html
   public seEnvia: boolean = false;
   public isCompany: boolean = false;
@@ -84,6 +85,7 @@ export class CotizacionEditarComponent implements OnInit {
   ngOnInit(): void {
     this.getDatosEmpresa();
     this.getDetallesCotiza();
+    this.loadUser();
   }
   //TRAEMOS LOS DATOS DE LA COTIZACION
   getDetallesCotiza(){
@@ -94,6 +96,7 @@ export class CotizacionEditarComponent implements OnInit {
       this._ventasService.getDetallesCotiza(id).subscribe(
         response =>{
           if(response.status == 'success'){
+            this.cotizacion_editada.idCotiza = response.Cotizacion[0]['idCotiza'];
             this.cotizacion_editada.idCliente = response.Cotizacion[0]['idCliente'];
             this.cotizacion_editada.cdireccion = response.Cotizacion[0]['cdireccion'];
             this.cotizacion_editada.observaciones = response.Cotizacion[0]['observaciones'];
@@ -108,7 +111,7 @@ export class CotizacionEditarComponent implements OnInit {
             this.isLoadingDatos = false;
             
           }
-          console.log(this.cotizacion_editada);
+          //console.log(this.cotizacion_editada);
           //console.log(this.productos_cotizacion_e);
         },error =>{
           console.log(error);
@@ -350,6 +353,42 @@ editarProductoLista(dato:any){
       console.log(error);
     });
 }
+//traemos la informacion del usuario logeado
+loadUser(){
+  this.identity = this._empleadoService.getIdentity();
+}
+//actualizamos la cotizacion
+actualizaCotizacion(){
+  //asignamos el id del Empleado que realiza la operacion
+  this.cotizacion_editada.idEmpleado = this.identity['sub'];
+  if(this.productos_cotizacion_e.length == 0){
+    this.toastService.show('No puedes generar una venta/cotizacion sin productos!',{classname: 'bg-danger text-light', delay: 6000})
+  }else if(this.cotizacion_editada.idCliente == 0){
+    this.toastService.show('No puedes generar una venta/cotizacion sin cliente!',{classname: 'bg-danger text-light', delay: 6000})
+  } else{
+    this._ventasService.putCotizacion(this.cotizacion_editada.idCotiza,this.cotizacion_editada).subscribe(
+      response =>{
+        if(response.status == 'success'){
+          this.toastService.show('Cotizacion actualzada',{classname: 'bg-success text-light', delay: 3000});
+          this._ventasService.putProductosCotiza(this.cotizacion_editada.idCotiza, this.productos_cotizacion_e).subscribe(
+            response => {
+              if(response.status == 'success'){
+                this.toastService.show('Productos actualzados',{classname: 'bg-success text-light', delay: 3000});
+              }
+              console.log(response)
+            },error =>{
+              console.log(error);
+            }
+          )
+        }
+        //console.log(response);
+      },error =>{
+        console.log(error);
+      }
+    );
+  }
+  console.log(this.cotizacion_editada)
+}
   //modales
   open(content:any) {//abrir modal
     this.getClientes();
@@ -386,19 +425,19 @@ editarProductoLista(dato:any){
       this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
     });
   }
-  // modalAlertaExistencia(content:any){
-  //   let encontrado = this.productos_cotizacion_e.find(x => x.tieneStock == false);
-  //   if(typeof(encontrado) == 'object' ){
-  //     this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title', size: 'sm'}).result.then((result) => {
-  //       this.closeResult = `Closed with: ${result}`;
-  //     }, (reason) => {
-  //       this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-  //     });
-  //   }else{
-  //     //this.creaCotizacion();
-  //     console.log('ok')
-  //   }
-  // }
+   modalAlertaExistencia(content:any){
+     let encontrado = this.productos_cotizacion_e.find(x => x.tieneStock == false);
+     if(typeof(encontrado) == 'object' ){
+       this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title', size: 'sm'}).result.then((result) => {
+         this.closeResult = `Closed with: ${result}`;
+       }, (reason) => {
+         this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+       });
+     }else{
+       this.actualizaCotizacion();
+       
+     }
+   }
   private getDismissReason(reason: any): string {//cerrarmodal
     if (reason === ModalDismissReasons.ESC) {
       return 'by pressing ESC';

@@ -100,7 +100,7 @@ public test: boolean = false;
              this._ordencompraService.updateProductosOrderC(id,this.lista_productosorden).subscribe( 
                response=>{
                  if(response.status == 'success'){
-                  this.toastService.show('Orden editada correcta,emte',{classname: 'bg-success text-light', delay: 3000});
+                  this.toastService.show('Orden editada correctamente',{classname: 'bg-success text-light', delay: 3000});
                   this.getOrderModificada();
                    //console.log(response);
                  }else{

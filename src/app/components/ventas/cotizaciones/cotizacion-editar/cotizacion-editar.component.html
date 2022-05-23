@@ -132,8 +132,8 @@
         </div>
         <div class="col-2">
             <div class="col">
-                <!-- <button class="btn btn-secondary form-control" (click)="modalAlertaExistencia(mAlertaExistencia)" ><i class="bi bi-file-earmark-medical"></i> <br> Guardar</button> -->
-                <button class="btn btn-secondary form-control"  ><i class="bi bi-file-earmark-medical"></i> <br> Guardar</button>
+                <button class="btn btn-secondary form-control" (click)="modalAlertaExistencia(mAlertaExistencia)" ><i class="bi bi-file-earmark-medical"></i> <br> Guardar</button>
+                <!-- <button class="btn btn-secondary form-control"  ><i class="bi bi-file-earmark-medical"></i> <br> Guardar</button> -->
             </div>
             <br>
             <div class="col">
@@ -535,7 +535,7 @@
             <button class="btn btn-danger form-control" (click)="modal.dismiss('Cross click')">Cancelar</button>
         </div>
         <div class="col">
-            <button class="btn btn-success form-control" (click)="modal.dismiss('Cross click')">Si</button>
+            <button class="btn btn-success form-control" (click)="modal.dismiss('Cross click')" (click)="actualizaCotizacion()">Si</button>
         </div>
     </div>
 </ng-template>
