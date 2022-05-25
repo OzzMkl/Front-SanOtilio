@@ -452,6 +452,18 @@ export class PuntoDeVentaComponent implements OnInit {
     //GUARDAMOS PDF
     doc.save("cotizacion-"+this.detallesCotiza[0]['idCotiza']+".pdf");
   }
+  creaVenta(){
+    //asignamos id del empleado
+    this.ventag.idEmpleado = this.identity['sub'];
+    if(this.lista_productoVentag.length == 0){
+      this.toastService.show('No puedes generar una venta/cotizacion sin productos!',{classname: 'bg-danger text-light', delay: 6000})
+    }else if(this.ventag.idCliente == 0){
+      this.toastService.show('No puedes generar una venta/cotizacion sin cliente!',{classname: 'bg-danger text-light', delay: 6000})
+    }else{
+     console.log('ok') 
+    }
+    console.log(this.ventag);
+  }
   creaTicket(){
     
   }
