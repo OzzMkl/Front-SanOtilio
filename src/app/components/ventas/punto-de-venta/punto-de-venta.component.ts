@@ -460,9 +460,27 @@ export class PuntoDeVentaComponent implements OnInit {
     }else if(this.ventag.idCliente == 0){
       this.toastService.show('No puedes generar una venta/cotizacion sin cliente!',{classname: 'bg-danger text-light', delay: 6000})
     }else{
-     console.log('ok') 
+      this._ventasService.postVentas(this.ventag).subscribe(
+        response => {
+          if(response.status == 'success'){
+            this.toastService.show(' ⚠ Venta creada exitosamente!', { classname: 'bg-success  text-light', delay: 5000 });
+            this._ventasService.postProductosVentas(this.lista_productoVentag).subscribe(
+              response => {
+                if(response.status == 'success'){
+                  this.toastService.show('productos cargados exitosamente',{ classname: 'bg-success text-light', delay: 5000});
+                }
+                console.log(response);
+              }, error =>{
+                console.log(error);
+              }
+            )
+          }
+          console.log(response);
+        }, error => {
+          console.log(error);
+        }
+      );
     }
-    console.log(this.ventag);
   }
   creaTicket(){
     

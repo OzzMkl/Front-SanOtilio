@@ -53,4 +53,17 @@ export class VentasService {
     let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');//mandamos el json con las cabeceras para que obtengamos el token
     return this._http.put(this.url+'cotizaciones/actualizaProductosCotizacion/'+idCotiza,params, {headers:headers} );
   }
+  //VENTAS
+  postVentas(ventasg:any):Observable<any>{
+    let json = JSON.stringify(ventasg);
+    let params = 'json='+json;
+    let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');
+    return this._http.post(this.url+'ventas/guardarVenta',params, {headers:headers});
+  }
+  postProductosVentas(productosVenta:any):Observable<any>{
+    let json = JSON.stringify(productosVenta);
+    let params = 'json='+json;
+    let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');//mandamos el json con las cabeceras para que obtengamos el token
+    return this._http.post(this.url+'ventas/guardarProductosVenta',params, {headers:headers} );
+  }
 }
