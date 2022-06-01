@@ -58,6 +58,10 @@ export class VentasService {
     let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');
     return this._http.get(this.url+'ventas/indexVentas', {headers:headers} );
   }
+  getDetallesVenta(idVenta:any):Observable<any>{
+    let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');
+    return this._http.get(this.url+'ventas/getDetallesVenta/'+idVenta, {headers:headers} );
+  }
   postVentas(ventasg:any):Observable<any>{
     let json = JSON.stringify(ventasg);
     let params = 'json='+json;

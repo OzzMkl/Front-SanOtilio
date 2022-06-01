@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 //Servicios
 import { VentasService } from 'src/app/services/ventas.service';
+//NGBOOTSTRAP-modal
+import { NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-ventas-realizadas',
@@ -11,6 +13,8 @@ export class VentasRealizadasComponent implements OnInit {
 
   //variables servicios
   public ventas:any;
+  public detallesVenta:any;
+  public productosDVenta:any;
   //spinner de carga
   public isLoading:boolean = false;
   //paginator
@@ -19,13 +23,16 @@ export class VentasRealizadasComponent implements OnInit {
   public next_page:any;
   public prev_page:any;
   public pageActual:any;
+  public mpageActual:any;//para el modal
   //pipe
   tipoBusqueda:number = 1;
   buscaFolio=''
   buscaNombreCliente='';
   buscaNombreEmpleado='';
+  //cerrar modal
+  closeResult = '';
 
-  constructor( private _ventasService: VentasService) { }
+  constructor( private _ventasService: VentasService, private modalService: NgbModal) { }
 
   ngOnInit(): void {
     this.getVentas();
@@ -43,11 +50,40 @@ export class VentasRealizadasComponent implements OnInit {
       }
     )
   }
+  getDetallesVenta(idVenta:any){
+    this._ventasService.getDetallesVenta(idVenta).subscribe(
+      response =>{
+        if(response.status == 'success'){
+          this.detallesVenta = response.venta;
+          this.productosDVenta = response.productos_ventasg;
+        }
+      },error =>{
+        console.log(error);
+      }
+    )
+  }
   //ponemos vacio al cambiar entre tipo de busqueda
   seleccionTipoBusqueda(e:any){
     this.buscaFolio='';
     this.buscaNombreCliente='';
     this.buscaNombreEmpleado='';
+  }
+  // Metodos del  modal
+  open(content:any) {//abrir modal
+    this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title', size: 'xl'}).result.then((result) => {
+      this.closeResult = `Closed with: ${result}`;
+    }, (reason) => {
+      this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+    });
+  }
+  private getDismissReason(reason: any): string {//cerrarmodal
+    if (reason === ModalDismissReasons.ESC) {
+      return 'by pressing ESC';
+    } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
+      return 'by clicking on a backdrop';
+    } else {
+      return `with: ${reason}`;
+    }
   }
 
 }

@@ -38,7 +38,7 @@
                 </tr>
             </thead>                           <!-- Se agrega filtro de cotizaciones para clientes-->
             <tbody *ngFor="let venta of ventas | filterCotizacionesNomC: buscaNombreCliente | filterIdventa: buscaFolio | filterVendedor: buscaNombreEmpleado | paginate:{id:'paginationVentas',itemsPerPage: 10, currentPage: pageActual}">
-                <tr>
+                <tr (click)="open(mDetallesVenta)" (click)="getDetallesVenta(venta.idVenta)">
                     <th scope="row">{{venta.idVenta}}</th>
                     <th scope="row">{{venta.created_at | date: 'dd/MM/yyyy'}}</th>
                     <th scope="row">{{venta.nombreCliente}}</th>
@@ -50,3 +50,77 @@
         <pagination-controls id="paginationVentas" (pageChange)="pageActual = $event"></pagination-controls>
     </div>
 </div>
+<!-- Modal -->
+<ng-template #mDetallesVenta let-modal>
+    <div *ngFor="let v of detallesVenta">
+        <div class="modal-header">
+            <h5 class="modal-title" id="modal-basic-title">Detalles venta #{{v.idVenta}}</h5>
+            <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+        </div>
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-5">
+                    <label class="form-label">Cliente</label>
+                    <input type="text" class="form-control" value="{{v.nombreCliente}}" readonly>
+                </div>
+                <div class="col-2">
+                    <label class="form-label">Fecha</label>
+                    <input type="text" class="form-control" value="{{v.created_at | date: 'dd/MM/yyyy'}}" readonly>
+                </div>
+                <div class="col-2">
+                    <label class="form-label">Status</label>
+                    <input type="text" class="form-control" value="{{v.nombreStatus}}" readonly>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-5">
+                    <label class="form-label">Vendedor</label>
+                    <input type="text" class="form-control" value="{{v.nombreEmpleado}}" readonly>
+                </div>
+                <div class="col-2">
+                    <label class="form-label">Subtotal</label>
+                    <input type="text" class="form-control" value="{{v.subtotal | currency}}" readonly>
+                </div>
+                <div class="col-2">
+                    <label class="form-label">Descuento</label>
+                    <input type="text" class="form-control" value="{{v.descuento | currency}}" readonly>
+                </div>
+                <div class="col-2">
+                    <label class="form-label">Total</label>
+                    <input type="text" class="form-control" value="{{v.total | currency}}" readonly>
+                </div>
+            </div>
+            <hr>
+            <table class="table table-dark table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col">CLAVE EXTERNA</th>
+                        <th scope="col">DESCRIPCION</th>
+                        <th scope="col">PRECIO</th>
+                        <th scope="col">CANTIDAD</th>
+                        <th scope="col">DESCUENTO</th>
+                        <th scope="col">SUBTOTAL</th>
+                    </tr>
+                </thead>
+                <tbody *ngFor="let pdv of productosDVenta | paginate:{id:'mProductosDVenta',itemsPerPage: 4, currentPage: mpageActual}">
+                    <tr>
+                        <th scope="row">{{pdv.claveEx}}</th>
+                        <th scope="row">{{pdv.descripcion}}</th>
+                        <th scope="row">{{pdv.precio}}</th>
+                        <th scope="row">{{pdv.cantidad}}</th>
+                        <th scope="row">{{pdv.descuento}}</th>
+                        <th scope="row">{{pdv.subtotal}}</th>
+                    </tr>
+                </tbody>
+            </table>
+            <pagination-controls id="mProductosDVenta" (pageChange)="mpageActual = $event"></pagination-controls>
+            <hr>
+            <div class="row" *ngIf="v.observaciones.length > 2">
+                <div class="col">
+                    <label class="form-label">Observaciones</label>
+                    <textarea class="form-control" rows="2" value="{{v.observaciones}}" readonly></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>
