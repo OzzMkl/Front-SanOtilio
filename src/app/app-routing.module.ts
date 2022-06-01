@@ -37,6 +37,9 @@ import { ClasificacionModuloComponent } from './components/inventario/taxonomia/
 
 import { PuntoDeVentaComponent } from './components/ventas/punto-de-venta/punto-de-venta.component';
 
+import { VentasRealizadasModuloComponent } from './components/ventas/ventas-realizadas/ventas-realizadas-modulo/ventas-realizadas-modulo.component';
+import { VentasRealizadasComponent } from './components/ventas/ventas-realizadas/ventas-realizadas/ventas-realizadas.component';
+
 import { CotizacionModuloComponent } from './components/ventas/cotizaciones/cotizacion-modulo/cotizacion-modulo.component';
 import { CotizacionBuscarComponent } from './components/ventas/cotizaciones/cotizacion-buscar/cotizacion-buscar.component';
 import { CotizacionEditarComponent } from './components/ventas/cotizaciones/cotizacion-editar/cotizacion-editar.component';
@@ -77,6 +80,11 @@ const routes: Routes = [
       {path: 'proveedorVer/:idProveedor',component: ProveedorVerComponent}
     ]},
   {path: 'punto-de-venta',component: PuntoDeVentaComponent},
+  {path: 'ventas-realizadas',component: VentasRealizadasModuloComponent,
+  children:
+  [
+    {path:'ventas-realizadas-buscar',component: VentasRealizadasComponent}
+  ]},
   {path: 'cotizacion-modulo', component: CotizacionModuloComponent,
   children:
   [
