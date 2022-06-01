@@ -36,8 +36,8 @@
                     <th scope="col">VENDEDOR</th>
                     <th scope="col">TOTAL</th>
                 </tr>
-            </thead>
-            <tbody *ngFor="let venta of ventas | paginate:{id:'paginationVentas',itemsPerPage: 10, currentPage: pageActual}">
+            </thead>                           <!-- Se agrega filtro de cotizaciones para clientes-->
+            <tbody *ngFor="let venta of ventas | filterCotizacionesNomC: buscaNombreCliente | filterIdventa: buscaFolio | filterVendedor: buscaNombreEmpleado | paginate:{id:'paginationVentas',itemsPerPage: 10, currentPage: pageActual}">
                 <tr>
                     <th scope="row">{{venta.idVenta}}</th>
                     <th scope="row">{{venta.created_at | date: 'dd/MM/yyyy'}}</th>

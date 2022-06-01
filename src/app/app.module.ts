@@ -70,6 +70,8 @@ import { FilterCotizacionesNomCPipe } from './pipes/filter-cotizaciones-nom-c.pi
 import { FilterCotizacionesIdCotizaPipe } from './pipes/filter-cotizaciones-id-cotiza.pipe';
 import { VentasRealizadasModuloComponent } from './components/ventas/ventas-realizadas/ventas-realizadas-modulo/ventas-realizadas-modulo.component';
 import { VentasRealizadasComponent } from './components/ventas/ventas-realizadas/ventas-realizadas/ventas-realizadas.component';
+import { FilterIdventaPipe } from './pipes/ventas/filter-idventa.pipe';
+import { FilterVendedorPipe } from './pipes/ventas/filter-vendedor.pipe';
 
 
 @NgModule({
@@ -128,7 +130,9 @@ import { VentasRealizadasComponent } from './components/ventas/ventas-realizadas
     FilterCotizacionesNomCPipe,
     FilterCotizacionesIdCotizaPipe,
     VentasRealizadasModuloComponent,
-    VentasRealizadasComponent
+    VentasRealizadasComponent,
+    FilterIdventaPipe,
+    FilterVendedorPipe
   ],
   imports: [
     BrowserModule,
