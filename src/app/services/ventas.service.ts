@@ -54,6 +54,10 @@ export class VentasService {
     return this._http.put(this.url+'cotizaciones/actualizaProductosCotizacion/'+idCotiza,params, {headers:headers} );
   }
   //VENTAS
+  getIndexVentas():Observable<any>{
+    let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');
+    return this._http.get(this.url+'ventas/indexVentas', {headers:headers} );
+  }
   postVentas(ventasg:any):Observable<any>{
     let json = JSON.stringify(ventasg);
     let params = 'json='+json;
