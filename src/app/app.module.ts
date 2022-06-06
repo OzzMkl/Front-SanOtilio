@@ -72,6 +72,10 @@ import { VentasRealizadasModuloComponent } from './components/ventas/ventas-real
 import { VentasRealizadasComponent } from './components/ventas/ventas-realizadas/ventas-realizadas/ventas-realizadas.component';
 import { FilterIdventaPipe } from './pipes/ventas/filter-idventa.pipe';
 import { FilterVendedorPipe } from './pipes/ventas/filter-vendedor.pipe';
+import { CajaModuloComponent } from './components/cajas/caja-modulo/caja-modulo.component';
+import { NotasPorCobrarComponent } from './components/cajas/notas-por-cobrar/notas-por-cobrar.component';
+import { NotasACreditoComponent } from './components/cajas/notas-a-credito/notas-a-credito.component';
+import { CorteDeCajaComponent } from './components/cajas/corte-de-caja/corte-de-caja.component';
 
 
 @NgModule({
@@ -132,7 +136,11 @@ import { FilterVendedorPipe } from './pipes/ventas/filter-vendedor.pipe';
     VentasRealizadasModuloComponent,
     VentasRealizadasComponent,
     FilterIdventaPipe,
-    FilterVendedorPipe
+    FilterVendedorPipe,
+    CajaModuloComponent,
+    NotasPorCobrarComponent,
+    NotasACreditoComponent,
+    CorteDeCajaComponent
   ],
   imports: [
     BrowserModule,

@@ -59,7 +59,7 @@
         </div>
         <div class="modal-body">
             <div class="row">
-                <div class="col-5">
+                <div class="col-4">
                     <label class="form-label">Cliente</label>
                     <input type="text" class="form-control" value="{{v.nombreCliente}}" readonly>
                 </div>
@@ -71,9 +71,14 @@
                     <label class="form-label">Status</label>
                     <input type="text" class="form-control" value="{{v.nombreStatus}}" readonly>
                 </div>
+                <div class="col" >
+                    <!-- <button type="button" class="btn btn-secondary me-md-2" style="box-sizing: border-box;" ><i class="bi bi-receipt-cutoff"></i><br>TICKET</button> -->
+                    <button type="button" class="btn btn-warning me-md-2"  ><i class="bi bi-pencil-square" ></i><br>EDITAR</button>
+                    <button type="button" class="btn btn-danger me-md-2"  ><i class="bi bi-pencil-square" ></i><br>CANCELAR</button>
+                </div>
             </div>
             <div class="row">
-                <div class="col-5">
+                <div class="col-4">
                     <label class="form-label">Vendedor</label>
                     <input type="text" class="form-control" value="{{v.nombreEmpleado}}" readonly>
                 </div>

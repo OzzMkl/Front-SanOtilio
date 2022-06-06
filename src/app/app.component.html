@@ -38,6 +38,7 @@
             <li><a class="dropdown-item" [routerLink]="['./ventas-realizadas/ventas-realizadas-buscar']">VENTAS REALIZADAS</a></li>
             <li><a class="dropdown-item" [routerLink]="['./cotizacion-modulo/cotizacion-buscar']">COTIZACIONES</a></li>
             <li><a class="dropdown-item" [routerLink]="['./cliente-modulo/cliente-buscar']">CLIENTES</a></li>
+            <li><a class="dropdown-item">ENTREGAS</a></li>
             <li><hr class="dropdown-divider"></li>
             <li><a class="dropdown-item" href="#">REPORTES</a></li>
           </ul>
@@ -47,8 +48,8 @@
             CAJAS
           </a>
           <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <li><a class="dropdown-item" href="#">A</a></li>
-            <li><a class="dropdown-item" href="#">B</a></li>
+            <li><a class="dropdown-item" [routerLink]="['./caja-modulo/notas-por-cobrar']">Caja</a></li>
+            <li><a class="dropdown-item" [routerLink]="['./corte-de-caja']">Corte de caja</a></li>
             <li><hr class="dropdown-divider"></li>
             <li><a class="dropdown-item" href="#">REPORTES</a></li>
           </ul>
