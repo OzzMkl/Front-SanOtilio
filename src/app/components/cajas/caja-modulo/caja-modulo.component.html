@@ -1,2 +1,15 @@
-<p>caja-modulo works!</p>
+<div class="container">
+    <br>
+    <div class="row justify-content-between">
+        <div class="col-5">
+            <h1>Modulo de cajas</h1>
+        </div>
+        <div class="col-auto">
+            <button type="button"  class="btn btn-primary me-md-2" [routerLink]="['notas-por-cobrar']" style="box-sizing: border-box;"><i class="bi bi-search"></i><br>Buscar notas por cobrar</button>
+            <button type="button"  class="btn btn-secondary me-md-2" [routerLink]="['notas-a-credito']" style="box-sizing: border-box;"><i class="bi bi-search"></i><br>Buscar notas a credito</button>
+        </div>
+    </div>
+</div>
+<hr>
+<br>
 <router-outlet></router-outlet>

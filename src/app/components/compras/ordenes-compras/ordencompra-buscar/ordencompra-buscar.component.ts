@@ -2,8 +2,12 @@ import { Component, OnInit } from '@angular/core';
 //Servicio
 import { OrdendecompraService } from 'src/app/services/ordendecompra.service';
 import { global } from 'src/app/services/global';
+import { EmpresaService } from 'src/app/services/empresa.service';
 //NGBOOTSTRAP
 import { NgbModal, ModalDismissReasons, NgbDateStruct} from '@ng-bootstrap/ng-bootstrap';
+//pdf
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 @Component({
   selector: 'app-ordencompra-buscar',
@@ -13,7 +17,7 @@ import { NgbModal, ModalDismissReasons, NgbDateStruct} from '@ng-bootstrap/ng-bo
 })
 export class OrdencompraBuscarComponent implements OnInit {
 
-  constructor( private _ordendecompraService: OrdendecompraService,
+  constructor( private _ordendecompraService: OrdendecompraService,private _empresaService: EmpresaService,
                private modalService: NgbModal) { }
 
 
@@ -22,6 +26,7 @@ export class OrdencompraBuscarComponent implements OnInit {
   public ordenesdecompra: any = [];
   public detallesOrdencompra:any;
   public productosDOC:any;
+  public empresa:any;//getDetallesEmpresa
   public url: string = global.url;
   /**PAGINATOR */
   // public totalPages: any;
@@ -60,6 +65,15 @@ export class OrdencompraBuscarComponent implements OnInit {
         console.log(error);
       });
   }
+  getDatosEmpresa(){
+    this._empresaService.getDatosEmpresa().subscribe( 
+      response => {
+        if(response.status == 'success'){
+           this.empresa = response.empresa;
+           //console.log(this.empresa)
+        }
+      },error => {console.log(error)});
+  }
   seleccionTipoBusqueda(e:any){//Limpiar input del tipo de busqueda
     this.buscarOrdId='';
     this.buscarOrdProveedor='';
@@ -82,6 +96,7 @@ export class OrdencompraBuscarComponent implements OnInit {
         console.log(error);
       });
   }
+  
   // Modal
   open(content:any) {//abre modal
     this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title', size: 'xl'}).result.then((result) => {
