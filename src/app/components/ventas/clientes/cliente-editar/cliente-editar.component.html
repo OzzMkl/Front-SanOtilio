@@ -17,7 +17,10 @@
             <div *ngIf="isCompany == false; else elseBlock" class="row">
                 <div class="col-4">
                     <label class="form-label" for="">Nombre(s)</label>
-                    <input class="form-control" type="text" name="nombre" #nombre="ngModel" [(ngModel)]="clienteEditado.nombre" >
+                    <input class="form-control" type="text" name="nombre" #nombre="ngModel" [(ngModel)]="clienteEditado.nombre" required>
+                    <div [hidden]="nombre.valid || nombre.pristine" class="alert alert-danger">
+                      CAMPO REQUERIDO
+                    </div>
                 </div>
                 <div class="col-3">
                     <label class="form-label" for="">Apellido paterno</label>
@@ -31,13 +34,19 @@
             <ng-template #elseBlock>
                 <div class="col-12">
                     <label class="form-label" for="">Nombre de empresa</label>
-                    <input class="form-control" type="text" name="nombre" #nombre="ngModel" [(ngModel)]="clienteEditado.nombre">
+                    <input class="form-control" type="text" name="nombre" #nombre="ngModel" [(ngModel)]="clienteEditado.nombre" required>
+                    <div [hidden]="nombre.valid || nombre.pristine" class="alert alert-danger">
+                      CAMPO REQUERIDO
+                    </div>
                 </div>
             </ng-template>
             
             <div class="col-3">
                 <label class="form-label" for="">Correo</label>
-                <input class="form-control" type="email" name="correo" #correo="ngModel" [(ngModel)]="clienteEditado.correo" >
+                <input class="form-control" type="email" name="correo" #correo="ngModel" [(ngModel)]="clienteEditado.correo" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" required>
+                <div [hidden]="correo.valid || correo.pristine" class="alert alert-danger">
+                  CAMPO REQUERIDO EN FORMATO : correo@domino.com
+                </div>
             </div>
             <div class="col-3">
                 <label class="form-label" for="">Tipo cliente</label>
@@ -54,11 +63,24 @@
         <hr>
         <div class="row align-items-start">
             <div class="col-4">
-                <label class="form-label" for="">RFC</label>
-                <input class="form-control" type="text" name="rfc" #rfc="ngModel" [(ngModel)]="clienteEditado.rfc">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="isRFC" [(ngModel)]="isRFC" id="flexCheckDefault3">
+                <label class="form-check-label" for="flexCheckDefault3">¿Tiene RFC?</label>
+              </div>
+              <div *ngIf="isRFC == true; else RFCgenerico">
+                <input class="form-control" maxlength="13" oninput="this.value = this.value.toUpperCase()" type="text" name="rfc" #rfc="ngModel" [(ngModel)]="clienteEditado.rfc">
+                <div [hidden]="rfc.valid || rfc.pristine" class="alert alert-danger">
+                  CAMPO REQUERIDO
+                </div>
+              </div>
+                <ng-template #RFCgenerico>
+                  <div>
+                    <input class="form-control" value="XAXX010101000" readonly>
+                  </div>
+                </ng-template>
             </div>
             <div class="col-3">
-                    <label class="form-label" for="flexCheckDefault">Tiene credito</label>
+                    <label class="form-label" for="flexCheckDefault">¿Tiene credito?</label>
                     <br>
                     <input class="form-check-input" type="checkbox"   name="test" [(ngModel)]="isCredito" id="flexCheckDefault"  >
             </div>
@@ -80,7 +102,7 @@
                 </tr>
             </thead>
             <tbody *ngFor="let dc of listaDirecciones">
-                <tr (click)="editarDireccion(dc.colonia,content)">
+                <tr (click)="editarDireccion(dc.colonia + dc.calle + dc.numExt,content)">
                     <th scope="row">{{dc.estado}}, {{dc.ciudad}}, {{dc.colonia}}, CALLE {{dc.calle}}, #{{dc.numExt}} interior {{dc.numInt}}</th>
                     <th scope="row">{{dc.referencia}}</th>
                     <th scope="row">{{dc.telefono}}</th>
@@ -91,7 +113,7 @@
         <br>
         <div>
             <div class="col-12">
-                <button  class="btn btn-primary" type="submit" >Guardar</button>
+                <button  class="btn btn-primary" type="submit" [disabled]="FormCliente.invalid" >Guardar</button>
             </div>
         </div>
 

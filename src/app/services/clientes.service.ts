@@ -30,9 +30,19 @@ export class ClientesService {
   let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');//mandamos el json con las cabeceras para que obtengamos el token
   return this._http.post(this.url+'clientes/registerCdireccion',params, {headers:headers} );
  }
+ postNuevaDireccion(nuevaDir:any):Observable<any>{
+  let json = JSON.stringify(nuevaDir);
+  let params = 'json='+json;
+  let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');//mandamos el json con las cabeceras para que obtengamos el token
+  return this._http.post(this.url+'clientes/registrarNuevaDireccion',params, {headers:headers} );
+ }
  getDetallesCliente(idCliente:any):Observable<any>{
   let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');
   return this._http.get(this.url+'clientes/getDetallesCliente/'+idCliente, {headers:headers} );
+ }
+ getDireccionCliente(idCliente:any):Observable<any>{
+  let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');
+  return this._http.get(this.url+'clientes/getDireccionCliente/'+idCliente, {headers:headers} );
  }
  updateCliente(cliente:any, idCliente:any):Observable<any>{
   let json = JSON.stringify(cliente);

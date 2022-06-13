@@ -31,7 +31,8 @@ export class ClienteBuscarComponent implements OnInit {
   //cerrar mdal
   closeResult='';
   //modelo para buscar
-  
+  //spinner
+  public isLoading: boolean = false;
 
   constructor( private _clienteService: ClientesService, private modalService: NgbModal ) { }
 
@@ -54,11 +55,13 @@ export class ClienteBuscarComponent implements OnInit {
       });
   }
   getClientes(){
+    this.isLoading = true;
     this._clienteService.getAllClientes().subscribe( 
       response =>{
         if(response.status == 'success'){
           this.clientes = response.clientes;
           //console.log(this.clientes);
+          this.isLoading=false;
         }
       },error =>{
       console.log(error);

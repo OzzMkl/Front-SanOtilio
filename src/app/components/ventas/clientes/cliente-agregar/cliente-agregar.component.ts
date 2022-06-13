@@ -21,6 +21,8 @@ export class ClienteAgregarComponent implements OnInit {
   //variable formulario
   public isCompany: boolean = false;
   public isCredito: boolean = false;
+  public isRFC: boolean = false;
+  public checkDireccion: boolean = false;
   //modelo
   public cliente: Cliente;
   public cdireccion: Cdireccion;
@@ -49,14 +51,19 @@ export class ClienteAgregarComponent implements OnInit {
       });
   }
   guardarCliente(form:any){//guardamos la informacion capturada del cliente
+    
     if(this.isCompany == true ){
       this.cliente.aMaterno ='';
       this.cliente.aPaterno='';
+    }
+    if(this.isRFC == false){
+      this.cliente.rfc ='XAXX010101000';
     }
     this._clienteService.postCliente(this.cliente).subscribe( 
       response =>{
         console.log(this.cliente)
         if(response.status == 'success'){
+          if(this.checkDireccion == true){
             this._clienteService.postCdireccion(this.cdireccion).subscribe( 
               response=>{
                 this.toastService.show('Cliente registrado correctamente',{classname: 'bg-success text-light', delay: 3000});
@@ -65,6 +72,10 @@ export class ClienteAgregarComponent implements OnInit {
                 this.toastService.show('Algo salio mal',{classname: 'bg-danger text-light', delay: 6000})
                 console.log(error);
               });
+          }else{
+            this.toastService.show('Cliente registrado, pero sin direccion',{classname: 'bg-success text-light', delay: 3000});
+          }
+            
         }else{
           this.toastService.show('Algo salio mal',{classname: 'bg-danger text-light', delay: 6000})
           console.log('Algo salio mal');
@@ -78,11 +89,14 @@ export class ClienteAgregarComponent implements OnInit {
   }
   // Modal
   open(content:any) {//abre modal
-    this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title', size: 'xl'}).result.then((result) => {
-      this.closeResult = `Closed with: ${result}`;
-    }, (reason) => {
-      this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-    });
+    if(this.checkDireccion == true){
+      this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title', size: 'xl'}).result.then((result) => {
+        this.closeResult = `Closed with: ${result}`;
+      }, (reason) => {
+        this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+      });
+    }
+    
   }
   private getDismissReason(reason: any): string {//cierra modal con teclado ESC o al picar fuera del modal
     if (reason === ModalDismissReasons.ESC) {

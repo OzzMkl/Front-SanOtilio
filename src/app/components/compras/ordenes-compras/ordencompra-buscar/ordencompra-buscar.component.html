@@ -2,7 +2,12 @@
     <h1>Ordenes de compra por recibir</h1>
 </div>
 <div>
-    <div class="container-fluid" *ngIf="ordenesdecompra">
+    <div class="text-center text-primary" *ngIf="isLoading">
+        <div class="spinner-border" role="status" >
+            <span class="visually-hidden">Loading...</span>
+          </div>
+    </div>
+    <div class="container-fluid" *ngIf="!isLoading">
         <div class="input-group mb-2">
             <div class="col-2">
                 <select class="form-select" name="tipoBusqueda" [(ngModel)]="tipoBusqueda" (ngModelChange)="seleccionTipoBusqueda($event)">
@@ -61,7 +66,7 @@
                       </div>
                       
                       <div class="col-auto">
-                          <button type="button" class="btn btn-secondary"><i class="bi bi-file-earmark-pdf"></i><br>PDF</button>
+                          <button type="button" class="btn btn-secondary" ><i class="bi bi-file-earmark-pdf"></i><br>PDF</button>
                       </div>
                       <div class="col-auto">
                           <button type="button" class="btn btn-warning" (click)="modal.dismiss('Cross click')" [routerLink]="['../ordencompra-editar',doc.idOrd]"><i class="bi bi-pencil-square"></i><br>Editar</button>

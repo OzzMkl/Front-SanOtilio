@@ -1,0 +1,131 @@
+<div class="container">
+    <h4 class="text-center">Buscar ventas realizadas</h4>
+</div>
+<div class="container-fluid">
+    <div class="input-group mb-2">
+        <div class="col-2">
+            <select class="form-select" name="tipoBusqueda" [(ngModel)]="tipoBusqueda" (ngModelChange)="seleccionTipoBusqueda($event)">
+                <option value="1" selected># Folio</option>
+                <option value="2">Cliente</option>
+                <option value="3">Vendedor</option>
+            </select>
+        </div>
+        <div class="col" *ngIf="tipoBusqueda == 1">
+            <input class="form-control" type="text" name="buscaFolio" placeholder="Buscar . . ." [(ngModel)]="buscaFolio" pattern="[0-9]+">
+        </div>
+        <div class="col" *ngIf="tipoBusqueda == 2">
+            <input class="form-control" type="text" name="buscaNombreCliente" placeholder="Buscar . . ." [(ngModel)]="buscaNombreCliente" >
+        </div>
+        <div class="col" *ngIf="tipoBusqueda == 3">
+            <input class="form-control" type="text" name="buscaNombreEmpleado" placeholder="Buscar . . ." [(ngModel)]="buscaNombreEmpleado">
+        </div>
+    </div>
+    <br>
+    <div class="text-center text-primary" *ngIf="isLoading">
+        <div class="spinner-border" role="status" >
+            <span class="visually-hidden">Loading...</span>
+          </div>
+    </div>
+    <div *ngIf="!isLoading">
+        <table class="table table-dark table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">FOLIO</th>
+                    <th scope="col">FECHA</th>
+                    <th scope="col">CLIENTE</th>
+                    <th scope="col">VENDEDOR</th>
+                    <th scope="col">TOTAL</th>
+                </tr>
+            </thead>                           <!-- Se agrega filtro de cotizaciones para clientes-->
+            <tbody *ngFor="let venta of ventas | filterCotizacionesNomC: buscaNombreCliente | filterIdventa: buscaFolio | filterVendedor: buscaNombreEmpleado | paginate:{id:'paginationVentas',itemsPerPage: 10, currentPage: pageActual}">
+                <tr (click)="open(mDetallesVenta)" (click)="getDetallesVenta(venta.idVenta)">
+                    <th scope="row">{{venta.idVenta}}</th>
+                    <th scope="row">{{venta.created_at | date: 'dd/MM/yyyy'}}</th>
+                    <th scope="row">{{venta.nombreCliente}}</th>
+                    <th scope="row">{{venta.nombreEmpleado}}</th>
+                    <th scope="row">{{venta.total | currency}}</th>
+                </tr>
+            </tbody>
+        </table>
+        <pagination-controls id="paginationVentas" (pageChange)="pageActual = $event"></pagination-controls>
+    </div>
+</div>
+<!-- Modal -->
+<ng-template #mDetallesVenta let-modal>
+    <div *ngFor="let v of detallesVenta">
+        <div class="modal-header">
+            <h5 class="modal-title" id="modal-basic-title">Detalles venta #{{v.idVenta}}</h5>
+            <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+        </div>
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-4">
+                    <label class="form-label">Cliente</label>
+                    <input type="text" class="form-control" value="{{v.nombreCliente}}" readonly>
+                </div>
+                <div class="col-2">
+                    <label class="form-label">Fecha</label>
+                    <input type="text" class="form-control" value="{{v.created_at | date: 'dd/MM/yyyy'}}" readonly>
+                </div>
+                <div class="col-2">
+                    <label class="form-label">Status</label>
+                    <input type="text" class="form-control" value="{{v.nombreStatus}}" readonly>
+                </div>
+                <div class="col" >
+                    <!-- <button type="button" class="btn btn-secondary me-md-2" style="box-sizing: border-box;" ><i class="bi bi-receipt-cutoff"></i><br>TICKET</button> -->
+                    <button type="button" class="btn btn-warning me-md-2"  ><i class="bi bi-pencil-square" ></i><br>EDITAR</button>
+                    <button type="button" class="btn btn-danger me-md-2"  ><i class="bi bi-pencil-square" ></i><br>CANCELAR</button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-4">
+                    <label class="form-label">Vendedor</label>
+                    <input type="text" class="form-control" value="{{v.nombreEmpleado}}" readonly>
+                </div>
+                <div class="col-2">
+                    <label class="form-label">Subtotal</label>
+                    <input type="text" class="form-control" value="{{v.subtotal | currency}}" readonly>
+                </div>
+                <div class="col-2">
+                    <label class="form-label">Descuento</label>
+                    <input type="text" class="form-control" value="{{v.descuento | currency}}" readonly>
+                </div>
+                <div class="col-2">
+                    <label class="form-label">Total</label>
+                    <input type="text" class="form-control" value="{{v.total | currency}}" readonly>
+                </div>
+            </div>
+            <hr>
+            <table class="table table-dark table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col">CLAVE EXTERNA</th>
+                        <th scope="col">DESCRIPCION</th>
+                        <th scope="col">PRECIO</th>
+                        <th scope="col">CANTIDAD</th>
+                        <th scope="col">DESCUENTO</th>
+                        <th scope="col">SUBTOTAL</th>
+                    </tr>
+                </thead>
+                <tbody *ngFor="let pdv of productosDVenta | paginate:{id:'mProductosDVenta',itemsPerPage: 4, currentPage: mpageActual}">
+                    <tr>
+                        <th scope="row">{{pdv.claveEx}}</th>
+                        <th scope="row">{{pdv.descripcion}}</th>
+                        <th scope="row">{{pdv.precio}}</th>
+                        <th scope="row">{{pdv.cantidad}}</th>
+                        <th scope="row">{{pdv.descuento}}</th>
+                        <th scope="row">{{pdv.subtotal}}</th>
+                    </tr>
+                </tbody>
+            </table>
+            <pagination-controls id="mProductosDVenta" (pageChange)="mpageActual = $event"></pagination-controls>
+            <hr>
+            <div class="row" *ngIf="v.observaciones.length > 2">
+                <div class="col">
+                    <label class="form-label">Observaciones</label>
+                    <textarea class="form-control" rows="2" value="{{v.observaciones}}" readonly></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>

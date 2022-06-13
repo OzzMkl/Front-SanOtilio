@@ -21,6 +21,7 @@ export class ClienteEditarComponent implements OnInit {
   //variable formulario
   public isCompany: boolean = false;
   public isCredito: boolean = false;
+  public isRFC: boolean = false;
   //cerrar modal
   closeResult ='';
   //Modelos 
@@ -67,6 +68,9 @@ export class ClienteEditarComponent implements OnInit {
           if(this.clienteEditado.aPaterno.length == 0 && this.clienteEditado.aMaterno.length == 0){
             this.isCompany = true;
           }
+          if(this.clienteEditado.rfc != 'XAXX010101000'){
+            this.isRFC = true;
+          }
         }else{
           console.log('algo salio mal');
         }
@@ -86,12 +90,12 @@ export class ClienteEditarComponent implements OnInit {
   capturarDireccion(){//agregamos la direccion a la lista de direcciones
     this.listaDirecciones.push({...this.dirEditada})
   }
-  editarDireccion(colonia:any,content:any){//edcion de la direccion al dar click
+  editarDireccion(direccion:any,content:any){//edcion de la direccion al dar click
     //creamos variable
     let k;
     //buscamos dentro del array el nombre de la colonia y ya encontrado
     //asignamos todo el objeto a la variable que creamos
-    k = this.listaDirecciones.find((item) => item.colonia == colonia);
+    k = this.listaDirecciones.find((item) => item.colonia+item.calle+item.numExt == direccion);
     //asignamos una por una a las propiedades del modelo dirEditada
     this.dirEditada.idCliente = k!.idCliente;
     this.dirEditada.pais = k!.pais;
@@ -107,11 +111,18 @@ export class ClienteEditarComponent implements OnInit {
     this.dirEditada.telefono = k!.telefono;
     this.dirEditada.idZona = k!.idZona;
     //eliminamos de la lista la direccion seleccionada
-    this.listaDirecciones = this.listaDirecciones.filter((item) => item.colonia !== colonia);
+    this.listaDirecciones = this.listaDirecciones.filter((item) => item.colonia+item.calle+item.numExt !== direccion);
     //mandammos a abrir el modal para editar la direccion
     this.open(content);
   }
   actualizarCliente(){
+    if(this.isCompany == true ){
+      this.clienteEditado.aMaterno ='';
+      this.clienteEditado.aPaterno='';
+    }
+    if(this.isRFC == false){
+      this.clienteEditado.rfc ='XAXX010101000';
+    }
     //console.log(this.listaDirecciones);
     this._clienteService.updateCliente(this.clienteEditado,this.clienteEditado.idCliente).subscribe( 
       response =>{

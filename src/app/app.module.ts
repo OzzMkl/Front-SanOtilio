@@ -63,6 +63,19 @@ import { ClienteAgregarComponent } from './components/ventas/clientes/cliente-ag
 import { ClienteEditarComponent } from './components/ventas/clientes/cliente-editar/cliente-editar.component';
 import { ClienteBuscarComponent } from './components/ventas/clientes/cliente-buscar/cliente-buscar.component';
 import { FilterClientesPipe } from './pipes/filter-clientes.pipe';
+import { CotizacionBuscarComponent } from './components/ventas/cotizaciones/cotizacion-buscar/cotizacion-buscar.component';
+import { CotizacionEditarComponent } from './components/ventas/cotizaciones/cotizacion-editar/cotizacion-editar.component';
+import { CotizacionModuloComponent } from './components/ventas/cotizaciones/cotizacion-modulo/cotizacion-modulo.component';
+import { FilterCotizacionesNomCPipe } from './pipes/filter-cotizaciones-nom-c.pipe';
+import { FilterCotizacionesIdCotizaPipe } from './pipes/filter-cotizaciones-id-cotiza.pipe';
+import { VentasRealizadasModuloComponent } from './components/ventas/ventas-realizadas/ventas-realizadas-modulo/ventas-realizadas-modulo.component';
+import { VentasRealizadasComponent } from './components/ventas/ventas-realizadas/ventas-realizadas/ventas-realizadas.component';
+import { FilterIdventaPipe } from './pipes/ventas/filter-idventa.pipe';
+import { FilterVendedorPipe } from './pipes/ventas/filter-vendedor.pipe';
+import { CajaModuloComponent } from './components/cajas/caja-modulo/caja-modulo.component';
+import { NotasPorCobrarComponent } from './components/cajas/notas-por-cobrar/notas-por-cobrar.component';
+import { NotasACreditoComponent } from './components/cajas/notas-a-credito/notas-a-credito.component';
+import { CorteDeCajaComponent } from './components/cajas/corte-de-caja/corte-de-caja.component';
 
 
 @NgModule({
@@ -115,6 +128,19 @@ import { FilterClientesPipe } from './pipes/filter-clientes.pipe';
     ClienteEditarComponent,
     ClienteBuscarComponent,
     FilterClientesPipe,
+    CotizacionBuscarComponent,
+    CotizacionEditarComponent,
+    CotizacionModuloComponent,
+    FilterCotizacionesNomCPipe,
+    FilterCotizacionesIdCotizaPipe,
+    VentasRealizadasModuloComponent,
+    VentasRealizadasComponent,
+    FilterIdventaPipe,
+    FilterVendedorPipe,
+    CajaModuloComponent,
+    NotasPorCobrarComponent,
+    NotasACreditoComponent,
+    CorteDeCajaComponent
   ],
   imports: [
     BrowserModule,

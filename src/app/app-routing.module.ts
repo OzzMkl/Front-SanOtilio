@@ -37,10 +37,22 @@ import { ClasificacionModuloComponent } from './components/inventario/taxonomia/
 
 import { PuntoDeVentaComponent } from './components/ventas/punto-de-venta/punto-de-venta.component';
 
+import { VentasRealizadasModuloComponent } from './components/ventas/ventas-realizadas/ventas-realizadas-modulo/ventas-realizadas-modulo.component';
+import { VentasRealizadasComponent } from './components/ventas/ventas-realizadas/ventas-realizadas/ventas-realizadas.component';
+
+import { CotizacionModuloComponent } from './components/ventas/cotizaciones/cotizacion-modulo/cotizacion-modulo.component';
+import { CotizacionBuscarComponent } from './components/ventas/cotizaciones/cotizacion-buscar/cotizacion-buscar.component';
+import { CotizacionEditarComponent } from './components/ventas/cotizaciones/cotizacion-editar/cotizacion-editar.component';
+
 import { ClienteModuloComponent } from './components/ventas/clientes/cliente-modulo/cliente-modulo.component';
 import { ClienteBuscarComponent } from './components/ventas/clientes/cliente-buscar/cliente-buscar.component';
 import { ClienteAgregarComponent } from './components/ventas/clientes/cliente-agregar/cliente-agregar.component';
 import { ClienteEditarComponent } from './components/ventas/clientes/cliente-editar/cliente-editar.component';
+
+import { CajaModuloComponent } from './components/cajas/caja-modulo/caja-modulo.component';
+import { NotasPorCobrarComponent } from './components/cajas/notas-por-cobrar/notas-por-cobrar.component';
+import { NotasACreditoComponent } from './components/cajas/notas-a-credito/notas-a-credito.component';
+import { CorteDeCajaComponent } from './components/cajas/corte-de-caja/corte-de-caja.component';
 
 const routes: Routes = [
   {path: '', component: GeneralComponent},
@@ -73,6 +85,17 @@ const routes: Routes = [
       {path: 'proveedorVer/:idProveedor',component: ProveedorVerComponent}
     ]},
   {path: 'punto-de-venta',component: PuntoDeVentaComponent},
+  {path: 'ventas-realizadas',component: VentasRealizadasModuloComponent,
+  children:
+  [
+    {path:'ventas-realizadas-buscar',component: VentasRealizadasComponent}
+  ]},
+  {path: 'cotizacion-modulo', component: CotizacionModuloComponent,
+  children:
+  [
+    {path: 'cotizacion-buscar', component: CotizacionBuscarComponent},
+    {path: 'cotizacion-editar/:idCotiza', component: CotizacionEditarComponent}
+  ]},
   {path: 'cliente-modulo',component: ClienteModuloComponent,
       children:
     [
@@ -80,6 +103,13 @@ const routes: Routes = [
       {path: 'cliente-agregar',component:ClienteAgregarComponent},
       {path: 'cliente-editar/:idCliente',component: ClienteEditarComponent}
     ]},
+  {path:'caja-modulo', component: CajaModuloComponent,
+      children:
+      [
+        {path:'notas-por-cobrar',component: NotasPorCobrarComponent},
+        {path:'notas-a-credito',component: NotasACreditoComponent}
+      ]},
+  {path:'corte-de-caja',component: CorteDeCajaComponent},
   {path: 'producto-modulo', component: ProductoModuloComponent,
    children:
    [

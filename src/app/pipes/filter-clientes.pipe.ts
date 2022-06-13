@@ -9,7 +9,8 @@ export class FilterClientesPipe implements PipeTransform {
     if(arg == '' || arg.lenght < 3) return value;
     const result =[];
     for(const c of value){
-      if(c.nombre.toLowerCase().indexOf(arg.toLowerCase()) > -1){
+      let namess = c.nombre+' '+c.aPaterno+' '+c.aMaterno;
+      if(namess.toLowerCase().indexOf(arg.toLowerCase()) > -1){
         result.push(c);
       };
     };
