@@ -34,7 +34,6 @@ export class CompraAgregarComponent implements OnInit {
   closeResult = '';
 
   public orden_compra: Ordencompra;
-  public producto_orden: Producto_orden;
   public proveedoresLista: any;
   public proveedorVer: any;
   public medidas: any;
@@ -85,7 +84,6 @@ export class CompraAgregarComponent implements OnInit {
     private calendar: NgbCalendar
     ) {
       this.orden_compra = new Ordencompra(0,null,0,'',null,0,1,null);
-      this.producto_orden = new Producto_orden(0,0,0,null,null,null,null);
       this.compra = new Compra(0,null,null,0,0,0,0,0,0,null,'',null);
       this.producto_compra = new Producto_compra(0,0,0,0,1,null,null,null,null,null,null,0,null);
       this.Lista_compras = [];
