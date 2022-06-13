@@ -64,10 +64,11 @@ export class CompraAgregarComponent implements OnInit {
   public identity: any;
   public ultimaCompra: any;
   public detailOrd: any;
+  public detailComp: any;
   //modelo de bootstrap
   model!: NgbDateStruct;
   today = this.calendar.getToday();
-  //variable para el pdf
+  //variable para el pdf+
   public fecha : Date = new Date();
 
 
@@ -86,7 +87,7 @@ export class CompraAgregarComponent implements OnInit {
       this.orden_compra = new Ordencompra(0,null,0,'',null,0,1,null);
       this.producto_orden = new Producto_orden(0,0,0,null,null,null,null);
       this.compra = new Compra(0,null,null,0,0,0,0,0,0,null,'',null);
-      this.producto_compra = new Producto_compra(0,0,0,0,1,null,null,null,null,null,null,0);
+      this.producto_compra = new Producto_compra(0,0,0,0,1,null,null,null,null,null,null,0,null);
       this.Lista_compras = [];
       this.url = global.url;
      }
@@ -99,21 +100,22 @@ export class CompraAgregarComponent implements OnInit {
     this.loadUser();
   }
 
-  onChange(id:any){//evento que muestra los datos del proveedor al seleccionarlo
+  /*Eventos*/
+  onChange(id:any){//Muestra los datos del proveedor al seleccionarlo
     this.getProveeVer(id);
   }
 
-  onChangeI(id:any){//evento que muestra los datos del impuesto al seleccionarlo
+  onChangeI(id:any){//Muestra los datos del impuesto al seleccionarlo
     this.getImpuestoVer(id);    
     // console.log(id);
   }
 
-  onChangeT(subtotal:any){//evento que
+  onChangeT(subtotal:any){//Recalcula el subtotal al hacer un cambio
     this.producto_compra.subtotal = this.producto_compra.cantidad * this.producto_compra.precio;
     this.producto_compra.subtotal = this.producto_compra.subtotal + (this.producto_compra.subtotal * (this.producto_compra.valorImpuesto / 100)); 
   }
 
-  cambioSeleccionado(e:any){//limpiamos los inputs del modal
+  cambioSeleccionado(e:any){//Limpiamos los inputs del modal
     this.buscarProducto = '';
     this.buscarProductoCE = '';
     this.buscarProductoCbar = '';
@@ -128,14 +130,18 @@ export class CompraAgregarComponent implements OnInit {
       //verificamos si la lista de compras ya contiene el producto buscandolo por idProducto
       this.toastService.show('Ese producto ya esta en la lista',{classname: 'bg-danger text-light', delay: 6000})
     }else{
-
       this.Lista_compras.push({...this.producto_compra});
       this.isSearch=true;
     }
     console.log(this.Lista_compras);
   }
 
-  consultarProducto(event:any){//mostrar informacion del producto al dar enter
+  consultarProductoModal(dato:any){
+    this.getProd(dato);
+    this.isSearch = false;
+  }
+
+  consultarProducto(event:any){//Mostrar informacion del producto al dar enter
     //alert('you just pressed the enter key'+event);
     this.dato=event.target.value;
     //console.log(this.dato)
@@ -144,43 +150,8 @@ export class CompraAgregarComponent implements OnInit {
     //console.log(this.producto_orden);
   
   }
-
-  consultarProductoModal(dato:any){
-    this.getProd(dato);
-    this.isSearch = false;
-  }
-
-  agregarCompra(form:any){//Enviar Form insertar en DB
-    this.compra.idEmpleadoR = this.identity['sub'];//asginamos id de Empleado
-    this.compra.fechaRecibo = this.model.year+'-'+this.model.month+'-'+this.model.day;//concatenamos la fecha del datepicker
-    this.compra.idStatus = 1;
-    //console.log(this.compra);
-    this._compraService.registrerCompra(this.compra).subscribe(
-    response =>{
-      if(response.status == 'Success!'){
-        // console.log(response)       
-        //   this.toastService.show(' ⚠ Orden creada', { classname: 'bg-warning  text-bold', delay: 5000 });
-          this._compraService.registerProductoscompra(this.Lista_compras).subscribe(
-            res =>{
-                console.log(res);
-                this.toastService.show(' ⚠ Compra creada exitosamente!', { classname: 'bg-success  text-light', delay: 5000 });
-                this.getDetailsOrd();
-                //this.createPDF();
-            },error =>{
-              console.log(<any>error);
-              this.toastService.show('Ups... Fallo al agregar los productos a la compra', { classname: 'bg-danger text-light', delay: 15000 });
-            });
-      }else{
-        console.log('fallo');  
-        console.log(response);
-      }
-    },error =>{
-      console.log(<any>error);
-      this.toastService.show('Ups... Fallo al crear la compra', { classname: 'bg-danger text-light', delay: 15000 });
-    });
-  }
-
-  public createPDF():void{
+  
+  public createPDF():void{//Crear PDF
     //this.getDetailsOrd();
     const doc = new jsPDF;
 
@@ -198,23 +169,25 @@ export class CompraAgregarComponent implements OnInit {
     doc.setFont('Helvetica').setFontSize(16).text(" \"SAN OTILIO\" ", 85,30);
     // variable con logo, tipo x1,y1, ancho, largo
     doc.addImage(logo,'PNG',100,32,10,10);
-    doc.setFont('Helvetica').setFontSize(10).text('REPORTE DE ORDEN DE COMPRA', 10,50);
+    doc.setFont('Helvetica').setFontSize(10).text('REPORTE DE COMPRA', 10,50);
     doc.setLineWidth(2.5).line(10,53,70,53);
     //           tipografia,negrita        tamaño          texto              x1,y1
-    doc.setFont('Helvetica','bold').setFontSize(10).text('NO. ORDEN: '+this.detailOrd[0]['idOrd'], 10,60);
+    doc.setFont('Helvetica','bold').setFontSize(10).text('NO. ORDEN: '+this.detailComp[0]['idOrd'], 10,60);
     doc.setFont('Helvetica','normal').setFontSize(10).text('FECHA IMPRESION: '+this.fecha.toLocaleDateString(), 50,65);
-    doc.setFont('Helvetica','normal').setFontSize(10).text('FECHA ESTIMADA: '+this.detailOrd[0]['fecha'], 115,65);  
+    doc.setFont('Helvetica','normal').setFontSize(10).text('FECHA ESTIMADA: '+this.detailComp[0]['fecha'], 115,65);  
 
     doc.setLineWidth(1).line(10,70,200,70);
     doc.setFont('Helvetica','normal').setFontSize(10).text('REALIZO: '+ nombreE.toUpperCase(), 10,75);
-    doc.setFont('Helvetica','normal').setFontSize(10).text('PROVEEDOR: '+this.detailOrd[0]['nombreProveedor'], 10,80);
-    doc.setFont('Helvetica','normal').setFontSize(10).text('OBSERVACIONES: '+this.detailOrd[0]['observaciones'], 10,85);
+    doc.setFont('Helvetica','normal').setFontSize(10).text('PROVEEDOR: '+this.detailComp[0]['nombreProveedor'], 10,80);
+    doc.setFont('Helvetica','normal').setFontSize(10).text('OBSERVACIONES: '+this.detailComp[0]['observaciones'], 10,85);
 
 
     doc.setLineWidth(1).line(10,92,200,92);
     autoTable(doc,{html: '#table_productos',startY:95})
     doc.save('a.pdf')
   } 
+
+
 
 /**SERVICIOS */
   getProvee(){
@@ -296,11 +269,11 @@ export class CompraAgregarComponent implements OnInit {
     this._compraService.getLastCompra().subscribe(
       response =>{
         if(response.status == 'success'){
-          this.ultimaCompra = response.ordencompra;
+          this.ultimaCompra = response.compra;
           this._compraService.getDetailsCompra(this.ultimaCompra['idCompra']).subscribe(
             response => {
-              this.detailOrd = response.ordencompra;
-              console.log(this.detailOrd)
+              this.detailComp = response.compra;
+              console.log(this.detailComp);
               this.createPDF();
             },error =>{
               console.log(error);
@@ -348,6 +321,48 @@ export class CompraAgregarComponent implements OnInit {
           console.log(error);
       }
     );
+  }
+
+  agregarCompra(form:any){//Enviar Form insertar en DB
+    this.compra.idEmpleadoR = this.identity['sub'];//asginamos id de Empleado
+    this.compra.fechaRecibo = this.model.year+'-'+this.model.month+'-'+this.model.day;//concatenamos la fecha del datepicker
+    this.compra.idStatus = 1;
+    //console.log(this.compra);
+    this._compraService.registrerCompra(this.compra).subscribe(
+    response =>{
+      if(response.status == 'Success!'){
+        // console.log(response)       
+        //   this.toastService.show(' ⚠ Orden creada', { classname: 'bg-warning  text-bold', delay: 5000 });
+          this._compraService.registerProductoscompra(this.Lista_compras).subscribe(
+            res =>{
+                console.log(res);
+                this.toastService.show(' ⚠ Compra creada exitosamente!', { classname: 'bg-success  text-light', delay: 5000 });
+                this.getDetailsOrd();
+                //this.createPDF();
+            },error =>{
+              console.log(<any>error);
+              this.toastService.show('Ups... Fallo al agregar los productos a la compra', { classname: 'bg-danger text-light', delay: 15000 });
+            });
+        //Agregar a PELOTE
+          this._compraService.updateExistencia(this.Lista_compras).subscribe(
+            res =>{
+                console.log(res);
+                this.toastService.show(' ⚠ Producto-Existencia-Lote agregado exitosamente!', { classname: 'bg-success  text-light', delay: 5000 });
+                //this.getDetailsOrd();
+                //this.createPDF();
+            },error =>{
+              console.log(<any>error);
+              this.toastService.show('Ups... Fallo al agregar los productos a Producto-Existencia-Lote', { classname: 'bg-danger text-light', delay: 15000 });
+            });
+
+      }else{
+        console.log('fallo');  
+        console.log(response);
+      }
+    },error =>{
+      console.log(<any>error);
+      this.toastService.show('Ups... Fallo al crear la compra', { classname: 'bg-danger text-light', delay: 15000 });
+    });
   }
   
 // Modal

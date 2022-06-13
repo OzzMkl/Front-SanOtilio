@@ -13,6 +13,7 @@ export class Producto_compra{//Modelo de la compra
         public NombreImpuesto: any,
         public valorImpuesto: any,
         public descripcion: any,
-        public nombreMedida: any
+        public nombreMedida: any,
+        public caducidad: any
     ){}
 }
