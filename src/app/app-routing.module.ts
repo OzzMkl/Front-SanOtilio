@@ -53,10 +53,12 @@ import { CajaModuloComponent } from './components/cajas/caja-modulo/caja-modulo.
 import { NotasPorCobrarComponent } from './components/cajas/notas-por-cobrar/notas-por-cobrar.component';
 import { NotasACreditoComponent } from './components/cajas/notas-a-credito/notas-a-credito.component';
 import { CorteDeCajaComponent } from './components/cajas/corte-de-caja/corte-de-caja.component';
+/***guards */
+import { InicioGuard } from './guards/inicio.guard';
 
 const routes: Routes = [
   {path: '', component: GeneralComponent},
-  {path: 'inicio', component: HomeComponent},
+  {path: 'inicio', component: HomeComponent}, //canActivate:[InicioGuard]},
   {path: 'login', component: LoginComponent},
   {path: 'logout/:sure', component: LoginComponent},
   {path: 'ajustes',component: EmpleadoEditarComponent},

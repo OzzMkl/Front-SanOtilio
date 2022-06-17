@@ -11,14 +11,7 @@ export class EmpleadoService{
     public identity: any;
     public token: any;
 
-    constructor(
-        public _http: HttpClient
-    ){
-        this.url = global.url;
-    }
-    test(){//prueba
-        return "Hola mundo esto es un servicio";
-    }
+    constructor( public _http: HttpClient ){ this.url = global.url; }
 
     signup(empleado:any, getToken = null): Observable<any>{//creamos metodo de inicio de sesion
         if(getToken != null){//comunicandose con la api de laravel jalamos el token y si es diferente de vacio 
@@ -49,6 +42,11 @@ export class EmpleadoService{
             this.token = null;
         }
         return this.token;
+    }
+
+    getPermisos():Observable<any>{
+        let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');
+        return this._http.get(this.url+'permisos', {headers:headers} );
     }
 
 }

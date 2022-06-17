@@ -7,13 +7,9 @@ import { Component, OnInit } from '@angular/core';
 })
 export class GeneralComponent implements OnInit {
 
-  public typewriter_text: string = "Thank you for your interest";
-  public typewriter_display: string = "";
-
   constructor() { }
 
   ngOnInit(): void {
-    
-    
+
   }
 }
