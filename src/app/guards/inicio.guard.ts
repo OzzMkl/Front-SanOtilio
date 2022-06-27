@@ -2,46 +2,69 @@ import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, RouterStateSnapshot, UrlTree, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { EmpleadoService } from '../services/empleado.service';
+import { ToastService } from 'src/app/services/toast.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class InicioGuard implements CanActivate {
 
-  constructor(private _router: Router, private _empleadoService: EmpleadoService){}
+  public user:any
+  public userPermisos:any
+  public roles:any
+  public check: boolean = false
+  idModulo=3
+  idSubModulo=6
 
-  // redirect(flag: boolean):any{
-  //   if(!flag){
-  //     this._router.navigate(['inicio'])
-  //   }
-  //   this._router.navigate(['login'])
-  // }
+  constructor(private _router: Router, private _empleadoService: EmpleadoService, public toastService: ToastService){}
+
 
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-      // let check = false;
-//       const token = this._empleadoService.getToken();
+      const token = this._empleadoService.getToken();
 
-      // if(token != null ){
-      //   check = true
-      // }else{
-      //   check = false;
-      // }
-      // this.redirect(check)
-    //return check;
+       if(token != null ){
+         //check = true
+         this.validateRol()
+       }else{
+         this.check = false;
+       }
     
-      const permisos = this._empleadoService.getPermisos();
-
-    //suponiendo que estamos en el modulo de compras
-    const idModulo=3;
-    //y en el submodulo de orden de compra
-    const idSubModulo=6;
-
-    const idRol = this._empleadoService.getToken();
-
-    const userArray=[idRol['idRol'],idModulo,idSubModulo];
-    return true;
+    return this.check
   }
+
+  private async validateRol(){
+    this.user = this._empleadoService.getIdentity()
+    await  this._empleadoService.getRolesBySubmodulo(this.idModulo).subscribe( 
+        response =>{
+          this.roles= response.roles
+        if(this.roles.find((items:any)=> items.idRol === this.user['idRol']) != 'undefined'){
+          
+          return this.validatePermissions();
+        }else{
+           console.log('no tiene permisos');
+           return false
+        }
+        }
+      )
+  }
+  private async validatePermissions(){
+   await this._empleadoService.getPermisos(this.user['idRol'],this.idModulo,this.idSubModulo).subscribe(
+     response =>{
+       this.userPermisos = response.permisos
+       if(this.userPermisos.length > 0){
+          console.log(this.userPermisos)
+          return true;
+       }else{
+        
+        this.toastService.show('Acceso denegado', { classname: 'bg-danger  text-light', delay: 5000 });
+        return false
+       }
+       
+     }
+   )
+
+ }
   
 }

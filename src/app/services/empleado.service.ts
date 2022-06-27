@@ -44,9 +44,15 @@ export class EmpleadoService{
         return this.token;
     }
 
-    getPermisos():Observable<any>{
+    getPermisos(idRol:number,idModulo:number,idSubModulo:number):Observable<any>{
+        // let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');
+        // return this._http.get(this.url+'permisos', {headers:headers} );
         let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');
-        return this._http.get(this.url+'permisos', {headers:headers} );
+        return this._http.get(this.url+'PermissionsByRol/'+idRol+'/'+idModulo+'/'+idSubModulo, {headers:headers});
+    }
+    getRolesBySubmodulo(idSubModulo:any):Observable<any>{
+        let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');
+        return this._http.get(this.url+'RolesBySubmodulo/'+idSubModulo, {headers:headers} );
     }
 
 }

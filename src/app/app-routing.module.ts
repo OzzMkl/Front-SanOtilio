@@ -62,7 +62,7 @@ const routes: Routes = [
   {path: 'login', component: LoginComponent},
   {path: 'logout/:sure', component: LoginComponent},
   {path: 'ajustes',component: EmpleadoEditarComponent},
-  {path: 'ordencompra-modulo', component: OrdencompraModuloComponent,
+  {path: 'ordencompra-modulo', component: OrdencompraModuloComponent, canActivate:[InicioGuard],
     children:[
       {path: 'ordencompra-agregar',component: OrdencompraAgregarComponent},
       {path: 'ordencompra-buscar',component: OrdencompraBuscarComponent},
