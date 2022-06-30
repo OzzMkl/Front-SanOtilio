@@ -55,6 +55,7 @@ import { NotasACreditoComponent } from './components/cajas/notas-a-credito/notas
 import { CorteDeCajaComponent } from './components/cajas/corte-de-caja/corte-de-caja.component';
 /***guards */
 import { InicioGuard } from './guards/inicio.guard';
+import { OrdencompraGuardGuard } from './guards/ordencompra-guard.guard';
 
 const routes: Routes = [
   {path: '', component: GeneralComponent},
@@ -62,7 +63,7 @@ const routes: Routes = [
   {path: 'login', component: LoginComponent},
   {path: 'logout/:sure', component: LoginComponent},
   {path: 'ajustes',component: EmpleadoEditarComponent},
-  {path: 'ordencompra-modulo', component: OrdencompraModuloComponent, canActivate:[InicioGuard],
+  {path: 'ordencompra-modulo', component: OrdencompraModuloComponent, canActivate:[OrdencompraGuardGuard],
     children:[
       {path: 'ordencompra-agregar',component: OrdencompraAgregarComponent},
       {path: 'ordencompra-buscar',component: OrdencompraBuscarComponent},
