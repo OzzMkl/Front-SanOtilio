@@ -77,6 +77,7 @@ import { NotasPorCobrarComponent } from './components/cajas/notas-por-cobrar/not
 import { NotasACreditoComponent } from './components/cajas/notas-a-credito/notas-a-credito.component';
 import { CorteDeCajaComponent } from './components/cajas/corte-de-caja/corte-de-caja.component';
 import { EmpleadoService } from './services/empleado.service';
+import { EntregasComponent } from './components/ventas/entregas/entregas.component';
 
 
 @NgModule({
@@ -141,7 +142,8 @@ import { EmpleadoService } from './services/empleado.service';
     CajaModuloComponent,
     NotasPorCobrarComponent,
     NotasACreditoComponent,
-    CorteDeCajaComponent
+    CorteDeCajaComponent,
+    EntregasComponent
   ],
   imports: [
     BrowserModule,

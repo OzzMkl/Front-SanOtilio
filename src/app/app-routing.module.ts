@@ -49,6 +49,8 @@ import { ClienteBuscarComponent } from './components/ventas/clientes/cliente-bus
 import { ClienteAgregarComponent } from './components/ventas/clientes/cliente-agregar/cliente-agregar.component';
 import { ClienteEditarComponent } from './components/ventas/clientes/cliente-editar/cliente-editar.component';
 
+import { EntregasComponent } from './components/ventas/entregas/entregas.component';
+
 import { CajaModuloComponent } from './components/cajas/caja-modulo/caja-modulo.component';
 import { NotasPorCobrarComponent } from './components/cajas/notas-por-cobrar/notas-por-cobrar.component';
 import { NotasACreditoComponent } from './components/cajas/notas-a-credito/notas-a-credito.component';
@@ -106,6 +108,7 @@ const routes: Routes = [
       {path: 'cliente-agregar',component:ClienteAgregarComponent},
       {path: 'cliente-editar/:idCliente',component: ClienteEditarComponent}
     ]},
+  {path:'entregas',component: EntregasComponent},
   {path:'caja-modulo', component: CajaModuloComponent,
       children:
       [

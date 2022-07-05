@@ -37,6 +37,8 @@ export class OrdencompraGuardGuard implements CanActivate {
       return this.check
   }
 
+  
+
   //validamos el rol
   private async validateRol(){
     //obtenemos datos del localstorage
@@ -64,7 +66,7 @@ export class OrdencompraGuardGuard implements CanActivate {
        this.userPermisos = response.permisos
        if(this.userPermisos.length > 0){
           console.log(this.userPermisos)
-          return true;
+          return this.check=true;
        }else{
         
         this.toastService.show('Acceso denegado', { classname: 'bg-danger  text-light', delay: 5000 });
