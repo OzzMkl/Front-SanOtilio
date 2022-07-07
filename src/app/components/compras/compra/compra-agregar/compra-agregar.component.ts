@@ -67,7 +67,7 @@ export class CompraAgregarComponent implements OnInit {
   //modelo de bootstrap
   model!: NgbDateStruct;
   today = this.calendar.getToday();
-  //variable para el pdf+
+  //variable para el pdf
   public fecha : Date = new Date();
 
 
