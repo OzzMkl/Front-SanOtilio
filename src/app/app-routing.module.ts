@@ -49,18 +49,23 @@ import { ClienteBuscarComponent } from './components/ventas/clientes/cliente-bus
 import { ClienteAgregarComponent } from './components/ventas/clientes/cliente-agregar/cliente-agregar.component';
 import { ClienteEditarComponent } from './components/ventas/clientes/cliente-editar/cliente-editar.component';
 
+import { EntregasComponent } from './components/ventas/entregas/entregas.component';
+
 import { CajaModuloComponent } from './components/cajas/caja-modulo/caja-modulo.component';
 import { NotasPorCobrarComponent } from './components/cajas/notas-por-cobrar/notas-por-cobrar.component';
 import { NotasACreditoComponent } from './components/cajas/notas-a-credito/notas-a-credito.component';
 import { CorteDeCajaComponent } from './components/cajas/corte-de-caja/corte-de-caja.component';
+/***guards */
+import { InicioGuard } from './guards/inicio.guard';
+import { OrdencompraGuardGuard } from './guards/ordencompra-guard.guard';
 
 const routes: Routes = [
   {path: '', component: GeneralComponent},
-  {path: 'inicio', component: HomeComponent},
+  {path: 'inicio', component: HomeComponent}, //canActivate:[InicioGuard]},
   {path: 'login', component: LoginComponent},
   {path: 'logout/:sure', component: LoginComponent},
   {path: 'ajustes',component: EmpleadoEditarComponent},
-  {path: 'ordencompra-modulo', component: OrdencompraModuloComponent,
+  {path: 'ordencompra-modulo', component: OrdencompraModuloComponent, canActivate:[OrdencompraGuardGuard],
     children:[
       {path: 'ordencompra-agregar',component: OrdencompraAgregarComponent},
       {path: 'ordencompra-buscar',component: OrdencompraBuscarComponent},
@@ -103,6 +108,7 @@ const routes: Routes = [
       {path: 'cliente-agregar',component:ClienteAgregarComponent},
       {path: 'cliente-editar/:idCliente',component: ClienteEditarComponent}
     ]},
+  {path:'entregas',component: EntregasComponent},
   {path:'caja-modulo', component: CajaModuloComponent,
       children:
       [

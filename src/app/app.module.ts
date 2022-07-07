@@ -76,6 +76,8 @@ import { CajaModuloComponent } from './components/cajas/caja-modulo/caja-modulo.
 import { NotasPorCobrarComponent } from './components/cajas/notas-por-cobrar/notas-por-cobrar.component';
 import { NotasACreditoComponent } from './components/cajas/notas-a-credito/notas-a-credito.component';
 import { CorteDeCajaComponent } from './components/cajas/corte-de-caja/corte-de-caja.component';
+import { EmpleadoService } from './services/empleado.service';
+import { EntregasComponent } from './components/ventas/entregas/entregas.component';
 
 
 @NgModule({
@@ -140,7 +142,8 @@ import { CorteDeCajaComponent } from './components/cajas/corte-de-caja/corte-de-
     CajaModuloComponent,
     NotasPorCobrarComponent,
     NotasACreditoComponent,
-    CorteDeCajaComponent
+    CorteDeCajaComponent,
+    EntregasComponent
   ],
   imports: [
     BrowserModule,
@@ -154,7 +157,7 @@ import { CorteDeCajaComponent } from './components/cajas/corte-de-caja/corte-de-
     AngularFileUploaderModule,
     NgxBarcodeModule
   ],
-  providers: [],
+  providers: [EmpleadoService],
   bootstrap: [AppComponent],
   exports: [
     CategoriaVerComponent    
