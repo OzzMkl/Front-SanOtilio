@@ -66,6 +66,10 @@ export class OrdencompraGuardGuard implements CanActivate {
        this.userPermisos = response.permisos
        if(this.userPermisos.length > 0){
           console.log(this.userPermisos)
+          /****** */
+          localStorage.removeItem('PermisosModulo');
+          localStorage.setItem('PermisosModulo', JSON.stringify(this.userPermisos));//guardamos la identidad y convertimos el objeto javascript a un objeto json
+          /****** */
           return this.check=true;
        }else{
         

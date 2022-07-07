@@ -10,6 +10,9 @@ export class EmpleadoService{
     public url: string;//declaramos la url publica a usar para todas las peticiones
     public identity: any;
     public token: any;
+    /****** */
+    public permisos: any;
+    /****** */
 
     constructor( public _http: HttpClient ){ this.url = global.url; }
 
@@ -34,6 +37,17 @@ export class EmpleadoService{
         }
         return this.identity;
     }
+    /************ */
+    getPermisosModulo(){
+        let permisos = JSON.parse(localStorage.getItem('PermisosModulo') || '{}');
+        if(permisos && permisos != null){
+            this.permisos = permisos;
+        } else{
+            this.permisos = null;
+        }
+        return this.permisos;
+    }
+    /************ */
     getToken(){//obtener la informacion del usuario identificado guardado localmente TOKEN
         let token = localStorage.getItem('token');
         if(token != "undefined"){

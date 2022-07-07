@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { OrdendecompraService } from 'src/app/services/ordendecompra.service';
 import { global } from 'src/app/services/global';
 import { EmpresaService } from 'src/app/services/empresa.service';
+import { EmpleadoService } from 'src/app/services/empleado.service';
 //NGBOOTSTRAP
 import { NgbModal, ModalDismissReasons, NgbDateStruct} from '@ng-bootstrap/ng-bootstrap';
 //pdf
@@ -17,8 +18,11 @@ import autoTable from 'jspdf-autotable';
 })
 export class OrdencompraBuscarComponent implements OnInit {
 
+  /***** */
+  public userPermisos:any
+  /***** */
   constructor( private _ordendecompraService: OrdendecompraService,private _empresaService: EmpresaService,
-               private modalService: NgbModal) { }
+               private modalService: NgbModal,public _empleadoService : EmpleadoService) { }
 
 
   public fechaActual : Date = new Date();
@@ -48,6 +52,7 @@ export class OrdencompraBuscarComponent implements OnInit {
 
   ngOnInit(): void {
     this.getAllOrdenes();
+    this.loadUser();
     //console.log(this.fechaActual.toLocaleDateString());
   }
   getAllOrdenes(){//obtener todas las ordenes de compras
@@ -114,5 +119,9 @@ export class OrdencompraBuscarComponent implements OnInit {
       return `with: ${reason}`;
     }
   }
-
+/***** */
+loadUser(){
+  this.userPermisos = this._empleadoService.getPermisosModulo();
+}
+/***** */
 }

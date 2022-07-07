@@ -60,21 +60,21 @@
             <form>
                 <div  class="container">
                   
-                  <div class="row">
+                  <div class="row" *ngFor="let permiso of  userPermisos">
                       <div class="col-6">
                           <h3>{{doc.nombreProveedor}}</h3>
                       </div>
                       
-                      <div class="col-auto">
+                      <div class="col-auto" *ngIf="permiso.pdf == 1">
                           <button type="button" class="btn btn-secondary" ><i class="bi bi-file-earmark-pdf"></i><br>PDF</button>
                       </div>
-                      <div class="col-auto">
+                      <div class="col-auto" *ngIf="permiso.editar == 1">
                           <button type="button" class="btn btn-warning" (click)="modal.dismiss('Cross click')" [routerLink]="['../ordencompra-editar',doc.idOrd]"><i class="bi bi-pencil-square"></i><br>Editar</button>
                       </div>
-                      <div class="col-auto">
+                      <div class="col-auto" *ngIf="permiso.cancelar == 1">
                           <button type="button" class="btn btn-danger"><i class="bi bi-trash3"></i><br>Cancelar</button>
                       </div>
-                      <div class="col-auto">
+                      <div class="col-auto" *ngIf="permiso.editar == 1">
                         <button type="button" class="btn btn-success" (click)="modal.dismiss('Cross click')" [routerLink]="['../../compra-modulo/compra-agregar-id',doc.idOrd]"><i class="bi bi-arrow-up-right-square"></i><br>Pasar a compra</button> 
                     </div>
                   </div>
