@@ -56,8 +56,8 @@ import { NotasPorCobrarComponent } from './components/cajas/notas-por-cobrar/not
 import { NotasACreditoComponent } from './components/cajas/notas-a-credito/notas-a-credito.component';
 import { CorteDeCajaComponent } from './components/cajas/corte-de-caja/corte-de-caja.component';
 /***guards */
-import { InicioGuard } from './guards/inicio.guard';
 import { OrdencompraGuardGuard } from './guards/ordencompra-guard.guard';
+import { ProveedorGuard } from './guards/proveedor.guard';
 
 const routes: Routes = [
   {path: '', component: GeneralComponent},
@@ -80,7 +80,7 @@ const routes: Routes = [
       {path: 'compra-ver', component: CompraVerComponent}
     ]},
 
-  {path: 'proveedor-modulo', component: ProveedorModuloComponent,
+  {path: 'proveedor-modulo', component: ProveedorModuloComponent, canActivate:[ProveedorGuard],
     children:
     [
       {path: 'agregarProveedor',component: ProveedorAgregarComponent},

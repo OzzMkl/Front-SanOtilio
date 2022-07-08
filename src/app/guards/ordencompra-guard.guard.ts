@@ -31,7 +31,7 @@ export class OrdencompraGuardGuard implements CanActivate {
         //check = true
         this.validateRol()
       }else{
-        this.check = false;
+        this._router.navigate(['/login'])
       }
       
       return this.check
@@ -44,41 +44,42 @@ export class OrdencompraGuardGuard implements CanActivate {
     //obtenemos datos del localstorage
     this.user = this._empleadoService.getIdentity()
     //ejecutamos consulta
-    await  this._empleadoService.getRolesBySubmodulo(this.idModulo).subscribe( 
+    await  this._empleadoService.getRolesBySubmodulo(this.idSubModulo).subscribe( 
         response =>{
           this.roles= response.roles
         //si el rol exoste en la lista de roles
-        if(this.roles.find((items:any)=> items.idRol === this.user['idRol']) != 'undefined'){
+        if(this.roles.find((items:any)=> items.idRol === this.user['idRol']) != undefined){
           //traemos sus  permisos
-             return this.validatePermissions();
+              
+              this._empleadoService.getPermisos(this.user['idRol'],this.idModulo,this.idSubModulo).subscribe(
+                response =>{
+                  this.userPermisos = response.permisos
+                  if(this.userPermisos.length > 0){
+                     //console.log(this.userPermisos)
+                     /****** */
+                     localStorage.removeItem('PermisosModulo');
+                     localStorage.setItem('PermisosModulo', JSON.stringify(this.userPermisos));//guardamos la identidad y convertimos el objeto javascript a un objeto json
+                     /****** */
+                     return this.check=true;
+                  }else{
+                   
+                   this.toastService.show('Acceso denegado', { classname: 'bg-danger  text-light', delay: 5000 });
+                   return false
+                  }
+                  
+                }
+              )
         }else{
           //si no lo encuentra no tiene permisos y retornamos un false
            console.log('no tiene permisos');
-           return false
+            false
         }
         }
       )
   }
   //revisamos permisos
-  private async validatePermissions(){
-   await this._empleadoService.getPermisos(this.user['idRol'],this.idModulo,this.idSubModulo).subscribe(
-     response =>{
-       this.userPermisos = response.permisos
-       if(this.userPermisos.length > 0){
-          console.log(this.userPermisos)
-          /****** */
-          localStorage.removeItem('PermisosModulo');
-          localStorage.setItem('PermisosModulo', JSON.stringify(this.userPermisos));//guardamos la identidad y convertimos el objeto javascript a un objeto json
-          /****** */
-          return this.check=true;
-       }else{
-        
-        this.toastService.show('Acceso denegado', { classname: 'bg-danger  text-light', delay: 5000 });
-        return false
-       }
-       
-     }
-   )
+  private  validatePermissions(){
+    
 
  }
 }

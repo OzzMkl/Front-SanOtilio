@@ -31,6 +31,7 @@ export class ProveedorVerComponent implements OnInit {
   public token:any;
   public prove: Proveedor;
   public provee: Proveedor;
+  public userPermisos:any
 
 
   // upst = new FormGroup({
@@ -70,7 +71,7 @@ export class ProveedorVerComponent implements OnInit {
     this.getidProv();
     this.getContacto();
     this.getNCP();
-    
+    this.loadUser();
   }
 
  
@@ -215,5 +216,8 @@ getNCP(){
   });
   }
   
+  loadUser(){
+    this.userPermisos = this._empleadoService.getPermisosModulo();
+  }
   
 }
