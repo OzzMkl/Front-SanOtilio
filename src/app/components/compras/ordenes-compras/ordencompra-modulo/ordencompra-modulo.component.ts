@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+//servicio
+import { EmpleadoService } from 'src/app/services/empleado.service';
 
 @Component({
   selector: 'app-ordencompra-modulo',
@@ -7,11 +9,14 @@ import { Component, OnInit } from '@angular/core';
 })
 export class OrdencompraModuloComponent implements OnInit {
 
-  public page_title: string;
+  public userPermisos:any;
 
-  constructor() {this.page_title='Modulo de Ordenes de compra' }
+  constructor(private _empleadoService: EmpleadoService) { }
 
   ngOnInit(): void {
+    this.loadUser()
   }
-
+  loadUser(){
+    this.userPermisos = this._empleadoService.getPermisosModulo();
+  }
 }
