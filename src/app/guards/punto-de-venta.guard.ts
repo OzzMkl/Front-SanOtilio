@@ -7,14 +7,14 @@ import { ToastService } from 'src/app/services/toast.service';
 @Injectable({
   providedIn: 'root'
 })
-export class OrdencompraGuardGuard implements CanActivate {
+export class PuntoDeVentaGuard implements CanActivate {
 
   public user:any
   public userPermisos:any
   public roles:any
   public check: boolean = false
-  idModulo=3
-  idSubModulo=6
+  idModulo=6
+  idSubModulo=17
 
   constructor(private _router: Router,
               private _empleadoService: EmpleadoService, 

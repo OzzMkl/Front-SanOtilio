@@ -54,7 +54,7 @@ export class ProveedorGuard implements CanActivate {
           return this.validatePermissions()
         }else{
           //si no lo encuentra no tiene permisos y retornamos un false
-           console.log('no tiene permisos');
+          this.toastService.show('Acceso denegado', { classname: 'bg-danger  text-light', delay: 5000 });
             false
         }
         }

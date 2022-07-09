@@ -58,6 +58,7 @@ import { CorteDeCajaComponent } from './components/cajas/corte-de-caja/corte-de-
 /***guards */
 import { OrdencompraGuardGuard } from './guards/ordencompra-guard.guard';
 import { ProveedorGuard } from './guards/proveedor.guard';
+import { PuntoDeVentaGuard } from './guards/punto-de-venta.guard';
 
 const routes: Routes = [
   {path: '', component: GeneralComponent},
@@ -89,7 +90,7 @@ const routes: Routes = [
       {path: 'proveedorEditar',component: ProveedorModificarComponent},
       {path: 'proveedorVer/:idProveedor',component: ProveedorVerComponent}
     ]},
-  {path: 'punto-de-venta',component: PuntoDeVentaComponent},
+  {path: 'punto-de-venta',component: PuntoDeVentaComponent, canActivate:[PuntoDeVentaGuard]},
   {path: 'ventas-realizadas',component: VentasRealizadasModuloComponent,
   children:
   [
