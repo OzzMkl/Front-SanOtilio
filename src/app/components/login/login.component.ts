@@ -52,7 +52,7 @@ export class LoginComponent implements OnInit {
                           localStorage.setItem('token', this.token);//guardamos el token localmente en la memoria del navegador
                           localStorage.setItem('identity', JSON.stringify(this.identity));//guardamos la identidad y convertimos el objeto javascript a un objeto json
                           //redireccionamos a pagina principal
-                          this._router.navigate(['inicio']);
+                          this._router.navigate(['']);
                     },
                     error =>{
                       this.status = 'error',
@@ -83,7 +83,7 @@ export class LoginComponent implements OnInit {
           this.identity = null;
           this.token = null;
           //redireccionamos a pagina principal
-          this._router.navigate(['inicio']);
+          this._router.navigate(['']);
       }
     });
   }

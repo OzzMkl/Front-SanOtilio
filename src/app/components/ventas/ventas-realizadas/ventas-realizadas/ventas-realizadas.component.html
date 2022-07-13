@@ -1,5 +1,5 @@
 <div class="container">
-    <h3 class="text-center">Buscar ventas realizadas</h3>
+    <h3 class="text-center">Buscar ventas sin cobrar</h3>
 </div>
 <div class="container-fluid">
     <div class="input-group mb-2">
@@ -71,10 +71,10 @@
                     <label class="form-label">Status</label>
                     <input type="text" class="form-control" value="{{v.nombreStatus}}" readonly>
                 </div>
-                <div class="col" >
+                <div class="col"  *ngFor="let permiso of userPermisos">
                     <!-- <button type="button" class="btn btn-secondary me-md-2" style="box-sizing: border-box;" ><i class="bi bi-receipt-cutoff"></i><br>TICKET</button> -->
-                    <button type="button" class="btn btn-warning me-md-2" ngbTooltip="EDITAR"><i class="bi bi-pencil-square" ></i><br></button>
-                    <button type="button" class="btn btn-danger me-md-2" ngbTooltip="CANCELAR"><i class="bi bi-pencil-square" ></i><br></button>
+                    <button *ngIf="permiso.editar == 1" type="button" class="btn btn-warning me-md-2" ngbTooltip="EDITAR"><i class="bi bi-pencil-square" ></i><br></button>
+                    <button *ngIf="permiso.cancelar == 1" type="button" class="btn btn-danger me-md-2" ngbTooltip="CANCELAR"><i class="bi bi-trash3" ></i><br></button>
                 </div>
             </div>
             <div class="row">

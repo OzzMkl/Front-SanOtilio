@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 //servicio
 import { ClientesService } from 'src/app/services/clientes.service';
 import { ToastService } from 'src/app/services/toast.service';
@@ -44,6 +45,7 @@ export class PuntoDeVentaComponent implements OnInit {
   public productosdCotiza:any;
   public empresa:any;//getDetallesEmpresa
   public productoEG:any;
+  public userPermisos:any//loaduser
   /**PAGINATOR */
   public totalPages: any;
   public page: any;
@@ -87,7 +89,8 @@ export class PuntoDeVentaComponent implements OnInit {
     private _productoService:ProductoService,
     private _ventasService: VentasService,
     private _empleadoService : EmpleadoService,
-    private _empresaService: EmpresaService) {
+    private _empresaService: EmpresaService,
+    private _router:Router) {
     //declaramos modelos
     this.ventag = new Ventag(0,0,2,'',1,null,0,0,0,0,'','',0);
     this.modeloCliente = new Cliente (0,'','','','','',0,1,0);
@@ -308,6 +311,12 @@ export class PuntoDeVentaComponent implements OnInit {
   //traemos la informacion del usuario logeado
   loadUser(){
     this.identity = this._empleadoService.getIdentity();
+    this.userPermisos = this._empleadoService.getPermisosModulo()
+    if(this.userPermisos['agregar'] != 1){
+      this._router.navigate(['./ventas-modulo/ventas-realizadas-buscar'])
+      
+      this.toastService.show('Acceso denegado', { classname: 'bg-danger  text-light', delay: 5000 });
+    }
   }
   //evitamod que den enter en el textarea de observaciones
   omitirEnter(event:any){
