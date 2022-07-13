@@ -12,7 +12,7 @@ import { NgxPaginationModule } from 'ngx-pagination';
 })
 export class ProveedorDeshabilitadosComponent implements OnInit {
 
-  public page_title: string;//declaramos titulo de la pagina
+  
   public url:string; //declaramos la url global para las peticiones al backend
   //public proveedores: Array<Proveedor>;//creamos un array de tipo objeto de proveedores
   public proveedores: any;
@@ -26,7 +26,7 @@ export class ProveedorDeshabilitadosComponent implements OnInit {
   constructor(
     private _proveedorService: ProveedorService//se declara el servicio
   ) { 
-    this.page_title = 'Proveedores deshabilitados';//asignamos el contenido al titulo
+    
     this.url = global.url;//se asigna la url del servicio global
     this.proveedores = [];//se crea el array
   }

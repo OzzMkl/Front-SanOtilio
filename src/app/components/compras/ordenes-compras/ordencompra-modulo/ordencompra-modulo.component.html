@@ -1,13 +1,13 @@
 <div class="container">
     <br>
     <div class="row align-items-center">
-        <div class="col-7">
-            <h1>Modulo de Ordenes de compra</h1>
+        <div class="col-9">
+            <h2>Modulo de Ordenes de compra</h2>
         </div>
-        <div class="col-4">
-            <button type="button" value="Agregar" class="btn btn-success me-md-2" [routerLink]="['ordencompra-agregar']" style="box-sizing: border-box;"><i class="bi bi-plus-circle"></i><br>Agregar</button>
-            <button type="button" value="Buscar" class="btn btn-primary me-md-2" [routerLink]="['ordencompra-buscar']" style="box-sizing: border-box;"><i class="bi bi-search"></i><br>Buscar</button>
-            <button type="button" value="Deshabilitados" class="btn btn-danger me-md-2" style="box-sizing: border-box;"><i class="bi bi-search"></i><br>Deshabilitados</button>
+        <div class="col-auto" *ngFor="let permiso of userPermisos">
+            <button *ngIf="permiso.agregar == 1" type="button" value="Agregar" class="btn btn-success me-md-2" [routerLink]="['ordencompra-agregar']" style="box-sizing: border-box;" ngbTooltip="AGREGAR"><i class="bi bi-plus-circle"></i><br></button>
+            <button *ngIf="permiso.ver == 1" type="button" value="Buscar" class="btn btn-primary me-md-2" [routerLink]="['ordencompra-buscar']" style="box-sizing: border-box;" ngbTooltip="BUSCAR"><i class="bi bi-search"></i><br></button>
+            <button *ngIf="permiso.ver == 1" type="button" value="Deshabilitados" class="btn btn-danger me-md-2" style="box-sizing: border-box;" ngbTooltip="BUSCAR CANCELADOS"><i class="bi bi-search" ></i><br></button>
         </div>
     </div>
 </div>

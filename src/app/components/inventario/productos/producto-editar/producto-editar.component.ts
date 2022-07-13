@@ -25,10 +25,6 @@ import { AlmacenService } from 'src/app/services/almacen.service';
 })
 export class ProductoEditarComponent implements OnInit {
 
-  //encabezados
-  public page_title: string;
-  public page_clasificacion: string;
-  public page_precios: string;
   public producto: Array<any>;
   public ptt:Array<Producto>;
   public productos: any;
@@ -56,9 +52,6 @@ export class ProductoEditarComponent implements OnInit {
     private _route: ActivatedRoute,
     public toastService: ToastService
   ){
-    this.page_title = 'Detalles del producto' ;
-    this.page_clasificacion = 'Clasificación';
-    this.page_precios = 'Precios';
     this.producto = [];
     this.ptt = [];
     

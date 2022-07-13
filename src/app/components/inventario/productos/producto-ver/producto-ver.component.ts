@@ -14,10 +14,6 @@ import { global } from 'src/app/services/global';
 })
 export class ProductoVerComponent implements OnInit {
 
-  //encabezados
-  public page_title: string;
-  public page_clasificacion: string;
-  public page_precios: string;
 
   public producto: Array<any>;
 
@@ -37,9 +33,6 @@ export class ProductoVerComponent implements OnInit {
     private _route: ActivatedRoute,
     public toastService: ToastService
     ){
-    this.page_title = 'Detalles del producto' ;
-    this.page_clasificacion = 'Clasificación';
-    this.page_precios = 'Precios';
     this.producto = [];
     this.closeModal='';
     this.url = global.url;

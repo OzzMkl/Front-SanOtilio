@@ -1,5 +1,5 @@
 <div class="container">
-    <h4 class="text-center">Buscar cotizaciones</h4>
+    <h3 class="text-center">Buscar cotizaciones</h3>
 </div>
 <div class="container-fluid">
     <div class="input-group mb-2">
@@ -51,7 +51,7 @@
 <ng-template #mDetallesCotiza let-modal>
     <div *ngFor="let dc of detallesCotiza">
         <div class="modal-header">
-            <h5 class="modal-title" id="modal-basic-title">Detalles cotizacion #{{dc.idCotiza}}</h5>
+            <h4 class="modal-title" id="modal-basic-title">Detalles cotizacion #{{dc.idCotiza}}</h4>
             <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
         </div>
         <div class="modal-body">
@@ -65,8 +65,8 @@
                     <input class="form-control" type="text" value="{{dc.created_at | date}}" readonly>
                 </div>
                 <div class="col" >
-                    <button type="button" class="btn btn-secondary me-md-2" style="box-sizing: border-box;" (click)="generaPDF()"><i class="bi bi-file-earmark-pdf"></i><br>PDF</button>
-                    <button type="button" class="btn btn-warning me-md-2" [routerLink]="['../cotizacion-editar',dc.idCotiza]" (click)="modal.dismiss('Cross click')"><i class="bi bi-pencil-square" ></i><br>EDITAR</button>
+                    <button type="button" class="btn btn-secondary me-md-2" style="box-sizing: border-box;" (click)="generaPDF()"><i class="bi bi-file-earmark-pdf" ngbTooltip="PDF"></i><br></button>
+                    <button type="button" class="btn btn-warning me-md-2" [routerLink]="['../cotizacion-editar',dc.idCotiza]" (click)="modal.dismiss('Cross click')" ngbTooltip="EDITAR"><i class="bi bi-pencil-square" ></i><br></button>
                 </div>
             </div>
             <hr>

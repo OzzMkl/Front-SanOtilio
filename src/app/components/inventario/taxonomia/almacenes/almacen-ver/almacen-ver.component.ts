@@ -13,7 +13,7 @@ import { global } from 'src/app/services/global';
 })
 export class AlmacenVerComponent implements OnInit {
 
-  public page_title: string;
+
   public url:string;
   public almacenes: any;
   public totalPages: any;
@@ -30,7 +30,7 @@ export class AlmacenVerComponent implements OnInit {
     private _router: Router
 
   ) {
-      this.page_title = 'Almacen'
+      
       this.url = global.url;
       this.almacenes = [];
    }

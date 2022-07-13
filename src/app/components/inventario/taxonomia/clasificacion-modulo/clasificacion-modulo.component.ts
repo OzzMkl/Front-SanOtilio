@@ -7,10 +7,10 @@ import { DepartamentoVerComponent } from '../clasificaciones/departamentos/depar
   styleUrls: ['./clasificacion-modulo.component.css']
 })
 export class ClasificacionModuloComponent implements OnInit {
-  public page_title: string;
+  
 
   constructor() {
-    this.page_title = 'Modulo de Clasificaciones';
+    
 
    }
 

@@ -2,12 +2,12 @@
     <div class="card" style="border-color: black;">
         <div class="card-header" style="background-color: rgb(143 177 227);">
             <div class="justify-content-around">
-                <h1>Producto: {{pd.claveEx}}</h1>
+                <h3>Producto: {{pd.claveEx}}</h3>
             </div> 
         </div> 
         <div class="card-body">
             <form class="form-group" #FormProductoModificado="ngForm" (ngSubmit)="onSubmit(FormProductoModificado)">
-                <h2 class="text-center">Datos principales</h2>
+                <h4 class="text-center">Datos principales</h4>
             <div class="row g-4">
                 
                 
@@ -48,7 +48,7 @@
                 </div>
             </div>
             <hr>
-            <h2 class="text-center">Clasificación</h2>
+            <h4 class="text-center">Clasificación</h4>
             <div class="row g-4">
                 <div class="col-4">
                     <label for="departamento">Departamento</label>
@@ -123,7 +123,7 @@
                 </div>
             </div>
             <hr>
-            <h2 class="text-center">Precios</h2>
+            <h4 class="text-center">Precios</h4>
             <div class="row g-4">
                 <div class="col-4">
                     <label for="stockmin">Stock Min</label>
@@ -161,7 +161,7 @@
                 </div>
                 <hr>
                 <div class="text-center">
-                    <label for="clavesat">Codigo de barras</label>
+                    <h4 >Codigo de barras</h4>
                     <ngx-barcode    [bc-value]="value" [bc-display-value]="true" ></ngx-barcode>
                 </div>
             </div>

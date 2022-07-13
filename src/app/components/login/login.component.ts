@@ -11,7 +11,7 @@ import { Router, ActivatedRoute, Params } from '@angular/router';
 })
 export class LoginComponent implements OnInit {
 
-  public page_title: string;
+  
   public empleado: Empleado;
   public status: any;
   public token: any;
@@ -22,7 +22,7 @@ export class LoginComponent implements OnInit {
     private _router: Router,
     private _route: ActivatedRoute
   ) { 
-    this.page_title = 'Identificate';
+    
     this.empleado = new Empleado(1,'','','ROLE_USER','','','','','','','','','','',1,1,1,1,'','',1,1);
     this.status ="";
   }

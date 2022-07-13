@@ -30,6 +30,7 @@ export class OrdencompraGuardGuard implements CanActivate {
       if(token != null ){
         //check = true
         this.validateRol()
+        
       }else{
         this._router.navigate(['/login'])
       }

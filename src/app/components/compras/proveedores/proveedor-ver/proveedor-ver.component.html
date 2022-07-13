@@ -6,7 +6,7 @@
             <div class="card-header" style="background-color: rgb(143 177 227);">
                 <div class="row justify-content-around">
                     <div class="col-md-12">
-                        <h2>Proveedor #{{p.idProveedor}}: {{ p.nombre}}</h2>
+                        <h3>Proveedor #{{p.idProveedor}}: {{ p.nombre}}</h3>
                     </div>
                 </div>
                 <div class="row justify-content-end" *ngFor="let permiso of userPermisos">
@@ -37,7 +37,7 @@
             </div>
         
             <div class="card-body">
-                <h2 class="card-subtitle mb-2">Datos del Proveedor</h2>
+                <h4 class="card-subtitle mb-2">Datos del Proveedor</h4>
                 <form>
                     <label>Dirección</label>                    
                     <input class="form-control" type="text" value="CALLE {{p.calle}} N°{{p.numero}}, COLONIA {{p.colonia}} {{p.cpostal}} {{p.ciudad}}, {{p.estado}}. {{p.pais}}" aria-label="readonly input example" readonly>
@@ -59,7 +59,7 @@
                     <br>
                 </form>
                 <hr>
-                <h2 class="card-subtitle mb-2">Contacto principal</h2>
+                <h4 class="card-subtitle mb-2">Contacto principal</h4>
                     <div class="row justify-content-end">
                         <div class="col-auto">
                             <button type="button" value="verC" class="btn btn-warning" (click)="triggerModal (modalData)" >Ver mas</button>
@@ -87,7 +87,7 @@
                     <br>
                 </form>
                 <hr>
-                <h2 class="card-subtitle mb-2">Números de cuenta principal</h2>
+                <h4 class="card-subtitle mb-2">Números de cuenta principal</h4>
                 <div class="row justify-content-end">
                     <div class="col-auto">
                         <button type="button" value="verNCP" class="btn btn-warning" (click)="triggerModal (modalData2)" >Ver mas</button>

@@ -91,12 +91,12 @@ const routes: Routes = [
       {path: 'proveedorVer/:idProveedor',component: ProveedorVerComponent}
     ]},
   {path: 'punto-de-venta',component: PuntoDeVentaComponent, canActivate:[PuntoDeVentaGuard]},
-  {path: 'ventas-realizadas',component: VentasRealizadasModuloComponent,
+  {path: 'ventas-realizadas',component: VentasRealizadasModuloComponent,canActivate:[PuntoDeVentaGuard],
   children:
   [
     {path:'ventas-realizadas-buscar',component: VentasRealizadasComponent}
   ]},
-  {path: 'cotizacion-modulo', component: CotizacionModuloComponent,
+  {path: 'cotizacion-modulo', component: CotizacionModuloComponent,canActivate:[PuntoDeVentaGuard],
   children:
   [
     {path: 'cotizacion-buscar', component: CotizacionBuscarComponent},

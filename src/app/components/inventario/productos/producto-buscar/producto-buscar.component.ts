@@ -11,7 +11,7 @@ import { Router } from '@angular/router';
 })
 export class ProductoBuscarComponent implements OnInit {
 
-  public page_title: string;
+  
   public url:string;
   public productos: any;
   /**PAGINATOR */
@@ -30,7 +30,7 @@ export class ProductoBuscarComponent implements OnInit {
     private _productoService: ProductoService,
     private _router: Router
   ) {
-    this.page_title = 'Buscar Productos';
+    
     this.url = global.url;
     this.productos = [];
     this.datox='';

@@ -12,7 +12,7 @@ import { Router, ActivatedRoute, Params} from '@angular/router';
   providers: [ProveedorService]
 })
 export class ProveedorBuscarComponent implements OnInit {
-  public page_title: string;
+  
   public url:string;
   //public proveedores: Array<Proveedor>;
   public proveedores: any;
@@ -29,7 +29,7 @@ export class ProveedorBuscarComponent implements OnInit {
     private _route: ActivatedRoute,
     private _router: Router
    ) { 
-      this.page_title = 'Buscar Proveedores';
+      
       this.url = global.url;
       this.proveedores = [];
       this.datox ='';
