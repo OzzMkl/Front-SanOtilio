@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { EmpleadoService } from 'src/app/services/empleado.service';
 
 @Component({
   selector: 'app-cotizacion-modulo',
@@ -7,9 +8,16 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CotizacionModuloComponent implements OnInit {
 
-  constructor() { }
+  public userPermisos:any
+
+  constructor(private _empleadoService:EmpleadoService) { }
 
   ngOnInit(): void {
+    this.loadUser()
+  }
+  
+  loadUser(){
+    this.userPermisos = this._empleadoService.getPermisosModulo()
   }
 
 }

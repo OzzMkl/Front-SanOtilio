@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 //Servicios
 import { VentasService } from 'src/app/services/ventas.service';
 import { EmpresaService } from 'src/app/services/empresa.service';
+import { EmpleadoService } from 'src/app/services/empleado.service';
 //NGBOOTSTRAP-modal
 import { NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
 //pdf
@@ -22,6 +23,7 @@ export class CotizacionBuscarComponent implements OnInit {
   public detallesCotiza:any;//getDetallesCotiza
   public productosdCotiza:any;//getDetallesCotiza
   public empresa:any;//getDetallesEmpresa
+  public userPermisos:any//loadUser
   //paginador
   public totalPages:any;
   public page:any;
@@ -37,11 +39,16 @@ export class CotizacionBuscarComponent implements OnInit {
   public isLoading: boolean = false;
   
   constructor( private _ventasService: VentasService,private modalService: NgbModal,
-    private _empresaService: EmpresaService) { }
+    private _empresaService: EmpresaService, private _empleadoService: EmpleadoService) { }
 
   ngOnInit(): void {
     this.getCotizaciones();
     this.getDatosEmpresa();
+    this.loadUser()
+  }
+
+  loadUser(){
+    this.userPermisos = this._empleadoService.getPermisosModulo()
   }
   //obtenemos array con todas las cotizaciones
   getCotizaciones(){

@@ -311,8 +311,8 @@ export class PuntoDeVentaComponent implements OnInit {
   //traemos la informacion del usuario logeado
   loadUser(){
     this.identity = this._empleadoService.getIdentity();
-    this.userPermisos = this._empleadoService.getPermisosModulo()
-    if(this.userPermisos['agregar'] != 1){
+     this.userPermisos = this._empleadoService.getPermisosModulo()
+    if(this.userPermisos[0]['agregar'] != 1){
       this._router.navigate(['./ventas-modulo/ventas-realizadas-buscar'])
       
       this.toastService.show('Acceso denegado', { classname: 'bg-danger  text-light', delay: 5000 });

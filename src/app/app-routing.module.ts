@@ -60,6 +60,7 @@ import { OrdencompraGuardGuard } from './guards/ordencompra-guard.guard';
 import { ProveedorGuard } from './guards/proveedor.guard';
 import { PuntoDeVentaGuard } from './guards/punto-de-venta.guard';
 import { CheckTokenGuard } from './guards/check-token.guard';
+import { CotizacionGuard } from './guards/cotizacion.guard';
 
 const routes: Routes = [
   {path: '', component: GeneralComponent, canActivate:[CheckTokenGuard]},
@@ -92,12 +93,12 @@ const routes: Routes = [
       {path: 'proveedorVer/:idProveedor',component: ProveedorVerComponent}
     ]},
   {path: 'punto-de-venta',component: PuntoDeVentaComponent,canActivate:[PuntoDeVentaGuard]},
-  {path: 'ventas-modulo',component: VentasRealizadasModuloComponent,
+  {path: 'ventas-modulo',component: VentasRealizadasModuloComponent,canActivate:[PuntoDeVentaGuard],
   children:
   [
     {path:'ventas-realizadas-buscar',component: VentasRealizadasComponent}
   ]},
-  {path: 'cotizacion-modulo', component: CotizacionModuloComponent,
+  {path: 'cotizacion-modulo', component: CotizacionModuloComponent, canActivate:[CotizacionGuard],
   children:
   [
     {path: 'cotizacion-buscar', component: CotizacionBuscarComponent},
