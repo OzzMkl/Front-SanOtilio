@@ -4,7 +4,6 @@ import { RouterModule, Routes } from '@angular/router';
 //IMPORTAR COMPONENTES
 import { GeneralComponent } from './components/general/general.component';
 import { LoginComponent } from './components/login/login.component';
-import { HomeComponent } from './components/home/home.component';
 import { ErrorComponent } from './components/error/error.component';
 import { EmpleadoEditarComponent } from './components/empleado-editar/empleado-editar.component';
 
@@ -49,7 +48,7 @@ import { ClienteBuscarComponent } from './components/ventas/clientes/cliente-bus
 import { ClienteAgregarComponent } from './components/ventas/clientes/cliente-agregar/cliente-agregar.component';
 import { ClienteEditarComponent } from './components/ventas/clientes/cliente-editar/cliente-editar.component';
 
-import { EntregasComponent } from './components/ventas/entregas/entregas.component';
+
 
 import { CajaModuloComponent } from './components/cajas/caja-modulo/caja-modulo.component';
 import { NotasPorCobrarComponent } from './components/cajas/notas-por-cobrar/notas-por-cobrar.component';
@@ -65,7 +64,6 @@ import { ClienteGuard } from './guards/cliente.guard';
 
 const routes: Routes = [
   {path: '', component: GeneralComponent, canActivate:[CheckTokenGuard]},
-  //{path: 'inicio', component: HomeComponent}, //canActivate:[InicioGuard]},
   {path: 'login', component: LoginComponent},
   {path: 'logout/:sure', component: LoginComponent},
   {path: 'ajustes',component: EmpleadoEditarComponent, canActivate:[CheckTokenGuard]},
@@ -112,7 +110,7 @@ const routes: Routes = [
       {path: 'cliente-agregar',component:ClienteAgregarComponent},
       {path: 'cliente-editar/:idCliente',component: ClienteEditarComponent}
     ]},
-  {path:'entregas',component: EntregasComponent},
+  //{path:'entregas',component: EntregasComponent},
   {path:'caja-modulo', component: CajaModuloComponent,
       children:
       [

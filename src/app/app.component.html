@@ -38,9 +38,18 @@
             <li><a class="dropdown-item" [routerLink]="['./punto-de-venta']">PUNTO DE VENTA</a></li>
             <li><a class="dropdown-item" [routerLink]="['./cotizacion-modulo/cotizacion-buscar']">COTIZACIONES</a></li>
             <li><a class="dropdown-item" [routerLink]="['./cliente-modulo/cliente-buscar']">CLIENTES</a></li>
-            <li><a class="dropdown-item" [routerLink]="['./entregas']">ENTREGAS</a></li>
             <li><hr class="dropdown-divider"></li>
             <li><a class="dropdown-item" href="#">REPORTES</a></li>
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">ENTREGAS</a>
+          <ul class=" dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" [routerLink]="['./entregas']">ENTREGA DE MATERIAL</a></li>
+            <li><a class="dropdown-item" >OPERADORES Y AUXILIARES</a></li>
+            <li><a class="dropdown-item" >UNIDADES</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" >REPORTES</a></li>
           </ul>
         </li>
         <li class="nav-item dropdown">
