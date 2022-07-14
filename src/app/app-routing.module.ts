@@ -61,6 +61,7 @@ import { ProveedorGuard } from './guards/proveedor.guard';
 import { PuntoDeVentaGuard } from './guards/punto-de-venta.guard';
 import { CheckTokenGuard } from './guards/check-token.guard';
 import { CotizacionGuard } from './guards/cotizacion.guard';
+import { ClienteGuard } from './guards/cliente.guard';
 
 const routes: Routes = [
   {path: '', component: GeneralComponent, canActivate:[CheckTokenGuard]},
@@ -104,7 +105,7 @@ const routes: Routes = [
     {path: 'cotizacion-buscar', component: CotizacionBuscarComponent},
     {path: 'cotizacion-editar/:idCotiza', component: CotizacionEditarComponent}
   ]},
-  {path: 'cliente-modulo',component: ClienteModuloComponent,
+  {path: 'cliente-modulo',component: ClienteModuloComponent,canActivate:[ClienteGuard],
       children:
     [
       {path: 'cliente-buscar',component: ClienteBuscarComponent},
