@@ -76,6 +76,9 @@ import { NotasPorCobrarComponent } from './components/cajas/notas-por-cobrar/not
 import { NotasACreditoComponent } from './components/cajas/notas-a-credito/notas-a-credito.component';
 import { CorteDeCajaComponent } from './components/cajas/corte-de-caja/corte-de-caja.component';
 import { EmpleadoService } from './services/empleado.service';
+import { EntregasModuloComponent } from './components/entregas/entregas-modulo/entregas-modulo.component';
+import { EntregasAgregarComponent } from './components/entregas/entregas-agregar/entregas-agregar.component';
+import { EntregasPendientesComponent } from './components/entregas/entregas-pendientes/entregas-pendientes.component';
 
 
 @NgModule({
@@ -139,7 +142,10 @@ import { EmpleadoService } from './services/empleado.service';
     CajaModuloComponent,
     NotasPorCobrarComponent,
     NotasACreditoComponent,
-    CorteDeCajaComponent
+    CorteDeCajaComponent,
+    EntregasModuloComponent,
+    EntregasAgregarComponent,
+    EntregasPendientesComponent
   ],
   imports: [
     BrowserModule,

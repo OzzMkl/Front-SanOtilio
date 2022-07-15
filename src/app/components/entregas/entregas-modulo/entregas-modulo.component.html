@@ -1,0 +1,18 @@
+
+<div class="container">
+    <br>
+    <div class="row justify-content-between">
+        <div class="col-9">
+            <h2>Modulo de entregas</h2>
+        </div>
+        <div class="col-auto">
+            
+            <button  type="button" value="Agregar" class="btn btn-success me-md-2" [routerLink]="['entregas-agregar']" style="box-sizing: border-box;" ngbTooltip="GENERAR ENTREGA"><i class="bi bi-plus-circle"></i><br> </button>
+            
+            <button  type="button" value="Buscar" class="btn btn-primary" [routerLink]="['entregas-pendientes']"  style="box-sizing: border-box;" ngbTooltip="BUSCAR PEDIDOS PENDIENTES POR ENVIAR"><i class="bi bi-search"></i><br></button>
+        </div>
+    </div>
+</div>
+<hr>
+<br>
+<router-outlet></router-outlet>

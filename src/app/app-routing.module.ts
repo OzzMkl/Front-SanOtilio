@@ -48,7 +48,9 @@ import { ClienteBuscarComponent } from './components/ventas/clientes/cliente-bus
 import { ClienteAgregarComponent } from './components/ventas/clientes/cliente-agregar/cliente-agregar.component';
 import { ClienteEditarComponent } from './components/ventas/clientes/cliente-editar/cliente-editar.component';
 
-
+import { EntregasModuloComponent } from './components/entregas/entregas-modulo/entregas-modulo.component';
+import { EntregasAgregarComponent } from './components/entregas/entregas-agregar/entregas-agregar.component';
+import { EntregasPendientesComponent } from './components/entregas/entregas-pendientes/entregas-pendientes.component';
 
 import { CajaModuloComponent } from './components/cajas/caja-modulo/caja-modulo.component';
 import { NotasPorCobrarComponent } from './components/cajas/notas-por-cobrar/notas-por-cobrar.component';
@@ -61,6 +63,7 @@ import { PuntoDeVentaGuard } from './guards/punto-de-venta.guard';
 import { CheckTokenGuard } from './guards/check-token.guard';
 import { CotizacionGuard } from './guards/cotizacion.guard';
 import { ClienteGuard } from './guards/cliente.guard';
+
 
 const routes: Routes = [
   {path: '', component: GeneralComponent, canActivate:[CheckTokenGuard]},
@@ -110,7 +113,11 @@ const routes: Routes = [
       {path: 'cliente-agregar',component:ClienteAgregarComponent},
       {path: 'cliente-editar/:idCliente',component: ClienteEditarComponent}
     ]},
-  //{path:'entregas',component: EntregasComponent},
+  {path:'entregas-modulo',component: EntregasModuloComponent,
+      children:[
+        {path:'entregas-agregar',component: EntregasAgregarComponent},
+        {path:'entregas-pendientes',component: EntregasPendientesComponent}
+      ]},
   {path:'caja-modulo', component: CajaModuloComponent,
       children:
       [
