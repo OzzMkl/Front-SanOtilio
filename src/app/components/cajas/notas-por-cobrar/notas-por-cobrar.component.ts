@@ -1,13 +1,20 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 //Servicios
 import { VentasService } from 'src/app/services/ventas.service';
 import { EmpresaService } from 'src/app/services/empresa.service';
 import { MonedaLiteralService } from 'src/app/services/moneda-literal.service';
+import { CajasService } from 'src/app/services/cajas.service';
+import { ToastService } from 'src/app/services/toast.service';
+import { EmpleadoService } from 'src/app/services/empleado.service';
 //NGBOOTSTRAP-modal
 import { NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
 //pdf
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
+//modelos
+import { Caja } from 'src/app/models/caja';
+
 
 @Component({
   selector: 'app-notas-por-cobrar',
@@ -17,12 +24,15 @@ import autoTable from 'jspdf-autotable';
 export class NotasPorCobrarComponent implements OnInit {
 
   //variables servicios
-  public ventas:any;
-  public detallesVenta:any;
-  public productosDVenta:any;
+  public vCaja:any;
+  public ventas:any;//getVentas
+  public detallesVenta:any;//getDetallesventas
+  public productosDVenta:any;//getDetallesventas
   public empresa:any;//getDetallesEmpresa
+  public empleado:any//loaduser
    //spinner de carga
    public isLoading:boolean = false;
+   public sesionCaja:boolean = false;
    //paginator
    public totalPages:any;
    public page:any;
@@ -37,14 +47,59 @@ export class NotasPorCobrarComponent implements OnInit {
    buscaNombreEmpleado='';
    //cerrar modal
    closeResult = '';
- 
+   //modelos
+  public caja: Caja = new Caja (null,null,0,'',0);
 
   constructor(private _ventasService: VentasService, private modalService: NgbModal, private _empresaService: EmpresaService,
-              private _monedaLiteral: MonedaLiteralService) { }
+              private _monedaLiteral: MonedaLiteralService, private _cajaService: CajasService, private _router: Router,
+              public toastService: ToastService, private _empleadoService: EmpleadoService) {}
 
   ngOnInit(): void {
+    this.loadUser();
+    this.verificaCaja();
     this.getVentas();
     this.getDatosEmpresa();
+  }
+  /***Revisamos si el usuario tiene abierto una sesion en caja*/
+  verificaCaja(){
+    //console.log(this.empleado)
+    this._cajaService.verificarCaja(this.empleado['sub']).subscribe(
+      response =>{
+        this.vCaja = response.caja;
+        if(this.vCaja['horaF'] != null){
+          this.toastService.show('Caja no iniciada', { classname: 'bg-danger  text-light', delay: 5000 });
+          
+        } else{
+          this.sesionCaja = true;
+        }
+        //console.log(this.caja)
+      }, error =>{
+        console.log(error)
+      }
+    )
+  }
+  loadUser(){
+    this.empleado = this._empleadoService.getIdentity();
+    //console.log(this.empleado)
+  }
+  iniciarCaja(FormCaja:any){
+    const fecha = new Date();
+    this.caja.idEmpleado = this.empleado['sub'];
+    this.caja.horaI = fecha.getFullYear() + '-' + ( fecha.getMonth() + 1 ) + '-' + fecha.getDate()+' '+fecha.getHours() + ':' + fecha.getMinutes() + ':' + fecha.getSeconds();
+    //console.log(this.caja)
+    this._cajaService.aperturaCaja(this.caja).subscribe(
+      response =>{
+        if(response.status == 'success'){
+          //console.log(response)
+          this.ngOnInit();
+        } else{
+          console.log('algo salio mal')
+        }
+      }, error =>{
+        console.error(error)
+      }
+    )
+    
   }
   getVentas(){
     this.isLoading = true;
@@ -161,6 +216,13 @@ export class NotasPorCobrarComponent implements OnInit {
   // Metodos del  modal
   open(content:any) {//abrir modal
     this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title', size: 'xl'}).result.then((result) => {
+      this.closeResult = `Closed with: ${result}`;
+    }, (reason) => {
+      this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+    });
+  }
+  openModalCobro(content:any){
+    this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title', size: 'lg', backdropClass: ''}).result.then((result) => {
       this.closeResult = `Closed with: ${result}`;
     }, (reason) => {
       this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;

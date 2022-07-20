@@ -394,6 +394,7 @@ export class PuntoDeVentaComponent implements OnInit {
             response => {
             this.detallesCotiza = response.Cotizacion;
             this.productosdCotiza = response.productos_cotiza;
+            //console.log(this.productosdCotiza)
             this.creaPDFcotizacion();
           },error =>{
             console.log(error)
@@ -439,7 +440,7 @@ export class PuntoDeVentaComponent implements OnInit {
     doc.setLineWidth(2.5).line(10,75,200,75);//colocacion de linea
     //recorremos los productos
     this.productosdCotiza.forEach((element:any) =>{
-      var temp = [element.claveEx,element.descripcion,element.nombreMedida,element.precio,element.cantidad,element.descuento,element.total];
+      var temp = [element.claveEx,element.descripcion,element.nombreMedida,element.precio,element.cantidad,element.descuento,element.subtotal];
       rows.push(temp);
     });
     //generamos la tabla
