@@ -1,4 +1,4 @@
-export class Caja{//Modelo de las medidas aqui asignamos todas las variables de acuerdo a la tabla que se tiene en la base de datos
+export class Caja{//Modelo de la tabla cajas
     constructor(
         public horaI: any,
         public horaF: any,

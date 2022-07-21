@@ -20,4 +20,9 @@ export class CajasService {
     let params = 'json='+json;
     return this._http.post(this.url+'cajas/aperturaCaja',params,{headers:this.headers});
   }
+  cobroVenta(venta:any):Observable<any>{
+    let json = JSON.stringify(venta);
+    let params = 'json='+json;
+    return this._http.post(this.url+'cajas/cobroVenta',params,{headers:this.headers});
+  }
 }

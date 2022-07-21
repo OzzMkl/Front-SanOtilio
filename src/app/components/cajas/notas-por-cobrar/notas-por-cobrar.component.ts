@@ -14,6 +14,7 @@ import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 //modelos
 import { Caja } from 'src/app/models/caja';
+import { Caja_movimientos } from 'src/app/models/caja_movimientos';
 
 
 @Component({
@@ -49,6 +50,7 @@ export class NotasPorCobrarComponent implements OnInit {
    closeResult = '';
    //modelos
   public caja: Caja = new Caja (null,null,0,'',0);
+  public caja_movimiento: Caja_movimientos = new Caja_movimientos(0,null,0,0,0,0,null,'');
 
   constructor(private _ventasService: VentasService, private modalService: NgbModal, private _empresaService: EmpresaService,
               private _monedaLiteral: MonedaLiteralService, private _cajaService: CajasService, private _router: Router,
@@ -78,11 +80,14 @@ export class NotasPorCobrarComponent implements OnInit {
       }
     )
   }
+  //cargamos inforamcion del usuario guardada en el localstorage
   loadUser(){
     this.empleado = this._empleadoService.getIdentity();
     //console.log(this.empleado)
   }
+  //Formulario para hacer apertura de caja
   iniciarCaja(FormCaja:any){
+    
     const fecha = new Date();
     this.caja.idEmpleado = this.empleado['sub'];
     this.caja.horaI = fecha.getFullYear() + '-' + ( fecha.getMonth() + 1 ) + '-' + fecha.getDate()+' '+fecha.getHours() + ':' + fecha.getMinutes() + ':' + fecha.getSeconds();
@@ -100,6 +105,9 @@ export class NotasPorCobrarComponent implements OnInit {
       }
     )
     
+  }
+  cobroVenta(){
+
   }
   getVentas(){
     this.isLoading = true;

@@ -153,15 +153,37 @@
 </ng-template>
 <!-- Modal de cobro -->
 <ng-template #cobrarVenta let-modal>
-    <div class="modal-header">
-        <h5 class="modal-title" id="modal-basic-title">Cobrar venta #</h5>
-        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
-    </div>
-    <div class="modal-body">
-        <form>
-            <div class="col-2"></div>
-            <label class="form-label">EFECTIVO</label>
-            <input class="from-control" type="text">
-        </form>
+    <div *ngFor="let v of detallesVenta">
+        <div class="modal-header">
+            <h5 class="modal-title" id="modal-basic-title">Cobrar venta #{{v.idVenta}}</h5>
+            <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+        </div>
+        <div class="modal-body">
+            <form>
+                <div class="row">
+                    <label class="form-label">Tipo de pago</label>
+                    <div class="input-group mb-2">
+                        <div class="col-3">
+                            <select class="form-select">
+                                <option value="">EFECTIVO</option>
+                                <option value="">TRANSFERENCIA</option>
+                            </select>
+                        </div>
+                        <div class="col-3">
+                            <input class="form-control" type="text">
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <label class="form-labek"></label>
+                        <input class="form-control" type="text">
+                    </div>
+                </div>
+                <div class="row justify-content-end">
+                    <div class="col-auto">
+                        <button class="btn btn-success" type="submit">COBRAR</button>
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
 </ng-template>
