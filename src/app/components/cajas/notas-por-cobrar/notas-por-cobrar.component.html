@@ -160,29 +160,71 @@
         </div>
         <div class="modal-body">
             <form>
+
                 <div class="row">
-                    <label class="form-label">Tipo de pago</label>
-                    <div class="input-group mb-2">
-                        <div class="col-3">
-                            <select class="form-select">
-                                <option value="">EFECTIVO</option>
-                                <option value="">TRANSFERENCIA</option>
-                            </select>
-                        </div>
-                        <div class="col-3">
-                            <input class="form-control" type="text">
-                        </div>
+                    <div class="col-8">
+                            <label class="form-label">Tipo de pago</label>
+                            <div class="input-group">
+                                <div class="col-4">
+                                    <select class="form-select">
+                                        <option *ngFor="let tp of tipo_pago" value="{{tp.idt}}">{{tp.tipo}}</option>
+                                    </select>
+                                </div>
+                                <div class="col-3">
+                                    <input class="form-control" type="number" min="0" name="tp1" [(ngModel)]="tp1" (change)="calculaCambio()">
+                                </div>
+                            </div>
+                            <label class="form-label">Tipo de pago  </label>
+                            <input class="form-check-input offset-md-2" type="checkbox" name="isTipoPago2" [(ngModel)]="isTipoPago2" (change)="calculaCambio()">
+                            <div class="input-group" *ngIf="isTipoPago2 == true">
+                                <div class="col-4">
+                                    <select class="form-select">
+                                        <option *ngFor="let tp of tipo_pago" value="{{tp.idt}}">{{tp.tipo}}</option>
+                                    </select>
+                                </div>
+                                <div class="col-3">
+                                    <input class="form-control" type="number" min="0" name="tp2" [(ngModel)]="tp2" (change)="calculaCambio()">
+                                </div>
+                            </div>
                     </div>
-                    <div class="col-2">
-                        <label class="form-labek"></label>
-                        <input class="form-control" type="text">
+                    <div class="col-3">
+                        <h6 class="text-center">OPERACIONES</h6>
+                        <div class="col">
+                            <label class="form-label" for="">TOTAL:</label>  
+                            <input class="form-control" type="text" value="{{v.total | currency}}" disabled>
+                        </div>
+                        <div class="col">
+                            <label class="form-label" for="">TP1:</label>
+                            <input class="form-control" type="text" value="{{tp1 | currency}}"  disabled>
+                        </div>
+                        <div class="col" *ngIf="isTipoPago2 == true">
+                            <label class="form-label" for="">TP2:</label>
+                            <input class="form-control" type="text" value="{{tp2 | currency}}"  disabled>
+                        </div>
+                        <div class="col">
+                            <label class="form-label" for="">CAMBIO:</label>
+                            <input class="form-control" type="text" value="{{cambio | currency}}"  disabled>
+                        </div>
                     </div>
                 </div>
+                <br>
                 <div class="row justify-content-end">
                     <div class="col-auto">
-                        <button class="btn btn-success" type="submit">COBRAR</button>
+                        <button class="btn btn-success" type="submit" [disabled]="isCero">COBRAR</button>
                     </div>
                 </div>
+
+
+
+
+
+
+
+
+
+
+
+
             </form>
         </div>
     </div>

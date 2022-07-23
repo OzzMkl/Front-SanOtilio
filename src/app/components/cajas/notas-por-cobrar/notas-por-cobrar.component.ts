@@ -31,9 +31,16 @@ export class NotasPorCobrarComponent implements OnInit {
   public productosDVenta:any;//getDetallesventas
   public empresa:any;//getDetallesEmpresa
   public empleado:any//loaduser
+  public tipo_pago:any//getTipoMovimiento
    //spinner de carga
    public isLoading:boolean = false;
    public sesionCaja:boolean = false;
+   //modal de cobrar venta
+   public isTipoPago2:boolean = false;
+   public isCero:boolean = true
+   public tp1:number = 0;
+   public tp2:number = 0;
+   public cambio:number = 0;
    //paginator
    public totalPages:any;
    public page:any;
@@ -61,6 +68,7 @@ export class NotasPorCobrarComponent implements OnInit {
     this.verificaCaja();
     this.getVentas();
     this.getDatosEmpresa();
+    this.getTipoPago();
   }
   /***Revisamos si el usuario tiene abierto una sesion en caja*/
   verificaCaja(){
@@ -85,7 +93,7 @@ export class NotasPorCobrarComponent implements OnInit {
     this.empleado = this._empleadoService.getIdentity();
     //console.log(this.empleado)
   }
-  //Formulario para hacer apertura de caja
+  //Guarda Formulario para hacer apertura de caja
   iniciarCaja(FormCaja:any){
     
     const fecha = new Date();
@@ -105,6 +113,59 @@ export class NotasPorCobrarComponent implements OnInit {
       }
     )
     
+  }
+  //validacion del campo del cambio para el cobro de notas
+  calculaCambio(){
+
+    //revisamos si el checkbox esta en true o false
+    switch(this.isTipoPago2){
+      case true:
+          //si es verdadero el input puede ir en cero o menor
+          if(this.tp1 <=0 || this.tp2 <= 0){
+            //si alguno es verdadero mandamos advertencia de que no es posible hacer eso
+            this.toastService.show('El precio minimo permitido es de: $',{classname: 'bg-danger text-light', delay: 6000});
+          } else{
+            //Si todo esta bien realizamos la operacion
+            this.cambio = this.detallesVenta[0]['total']- (this.tp1+this.tp2)
+            //si el cambio es menor o igual a cero
+            if(this.cambio <= 0){
+              //multiplicamos el cambio por -1  para volverlo positivo
+              this.cambio = (this.cambio)*(-1)
+              //habilitamos el boton de cobrar
+              this.isCero = false
+            } else{
+              //si el cambio aun es positivo lo ponemos a cero
+              //esto con la finalidad de confundir al cajero
+              this.cambio = 0;
+              this.isCero=true
+            }
+          }
+        break;
+      case false:
+          if(this.tp1 <= 0){
+            this.toastService.show('El precio minimo permitido es de: $',{classname: 'bg-danger text-light', delay: 6000});
+            
+          } else{
+            //si no esta habilitado el check ponemos el segundo valor a cero
+            this.tp2 = 0;
+            //realizamos la operacion
+            this.cambio = this.detallesVenta[0]['total']- (this.tp1+this.tp2)
+            
+            //si el cambio menor o igual a cero
+            if(this.cambio <= 0){
+              //multiplicamos el cambio por -1 para volverlo positivo
+              this.cambio = (this.cambio)*(-1)
+              //activamos el boton
+              this.isCero = false
+            } else{
+              //si el cambio aun es positivo lo ponemos a cero
+              //esto con la finalidad de confundir al cajero
+              this.cambio = 0;
+              this.isCero=true
+            }
+          }
+        break;
+    }
   }
   cobroVenta(){
 
@@ -144,6 +205,13 @@ export class NotasPorCobrarComponent implements OnInit {
            //console.log(this.empresa)
         }
       },error => {console.log(error)});
+  }
+  getTipoPago(){
+    this._ventasService.getTipoventa().subscribe(
+      response =>{
+        this.tipo_pago = response.tipo_pago
+      }
+    )
   }
   //ponemos vacio al cambiar entre tipo de busqueda
   seleccionTipoBusqueda(e:any){
