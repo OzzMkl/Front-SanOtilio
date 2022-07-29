@@ -40,6 +40,8 @@ export class NotasPorCobrarComponent implements OnInit {
    public isCero:boolean = true
    public tp1:number = 0;
    public tp2:number = 0;
+   public select1:number =0;
+   public select2:number =0;
    public cambio:number = 0;
    //paginator
    public totalPages:any;
@@ -57,7 +59,7 @@ export class NotasPorCobrarComponent implements OnInit {
    closeResult = '';
    //modelos
   public caja: Caja = new Caja (null,null,0,'',0);
-  public caja_movimiento: Caja_movimientos = new Caja_movimientos(0,null,0,0,0,0,null,'');
+  public caja_movimiento: Caja_movimientos = new Caja_movimientos(0,null,0,0,0,0,0,0,0,'');
 
   constructor(private _ventasService: VentasService, private modalService: NgbModal, private _empresaService: EmpresaService,
               private _monedaLiteral: MonedaLiteralService, private _cajaService: CajasService, private _router: Router,
@@ -82,7 +84,7 @@ export class NotasPorCobrarComponent implements OnInit {
         } else{
           this.sesionCaja = true;
         }
-        //console.log(this.caja)
+        console.log(this.vCaja)
       }, error =>{
         console.log(error)
       }
@@ -121,9 +123,9 @@ export class NotasPorCobrarComponent implements OnInit {
     switch(this.isTipoPago2){
       case true:
           //si es verdadero el input puede ir en cero o menor
-          if(this.tp1 <=0 || this.tp2 <= 0){
+          if(this.tp1 <=0 || this.tp2 <= 0 ){
             //si alguno es verdadero mandamos advertencia de que no es posible hacer eso
-            this.toastService.show('El precio minimo permitido es de: $',{classname: 'bg-danger text-light', delay: 6000});
+            this.toastService.show('No puedes ingresar 0',{classname: 'bg-danger text-light', delay: 6000});
           } else{
             //Si todo esta bien realizamos la operacion
             this.cambio = this.detallesVenta[0]['total']- (this.tp1+this.tp2)
@@ -142,8 +144,8 @@ export class NotasPorCobrarComponent implements OnInit {
           }
         break;
       case false:
-          if(this.tp1 <= 0){
-            this.toastService.show('El precio minimo permitido es de: $',{classname: 'bg-danger text-light', delay: 6000});
+          if(this.tp1 <= 0 ){
+            this.toastService.show('No puedes ingresar 0',{classname: 'bg-danger text-light', delay: 6000});
             
           } else{
             //si no esta habilitado el check ponemos el segundo valor a cero
@@ -167,8 +169,101 @@ export class NotasPorCobrarComponent implements OnInit {
         break;
     }
   }
+  //metodo para cobrar la nota
   cobroVenta(){
+    if(this.isTipoPago2 == true){
+      if(this.select1 == 0 || this.select2 == 0){
+        this.toastService.show('No puedes cobrar sin seleccionar metodo de pago',{classname: 'bg-danger text-light', delay: 6000});
+      } else{
 
+        //cremos arrary donde guardaremos los movimientos
+        const caja_mov_array = []
+
+        //cargamos la informacion del cobro
+        this.caja_movimiento.idCaja = this.vCaja['idCaja'];
+        this.caja_movimiento.totalNota = this.detallesVenta[0]['total'];
+        this.caja_movimiento.idTipoMov = 2;
+        this.caja_movimiento.idTipoPago = this.select1;
+        this.caja_movimiento.pagoCliente = this.tp1;
+        this.caja_movimiento.cambioCliente = this.cambio;
+        this.caja_movimiento.idOrigen = this.detallesVenta[0]['idVenta'];
+
+        //agregamos el primer movimiento a un array
+        caja_mov_array.push({... this.caja_movimiento})
+
+        //cargamos los datos del segundo pago
+        this.caja_movimiento.idTipoPago = this.select2;
+        this.caja_movimiento.pagoCliente = this.tp2;
+
+        //agregamos el segundo movimiento al array
+        caja_mov_array.push({... this.caja_movimiento});
+
+        //console.log(caja_mov_array);
+        this._cajaService.cobroVenta(this.detallesVenta[0]['idVenta'], caja_mov_array).subscribe(
+          response => {
+            //si la respuesta es correcta
+            if(response.status == 'success'){
+              console.log('cobro correcto');
+
+              //recargamos la tabla con las notas
+              this.getVentas();
+              //cerramos los dos modales
+              this.modalService.dismissAll()
+              //mandamos mensaje de la nota fue cobrada correctamente
+              this.toastService.show('Nota #'+this.detallesVenta[0]['idVenta']+' cobrada correctamente',{classname: 'bg-success text-light', delay: 3000});
+            } else{
+              //si devuelve otra coosa 
+              console.log('algo salio mal');
+              //mostramos mensaje de error
+              this.toastService.show('algo salio mal',{classname: 'bg-danger text-light', delay: 6000});
+            }
+          }
+        )
+      }
+      
+
+    } else{
+      if(this.select1 == 0 ){
+        this.toastService.show('No puedes cobrar sin seleccionar metodo de pago',{classname: 'bg-danger text-light', delay: 6000});
+      } else{
+        //creamos variable donde almacenams los movimientos a guadar
+        const caja_mov_array = []
+
+        //cargamos la informacion del cobro
+        this.caja_movimiento.idCaja = this.vCaja['idCaja'];
+        this.caja_movimiento.totalNota = this.detallesVenta[0]['total'];
+        this.caja_movimiento.idTipoMov = 1;
+        this.caja_movimiento.idTipoPago = this.select1;
+        this.caja_movimiento.pagoCliente = this.tp1;
+        this.caja_movimiento.cambioCliente = this.cambio;
+        this.caja_movimiento.idOrigen = this.detallesVenta[0]['idVenta'];
+
+        //guardamos el movimiento
+        caja_mov_array.push({... this.caja_movimiento});
+        //console.log(this.caja_movimiento)
+        this._cajaService.cobroVenta(this.detallesVenta[0]['idVenta'],caja_mov_array).subscribe(
+          response => {
+            //si la respuesta es correcta
+            if(response.status == 'success'){
+              console.log('cobro correcto');
+
+              //recargamos la tabla con las notas
+              this.getVentas();
+              //cerramos los dos modales
+              this.modalService.dismissAll()
+              //mandamos mensaje de la nota fue cobrada correctamente
+              this.toastService.show('Nota #'+this.detallesVenta[0]['idVenta']+' cobrada correctamente',{classname: 'bg-success text-light', delay: 3000});
+            } else{
+              //si devuelve otra coosa 
+              console.log('algo salio mal');
+              //mostramos mensaje de error
+              this.toastService.show('algo salio mal',{classname: 'bg-danger text-light', delay: 6000});
+            }
+          }
+        )
+      }
+
+    }
   }
   getVentas(){
     this.isLoading = true;
@@ -314,3 +409,4 @@ export class NotasPorCobrarComponent implements OnInit {
     }
   }
 }
+/*********************** */

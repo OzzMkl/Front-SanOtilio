@@ -166,7 +166,7 @@
                             <label class="form-label">Tipo de pago</label>
                             <div class="input-group">
                                 <div class="col-4">
-                                    <select class="form-select">
+                                    <select class="form-select" name="tipopago1" #tipopago1="ngModel" [(ngModel)]="select1">
                                         <option *ngFor="let tp of tipo_pago" value="{{tp.idt}}">{{tp.tipo}}</option>
                                     </select>
                                 </div>
@@ -178,7 +178,7 @@
                             <input class="form-check-input offset-md-2" type="checkbox" name="isTipoPago2" [(ngModel)]="isTipoPago2" (change)="calculaCambio()">
                             <div class="input-group" *ngIf="isTipoPago2 == true">
                                 <div class="col-4">
-                                    <select class="form-select">
+                                    <select class="form-select" name="tipopago2" #tipopago2="ngModel" [(ngModel)]="select2">
                                         <option *ngFor="let tp of tipo_pago" value="{{tp.idt}}">{{tp.tipo}}</option>
                                     </select>
                                 </div>
@@ -210,16 +210,9 @@
                 <br>
                 <div class="row justify-content-end">
                     <div class="col-auto">
-                        <button class="btn btn-success" type="submit" [disabled]="isCero">COBRAR</button>
+                        <button class="btn btn-success" type="submit" [disabled]="isCero" (click)="cobroVenta()">COBRAR</button>
                     </div>
                 </div>
-
-
-
-
-
-
-
 
 
 
