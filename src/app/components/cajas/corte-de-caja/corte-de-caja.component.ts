@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+//servicio
+import { CajasService } from 'src/app/services/cajas.service';
 
 @Component({
   selector: 'app-corte-de-caja',
@@ -7,9 +9,21 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CorteDeCajaComponent implements OnInit {
 
-  constructor() { }
+  //
+  public  sesiones:any
+  constructor(private _cajaService: CajasService) { }
 
   ngOnInit(): void {
+    this.getVerificaSesionesCaja()
+  }
+
+  getVerificaSesionesCaja(){
+    this._cajaService.verificaSesionCaja().subscribe(
+      response => {
+        this.sesiones = response.caja
+        console.log(this.sesiones)
+      }
+    )
   }
 
 }

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Empleado } from 'src/app/models/empleado';
 import { EmpleadoService } from '../../services/empleado.service';
 import { Router, ActivatedRoute, Params } from '@angular/router';
+import { ToastService } from 'src/app/services/toast.service';
 
 @Component({
   selector: 'app-login',
@@ -20,7 +21,8 @@ export class LoginComponent implements OnInit {
   constructor(
     private _empleadoService: EmpleadoService,
     private _router: Router,
-    private _route: ActivatedRoute
+    private _route: ActivatedRoute,
+    private toastService: ToastService
   ) { 
     
     this.empleado = new Empleado(1,'','','ROLE_USER','','','','','','','','','','',1,1,1,1,'','',1,1);
@@ -61,12 +63,12 @@ export class LoginComponent implements OnInit {
                   );
         }else{
           this.status = 'error';
-          
+          this.toastService.show('Email y/o contraseña incorrectos',{classname: 'bg-danger text-light', delay: 5000});
         }
       },
       error =>{
         this.status = 'error',
-        console.log(<any>error);
+        console.log(error);
         
       }
     );

@@ -1,1 +1,8 @@
-<p>corte-de-caja works!</p>
+<div class="container">
+    <br>
+    <div class="row">
+        <div class="col" *ngFor="let sesion of sesiones">
+            <h3> <span class="badge bg-secondary">{{sesion.idCaja}}</span></h3>
+        </div>
+    </div>
+</div>

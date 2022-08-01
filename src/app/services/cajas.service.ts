@@ -25,6 +25,9 @@ export class CajasService {
     let params = 'json='+json;
     return this._http.post(this.url+'cajas/cobroVenta/'+idVenta,params,{headers:this.headers});
   }
+  verificaSesionCaja():Observable<any>{
+    return this._http.get(this.url+'cajas/verificaSesionesCaja',{headers:this.headers})
+  }
   // getTipoMovimiento():Observable<any>{
   //   return this._http.get(this.url+'cajas/indexTipoMovimiento',{headers:this.headers});
   // }
