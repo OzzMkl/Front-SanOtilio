@@ -84,7 +84,7 @@
                     <input class="form-control" type="text" value="{{dc.clienteRFC}}" readonly>
                 </div>
             </div>
-            <div class="row" *ngIf="dc.cdireccion.length > 2">
+            <div class="row" *ngIf="dc.cdireccion != null">
                 <div class="col">
                     <label class="form-label">Direccion</label>
                     <textarea class="form-control" rows="2" value="{{dc.cdireccion}}" readonly></textarea>

@@ -33,7 +33,7 @@
                   </div>
             </div>
         </div>
-        <div *ngIf="seEnvia == true || cotizacion_editada.cdireccion.length > 0" class="row">
+        <div *ngIf="seEnvia == true || cotizacion_editada.cdireccion != null" class="row">
             <div class="col">
                 <label class="form-label">Direccion del cliente</label>
                 <!-- <input type="text" class="form-control" value="{{ventag.dirCliente}}" readonly> -->
