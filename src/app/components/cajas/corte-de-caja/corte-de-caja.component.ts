@@ -171,7 +171,7 @@ export class CorteDeCajaComponent implements OnInit {
     doc.setFont('Helvetica','normal').setFontSize(9).text('GENERA CORTE: '+this.empleado['nombre'].toUpperCase()+' '+this.empleado['apellido'].toUpperCase()+' '+this.empleado['amaterno'].toUpperCase(), 60,43);
     doc.setFont('Helvetica','normal').setFontSize(9).text('CAJERO: '+this.sesionPDF.nombreEmpleado.toUpperCase(), 60,47);
     doc.setFont('Helvetica','normal').setFontSize(9).text('FECHA: '+this.fecha.toLocaleDateString(), 170,43);
-    doc.setFont('Helvetica','normal').setFontSize(9).text('FECHA: '+this.fecha.getHours()+':'+this.fecha.getMinutes()+':'+this.fecha.getMilliseconds() , 170,47);
+    doc.setFont('Helvetica','normal').setFontSize(9).text('HORA: '+this.fecha.getHours()+':'+this.fecha.getMinutes()+':'+this.fecha.getMilliseconds() , 170,47);
     doc.setLineWidth(2.5).line(10,50,200,50);//colocacion de linea
 
     doc.setLineWidth(5).line(10,60,55,60)
