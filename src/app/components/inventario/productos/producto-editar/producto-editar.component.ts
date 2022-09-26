@@ -56,7 +56,7 @@ export class ProductoEditarComponent implements OnInit {
     this.ptt = [];
     
     this.url = global.url;
-    this.productoModificado = new Producto(0,0,0,0,0,0,'',0,'',0,0,'null',1,'','','',0,0,0,null,0,0);
+    this.productoModificado = new Producto(0,0,0,0,0,0,'',0,'',0,0,'',0,'','',null,0,null,0,0);
 
     this.medidas= [];
     this.marca=[];
@@ -108,8 +108,6 @@ export class ProductoEditarComponent implements OnInit {
          this.productoModificado.claveSat = this.producto[0]['claveSat'];
          this.productoModificado.tEntrega = this.producto[0]['tEntrega'];
          this.productoModificado.idAlmacen = this.producto[0]['idAlmacen'];
-         this.productoModificado.precioR = this.producto[0]['precioR'];
-         this.productoModificado.precioS = this.producto[0]['precioS'];
          this.productoModificado.idProductoS = this.producto[0]['idProductoS'];
          this.productoModificado.factorConv = this.producto[0]['factorConv'];
          this.productoModificado.cbarras = this.producto[0]['cbarras'];
@@ -137,8 +135,6 @@ export class ProductoEditarComponent implements OnInit {
             this.productoModificado.claveSat = this.producto[0]['claveSat'];
             this.productoModificado.tEntrega = this.producto[0]['tEntrega'];
             this.productoModificado.idAlmacen = this.producto[0]['idAlmacen'];
-            this.productoModificado.precioR = this.producto[0]['precioR'];
-            this.productoModificado.precioS = this.producto[0]['precioS'];
             this.productoModificado.idProductoS = this.producto[0]['idProductoS'];
             this.productoModificado.factorConv = this.producto[0]['factorConv'];
             this.productoModificado.cbarras = this.producto[0]['cbarras'];

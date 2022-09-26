@@ -17,8 +17,6 @@ export class Producto{//Modelo del producto
         public claveSat: string,
         public tEntrega: any,
         public idAlmacen: number,
-        public precioR: number,
-        public precioS: number,
         public idProductoS: any,
         public factorConv: number,
         public existenciaG: number

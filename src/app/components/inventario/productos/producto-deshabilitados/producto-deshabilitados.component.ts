@@ -41,7 +41,7 @@ export class ProductoDeshabilitadosComponent implements OnInit {
           this.productos = response.productos;
           //navegacion paginacion
           this.totalPages = response.productos.total;
-          console.log(response.productos);
+          //console.log(response.productos);
         }
       },
       error =>{

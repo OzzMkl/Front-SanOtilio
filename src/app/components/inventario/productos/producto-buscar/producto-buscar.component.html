@@ -33,7 +33,7 @@
                     <!-- <th scope="col">ACCION</th> -->
             </tr>
             </thead>
-            <tbody *ngFor="let pr of productos | filterProduct:fpd | paginate:{itemsPerPage: 10, currentPage: pageActual}">
+            <tbody *ngFor="let pr of productos | filterProduct:fpd | paginate: { itemsPerPage:itemsPerPage, currentPage: pageActual, totalItems:totalPages }">
                 <tr (click)="selected(pr.idProducto)">
                     <th scope="row">{{pr.claveEx}}</th>
                     <th scope="row">{{pr.cbarras}}</th>
@@ -54,6 +54,6 @@
                 </tr>
             </tbody>
         </table>
-       <pagination-controls (pageChange)="pageActual = $event"></pagination-controls>
+       <pagination-controls (pageChange)="getPage(pageActual = $event)"></pagination-controls>
     </div>
 </div>
