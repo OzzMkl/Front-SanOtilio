@@ -43,6 +43,9 @@ export class CompraService {
     return this._http.post(this.url+'compra/updateExistencia',params, {headers:headers} );
   }
 
-  
+  registerLote():Observable<any>{
+    let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');//mandamos el json con las cabeceras para que obtengamos el token
+    return this._http.post(this.url+'compra/registerLote', {headers:headers} );
+  }
 
 }
