@@ -1,6 +1,6 @@
 <div class="container">
     <div>
-        <h5 class="text-center">DATOS DEL CLIENTE</h5>
+        <h4 class="text-center">DATOS DEL CLIENTE</h4>
         <div class="row align-items-start" >
             <div class="col-4">
                 <label class="form-label" for="">Buscar cliente</label>
@@ -42,7 +42,7 @@
     </div>
     <hr>
     <div class="row align-items-start">
-        <h5 class="text-center">AGREGAR PRODUCTO</h5>
+        <h4 class="text-center">AGREGAR PRODUCTO</h4>
         <div class="col-2">
             <label class="form-label" for="">Buscar producto</label>
                 <div class="input-group">
@@ -82,7 +82,7 @@
     </div>
     <hr>
     <div>
-        <h5 class="text-center">LISTA DE PRODUCTOS</h5>
+        <h4 class="text-center">LISTA DE PRODUCTOS</h4>
         <table class="table table-dark table-hover">
             <thead>
                 <tr>
@@ -147,7 +147,7 @@
 <!-- Modal buscar clientes-->
 <ng-template #content let-modal>
     <div class="modal-header">
-      <h5 class="modal-title" id="modal-basic-title">Buscar cliente</h5>
+      <h4 class="modal-title" id="modal-basic-title">Buscar cliente</h4>
       <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
     </div>
     <div class="modal-body">
@@ -190,13 +190,13 @@
 <!-- Modal agregar cliente-->
 <ng-template #content2 let-modal>
     <div class="modal-header">
-      <h5 class="modal-title" id="modal-basic-title">Agregar cliente</h5>
+      <h4 class="modal-title" id="modal-basic-title">Agregar cliente</h4>
       <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
     </div>
     <div class="modal-body">
         <div class="row">
             <div class="col">
-            <h4 class="text-center">DATOS PERSONALES</h4>
+            <h5 class="text-center">DATOS PERSONALES</h5>
             </div>
             <div class="col">
                 <div class="form-check form-switch">
@@ -371,7 +371,7 @@
 <!-- Modal para elegir direccion del cliente -->
 <ng-template #buscarDireccion let-modal>
     <div class="modal-header">
-        <h5 class="modal-title" id="modal-basic-title">Seleccionar direccion</h5>
+        <h4 class="modal-title" id="modal-basic-title">Seleccionar direccion</h4>
         <button class="btn btn-success col-auto offset-md-8" ngbTooltip="Agregar direccion" (click)="modalAgregarDireccion(nuevaDireccion)"><i class="bi bi-plus-circle-dotted" style="font-size: 1.3rem; color: rgb(255, 249, 249); left: 0;"></i></button>
         <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
       </div>

@@ -14,10 +14,6 @@ import { global } from 'src/app/services/global';
 })
 export class ProductoVerComponent implements OnInit {
 
-  //encabezados
-  public page_title: string;
-  public page_clasificacion: string;
-  public page_precios: string;
 
   public producto: Array<any>;
 
@@ -37,14 +33,11 @@ export class ProductoVerComponent implements OnInit {
     private _route: ActivatedRoute,
     public toastService: ToastService
     ){
-    this.page_title = 'Detalles del producto' ;
-    this.page_clasificacion = 'Clasificación';
-    this.page_precios = 'Precios';
     this.producto = [];
     this.closeModal='';
     this.url = global.url;
-    this.prod= new Producto(0,0,0,0,0,0,'',0,'',0,0,'null',2,'','','',0,0,0,0,0,0);
-    this.prodd = new Producto(0,0,0,0,0,0,'',0,'',0,0,'null',1,'','','',0,0,0,0,0,0);
+    this.prod= new Producto(0,0,0,0,0,0,'',0,'',0,0,'',0,'','',null,0,null,0,0);
+    this.prodd = new Producto(0,0,0,0,0,0,'',0,'',0,0,'',0,'','',null,0,null,0,0);
    }
 
   ngOnInit(): void {
@@ -64,13 +57,13 @@ export class ProductoVerComponent implements OnInit {
         if(response.status == 'success' && response.producto.length > 0){
           this.producto = response.producto;
           this.value = this.producto[0]['cbarras'];
-          //console.log(this.producto);
+          console.log(this.producto);
         }else{
           this._productoService.getProdverDos(id).subscribe(
             response=>{
               this.producto = response.producto;
               this.value = this.producto[0]['cbarras'];
-              //console.log(this.producto);
+              console.log(this.producto);
             },
               error =>{
                 console.log(error);

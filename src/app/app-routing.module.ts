@@ -4,7 +4,6 @@ import { RouterModule, Routes } from '@angular/router';
 //IMPORTAR COMPONENTES
 import { GeneralComponent } from './components/general/general.component';
 import { LoginComponent } from './components/login/login.component';
-import { HomeComponent } from './components/home/home.component';
 import { ErrorComponent } from './components/error/error.component';
 import { EmpleadoEditarComponent } from './components/empleado-editar/empleado-editar.component';
 
@@ -49,22 +48,28 @@ import { ClienteBuscarComponent } from './components/ventas/clientes/cliente-bus
 import { ClienteAgregarComponent } from './components/ventas/clientes/cliente-agregar/cliente-agregar.component';
 import { ClienteEditarComponent } from './components/ventas/clientes/cliente-editar/cliente-editar.component';
 
-import { EntregasComponent } from './components/ventas/entregas/entregas.component';
+import { EntregasModuloComponent } from './components/entregas/entregas-modulo/entregas-modulo.component';
+import { EntregasAgregarComponent } from './components/entregas/entregas-agregar/entregas-agregar.component';
+import { EntregasPendientesComponent } from './components/entregas/entregas-pendientes/entregas-pendientes.component';
 
 import { CajaModuloComponent } from './components/cajas/caja-modulo/caja-modulo.component';
 import { NotasPorCobrarComponent } from './components/cajas/notas-por-cobrar/notas-por-cobrar.component';
 import { NotasACreditoComponent } from './components/cajas/notas-a-credito/notas-a-credito.component';
 import { CorteDeCajaComponent } from './components/cajas/corte-de-caja/corte-de-caja.component';
 /***guards */
-import { InicioGuard } from './guards/inicio.guard';
 import { OrdencompraGuardGuard } from './guards/ordencompra-guard.guard';
+import { ProveedorGuard } from './guards/proveedor.guard';
+import { PuntoDeVentaGuard } from './guards/punto-de-venta.guard';
+import { CheckTokenGuard } from './guards/check-token.guard';
+import { CotizacionGuard } from './guards/cotizacion.guard';
+import { ClienteGuard } from './guards/cliente.guard';
+
 
 const routes: Routes = [
-  {path: '', component: GeneralComponent},
-  {path: 'inicio', component: HomeComponent}, //canActivate:[InicioGuard]},
+  {path: '', component: GeneralComponent, canActivate:[CheckTokenGuard]},
   {path: 'login', component: LoginComponent},
   {path: 'logout/:sure', component: LoginComponent},
-  {path: 'ajustes',component: EmpleadoEditarComponent},
+  {path: 'ajustes',component: EmpleadoEditarComponent, canActivate:[CheckTokenGuard]},
   {path: 'ordencompra-modulo', component: OrdencompraModuloComponent, canActivate:[OrdencompraGuardGuard],
     children:[
       {path: 'ordencompra-agregar',component: OrdencompraAgregarComponent},
@@ -80,7 +85,7 @@ const routes: Routes = [
       {path: 'compra-ver', component: CompraVerComponent}
     ]},
 
-  {path: 'proveedor-modulo', component: ProveedorModuloComponent,
+  {path: 'proveedor-modulo', component: ProveedorModuloComponent, canActivate:[ProveedorGuard],
     children:
     [
       {path: 'agregarProveedor',component: ProveedorAgregarComponent},
@@ -89,26 +94,30 @@ const routes: Routes = [
       {path: 'proveedorEditar',component: ProveedorModificarComponent},
       {path: 'proveedorVer/:idProveedor',component: ProveedorVerComponent}
     ]},
-  {path: 'punto-de-venta',component: PuntoDeVentaComponent},
-  {path: 'ventas-realizadas',component: VentasRealizadasModuloComponent,
+  {path: 'punto-de-venta',component: PuntoDeVentaComponent,canActivate:[PuntoDeVentaGuard]},
+  {path: 'ventas-modulo',component: VentasRealizadasModuloComponent,canActivate:[PuntoDeVentaGuard],
   children:
   [
     {path:'ventas-realizadas-buscar',component: VentasRealizadasComponent}
   ]},
-  {path: 'cotizacion-modulo', component: CotizacionModuloComponent,
+  {path: 'cotizacion-modulo', component: CotizacionModuloComponent, canActivate:[CotizacionGuard],
   children:
   [
     {path: 'cotizacion-buscar', component: CotizacionBuscarComponent},
     {path: 'cotizacion-editar/:idCotiza', component: CotizacionEditarComponent}
   ]},
-  {path: 'cliente-modulo',component: ClienteModuloComponent,
+  {path: 'cliente-modulo',component: ClienteModuloComponent,canActivate:[ClienteGuard],
       children:
     [
       {path: 'cliente-buscar',component: ClienteBuscarComponent},
       {path: 'cliente-agregar',component:ClienteAgregarComponent},
       {path: 'cliente-editar/:idCliente',component: ClienteEditarComponent}
     ]},
-  {path:'entregas',component: EntregasComponent},
+  {path:'entregas-modulo',component: EntregasModuloComponent,
+      children:[
+        {path:'entregas-agregar',component: EntregasAgregarComponent},
+        {path:'entregas-pendientes',component: EntregasPendientesComponent}
+      ]},
   {path:'caja-modulo', component: CajaModuloComponent,
       children:
       [

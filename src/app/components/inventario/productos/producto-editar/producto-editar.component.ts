@@ -25,10 +25,6 @@ import { AlmacenService } from 'src/app/services/almacen.service';
 })
 export class ProductoEditarComponent implements OnInit {
 
-  //encabezados
-  public page_title: string;
-  public page_clasificacion: string;
-  public page_precios: string;
   public producto: Array<any>;
   public ptt:Array<Producto>;
   public productos: any;
@@ -56,14 +52,11 @@ export class ProductoEditarComponent implements OnInit {
     private _route: ActivatedRoute,
     public toastService: ToastService
   ){
-    this.page_title = 'Detalles del producto' ;
-    this.page_clasificacion = 'Clasificación';
-    this.page_precios = 'Precios';
     this.producto = [];
     this.ptt = [];
     
     this.url = global.url;
-    this.productoModificado = new Producto(0,0,0,0,0,0,'',0,'',0,0,'null',1,'','','',0,0,0,null,0,0);
+    this.productoModificado = new Producto(0,0,0,0,0,0,'',0,'',0,0,'',0,'','',null,0,null,0,0);
 
     this.medidas= [];
     this.marca=[];
@@ -115,8 +108,6 @@ export class ProductoEditarComponent implements OnInit {
          this.productoModificado.claveSat = this.producto[0]['claveSat'];
          this.productoModificado.tEntrega = this.producto[0]['tEntrega'];
          this.productoModificado.idAlmacen = this.producto[0]['idAlmacen'];
-         this.productoModificado.precioR = this.producto[0]['precioR'];
-         this.productoModificado.precioS = this.producto[0]['precioS'];
          this.productoModificado.idProductoS = this.producto[0]['idProductoS'];
          this.productoModificado.factorConv = this.producto[0]['factorConv'];
          this.productoModificado.cbarras = this.producto[0]['cbarras'];
@@ -144,8 +135,6 @@ export class ProductoEditarComponent implements OnInit {
             this.productoModificado.claveSat = this.producto[0]['claveSat'];
             this.productoModificado.tEntrega = this.producto[0]['tEntrega'];
             this.productoModificado.idAlmacen = this.producto[0]['idAlmacen'];
-            this.productoModificado.precioR = this.producto[0]['precioR'];
-            this.productoModificado.precioS = this.producto[0]['precioS'];
             this.productoModificado.idProductoS = this.producto[0]['idProductoS'];
             this.productoModificado.factorConv = this.producto[0]['factorConv'];
             this.productoModificado.cbarras = this.producto[0]['cbarras'];

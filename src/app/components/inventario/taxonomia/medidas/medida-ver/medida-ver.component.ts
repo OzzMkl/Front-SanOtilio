@@ -12,7 +12,7 @@ import { MedidaService } from 'src/app/services/medida.service';
 })
 export class MedidaVerComponent implements OnInit {
 
-  public page_title: string;
+  
   public url:string;
   public medidas: any;
   public totalPages: any;
@@ -30,7 +30,7 @@ export class MedidaVerComponent implements OnInit {
     private _router: Router
 
   ) {
-      this.page_title = 'Medidas'
+      
       this.url = global.url;
       this.medidas = [];
    }

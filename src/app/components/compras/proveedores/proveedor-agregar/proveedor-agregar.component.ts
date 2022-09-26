@@ -17,10 +17,7 @@ export class ProveedorAgregarComponent implements OnInit {
   public proveedor: Proveedor;
   public banco: Array<Banco>;
   
-  public page_title: string;
-  public page_contacto: string;
-  public page_cuenta: string;
-  public page_proveedor: string;
+
   public status: string;
   
   
@@ -34,10 +31,7 @@ export class ProveedorAgregarComponent implements OnInit {
   ) {
       this.proveedor = new Proveedor (0,'','','','','','','','','','',0,0,1,'','','','','','','','','');    
       this.banco = [];
-      this.page_title = 'Agregar un proveedor';
-      this.page_contacto = 'Datos del contacto';
-      this.page_cuenta = 'Datos de la cuenta';
-      this.page_proveedor = 'Datos del proveedor';
+      
       this.status = '';
    }
 

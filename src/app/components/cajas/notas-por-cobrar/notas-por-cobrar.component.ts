@@ -1,13 +1,21 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 //Servicios
 import { VentasService } from 'src/app/services/ventas.service';
 import { EmpresaService } from 'src/app/services/empresa.service';
 import { MonedaLiteralService } from 'src/app/services/moneda-literal.service';
+import { CajasService } from 'src/app/services/cajas.service';
+import { ToastService } from 'src/app/services/toast.service';
+import { EmpleadoService } from 'src/app/services/empleado.service';
 //NGBOOTSTRAP-modal
 import { NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
 //pdf
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
+//modelos
+import { Caja } from 'src/app/models/caja';
+import { Caja_movimientos } from 'src/app/models/caja_movimientos';
+
 
 @Component({
   selector: 'app-notas-por-cobrar',
@@ -17,12 +25,24 @@ import autoTable from 'jspdf-autotable';
 export class NotasPorCobrarComponent implements OnInit {
 
   //variables servicios
-  public ventas:any;
-  public detallesVenta:any;
-  public productosDVenta:any;
+  public vCaja:any;
+  public ventas:any;//getVentas
+  public detallesVenta:any;//getDetallesventas
+  public productosDVenta:any;//getDetallesventas
   public empresa:any;//getDetallesEmpresa
+  public empleado:any//loaduser
+  public tipo_pago:any//getTipoMovimiento
    //spinner de carga
    public isLoading:boolean = false;
+   public sesionCaja:boolean = false;
+   //modal de cobrar venta
+   public isTipoPago2:boolean = false;
+   public isCero:boolean = true
+   public tp1:number = 0;
+   public tp2:number = 0;
+   public select1:number =0;
+   public select2:number =0;
+   public cambio:number = 0;
    //paginator
    public totalPages:any;
    public page:any;
@@ -37,14 +57,213 @@ export class NotasPorCobrarComponent implements OnInit {
    buscaNombreEmpleado='';
    //cerrar modal
    closeResult = '';
- 
+   //modelos
+  public caja: Caja = new Caja (null,null,0,'',0);
+  public caja_movimiento: Caja_movimientos = new Caja_movimientos(0,null,0,0,0,0,0,0,0,'');
 
   constructor(private _ventasService: VentasService, private modalService: NgbModal, private _empresaService: EmpresaService,
-              private _monedaLiteral: MonedaLiteralService) { }
+              private _monedaLiteral: MonedaLiteralService, private _cajaService: CajasService, private _router: Router,
+              public toastService: ToastService, private _empleadoService: EmpleadoService) {}
 
   ngOnInit(): void {
+    this.loadUser();
+    this.verificaCaja();
     this.getVentas();
     this.getDatosEmpresa();
+    this.getTipoPago();
+  }
+  /***Revisamos si el usuario tiene abierto una sesion en caja*/
+  verificaCaja(){
+    //console.log(this.empleado)
+    this._cajaService.verificarCaja(this.empleado['sub']).subscribe(
+      response =>{
+        this.vCaja = response.caja;
+        if(this.vCaja['horaF'] != null){
+          this.toastService.show('Caja no iniciada', { classname: 'bg-danger  text-light', delay: 5000 });
+          
+        } else{
+          this.sesionCaja = true;
+        }
+        console.log(this.vCaja)
+      }, error =>{
+        console.log(error)
+      }
+    )
+  }
+  //cargamos inforamcion del usuario guardada en el localstorage
+  loadUser(){
+    this.empleado = this._empleadoService.getIdentity();
+    //console.log(this.empleado)
+  }
+  //Guarda Formulario para hacer apertura de caja
+  iniciarCaja(FormCaja:any){
+    
+    const fecha = new Date();
+    this.caja.idEmpleado = this.empleado['sub'];
+    this.caja.horaI = fecha.getFullYear() + '-' + ( fecha.getMonth() + 1 ) + '-' + fecha.getDate()+' '+fecha.getHours() + ':' + fecha.getMinutes() + ':' + fecha.getSeconds();
+    //console.log(this.caja)
+    this._cajaService.aperturaCaja(this.caja).subscribe(
+      response =>{
+        if(response.status == 'success'){
+          //console.log(response)
+          this.ngOnInit();
+        } else{
+          console.log('algo salio mal')
+        }
+      }, error =>{
+        console.error(error)
+      }
+    )
+    
+  }
+  //validacion del campo del cambio para el cobro de notas
+  calculaCambio(){
+
+    //revisamos si el checkbox esta en true o false
+    switch(this.isTipoPago2){
+      case true:
+          //si es verdadero el input puede ir en cero o menor
+          if(this.tp1 <=0 || this.tp2 <= 0 ){
+            //si alguno es verdadero mandamos advertencia de que no es posible hacer eso
+            this.toastService.show('No puedes ingresar 0',{classname: 'bg-danger text-light', delay: 6000});
+          } else{
+            //Si todo esta bien realizamos la operacion
+            this.cambio = this.detallesVenta[0]['total']- (this.tp1+this.tp2)
+            //si el cambio es menor o igual a cero
+            if(this.cambio <= 0){
+              //multiplicamos el cambio por -1  para volverlo positivo
+              this.cambio = (this.cambio)*(-1)
+              //habilitamos el boton de cobrar
+              this.isCero = false
+            } else{
+              //si el cambio aun es positivo lo ponemos a cero
+              //esto con la finalidad de confundir al cajero
+              this.cambio = 0;
+              this.isCero=true
+            }
+          }
+        break;
+      case false:
+          if(this.tp1 <= 0 ){
+            this.toastService.show('No puedes ingresar 0',{classname: 'bg-danger text-light', delay: 6000});
+            
+          } else{
+            //si no esta habilitado el check ponemos el segundo valor a cero
+            this.tp2 = 0;
+            //realizamos la operacion
+            this.cambio = this.detallesVenta[0]['total']- (this.tp1+this.tp2)
+            
+            //si el cambio menor o igual a cero
+            if(this.cambio <= 0){
+              //multiplicamos el cambio por -1 para volverlo positivo
+              this.cambio = (this.cambio)*(-1)
+              //activamos el boton
+              this.isCero = false
+            } else{
+              //si el cambio aun es positivo lo ponemos a cero
+              //esto con la finalidad de confundir al cajero
+              this.cambio = 0;
+              this.isCero=true
+            }
+          }
+        break;
+    }
+  }
+  //metodo para cobrar la nota
+  cobroVenta(){
+    if(this.isTipoPago2 == true){
+      if(this.select1 == 0 || this.select2 == 0){
+        this.toastService.show('No puedes cobrar sin seleccionar metodo de pago',{classname: 'bg-danger text-light', delay: 6000});
+      } else{
+
+        //cremos arrary donde guardaremos los movimientos
+        const caja_mov_array = []
+
+        //cargamos la informacion del cobro
+        this.caja_movimiento.idCaja = this.vCaja['idCaja'];
+        this.caja_movimiento.totalNota = this.detallesVenta[0]['total'];
+        this.caja_movimiento.idTipoMov = 2;
+        this.caja_movimiento.idTipoPago = this.select1;
+        this.caja_movimiento.pagoCliente = this.tp1;
+        this.caja_movimiento.cambioCliente = this.cambio;
+        this.caja_movimiento.idOrigen = this.detallesVenta[0]['idVenta'];
+
+        //agregamos el primer movimiento a un array
+        caja_mov_array.push({... this.caja_movimiento})
+
+        //cargamos los datos del segundo pago
+        this.caja_movimiento.idTipoPago = this.select2;
+        this.caja_movimiento.pagoCliente = this.tp2;
+
+        //agregamos el segundo movimiento al array
+        caja_mov_array.push({... this.caja_movimiento});
+
+        //console.log(caja_mov_array);
+        this._cajaService.cobroVenta(this.detallesVenta[0]['idVenta'], caja_mov_array).subscribe(
+          response => {
+            //si la respuesta es correcta
+            if(response.status == 'success'){
+              console.log('cobro correcto');
+
+              //recargamos la tabla con las notas
+              this.getVentas();
+              //cerramos los dos modales
+              this.modalService.dismissAll()
+              //mandamos mensaje de la nota fue cobrada correctamente
+              this.toastService.show('Nota #'+this.detallesVenta[0]['idVenta']+' cobrada correctamente',{classname: 'bg-success text-light', delay: 3000});
+            } else{
+              //si devuelve otra coosa 
+              console.log('algo salio mal');
+              //mostramos mensaje de error
+              this.toastService.show('algo salio mal',{classname: 'bg-danger text-light', delay: 6000});
+            }
+          }
+        )
+      }
+      
+
+    } else{
+      if(this.select1 == 0 ){
+        this.toastService.show('No puedes cobrar sin seleccionar metodo de pago',{classname: 'bg-danger text-light', delay: 6000});
+      } else{
+        //creamos variable donde almacenams los movimientos a guadar
+        const caja_mov_array = []
+
+        //cargamos la informacion del cobro
+        this.caja_movimiento.idCaja = this.vCaja['idCaja'];
+        this.caja_movimiento.totalNota = this.detallesVenta[0]['total'];
+        this.caja_movimiento.idTipoMov = 1;
+        this.caja_movimiento.idTipoPago = this.select1;
+        this.caja_movimiento.pagoCliente = this.tp1;
+        this.caja_movimiento.cambioCliente = this.cambio;
+        this.caja_movimiento.idOrigen = this.detallesVenta[0]['idVenta'];
+
+        //guardamos el movimiento
+        caja_mov_array.push({... this.caja_movimiento});
+        //console.log(this.caja_movimiento)
+        this._cajaService.cobroVenta(this.detallesVenta[0]['idVenta'],caja_mov_array).subscribe(
+          response => {
+            //si la respuesta es correcta
+            if(response.status == 'success'){
+              console.log('cobro correcto');
+
+              //recargamos la tabla con las notas
+              this.getVentas();
+              //cerramos los dos modales
+              this.modalService.dismissAll()
+              //mandamos mensaje de la nota fue cobrada correctamente
+              this.toastService.show('Nota #'+this.detallesVenta[0]['idVenta']+' cobrada correctamente',{classname: 'bg-success text-light', delay: 3000});
+            } else{
+              //si devuelve otra coosa 
+              console.log('algo salio mal');
+              //mostramos mensaje de error
+              this.toastService.show('algo salio mal',{classname: 'bg-danger text-light', delay: 6000});
+            }
+          }
+        )
+      }
+
+    }
   }
   getVentas(){
     this.isLoading = true;
@@ -81,6 +300,13 @@ export class NotasPorCobrarComponent implements OnInit {
            //console.log(this.empresa)
         }
       },error => {console.log(error)});
+  }
+  getTipoPago(){
+    this._ventasService.getTipoventa().subscribe(
+      response =>{
+        this.tipo_pago = response.tipo_pago
+      }
+    )
   }
   //ponemos vacio al cambiar entre tipo de busqueda
   seleccionTipoBusqueda(e:any){
@@ -166,6 +392,13 @@ export class NotasPorCobrarComponent implements OnInit {
       this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
     });
   }
+  openModalCobro(content:any){
+    this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title', size: 'lg', backdropClass: ''}).result.then((result) => {
+      this.closeResult = `Closed with: ${result}`;
+    }, (reason) => {
+      this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+    });
+  }
   private getDismissReason(reason: any): string {//cerrarmodal
     if (reason === ModalDismissReasons.ESC) {
       return 'by pressing ESC';
@@ -176,3 +409,4 @@ export class NotasPorCobrarComponent implements OnInit {
     }
   }
 }
+/*********************** */

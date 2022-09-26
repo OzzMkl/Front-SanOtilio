@@ -1,9 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 //servicio
 import { ClientesService } from 'src/app/services/clientes.service';
-import { global } from 'src/app/services/global';
-//router sirve para redireccionar a otra ruta
-import { Router } from '@angular/router';
+import { EmpleadoService } from 'src/app/services/empleado.service';
 //ngbootstrap
 import { NgbModal, ModalDismissReasons, NgbDateStruct} from '@ng-bootstrap/ng-bootstrap';
 
@@ -20,6 +18,7 @@ export class ClienteBuscarComponent implements OnInit {
   public clientes:any;
   public cliente:any;
   public dirCliente:any;
+  public userPermisos:any//loaduser
   /**PAGINATOR */
   public totalPages: any;
   public page: any;
@@ -34,10 +33,14 @@ export class ClienteBuscarComponent implements OnInit {
   //spinner
   public isLoading: boolean = false;
 
-  constructor( private _clienteService: ClientesService, private modalService: NgbModal ) { }
+  constructor( private _clienteService: ClientesService, private modalService: NgbModal, private _empleadoService:EmpleadoService ) { }
 
   ngOnInit(): void {
     this.getClientes();
+    this.loadUser();
+  }
+  loadUser(){
+    this.userPermisos = this._empleadoService.getPermisosModulo();
   }
   seleccionarCliente(idCliente:any){
     this._clienteService.getDetallesCliente(idCliente).subscribe( 

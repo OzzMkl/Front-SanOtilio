@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 //Servicios
 import { VentasService } from 'src/app/services/ventas.service';
+import { EmpleadoService } from 'src/app/services/empleado.service';
 //NGBOOTSTRAP-modal
 import { NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
 
@@ -15,6 +16,7 @@ export class VentasRealizadasComponent implements OnInit {
   public ventas:any;
   public detallesVenta:any;
   public productosDVenta:any;
+  public userPermisos:any//loaduser
   //spinner de carga
   public isLoading:boolean = false;
   //paginator
@@ -32,10 +34,11 @@ export class VentasRealizadasComponent implements OnInit {
   //cerrar modal
   closeResult = '';
 
-  constructor( private _ventasService: VentasService, private modalService: NgbModal) { }
+  constructor( private _ventasService: VentasService, private modalService: NgbModal, private _empleadoService: EmpleadoService) { }
 
   ngOnInit(): void {
     this.getVentas();
+    this.loadUser()
   }
   getVentas(){
     this.isLoading = true;
@@ -67,6 +70,10 @@ export class VentasRealizadasComponent implements OnInit {
     this.buscaFolio='';
     this.buscaNombreCliente='';
     this.buscaNombreEmpleado='';
+  }
+  //cargamos permisos
+  loadUser(){
+    this.userPermisos = this._empleadoService.getPermisosModulo()
   }
   // Metodos del  modal
   open(content:any) {//abrir modal

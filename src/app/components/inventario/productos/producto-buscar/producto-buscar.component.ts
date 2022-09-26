@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ProductoService } from 'src/app/services/producto.service';
+import { HttpClient} from '@angular/common/http';
 import { global } from 'src/app/services/global';
 import { Router } from '@angular/router';
 
@@ -11,15 +12,16 @@ import { Router } from '@angular/router';
 })
 export class ProductoBuscarComponent implements OnInit {
 
-  public page_title: string;
+  
   public url:string;
   public productos: any;
   /**PAGINATOR */
   public totalPages: any;
-  public page: any;
+  public path: any;
   public next_page: any;
   public prev_page: any;
-  pageActual: number = 1;
+  public itemsPerPage:number=0;
+  pageActual: number = 0;
   fpd='';
   datox:any;
 
@@ -28,9 +30,10 @@ export class ProductoBuscarComponent implements OnInit {
 
   constructor(
     private _productoService: ProductoService,
-    private _router: Router
+    private _router: Router,
+    private _http: HttpClient
   ) {
-    this.page_title = 'Buscar Productos';
+    
     this.url = global.url;
     this.productos = [];
     this.datox='';
@@ -45,11 +48,17 @@ export class ProductoBuscarComponent implements OnInit {
     this._productoService.getProductos().subscribe(
       response =>{
         if(response.status == 'success'){
-          this.productos = response.productos;
+          this.productos = response.productos.data;
           //console.log(this.productos)
+
           //navegacion paginacion
           this.totalPages = response.productos.total;
-          //console.log(response.productos);
+          this.itemsPerPage = response.productos.per_page;
+          this.pageActual = response.productos.current_page;
+          this.next_page = response.productos.next_page_url;
+          this.path = response.productos.path
+          
+          
           this.isLoading = false;
         }
       },
@@ -61,6 +70,20 @@ export class ProductoBuscarComponent implements OnInit {
   selected(dato:any){
     this.datox = dato;
     this._router.navigate(['./producto-modulo/producto-ver/'+this.datox]);
+  }
+  getPage(page:any) {
+    this._http.get(this.path+'?page='+page).subscribe(
+      (response:any) => {
+        //console.log(response);
+        this.productos = response.productos.data;
+        //navegacion paginacion
+        this.totalPages = response.productos.total;
+        this.itemsPerPage = response.productos.per_page;
+        this.pageActual = response.productos.current_page;
+        this.next_page = response.productos.next_page_url;
+        this.path = response.productos.path
+        
+    })
   }
 
 }

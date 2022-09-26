@@ -178,17 +178,17 @@
       </div>
       <br>
       <div class="row align-items-start">
-        <div class="col-3">
+        <!-- <div class="col-3">
           <label for="precioR" class="form-label">Precio revendedor</label>
           <input type="number" class="form-control" id="precioR" name="precioR" #precioR="ngModel" [(ngModel)]="producto.precioR" pattern="[0-9]{10}" maxlength="10">
-        </div>
-        <div class="col-3">
+        </div> -->
+        <!-- <div class="col-3">
           <label for="precioS" class="form-label">Precio publico general</label>
           <input type="number" class="form-control" id="precioS" name="precioS" #precioS="ngModel" [(ngModel)]="producto.precioS" pattern="[0-9]{10}" maxlength="10">
-        </div>
+        </div> -->
         <div class="col-3">
           <label for="clavesat" class="form-label">Clave sat</label>
-          <input type="number" class="form-control" id="clavesat" name="claveSat" #claveSat="ngModel" [(ngModel)]="producto.claveSat"pattern="[0-9]{15}" maxlength="15">
+          <input type="number" class="form-control" id="clavesat" name="claveSat" #claveSat="ngModel" [(ngModel)]="producto.claveSat"pattern="[0-9]{15}" maxlength="15" disabled>
         </div>
         <div class="col-3">
           <div class="form-check form-switch">

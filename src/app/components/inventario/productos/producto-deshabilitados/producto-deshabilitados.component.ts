@@ -11,7 +11,6 @@ import { Router } from '@angular/router';
 })
 export class ProductoDeshabilitadosComponent implements OnInit {
 
-  public page_title: string;
   public url:string;
   public productos: any;
   /**PAGINATOR */
@@ -27,7 +26,6 @@ export class ProductoDeshabilitadosComponent implements OnInit {
     private _productoService: ProductoService,
     private _router: Router
   ) {
-    this.page_title = 'Buscar Productos Deshabilitados';
     this.url = global.url;
     this.productos = [];
     this.datox='';
@@ -43,7 +41,7 @@ export class ProductoDeshabilitadosComponent implements OnInit {
           this.productos = response.productos;
           //navegacion paginacion
           this.totalPages = response.productos.total;
-          console.log(response.productos);
+          //console.log(response.productos);
         }
       },
       error =>{

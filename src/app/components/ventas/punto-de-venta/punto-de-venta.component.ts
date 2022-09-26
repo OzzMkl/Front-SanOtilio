@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 //servicio
 import { ClientesService } from 'src/app/services/clientes.service';
 import { ToastService } from 'src/app/services/toast.service';
@@ -44,6 +45,7 @@ export class PuntoDeVentaComponent implements OnInit {
   public productosdCotiza:any;
   public empresa:any;//getDetallesEmpresa
   public productoEG:any;
+  public userPermisos:any//loaduser
   /**PAGINATOR */
   public totalPages: any;
   public page: any;
@@ -87,7 +89,8 @@ export class PuntoDeVentaComponent implements OnInit {
     private _productoService:ProductoService,
     private _ventasService: VentasService,
     private _empleadoService : EmpleadoService,
-    private _empresaService: EmpresaService) {
+    private _empresaService: EmpresaService,
+    private _router:Router) {
     //declaramos modelos
     this.ventag = new Ventag(0,0,2,'',1,null,0,0,0,0,'','',0);
     this.modeloCliente = new Cliente (0,'','','','','',0,1,0);
@@ -308,6 +311,12 @@ export class PuntoDeVentaComponent implements OnInit {
   //traemos la informacion del usuario logeado
   loadUser(){
     this.identity = this._empleadoService.getIdentity();
+     this.userPermisos = this._empleadoService.getPermisosModulo()
+    if(this.userPermisos[0]['agregar'] != 1){
+      this._router.navigate(['./ventas-modulo/ventas-realizadas-buscar'])
+      
+      this.toastService.show('Acceso denegado', { classname: 'bg-danger  text-light', delay: 5000 });
+    }
   }
   //evitamod que den enter en el textarea de observaciones
   omitirEnter(event:any){
@@ -385,6 +394,7 @@ export class PuntoDeVentaComponent implements OnInit {
             response => {
             this.detallesCotiza = response.Cotizacion;
             this.productosdCotiza = response.productos_cotiza;
+            //console.log(this.productosdCotiza)
             this.creaPDFcotizacion();
           },error =>{
             console.log(error)
@@ -430,7 +440,7 @@ export class PuntoDeVentaComponent implements OnInit {
     doc.setLineWidth(2.5).line(10,75,200,75);//colocacion de linea
     //recorremos los productos
     this.productosdCotiza.forEach((element:any) =>{
-      var temp = [element.claveEx,element.descripcion,element.nombreMedida,element.precio,element.cantidad,element.descuento,element.total];
+      var temp = [element.claveEx,element.descripcion,element.nombreMedida,element.precio,element.cantidad,element.descuento,element.subtotal];
       rows.push(temp);
     });
     //generamos la tabla
@@ -460,6 +470,7 @@ export class PuntoDeVentaComponent implements OnInit {
     }else if(this.ventag.idCliente == 0){
       this.toastService.show('No puedes generar una venta/cotizacion sin cliente!',{classname: 'bg-danger text-light', delay: 6000})
     }else{
+      //console.log(this.ventag)
       this._ventasService.postVentas(this.ventag).subscribe(
         response => {
           if(response.status == 'success'){
@@ -469,21 +480,18 @@ export class PuntoDeVentaComponent implements OnInit {
                 if(response.status == 'success'){
                   this.toastService.show('productos cargados exitosamente',{ classname: 'bg-success text-light', delay: 5000});
                 }
-                console.log(response);
+                //console.log(response);
               }, error =>{
                 console.log(error);
               }
             )
           }
-          console.log(response);
+          //console.log(response);
         }, error => {
           console.log(error);
         }
       );
     }
-  }
-  creaTicket(){
-    
   }
   // Metodos del  modal
   open(content:any) {//abrir modal aplica para la mayoria de los modales

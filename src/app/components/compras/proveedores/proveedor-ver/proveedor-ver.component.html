@@ -6,20 +6,20 @@
             <div class="card-header" style="background-color: rgb(143 177 227);">
                 <div class="row justify-content-around">
                     <div class="col-md-12">
-                        <h1>Proveedor #{{p.idProveedor}}: {{ p.nombre}}</h1>
+                        <h3>Proveedor #{{p.idProveedor}}: {{ p.nombre}}</h3>
                     </div>
                 </div>
-                <div class="row justify-content-end">
+                <div class="row justify-content-end" *ngFor="let permiso of userPermisos">
                     <div class="col-auto">
-                        <button type="button" class="btn btn-secondary me-md-2"><i class="bi bi-file-earmark-pdf"></i><br>PDF</button>
-                        <button type="button" value="Deshabilitados" class="btn btn-warning me-md-2" ><i class="bi bi-pencil-square"></i><br>Editar</button>
+                        <button type="button" class="btn btn-secondary me-md-2" ngbTooltip="PDF" *ngIf="permiso.pdf == 1"><i class="bi bi-file-earmark-pdf"></i><br></button>
+                        <button type="button" value="Deshabilitados" class="btn btn-warning me-md-2" ngbTooltip="EDITAR" *ngIf="permiso.editar == 1"><i class="bi bi-pencil-square"></i><br></button>
                     </div>
 
                     <div *ngIf="p.idStatus==1; else elseBlock" class="col-auto">
                         <form class="form-group" #upstss="ngForm" (ngSubmit)="onSubmitt(upstss)" >
                             <input class="form-control" type="text" name="idProveedor" #idProveedor="ngModel" [(ngModel)]="provee.idProveedor" hidden>
                             <input class="form-control" type="text" value="2" name="idStatus" #idStatus="ngModel" [(ngModel)]="provee.idStatus" hidden>
-                            <button type="submit" class="btn btn-danger" ><i class="bi bi-exclamation-circle"></i><br>Inhabilitar</button>
+                            <button type="submit" class="btn btn-danger" ngbTooltip="DESHABILITAR" *ngIf="permiso.cancelar == 1"><i class="bi bi-exclamation-circle"></i><br></button>
                         </form>
 
                       </div>
@@ -28,7 +28,7 @@
                              <form class="form-group" #upsts="ngForm" (ngSubmit)="onSubmit(upsts)" >
                                 <input class="form-control" type="text" name="idProveedor" #idProveedor="ngModel" [(ngModel)]="prove.idProveedor" hidden>
                                 <input class="form-control" type="text" name="idStatus" #idStatus="ngModel" [(ngModel)]="prove.idStatus" hidden>
-                                <button type="submit" class="btn btn-danger" ><i class="bi bi-exclamation-circle"></i><br>Habilitar</button>
+                                <button type="submit" class="btn btn-danger" ngbTooltip="HABILITAR" *ngIf="permiso.editar == 1"><i class="bi bi-exclamation-circle"></i><br></button>
                             </form>
                         </div>
                     </ng-template>
@@ -37,7 +37,7 @@
             </div>
         
             <div class="card-body">
-                <h2 class="card-subtitle mb-2">Datos del Proveedor</h2>
+                <h4 class="card-subtitle mb-2">Datos del Proveedor</h4>
                 <form>
                     <label>Dirección</label>                    
                     <input class="form-control" type="text" value="CALLE {{p.calle}} N°{{p.numero}}, COLONIA {{p.colonia}} {{p.cpostal}} {{p.ciudad}}, {{p.estado}}. {{p.pais}}" aria-label="readonly input example" readonly>
@@ -59,7 +59,7 @@
                     <br>
                 </form>
                 <hr>
-                <h2 class="card-subtitle mb-2">Contacto principal</h2>
+                <h4 class="card-subtitle mb-2">Contacto principal</h4>
                     <div class="row justify-content-end">
                         <div class="col-auto">
                             <button type="button" value="verC" class="btn btn-warning" (click)="triggerModal (modalData)" >Ver mas</button>
@@ -87,7 +87,7 @@
                     <br>
                 </form>
                 <hr>
-                <h2 class="card-subtitle mb-2">Números de cuenta principal</h2>
+                <h4 class="card-subtitle mb-2">Números de cuenta principal</h4>
                 <div class="row justify-content-end">
                     <div class="col-auto">
                         <button type="button" value="verNCP" class="btn btn-warning" (click)="triggerModal (modalData2)" >Ver mas</button>

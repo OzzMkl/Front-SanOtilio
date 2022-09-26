@@ -1,5 +1,5 @@
 <div class="container">
-    <h1>Ordenes de compra por recibir</h1>
+    <h3 class="text-center">Ordenes de compra por recibir</h3>
 </div>
 <div>
     <div class="text-center text-primary" *ngIf="isLoading">
@@ -61,21 +61,21 @@
                 <div  class="container">
                   
                   <div class="row" *ngFor="let permiso of  userPermisos">
-                      <div class="col-6">
-                          <h3>{{doc.nombreProveedor}}</h3>
+                      <div class="col-9">
+                          <h4>{{doc.nombreProveedor}}</h4>
                       </div>
                       
                       <div class="col-auto" *ngIf="permiso.pdf == 1">
-                          <button type="button" class="btn btn-secondary" ><i class="bi bi-file-earmark-pdf"></i><br>PDF</button>
+                          <button type="button" class="btn btn-secondary" ngbTooltip="PDF"><i class="bi bi-file-earmark-pdf"></i><br></button>
                       </div>
                       <div class="col-auto" *ngIf="permiso.editar == 1">
-                          <button type="button" class="btn btn-warning" (click)="modal.dismiss('Cross click')" [routerLink]="['../ordencompra-editar',doc.idOrd]"><i class="bi bi-pencil-square"></i><br>Editar</button>
+                          <button type="button" class="btn btn-warning" (click)="modal.dismiss('Cross click')" [routerLink]="['../ordencompra-editar',doc.idOrd]" ngbTooltip="EDITAR"><i class="bi bi-pencil-square"></i><br></button>
                       </div>
                       <div class="col-auto" *ngIf="permiso.cancelar == 1">
-                          <button type="button" class="btn btn-danger"><i class="bi bi-trash3"></i><br>Cancelar</button>
+                          <button type="button" class="btn btn-danger" ngbTooltip="CANCELAR"><i class="bi bi-trash3"></i><br></button>
                       </div>
                       <div class="col-auto" *ngIf="permiso.editar == 1">
-                        <button type="button" class="btn btn-success" (click)="modal.dismiss('Cross click')" [routerLink]="['../../compra-modulo/compra-agregar-id',doc.idOrd]"><i class="bi bi-arrow-up-right-square"></i><br>Pasar a compra</button> 
+                        <button type="button" class="btn btn-success" (click)="modal.dismiss('Cross click')" [routerLink]="['../../compra-modulo/compra-agregar-id',doc.idOrd]" ngbTooltip="PASAR A COMPRA"><i class="bi bi-arrow-up-right-square"></i><br></button> 
                     </div>
                   </div>
                   <hr>

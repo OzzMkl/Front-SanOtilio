@@ -13,7 +13,7 @@ import { MarcaService } from 'src/app/services/marca.service';
 })
 export class MarcaVerComponent implements OnInit {
 
-  public page_title: string;
+  
   public url:string;
   public marca: any;
   public totalPages: any;
@@ -31,7 +31,7 @@ export class MarcaVerComponent implements OnInit {
 
   ) {
 
-      this.page_title = 'Marcas'
+      
       this.url = global.url;
       this.marca = [];
 

@@ -1,5 +1,5 @@
 <div class="container">
-    <h4 class="text-center">Buscar clientes</h4>
+    <h3 class="text-center">Buscar clientes</h3>
 </div>
 <div class="container- fluid" *ngIf="clientes">
     <div class="col">
@@ -59,9 +59,9 @@
                         <label class="form-label">TIPO CLIENTE</label>
                         <input class="form-control" type="text" value="{{c.nombreTipoC}}" readonly>
                     </div>
-                    <div class="col-1">
+                    <div class="col-1" *ngFor="let permiso of userPermisos">
                         
-                        <button type="button" class="btn btn-warning" (click)="modal.dismiss('Cross click')" [routerLink]="['../cliente-editar',c.idCliente]"><i class="bi bi-pencil-square"></i><br>Editar</button>
+                        <button *ngIf="permiso.editar == 1" type="button" class="btn btn-warning" (click)="modal.dismiss('Cross click')" [routerLink]="['../cliente-editar',c.idCliente]" ngbTooltip="EDITAR"><i class="bi bi-pencil-square"></i><br></button>
                     </div>
                 </div>
                 <hr>

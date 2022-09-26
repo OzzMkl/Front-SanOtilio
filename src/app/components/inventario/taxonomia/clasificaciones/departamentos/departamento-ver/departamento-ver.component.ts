@@ -16,7 +16,6 @@ import { SubCategoriaService } from 'src/app/services/subcategoria.service';
 })
 export class DepartamentoVerComponent implements OnInit {
 
-  public page_title: string;
   public url:string;
   public departamentos: any;
   public totalPages: any;
@@ -43,14 +42,11 @@ export class DepartamentoVerComponent implements OnInit {
     private _router: Router
 
   ) {
-    this.page_title = ''
     this.url = global.url;
     this.departamentos = [];
     this.categoria = [];
     this.subCategoria = [];
     this.long = [];
-    this.Tcate = 'Categorías';
-    this.Tsubcate = 'Subcategorías';
 
    }
 

@@ -12,7 +12,6 @@ import { NgxBarcodeModule } from 'ngx-barcode';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './components/login/login.component';
-import { HomeComponent } from './components/home/home.component';
 import { ErrorComponent } from './components/error/error.component';
 
 import { EmpleadoEditarComponent } from './components/empleado-editar/empleado-editar.component';
@@ -77,14 +76,15 @@ import { NotasPorCobrarComponent } from './components/cajas/notas-por-cobrar/not
 import { NotasACreditoComponent } from './components/cajas/notas-a-credito/notas-a-credito.component';
 import { CorteDeCajaComponent } from './components/cajas/corte-de-caja/corte-de-caja.component';
 import { EmpleadoService } from './services/empleado.service';
-import { EntregasComponent } from './components/ventas/entregas/entregas.component';
+import { EntregasModuloComponent } from './components/entregas/entregas-modulo/entregas-modulo.component';
+import { EntregasAgregarComponent } from './components/entregas/entregas-agregar/entregas-agregar.component';
+import { EntregasPendientesComponent } from './components/entregas/entregas-pendientes/entregas-pendientes.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
-    HomeComponent,
     ErrorComponent,
     EmpleadoEditarComponent,
     ProveedorAgregarComponent,
@@ -143,7 +143,9 @@ import { EntregasComponent } from './components/ventas/entregas/entregas.compone
     NotasPorCobrarComponent,
     NotasACreditoComponent,
     CorteDeCajaComponent,
-    EntregasComponent
+    EntregasModuloComponent,
+    EntregasAgregarComponent,
+    EntregasPendientesComponent
   ],
   imports: [
     BrowserModule,
