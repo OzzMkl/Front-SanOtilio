@@ -86,7 +86,8 @@ export class ProductoAgregarComponent implements OnInit {
     this.almacenes = [];
     this.closeModal ='';
     this.lote = new Lote ('','');
-    this.producto = new Producto(0,0,0,0,0,0,'',0,'',0,0,'',0,'','',null,0,null,0,0);
+    //this.producto = new Producto(0,0,0,0,0,0,'',0,'',0,0,'',0,'','',null,0,null,0,0);
+    this.producto = new Producto(0,0,0,0,0,0,'',0,'',0,0,'',1,'','',null,0,null,0,0);
     this.pd=[];
     this.url = global.url;
    }
