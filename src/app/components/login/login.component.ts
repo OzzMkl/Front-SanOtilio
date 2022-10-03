@@ -48,8 +48,8 @@ export class LoginComponent implements OnInit {
                this._empleadoService.signup(this.empleado, this.status).subscribe(//Realizamos nuevamente la peticion para traer los datos ya que en el anterior solo obtenemos el token
                     response => {
                           this.identity = response;//obtenemos los datos
-                          console.log(this.token);
-                          console.log(this.identity);
+                          //console.log(this.token);
+                          //console.log(this.identity);
                           //con esto percistimos los datos del usuario identificado
                           localStorage.setItem('token', this.token);//guardamos el token localmente en la memoria del navegador
                           localStorage.setItem('identity', JSON.stringify(this.identity));//guardamos la identidad y convertimos el objeto javascript a un objeto json

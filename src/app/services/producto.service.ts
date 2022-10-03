@@ -7,7 +7,7 @@ import { global } from "./global";
 @Injectable()
 export class ProductoService{
     public url: string;//declaramos la url publica a usar para todas las peticiones
-
+    public headers:any = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');
 
     constructor(
         public _http: HttpClient
@@ -75,5 +75,8 @@ export class ProductoService{
     getExistenciaG(idProducto:any):Observable<any>{
         let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');
         return this._http.get(this.url+'productos/getExistenciaG/'+idProducto, {headers:headers} );
+    }
+    searchClaveExterna(claveExterna:string):Observable<any>{
+        return this._http.get(this.url+'productos/searchClaveExterna/'+claveExterna, {headers:this.headers});
     }
 }

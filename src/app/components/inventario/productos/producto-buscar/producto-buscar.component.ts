@@ -22,7 +22,7 @@ export class ProductoBuscarComponent implements OnInit {
   public prev_page: any;
   public itemsPerPage:number=0;
   pageActual: number = 0;
-  fpd='';
+  searchProducto='';
   datox:any;
 
   //spinner
@@ -84,6 +84,46 @@ export class ProductoBuscarComponent implements OnInit {
         this.path = response.productos.path
         
     })
+  }
+
+  /*Funcion que busca la palabra o letra que se escribe 
+  * en el cuadro de busqueda
+  * recibe el evento del componente se carga su valor
+  * a la variable searchProducto
+  */
+  getSearch(claveExterna:any){
+    //mostramos el spinner 
+    this.isLoading = true;
+
+    if(claveExterna.target.value == ''){
+      this.getProd();
+    }
+    //componemos la palabra
+    this.searchProducto = claveExterna.target.value;
+
+    //generamos consulta
+    this._productoService.searchClaveExterna(this.searchProducto).subscribe(
+      response =>{
+          if(response.status == 'success'){
+
+            //asignamos datos a varibale para poder mostrarla en la tabla
+            this.productos = response.productos.data;
+            //console.log(this.productos)
+
+            //navegacion paginacion
+            this.totalPages = response.productos.total;
+            this.itemsPerPage = response.productos.per_page;
+            this.pageActual = response.productos.current_page;
+            this.next_page = response.productos.next_page_url;
+            this.path = response.productos.path
+            
+            //una ves terminado de cargar quitamos el spinner
+            this.isLoading = false;
+        }
+      }, error =>{
+          console.log(error)
+      }
+    )
   }
 
 }
