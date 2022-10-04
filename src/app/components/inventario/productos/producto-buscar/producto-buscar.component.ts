@@ -24,7 +24,6 @@ import { Router } from '@angular/router';
   providers: [ProductoService]
 })
 export class ProductoBuscarComponent implements OnInit {
-
   
   public url:string = global.url;
   public productos: Array<any> = [];
@@ -54,7 +53,6 @@ export class ProductoBuscarComponent implements OnInit {
    * Trae todos los productos con su paginacion
    * para mostrar en la tabla
    */
-
   getProd(){
 
     //mostramos el spinner
@@ -88,15 +86,14 @@ export class ProductoBuscarComponent implements OnInit {
 
   /**
    * 
-   * @param dato 
+   * @param id 
    * Es el id del producto a buscar
    * @description
    * Redireccionamos al componente producto-ver y mostramos
    *  los detalles del producto
    */
-
-  selected(dato:number){
-    this._router.navigate(['./producto-modulo/producto-ver/'+dato]);
+  selected(id:number){
+    this._router.navigate(['./producto-modulo/producto-ver/'+id]);
   }
 
   /**
@@ -131,7 +128,6 @@ export class ProductoBuscarComponent implements OnInit {
    * Recibe los valores del evento keyUp, luego busca y actualiza
    * los datos de la tabla
    */
-
   getSearch(claveExterna:any){
 
     //mostramos el spinner 

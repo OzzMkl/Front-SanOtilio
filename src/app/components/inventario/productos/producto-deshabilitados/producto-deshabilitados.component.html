@@ -1,17 +1,22 @@
 <div class="container">
     <h3 class="text-center">Buscar Productos Deshabilitados</h3>
 </div>
-<div class="">
-    <div class="loading" *ngIf="!productos">
-        Cargando..
+<!--CUADRO DE BUSQUEDA-->
+<div class="form-group">
+    <input type="search" class="form-control" name="searchProducto" placeholder="Buscar ..." (keyup)="getSearch($event)">
+</div>
+<!-- FIN CUADRO DE BUSQUEDA  -->
+<br>
+    <!-- SPINNER  -->
+    <div class="text-center text-primary" *ngIf="isLoading">
+        <div class="spinner-border" role="status" >
+            <span class="visually-hidden">Loading...</span>
+          </div>
     </div>
-    <div class="container-fluid" *ngIf="productos">
-        <!--CUADRO DE BUSQUEDA-->
-        <div class="form-group">
-            <input type="text" class="form-control" name="fpd" placeholder="Buscar ..." [(ngModel)]="fpd">
-        </div>
-        <br>
-        <!--  -->
+    <!-- FIN SPINNER  -->
+    <!-- CONTENEDOR TABLE -->
+    <div class="container-fluid" *ngIf="!isLoading">
+        <!-- TABLA -->
         <table class="table table-dark table-hover" >
             <thead>
                 <tr>
@@ -22,14 +27,15 @@
                     <th scope="col">PRECIO REVENDEDOR</th>
                     <th scope="col">MEDIDA</th>
                     <th scope="col">MARCA</th>
-                    <th scope="col">DEPARTAMENTO</th>
-                    <th scope="col">CATEGORIA</th>
-                    <th scope="col">SUBCATEGORIA</th>
+                    <th scope="col">EXISTENCIA</th>
+                    <!-- <th scope="col">DEPARTAMENTO</th> -->
+                    <!-- <th scope="col">CATEGORIA</th> -->
+                    <!-- <th scope="col">SUBCATEGORIA</th> -->
                     <th scope="col">IMAGEN</th>
                     <!-- <th scope="col">ACCION</th> -->
             </tr>
             </thead>
-            <tbody *ngFor="let pr of productos | filterProduct:fpd | paginate:{itemsPerPage: 10, currentPage: pageActual}">
+            <tbody *ngFor="let pr of productos | paginate:{itemsPerPage: 10, currentPage: pageActual}">
                 <tr (click)="selected(pr.idProducto)">
                     <th scope="row">{{pr.claveEx}}</th>
                     <th scope="row">{{pr.cbarras}}</th>
@@ -38,14 +44,24 @@
                     <th scope="row">${{pr.precioR}}</th>
                     <th scope="row">{{pr.nombreMedida}}</th>
                     <th scope="row">{{pr.nombreMarca}}</th>
-                    <th scope="row">{{pr.nombreDep}}</th>
-                    <th scope="row">{{pr.nombreCat}}</th>
-                    <th scope="row">{{pr.nombreSubCat}}</th>
-                    <th scope="row"><img src="{{url + 'productos/getImageProduc/' + pr.imagen}}" width="100px" height="100px"></th>
+                    <th scope="row">{{pr.existenciaG}}</th>
+                    <!-- <th scope="row">{{pr.nombreDep}}</th> -->
+                    <!-- <th scope="row">{{pr.nombreCat}}</th> -->
+                    <!-- <th scope="row">{{pr.nombreSubCat}}</th> -->
+                    <th scope="row" *ngIf="pr.imagen != null || pr.imagen == '' || pr.imagen == 'null'; else elseBlock"><img src="{{url + 'productos/getImageProduc/' + pr.imagen}}" width="75px" height="75px"></th>
                     <!-- <th scope="row"> <input type="button" value="Ver" class="btn btn-warning"/></th> -->
+                    <ng-template #elseBlock>
+                        <th scope="row"><img src="{{url + 'productos/getImageProduc/1650558444no-image.png'}}" width="75px" height="75px"></th>
+                    </ng-template>
                 </tr>
             </tbody>
         </table>
-       <pagination-controls (pageChange)="pageActual = $event"></pagination-controls>
+        <!-- FIN TABLA -->
+        <!-- CONTROLES PAGINACION -->
+       <pagination-controls 
+            (pageChange)="getPage(pageActual = $event)"
+            previousLabel="Anterior"
+            nextLabel="Siguiente" >
+       </pagination-controls>
     </div>
-</div>
+    <!-- FIN CONTENEDOR TABLE -->

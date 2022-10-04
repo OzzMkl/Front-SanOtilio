@@ -76,7 +76,29 @@ export class ProductoService{
         let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');
         return this._http.get(this.url+'productos/getExistenciaG/'+idProducto, {headers:headers} );
     }
+    
+    /**
+     * Busca los productos apartir de su clave externa
+     * solo busca los productos que tengan estatus 1 (activos/habilitados)
+     * 
+     * @param claveExterna 
+     * Recibimos parametro a buscar
+     * @returns 
+     * Retornamos la respuesta del api
+     */
     searchClaveExterna(claveExterna:string):Observable<any>{
         return this._http.get(this.url+'productos/searchClaveExterna/'+claveExterna, {headers:this.headers});
+    }
+    /**
+     * Busca los productos apartir de su clave externa
+     * solo busca los productos que tengan estatus 2 (deshabilitado/inactivo)
+     * 
+     * @param claveExterna 
+     * Recibimos parametro a buscar
+     * @returns 
+     * Retornamos la respuesta del api
+     */
+    searchClaveExternaInactivos(claveExterna:string):Observable<any>{
+        return this._http.get(this.url+'productos/searchClaveExInactivos/'+claveExterna, {headers:this.headers});
     }
 }
