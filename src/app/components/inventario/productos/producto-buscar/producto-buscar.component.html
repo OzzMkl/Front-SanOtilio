@@ -2,8 +2,23 @@
     <h3 class="text-center">Buscar Productos</h3>
 </div>
     <!--CUADRO DE BUSQUEDA-->
-    <div class="form-group">
+    <div class="input-group mb-2">
+        <div class="col-2">
+            <select class="form-select" name="tipoBusqueda" [(ngModel)]="tipoBusqueda">
+                <option value="1">Clave externa</option>
+                <option value="2">Codigo de barras</option>
+                <option value="3">Descripcion</option>
+            </select>
+        </div>
+        <div class="col" *ngIf="tipoBusqueda == 1">
             <input type="search" class="form-control" name="searchProducto" placeholder="Buscar ..." (keyup)="getSearch($event)">
+        </div>
+        <div class="col" *ngIf="tipoBusqueda == 2">
+            <input type="search" class="form-control" name="searchProductoCodBar" placeholder="Buscar ..." (keyup)="getSearchCodbar($event)">
+        </div>
+        <div class="col" *ngIf="tipoBusqueda == 3">
+            <input type="search" class="form-control" name="searchProductoDescripcion" placeholder="Buscar ..." (keyup)="getSearchDescripcion($event)">
+        </div>
     </div>
     <!--FIN CUADRO DE BUSQUEDA-->
     <br>

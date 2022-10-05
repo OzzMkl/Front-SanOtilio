@@ -89,6 +89,23 @@ export class ProductoService{
     searchClaveExterna(claveExterna:string):Observable<any>{
         return this._http.get(this.url+'productos/searchClaveExterna/'+claveExterna, {headers:this.headers});
     }
+
+    /**
+     * Busca los productos apartir de su codigo de barras
+     * solo busca productos habilitados statuss 1
+     * @param codbar 
+     * parametro a buscar
+     * @returns 
+     * retorna respuesta
+     */
+    searchCodbar(codbar:number):Observable<any>{
+        return this._http.get(this.url+'productos/searchCodbar/'+codbar, {headers:this.headers})
+    }
+
+    searchDescripcion(descripcion:string):Observable<any>{
+        return this._http.get(this.url+'productos/searchDescripcion/'+descripcion, {headers:this.headers})
+    }
+
     /**
      * Busca los productos apartir de su clave externa
      * solo busca los productos que tengan estatus 2 (deshabilitado/inactivo)
