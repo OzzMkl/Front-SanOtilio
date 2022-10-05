@@ -102,6 +102,13 @@ export class ProductoService{
         return this._http.get(this.url+'productos/searchCodbar/'+codbar, {headers:this.headers})
     }
 
+    /**
+     * Busca los productos apartir de su descripcion
+     * solo busca los productos activos estatus 1
+     * @param descripcion 
+     * recibe la descripcion a buscar
+     * @returns 
+     */
     searchDescripcion(descripcion:string):Observable<any>{
         return this._http.get(this.url+'productos/searchDescripcion/'+descripcion, {headers:this.headers})
     }
@@ -117,5 +124,28 @@ export class ProductoService{
      */
     searchClaveExternaInactivos(claveExterna:string):Observable<any>{
         return this._http.get(this.url+'productos/searchClaveExInactivos/'+claveExterna, {headers:this.headers});
+    }
+
+    /**
+     * Busca los productos apartir de su codigo de barras
+     * solo busca productos habilitados statuss 2
+     * @param codbar 
+     * parametro a buscar
+     * @returns 
+     * retorna respuesta
+     */
+     searchCodbarI(codbar:number):Observable<any>{
+        return this._http.get(this.url+'productos/searchCodbarI/'+codbar, {headers:this.headers})
+    }
+
+    /**
+     * Busca los productos apartir de su descripcion
+     * solo busca los productos activos estatus 2
+     * @param descripcion 
+     * recibe la descripcion a buscar
+     * @returns 
+     */
+    searchDescripcionI(descripcion:string):Observable<any>{
+        return this._http.get(this.url+'productos/searchDescripcionI/'+descripcion, {headers:this.headers})
     }
 }

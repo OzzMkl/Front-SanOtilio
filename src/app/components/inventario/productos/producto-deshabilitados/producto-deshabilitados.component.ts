@@ -35,7 +35,11 @@ export class ProductoDeshabilitadosComponent implements OnInit {
   public prev_page: any;
   public itemsPerPage:number=0;
   pageActual: number = 0;
+  //
   searchProducto='';
+  searchProductoCodbar=0;
+  searchProductoDescrip='';
+  public tipoBusqueda: number = 1;
 
   //spinner
   public isLoading:boolean = false;
@@ -161,6 +165,96 @@ export class ProductoDeshabilitadosComponent implements OnInit {
         }
       }, error =>{
           console.log(error)
+      }
+    )
+  }
+
+  /**
+   * 
+   * @param codbar 
+   * Recibimos el evento del input
+   * @description
+   * Recibe los valores del evento keyup, luego busca y actualiza
+   * los datos que se muestran en la tabla
+   */
+   getSearchCodbarI(codbar:any){
+
+    //mostramos el spinner
+    this.isLoading = true;
+
+    //si es vacio volvemos a llamar la primera funcion que trae todo
+    if(codbar.target.value == ''){
+      this.getProd();
+    }
+
+    //componemos el codigo a buscar
+    this.searchProductoCodbar = codbar.target.value;
+
+    //llamamos al servicio
+    this._productoService.searchCodbarI(this.searchProductoCodbar).subscribe(
+      response =>{
+          if(response.status == 'success'){
+            //asignamos datos a varibale para poder mostrarla en la tabla
+            this.productos = response.productos.data;
+            //console.log(this.productos)
+
+            //navegacion paginacion
+            this.totalPages = response.productos.total;
+            this.itemsPerPage = response.productos.per_page;
+            this.pageActual = response.productos.current_page;
+            this.next_page = response.productos.next_page_url;
+            this.path = response.productos.path
+            
+            //una ves terminado de cargar quitamos el spinner
+            this.isLoading = false;
+          }
+      }, error => {
+        console.log(error)
+      }
+    )
+  }
+
+  /**
+   * 
+   * @param descripcion 
+   * Recibimos el evento del input
+   * @description
+   * Recibe los valores del Keyup, luego buscamos y actualizamos
+   * los datos que se muestran en la tabla
+   */
+  getSearchDescripcionI(descripcion:any){
+    
+    //mostramos el spinner
+    this.isLoading = true;
+
+    //si es vacio volvemos a llamar la primera funcion que trae todo
+    if(descripcion.target.value == ''){
+      this.getProd();
+    }
+
+    //componemos el codigo a buscar
+    this.searchProductoDescrip = descripcion.target.value;
+
+    //llamamos al servicio
+    this._productoService.searchDescripcionI(this.searchProductoDescrip).subscribe(
+      response =>{
+          if(response.status == 'success'){
+            //asignamos datos a varibale para poder mostrarla en la tabla
+            this.productos = response.productos.data;
+            //console.log(this.productos)
+
+            //navegacion paginacion
+            this.totalPages = response.productos.total;
+            this.itemsPerPage = response.productos.per_page;
+            this.pageActual = response.productos.current_page;
+            this.next_page = response.productos.next_page_url;
+            this.path = response.productos.path
+            
+            //una ves terminado de cargar quitamos el spinner
+            this.isLoading = false;
+          }
+      }, error => {
+        console.log(error)
       }
     )
   }
