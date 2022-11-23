@@ -6,14 +6,11 @@ import { global } from "./global";
 
 @Injectable()
 export class ProductoService{
-    public url: string;//declaramos la url publica a usar para todas las peticiones
+    public url: string = global.url;//declaramos la url publica a usar para todas las peticiones
     public headers:any = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');
 
-    constructor(
-        public _http: HttpClient
-    ){
-        this.url = global.url;
-    }
+    constructor( public _http: HttpClient ){ }
+    
     registerProducto(producto:any):Observable<any>{
             let json = JSON.stringify(producto);
             let params = 'json='+json;
