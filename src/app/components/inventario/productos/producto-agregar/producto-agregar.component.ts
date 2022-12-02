@@ -29,7 +29,7 @@ import { ProductoService } from 'src/app/services/producto.service';
 import { ToastService } from 'src/app/services/toast.service';
 /*NGBOOTSTRAP */
 import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-/*MODELOS*/
+/*MODELOS */
 import { Producto} from 'src/app/models/producto';
 import { Producto_precio } from 'src/app/models/producto_precio';
 
@@ -634,6 +634,10 @@ export class ProductoAgregarComponent implements OnInit {
       }//fin switch
     }//fin else
   }//fin calculaMonto()
+
+  revisaCheckventa(e:any){
+    console.log(e)
+  }
 
   /*    SERVICIOS 
    * Todos estos metodos traen la informacion de su nombre

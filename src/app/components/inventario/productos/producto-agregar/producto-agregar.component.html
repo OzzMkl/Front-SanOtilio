@@ -206,10 +206,14 @@
           <input class="form-check-input" type="checkbox"  id="checkPrecioCompra">
           <label class="form-label" for="checkPrecioCompra">Precio compra</label>
         </div> -->
-        <label class="form-label" for="checkPrecioCompra">Precio compra</label>
+        <label class="form-label" for="checkPrecioCompra">Precio compra *</label>
         <div class="input-group mb-3">
           <span class="input-group-text" id="basic-addon1">$</span>
-          <input type="number" class="form-control" name="precioCompra" [(ngModel)]="producto_precio.preciocompra"  (ngModelChange)="tieneImpuesto($event)">
+          <input type="number" class="form-control" name="precioCompra" #precioCompra="ngModel" [(ngModel)]="producto_precio.preciocompra" pattern="^[0-9]{1,6}" min="1"
+          (ngModelChange)="tieneImpuesto($event)" required>
+          <div [hidden]="precioCompra.valid || precioCompra.pristine" class="alert alert-danger">
+            CAMPO REQUERIDO | INGRESE SOLO NUMEROS MAYOR A 0 Y MAXIMO 9999999
+          </div>
         </div>
       </div>
 
@@ -233,13 +237,13 @@
         </div>
         
       </div>
-    </div>
+    </div><!-- PRIMERA PARTE (precio compra . tiene impuesto . precio compra sin)-->
 
     <div class="row align-items-start">
 
       <div class="col-4">
 
-        <label class="form-label">¿Se factura?</label>
+        <label class="form-label">¿Se factura? *</label>
         <br>
         
         <div class="form-check form-check-inline">
@@ -269,7 +273,7 @@
         </div>
       </div>
 
-    </div>
+    </div> <!-- SEGUNDA PARTE (se factura, clave sat, unidad sat) -->
     
     <!-- INICIO P5 -->
     <div class="row align-items-start">
@@ -313,10 +317,10 @@
     <!-- FIN P5 -->
 <br>
     <!-- INICIO P4 -->
-    <div class="row align-items-start">
+    <div class="row align-items-start" >
       <div class="col-2">
         <div class="form-check">
-          <input class="form-check-input" type="checkbox"  id="checkP4" name="precio4" [(ngModel)]="precio4">
+          <input class="form-check-input" type="checkbox"  id="checkP4" name="precio4" [(ngModel)]="precio4" (ngModelChange)="revisaCheckventa($event)">
           <p style="font-size:28px ;">P4</p>
         </div>
       </div>
