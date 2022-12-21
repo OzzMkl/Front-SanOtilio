@@ -8,6 +8,8 @@ import {NgxPaginationModule} from 'ngx-pagination'; // <-- import the module
 import { AngularFileUploaderModule } from "angular-file-uploader";
 //import { ReactiveFormsModule } from '@angular/forms';
 import { NgxBarcodeModule } from 'ngx-barcode';
+///primeng
+import { PrimengModule } from './primeng/primeng/primeng.module';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -157,7 +159,8 @@ import { EntregasPendientesComponent } from './components/entregas/entregas-pend
     NgbModule,
     NgxPaginationModule,
     AngularFileUploaderModule,
-    NgxBarcodeModule
+    NgxBarcodeModule,
+    PrimengModule
   ],
   providers: [EmpleadoService],
   bootstrap: [AppComponent],

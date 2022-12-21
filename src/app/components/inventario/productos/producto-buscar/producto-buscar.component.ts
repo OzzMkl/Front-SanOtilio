@@ -1,3 +1,18 @@
+/**
+ *  @fileoverview Logica del componente producto-buscar
+ *                muestra campo para buscar productos
+ *                muestra tabla con los productos paginados
+ * 
+ *  @version 1.0
+ * 
+ *  @autor Oziel pacheco<ozielpacheco.m@gmail.com>
+ *  @copyright Materiales San Otilio
+ * 
+ *  @History
+ * 
+ *  -Primera version escrita por Oziel Pacheco
+ * 
+ */
 import { Component, OnInit } from '@angular/core';
 import { ProductoService } from 'src/app/services/producto.service';
 import { HttpClient} from '@angular/common/http';
@@ -11,10 +26,9 @@ import { Router } from '@angular/router';
   providers: [ProductoService]
 })
 export class ProductoBuscarComponent implements OnInit {
-
   
-  public url:string;
-  public productos: any;
+  public url:string = global.url;
+  public productos: Array<any> = [];
   /**PAGINATOR */
   public totalPages: any;
   public path: any;
@@ -22,9 +36,11 @@ export class ProductoBuscarComponent implements OnInit {
   public prev_page: any;
   public itemsPerPage:number=0;
   pageActual: number = 0;
-  fpd='';
-  datox:any;
-
+  //
+  searchProducto='';
+  searchProductoCodbar=0;
+  searchProductoDescrip='';
+  public tipoBusqueda: number = 1;
   //spinner
   public isLoading:boolean = false;
 
@@ -32,22 +48,27 @@ export class ProductoBuscarComponent implements OnInit {
     private _productoService: ProductoService,
     private _router: Router,
     private _http: HttpClient
-  ) {
-    
-    this.url = global.url;
-    this.productos = [];
-    this.datox='';
-   }
+  ) { }
 
   ngOnInit(): void {
     this.getProd();
   }
 
+  /**
+   * Trae todos los productos con su paginacion
+   * para mostrar en la tabla
+   */
   getProd(){
+
+    //mostramos el spinner
     this.isLoading = true;
+
+    //ejecutamos el servicio
     this._productoService.getProductos().subscribe(
       response =>{
         if(response.status == 'success'){
+
+          //asignamos a varibale para mostrar
           this.productos = response.productos.data;
           //console.log(this.productos)
 
@@ -58,7 +79,7 @@ export class ProductoBuscarComponent implements OnInit {
           this.next_page = response.productos.next_page_url;
           this.path = response.productos.path
           
-          
+          //una vez terminado de cargar quitamos el spinner
           this.isLoading = false;
         }
       },
@@ -67,11 +88,29 @@ export class ProductoBuscarComponent implements OnInit {
       }
     );
   }
-  selected(dato:any){
-    this.datox = dato;
-    this._router.navigate(['./producto-modulo/producto-ver/'+this.datox]);
+
+  /**
+   * 
+   * @param id 
+   * Es el id del producto a buscar
+   * @description
+   * Redireccionamos al componente producto-ver y mostramos
+   *  los detalles del producto
+   */
+  selected(id:number){
+    this._router.navigate(['./producto-modulo/producto-ver/'+id]);
   }
-  getPage(page:any) {
+
+  /**
+   * 
+   * @param page
+   * Es el numero de pagina a la cual se va acceder
+   * @description
+   * De acuerdo al numero de pagina recibido lo concatenamos a
+   * la direccion para "ir" a esa direccion y traer la informacion
+   * no retornamos ya que solo actualizamos las variables a mostrar
+   */
+  getPage(page:number) {
     this._http.get(this.path+'?page='+page).subscribe(
       (response:any) => {
         //console.log(response);
@@ -84,6 +123,141 @@ export class ProductoBuscarComponent implements OnInit {
         this.path = response.productos.path
         
     })
+  }
+
+  /**
+   * 
+   * @param claveExterna 
+   * Recibimos el evento del input
+   * @description
+   * Recibe los valores del evento keyUp, luego busca y actualiza
+   * los datos de la tabla
+   */
+  getSearch(claveExterna:any){
+
+    //mostramos el spinner 
+    this.isLoading = true;
+
+    //si es vacio volvemos a llamar la primera funcion
+    if(claveExterna.target.value == ''){
+      this.getProd();
+    }
+    //componemos la palabra
+    this.searchProducto = claveExterna.target.value;
+
+    //generamos consulta
+    this._productoService.searchClaveExterna(this.searchProducto).subscribe(
+      response =>{
+          if(response.status == 'success'){
+
+            //asignamos datos a varibale para poder mostrarla en la tabla
+            this.productos = response.productos.data;
+            //console.log(this.productos)
+
+            //navegacion paginacion
+            this.totalPages = response.productos.total;
+            this.itemsPerPage = response.productos.per_page;
+            this.pageActual = response.productos.current_page;
+            this.next_page = response.productos.next_page_url;
+            this.path = response.productos.path
+            
+            //una ves terminado de cargar quitamos el spinner
+            this.isLoading = false;
+        }
+      }, error =>{
+          console.log(error)
+      }
+    )
+  }
+
+  /**
+   * 
+   * @param codbar 
+   * Recibimos el evento del input
+   * @description
+   * Recibe los valores del evento keyup, luego busca y actualiza
+   * los datos que se muestran en la tabla
+   */
+  getSearchCodbar(codbar:any){
+
+    //mostramos el spinner
+    this.isLoading = true;
+
+    //si es vacio volvemos a llamar la primera funcion que trae todo
+    if(codbar.target.value == ''){
+      this.getProd();
+    }
+
+    //componemos el codigo a buscar
+    this.searchProductoCodbar = codbar.target.value;
+
+    //llamamos al servicio
+    this._productoService.searchCodbar(this.searchProductoCodbar).subscribe(
+      response =>{
+          if(response.status == 'success'){
+            //asignamos datos a varibale para poder mostrarla en la tabla
+            this.productos = response.productos.data;
+            //console.log(this.productos)
+
+            //navegacion paginacion
+            this.totalPages = response.productos.total;
+            this.itemsPerPage = response.productos.per_page;
+            this.pageActual = response.productos.current_page;
+            this.next_page = response.productos.next_page_url;
+            this.path = response.productos.path
+            
+            //una ves terminado de cargar quitamos el spinner
+            this.isLoading = false;
+          }
+      }, error => {
+        console.log(error)
+      }
+    )
+  }
+
+  /**
+   * 
+   * @param descripcion 
+   * Recibimos el evento del input
+   * @description
+   * Recibe los valores del Keyup, luego buscamos y actualizamos
+   * los datos que se muestran en la tabla
+   */
+  getSearchDescripcion(descripcion:any){
+    
+    //mostramos el spinner
+    this.isLoading = true;
+
+    //si es vacio volvemos a llamar la primera funcion que trae todo
+    if(descripcion.target.value == ''){
+      this.getProd();
+    }
+
+    //componemos el codigo a buscar
+    this.searchProductoDescrip = descripcion.target.value;
+
+    //llamamos al servicio
+    this._productoService.searchDescripcion(this.searchProductoDescrip).subscribe(
+      response =>{
+          if(response.status == 'success'){
+            //asignamos datos a varibale para poder mostrarla en la tabla
+            this.productos = response.productos.data;
+            //console.log(this.productos)
+
+            //navegacion paginacion
+            this.totalPages = response.productos.total;
+            this.itemsPerPage = response.productos.per_page;
+            this.pageActual = response.productos.current_page;
+            this.next_page = response.productos.next_page_url;
+            this.path = response.productos.path
+            
+            //una ves terminado de cargar quitamos el spinner
+            this.isLoading = false;
+          }
+      }, error => {
+        console.log(error)
+      }
+    )
   }
 
 }

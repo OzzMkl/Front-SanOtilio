@@ -6,14 +6,11 @@ import { global } from "./global";
 
 @Injectable()
 export class ProductoService{
-    public url: string;//declaramos la url publica a usar para todas las peticiones
+    public url: string = global.url;//declaramos la url publica a usar para todas las peticiones
+    public headers:any = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');
 
-
-    constructor(
-        public _http: HttpClient
-    ){
-        this.url = global.url;
-    }
+    constructor( public _http: HttpClient ){ }
+    
     registerProducto(producto:any):Observable<any>{
             let json = JSON.stringify(producto);
             let params = 'json='+json;
@@ -75,5 +72,77 @@ export class ProductoService{
     getExistenciaG(idProducto:any):Observable<any>{
         let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');
         return this._http.get(this.url+'productos/getExistenciaG/'+idProducto, {headers:headers} );
+    }
+    
+    /**
+     * Busca los productos apartir de su clave externa
+     * solo busca los productos que tengan estatus 1 (activos/habilitados)
+     * 
+     * @param claveExterna 
+     * Recibimos parametro a buscar
+     * @returns 
+     * Retornamos la respuesta del api
+     */
+    searchClaveExterna(claveExterna:string):Observable<any>{
+        return this._http.get(this.url+'productos/searchClaveExterna/'+claveExterna, {headers:this.headers});
+    }
+
+    /**
+     * Busca los productos apartir de su codigo de barras
+     * solo busca productos habilitados statuss 1
+     * @param codbar 
+     * parametro a buscar
+     * @returns 
+     * retorna respuesta
+     */
+    searchCodbar(codbar:number):Observable<any>{
+        return this._http.get(this.url+'productos/searchCodbar/'+codbar, {headers:this.headers})
+    }
+
+    /**
+     * Busca los productos apartir de su descripcion
+     * solo busca los productos activos estatus 1
+     * @param descripcion 
+     * recibe la descripcion a buscar
+     * @returns 
+     */
+    searchDescripcion(descripcion:string):Observable<any>{
+        return this._http.get(this.url+'productos/searchDescripcion/'+descripcion, {headers:this.headers})
+    }
+
+    /**
+     * Busca los productos apartir de su clave externa
+     * solo busca los productos que tengan estatus 2 (deshabilitado/inactivo)
+     * 
+     * @param claveExterna 
+     * Recibimos parametro a buscar
+     * @returns 
+     * Retornamos la respuesta del api
+     */
+    searchClaveExternaInactivos(claveExterna:string):Observable<any>{
+        return this._http.get(this.url+'productos/searchClaveExInactivos/'+claveExterna, {headers:this.headers});
+    }
+
+    /**
+     * Busca los productos apartir de su codigo de barras
+     * solo busca productos habilitados statuss 2
+     * @param codbar 
+     * parametro a buscar
+     * @returns 
+     * retorna respuesta
+     */
+     searchCodbarI(codbar:number):Observable<any>{
+        return this._http.get(this.url+'productos/searchCodbarI/'+codbar, {headers:this.headers})
+    }
+
+    /**
+     * Busca los productos apartir de su descripcion
+     * solo busca los productos activos estatus 2
+     * @param descripcion 
+     * recibe la descripcion a buscar
+     * @returns 
+     */
+    searchDescripcionI(descripcion:string):Observable<any>{
+        return this._http.get(this.url+'productos/searchDescripcionI/'+descripcion, {headers:this.headers})
     }
 }

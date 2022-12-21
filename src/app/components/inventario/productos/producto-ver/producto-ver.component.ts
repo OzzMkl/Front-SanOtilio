@@ -36,8 +36,8 @@ export class ProductoVerComponent implements OnInit {
     this.producto = [];
     this.closeModal='';
     this.url = global.url;
-    this.prod= new Producto(0,0,0,0,0,0,'',0,'',0,0,'',0,'','',null,0,null,0,0);
-    this.prodd = new Producto(0,0,0,0,0,0,'',0,'',0,0,'',0,'','',null,0,null,0,0);
+    this.prod =  new Producto(0,0,0,0,0,0,'',0,'',0,0,'',2,'','',null,0,null,0,0);
+    this.prodd = new Producto(0,0,0,0,0,0,'',0,'',0,0,'',1,'','',null,0,null,0,0);
    }
 
   ngOnInit(): void {

@@ -5,7 +5,7 @@ export class Producto{//Modelo del producto
         public idMarca: number,
         public idDep: number,
         public idCat: number,
-        public idSubCat: number,
+        public idSubCat: any,
         public claveEx: string,
         public cbarras: number,
         public descripcion: string,

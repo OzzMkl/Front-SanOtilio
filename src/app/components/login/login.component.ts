@@ -1,7 +1,20 @@
+/**
+ *  @fileoverview Logica del componente login
+ * 
+ *  @version 1.0
+ * 
+ *  @autor Oziel pacheco<ozielpacheco.m@gmail.com>
+ *  @copyright Materiales San Otilio
+ * 
+ *  @History
+ * 
+ *  -Primera version escrita por Oziel Pacheco
+ * 
+ */
 import { Component, OnInit } from '@angular/core';
 import { Empleado } from 'src/app/models/empleado';
 import { EmpleadoService } from '../../services/empleado.service';
-import { Router, ActivatedRoute, Params } from '@angular/router';
+import { Router, ActivatedRoute} from '@angular/router';
 import { ToastService } from 'src/app/services/toast.service';
 
 @Component({
@@ -34,6 +47,13 @@ export class LoginComponent implements OnInit {
     this.logout();
   }
 
+  /**
+   * 
+   * @param form 
+   * Recibe los valores del form
+   * @description
+   * 
+   */
   onSubmit(form:any){
     
     this._empleadoService.signup(this.empleado).subscribe(
@@ -48,8 +68,8 @@ export class LoginComponent implements OnInit {
                this._empleadoService.signup(this.empleado, this.status).subscribe(//Realizamos nuevamente la peticion para traer los datos ya que en el anterior solo obtenemos el token
                     response => {
                           this.identity = response;//obtenemos los datos
-                          console.log(this.token);
-                          console.log(this.identity);
+                          //console.log(this.token);
+                          //console.log(this.identity);
                           //con esto percistimos los datos del usuario identificado
                           localStorage.setItem('token', this.token);//guardamos el token localmente en la memoria del navegador
                           localStorage.setItem('identity', JSON.stringify(this.identity));//guardamos la identidad y convertimos el objeto javascript a un objeto json
