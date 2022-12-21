@@ -226,14 +226,6 @@ export class CompraAgregarIdComponent implements OnInit {
 
 
     console.log(this.Lista_compras);
-
-
-
-
-
-
-
-
     
   }
 
