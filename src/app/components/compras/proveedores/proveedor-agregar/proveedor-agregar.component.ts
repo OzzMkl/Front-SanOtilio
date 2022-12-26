@@ -41,16 +41,16 @@ export class ProveedorAgregarComponent implements OnInit {
   }
   onSubmit(form:any){
     //console.log(this.proveedor);
-    this._proveedorService.register(this.proveedor).subscribe(
-      response =>{ 
-        //console.log(response);
-        this.toastService.show('Proveedor guardado correctamente', { classname: 'bg-success text-light', delay: 5000 }); 
-        form.reset();  },
-      error => {
-        this.toastService.show('Ups... Algo salio mal', { classname: 'bg-danger text-light', delay: 15000 });
-        console.log(<any>error);
-      }
-    )
+     this._proveedorService.register(this.proveedor).subscribe(
+       response =>{ 
+         //console.log(response);
+         this.toastService.show('Proveedor guardado correctamente', { classname: 'bg-success text-light', delay: 5000 }); 
+         form.reset();  },
+       error => {
+         this.toastService.show('Ups... Algo salio mal', { classname: 'bg-danger text-light', delay: 15000 });
+         console.log(<any>error);
+       }
+     )
   }
 
   getBanco(){

@@ -1,17 +1,29 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { InputTextModule } from 'primeng/inputtext';
+import { PanelModule } from 'primeng/panel'
+import { AccordionModule } from 'primeng/accordion';
+import { DropdownModule } from 'primeng/dropdown';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { ButtonModule } from 'primeng/button';
 
 
 
 @NgModule({
   declarations: [],
   exports:[
-    InputTextModule
+    InputTextModule,
+    PanelModule,
+    AccordionModule,
+    DropdownModule,
+    InputNumberModule,
+    ButtonModule,
   ],
   imports: [
     CommonModule,
+    BrowserAnimationsModule
   ]
 })
 export class PrimengModule { }

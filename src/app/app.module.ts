@@ -160,7 +160,8 @@ import { EntregasPendientesComponent } from './components/entregas/entregas-pend
     NgxPaginationModule,
     AngularFileUploaderModule,
     NgxBarcodeModule,
-    PrimengModule
+    PrimengModule,
+    
   ],
   providers: [EmpleadoService],
   bootstrap: [AppComponent],
