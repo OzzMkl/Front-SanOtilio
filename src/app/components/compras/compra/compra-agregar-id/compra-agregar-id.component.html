@@ -229,7 +229,7 @@
     </form>
 </div> -->
 
-<div class="container">
+<div class="container-fluid">
     <form class="form-group" #FormCom="ngForm" (ngSubmit)="agregarCompra(FormCom)">
         <div class="row align-items-start">
 
@@ -247,8 +247,15 @@
                 <input pInputText type="text" class="form-control" id="folioProveedor" name="folioProveedor" #folioProveedor="ngModel" [(ngModel)]="compra.folioProveedor">
                 <br>
             </div>
+            <!-- <div class="p-field p-md-4">
+                <span class="p-float-label">
+                    <p-dropdown [options]="proveedoresLista" optionLabel="nombre" [autoDisplayFirst]="false" optionValue="idProveedor" name="idProveedor"
+                                #idProveedor="ngModel" [(ngModel)]="compra.idProveedor">
+                    </p-dropdown>
+                    <label for="idProveedor">Seleccionar proveedor</label>
+                </span>
+            </div> -->
             <div class="col-4">
-                <label for="idProveedor" class="form-label">Seleccionar proveedor</label>
                 <select name="idProveedor" id="idProveedor" class="form-select" #idProveedor="ngModel" [(ngModel)]="compra.idProveedor" (ngModelChange)="onChange($event)">
                     <option selected disabled value="">Abrir para seleccionar</option>
                     <option  *ngFor="let proveedor of proveedoresLista" value={{proveedor.idProveedor}}>{{proveedor.nombre}}</option>
