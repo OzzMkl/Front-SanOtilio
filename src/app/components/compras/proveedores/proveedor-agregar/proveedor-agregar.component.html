@@ -1,5 +1,5 @@
 <!-- PRIMENG -->
-<div class="container">
+<div class="container-fluid">
     <p-panel header="Agregar un proveedor">
         <form #agregarProveedor="ngForm" (ngSubmit)="onSubmit(agregarProveedor)">
             <p-accordion [multiple]="true">
@@ -241,10 +241,10 @@
             <br>
             <div class="row justify-content-evenly">
                 <div class="col-md-2">
-                    <button pButton type="button" class="p-button-rounded p-button-danger" label="Cancelar"></button>
+                    <button pButton pRipple type="button" class="p-button-rounded p-button-danger" label="Cancelar"></button>
                 </div>
                 <div class="col-md-2">
-                    <button pButton type="submit" class="p-button-rounded p-button-success" [disabled]="agregarProveedor.invalid" label="Guardar"></button>
+                    <button pButton pRipple type="submit" class="p-button-rounded p-button-success" [disabled]="agregarProveedor.invalid" label="Guardar"></button>
                 </div>
                 
             </div>

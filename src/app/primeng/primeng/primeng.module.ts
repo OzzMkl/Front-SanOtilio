@@ -8,6 +8,8 @@ import { AccordionModule } from 'primeng/accordion';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { ButtonModule } from 'primeng/button';
+import {RippleModule} from 'primeng/ripple';
+import {TooltipModule} from 'primeng/tooltip';
 
 
 
@@ -20,6 +22,8 @@ import { ButtonModule } from 'primeng/button';
     DropdownModule,
     InputNumberModule,
     ButtonModule,
+    RippleModule,
+    TooltipModule,
   ],
   imports: [
     CommonModule,

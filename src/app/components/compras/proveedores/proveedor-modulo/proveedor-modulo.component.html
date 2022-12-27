@@ -1,18 +1,30 @@
-
-<div class="container">
+<div class="container-fluid">
     <br>
     <div class="row justify-content-between">
         <div class="col-5">
             <h2>Modulo de proveedores</h2>
         </div>
         <div class="col-auto" *ngFor="let permiso of userPermisos">
-            <button type="button" value="Agregar" class="btn btn-success me-md-2" [routerLink]="['agregarProveedor']" style="box-sizing: border-box;" *ngIf="permiso.agregar == 1" ngbTooltip="AGREGAR"><i class="bi bi-plus-circle"></i><br></button>
-            <button type="button" value="Buscar" class="btn btn-primary me-md-2" [routerLink]="['proveedorBuscar']" style="box-sizing: border-box;" *ngIf="permiso.ver == 1" ngbTooltip="BUSCAR"><i class="bi bi-search"></i><br></button>
-            <button type="button" value="Deshabilitados" class="btn btn-danger me-md-2" [routerLink]="['proveedorDeshabilitado']" style="box-sizing: border-box;" *ngIf="permiso.ver == 1" ngbTooltip="BUSCAR DESHABILITADOS"><i class="bi bi-search"></i><br></button>
+            
+                <button pButton pRipple type="button" class="p-button-rounded p-button-success me-md-2" icon="pi pi-check"
+                        [routerLink]="['agregarProveedor']" *ngIf="permiso.agregar == 1" pTooltip="Agregar" tooltipPosition="top" >
+                </button>
+            
+            
+                <button pButton pRipple type="button" class="p-button-rounded me-md-2" icon="pi pi-search"
+                        [routerLink]="['proveedorBuscar']" *ngIf="permiso.ver == 1" pTooltip="Buscar" tooltipPosition="top">
+                </button>
+            
+            
+                <button pButton pRipple type="button" class="p-button-rounded p-button-danger me-md-2" icon="pi pi-search"
+                [routerLink]="['proveedorDeshabilitado']" *ngIf="permiso.ver == 1" pTooltip="Deshabilitados" tooltipPosition="top">
+        </button>
+            
+            
+            
         </div>
     </div>
 </div>
 <hr>
-<br>
 <router-outlet></router-outlet>
 

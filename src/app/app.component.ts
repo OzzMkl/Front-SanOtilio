@@ -1,5 +1,6 @@
 import { Component, OnInit, DoCheck } from '@angular/core';
 import { EmpleadoService } from './services/empleado.service';
+import { PrimeNGConfig } from 'primeng/api';
 
 @Component({
   selector: 'app-root',
@@ -13,11 +14,14 @@ export class AppComponent implements OnInit, DoCheck{
   public token:any;
 
   constructor(
-    public _empleadoService : EmpleadoService
+    public _empleadoService : EmpleadoService,
+    private primengConfig: PrimeNGConfig
   ){
     this.loadUser();
   }
   ngOnInit(){
+    //se agrega para activar la animacion de los botones
+    this.primengConfig.ripple = true;
     // console.log('web carada correctaetne');
   }
   ngDoCheck(){
