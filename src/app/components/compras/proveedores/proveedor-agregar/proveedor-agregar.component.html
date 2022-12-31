@@ -13,8 +13,8 @@
                                             #nombre="ngModel" [(ngModel)]="proveedor.nombre" required> 
                                     <label for="nombre">Nombre del Proveedor</label>
                                 </span>
-                                <div [hidden]="nombre.valid || nombre.pristine" class="ng-invalid ng-dirty">
-                                    <small>Campo requerido</small>
+                                <div [hidden]="nombre.valid || nombre.pristine" styleClass="p-mr-2">
+                                    <p-message severity="error" text="text error" ></p-message>
                                 </div>
                             </div>
     

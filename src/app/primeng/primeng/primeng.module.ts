@@ -8,9 +8,14 @@ import { AccordionModule } from 'primeng/accordion';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { ButtonModule } from 'primeng/button';
-import {RippleModule} from 'primeng/ripple';
-import {TooltipModule} from 'primeng/tooltip';
+import { RippleModule} from 'primeng/ripple';
+import { TooltipModule} from 'primeng/tooltip';
 import { MenubarModule } from 'primeng/menubar';
+import { AvatarModule } from 'primeng/avatar';
+import { AvatarGroupModule } from 'primeng/avatargroup';
+import { MenuModule } from 'primeng/menu';
+import { MessagesModule } from 'primeng/messages';
+import { MessageModule } from 'primeng/message';
 
 
 
@@ -26,6 +31,11 @@ import { MenubarModule } from 'primeng/menubar';
     RippleModule,
     TooltipModule,
     MenubarModule,
+    AvatarModule,
+    AvatarGroupModule,
+    MenuModule,
+    MessageModule,
+    MessagesModule
   ],
   imports: [
     CommonModule,

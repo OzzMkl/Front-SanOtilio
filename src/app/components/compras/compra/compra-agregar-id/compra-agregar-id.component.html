@@ -1,29 +1,40 @@
-<!-- <div class="container">
-    <form class="form-group" #FormCom="ngForm" (ngSubmit)="agregarCompra(FormCom)">
+<div class="container-fluid">
+    <form #FormCom="ngForm" (ngSubmit)="agregarCompra(FormCom)">
+        <div class="p-field">
+            <div class="row justify-content-center"> 
+                <div class="p-grid">
+                    <div class="p-col-2">A</div>
+                    <div class="p-col-2">B</div>
+                    <div class="p-col-3 p-md-2 p-lg-1">C</div>
+                    <div class="p-col-3 p-md-2 p-lg-1">D</div>
+                </div>
+            </div>
+        </div>
         <div class="row align-items-start">
-
-            <h4 class="text-center">DATOS DEL PROVEEDOR VIEJO</h4>
+            <h4 class="text-center">DATOS DEL PROVEEDOR</h4>
             <div class="col-2">
                 <label for="idOrd" class="form-label"># Orden</label>
-                <input type="text" class="form-control" id="idOrd" name="idOrd" #idOrd="ngModel" [(ngModel)]="compra.idOrd" readonly>
+                <input pInputText type="text" class="form-control" id="idOrd" name="idOrd" #idOrd="ngModel" [(ngModel)]="compra.idOrd" readonly>
             </div>
             <div class="col-2">
                 <label for="idPedido" class="form-label"># Pedido</label>
-                <input type="text" class="form-control" id="idPedido" name="idPedido" #idPedido="ngModel" [(ngModel)]="compra.idPedido" readonly>
+                <input pInputText type="text" class="form-control" id="idPedido" name="idPedido" #idPedido="ngModel" [(ngModel)]="compra.idPedido" readonly>
             </div>
             <div class="col-2">
                 <label for="folioProveedor" class="form-label"> Folio del proveedor</label>
-                <input type="text" class="form-control" id="folioProveedor" name="folioProveedor" #folioProveedor="ngModel" [(ngModel)]="compra.folioProveedor">
+                <input pInputText type="text" class="form-control" id="folioProveedor" name="folioProveedor" #folioProveedor="ngModel" [(ngModel)]="compra.folioProveedor">
                 <br>
             </div>
             <div class="col-4">
                 <label for="idProveedor" class="form-label">Seleccionar proveedor</label>
                 <select name="idProveedor" id="idProveedor" class="form-select" #idProveedor="ngModel" [(ngModel)]="compra.idProveedor" (ngModelChange)="onChange($event)">
-                    <option selected disabled value="">Abrir para seleccionar</option>
                     <option  *ngFor="let proveedor of proveedoresLista" value={{proveedor.idProveedor}}>{{proveedor.nombre}}</option>
                 </select>
             </div>
-
+            <div class="col-4">
+                <label for="idProveedor" >Seleccionar proveedor</label>
+                <p-dropdown [options]="proveedoresLista" optionLabel="nombre" [autoDisplayFirst]="false" optionValue="idProveedor" name="idProveedor" #idProveedor="ngModel" [(ngModel)]="compra.idProveedor"></p-dropdown>
+            </div>
             <div class="col-3">
                 <label for="" class="form-label">Fecha estimada de entrega</label>
                 <input type="text" class="form-control" value="{{orden_compra.fecha | date: 'dd/MM/yyyy'}}" readonly>
@@ -32,8 +43,7 @@
             <div class="col-4">
                 <label class="form-label" for="">Selecciona la fecha de recepción</label>
                 <div class="input-group">
-                  <input class="form-control" placeholder="aaaa-mm-dd"
-                         name="dp" [(ngModel)]="model" ngbDatepicker [footerTemplate]="footerTemplate" #d="ngbDatepicker">
+                  <input class="form-control" placeholder="aaaa-mm-dd" name="dp" [(ngModel)]="model" ngbDatepicker [footerTemplate]="footerTemplate" #d="ngbDatepicker">
                   <button class="btn btn-outline-secondary" (click)="d.toggle()" type="button"><i class="bi bi-calendar-date-fill"> </i> </button>
                 </div>
             </div>
@@ -227,35 +237,28 @@
             </div>
         </div>
     </form>
-</div> -->
+</div>
 
-<div class="container-fluid">
+<div class="container">
     <form class="form-group" #FormCom="ngForm" (ngSubmit)="agregarCompra(FormCom)">
         <div class="row align-items-start">
 
-            <h4 class="text-center">DATOS DEL PROVEEDOR</h4>
+            <h4 class="text-center">DATOS DEL PROVEEDOR VIEJO</h4>
             <div class="col-2">
                 <label for="idOrd" class="form-label"># Orden</label>
-                <input pInputText type="text" class="form-control" id="idOrd" name="idOrd" #idOrd="ngModel" [(ngModel)]="compra.idOrd" readonly>
+                <input type="text" class="form-control" id="idOrd" name="idOrd" #idOrd="ngModel" [(ngModel)]="compra.idOrd" readonly>
             </div>
             <div class="col-2">
                 <label for="idPedido" class="form-label"># Pedido</label>
-                <input pInputText type="text" class="form-control" id="idPedido" name="idPedido" #idPedido="ngModel" [(ngModel)]="compra.idPedido" readonly>
+                <input type="text" class="form-control" id="idPedido" name="idPedido" #idPedido="ngModel" [(ngModel)]="compra.idPedido" readonly>
             </div>
             <div class="col-2">
                 <label for="folioProveedor" class="form-label"> Folio del proveedor</label>
-                <input pInputText type="text" class="form-control" id="folioProveedor" name="folioProveedor" #folioProveedor="ngModel" [(ngModel)]="compra.folioProveedor">
+                <input type="text" class="form-control" id="folioProveedor" name="folioProveedor" #folioProveedor="ngModel" [(ngModel)]="compra.folioProveedor">
                 <br>
             </div>
-            <!-- <div class="p-field p-md-4">
-                <span class="p-float-label">
-                    <p-dropdown [options]="proveedoresLista" optionLabel="nombre" [autoDisplayFirst]="false" optionValue="idProveedor" name="idProveedor"
-                                #idProveedor="ngModel" [(ngModel)]="compra.idProveedor">
-                    </p-dropdown>
-                    <label for="idProveedor">Seleccionar proveedor</label>
-                </span>
-            </div> -->
             <div class="col-4">
+                <label for="idProveedor" class="form-label">Seleccionar proveedor</label>
                 <select name="idProveedor" id="idProveedor" class="form-select" #idProveedor="ngModel" [(ngModel)]="compra.idProveedor" (ngModelChange)="onChange($event)">
                     <option selected disabled value="">Abrir para seleccionar</option>
                     <option  *ngFor="let proveedor of proveedoresLista" value={{proveedor.idProveedor}}>{{proveedor.nombre}}</option>

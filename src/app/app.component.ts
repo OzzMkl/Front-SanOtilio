@@ -15,7 +15,9 @@ export class AppComponent implements OnInit, DoCheck{
   public identity: any;
   public token:any;
 
-  items: MenuItem[] =[];
+  items! : MenuItem[];
+  itemsAvatar! : MenuItem[];
+  itemLogin! : MenuItem[];
 
   constructor( public _empleadoService : EmpleadoService, private primengConfig: PrimeNGConfig ){
     this.loadUser();
@@ -24,7 +26,25 @@ export class AppComponent implements OnInit, DoCheck{
   ngOnInit(){
     //se agrega para activar la animacion de los botones
     this.primengConfig.ripple = true;
-    // console.log('web carada correctaetne');
+    this.loadMenuItems();
+    this.loadMenuAvatar();
+    this.itemLogin = [{
+      label:'Login',
+      icon:'pi pi-fw pi-sign-in',
+      routerLink:'login'
+    }]
+  }
+
+  ngDoCheck(){
+    this.loadUser();
+  }
+
+  loadUser(){
+    this.identity = this._empleadoService.getIdentity();
+    this.token =  this._empleadoService.getToken();
+  }
+
+  loadMenuItems() : void{
     this.items = [
       {
         label: 'Compras',
@@ -108,13 +128,33 @@ export class AppComponent implements OnInit, DoCheck{
             },{
               label:'Buscar ventas sin cobrar',
               icon:'pi pi-fw pi-search',
-              routerLink:'punto-de-venta'
+              routerLink:'ventas-modulo/ventas-realizadas-buscar'
         }]},{
           label: 'Cotizaciones',
-          icon: 'pi pi-fw pi-file-pdf'
+          icon: 'pi pi-fw pi-file-pdf',
+          routerLink:'cotizacion-modulo/cotizacion-buscar',
+          items:[{
+            label:'Agregar cotizacion',
+            icon:'pi pi-fw pi-plus-circle',
+            routerLink:'punto-de-venta'
+          },{
+            label:'Buscar cotizaciones',
+            icon:'pi pi-fw pi-search',
+            routerLink:'cotizacion-modulo/cotizacion-buscar'
+          }]
         },{
           label: 'Clientes',
-          icon: 'pi pi-fw pi-users'
+          icon: 'pi pi-fw pi-users',
+          routerLink:'cliente-modulo/cliente-buscar',
+          items:[{
+            label:'Agregar cliente',
+            icon:'pi pi-fw pi-user-plus',
+            routerLink:'cliente-modulo/cliente-agregar'
+          },{
+            label:'Buscar cliente',
+            icon:'pi pi-fw pi-search-plus',
+            routerLink:'cliente-modulo/cliente-buscar'
+          }]
         },{
           label: 'Reportes',
           icon: 'pi pi-fw pi-file'
@@ -123,13 +163,24 @@ export class AppComponent implements OnInit, DoCheck{
         label: 'Entregas',
         icon: 'pi pi-fw pi-map',
         items: [{
-          label: 'Entrega de material'
+          label: 'Entrega de material',
+          icon:'pi pi-fw pi-send',
+          routerLink:'entregas-modulo/entregas-pendientes',
+          items:[{
+            label:'Generar entrega',
+            icon:'pi pi-fw pi-sign-out',
+            routerLink:''
+          },{
+            label:'Pedidos pendiente por enviar',
+            icon:'pi pi-fw pi-search',
+            routerLink:''
+          }]
         },{
           label: 'Operadores y auxiliares',
-          icon: ''
+          icon: 'pi pi-fw pi-users'
         },{
           label: 'Unidades',
-          icon: ''
+          icon: 'pi pi-fw pi-truck'
         },{
           label: 'Reportes',
           icon: 'pi pi-fw pi-file-pdf'
@@ -137,11 +188,15 @@ export class AppComponent implements OnInit, DoCheck{
       },{
         label: 'Cajas',
         icon: 'pi pi-fw pi-wallet',
+        routerLink:'caja-modulo/notas-por-cobrar',
         items: [{
-          label: 'Caja'
+          label: 'Caja',
+          icon:'pi pi-fw pi-inbox',
+          routerLink:'caja-modulo/notas-por-cobrar'
         },{
           label: 'Corte de caja',
-          icon: ''
+          icon: 'pi pi-fw pi-calculator',
+          routerLink:'corte-de-caja'
         },{
           label: 'Reportes',
           icon: 'pi pi-fw pi-file-pdf'
@@ -150,10 +205,13 @@ export class AppComponent implements OnInit, DoCheck{
         label: 'Administracion',
         icon: 'pi pi-fw pi-sitemap',
         items: [{
-          label: 'A'
+          label: 'A',
+          icon:'',
+          routerLink:''
         },{
           label: 'B',
-          icon: ''
+          icon: '',
+          routerLink:''
         },{
           label: 'Reportes',
           icon: 'pi pi-fw pi-file-pdf'
@@ -162,13 +220,46 @@ export class AppComponent implements OnInit, DoCheck{
         label: 'Inventario',
         icon: 'pi pi-fw pi-table',
         items: [{
-          label: 'Productos'
+          label: 'Productos',
+          icon:'pi pi-fw pi-th-large',
+          routerLink:'producto-modulo/producto-buscar',
+          items:[{
+            label:'Agregar producto',
+            icon:'pi pi-fw pi-plus-circle',
+            routerLink:'producto-modulo/producto-agregar'
+          },{
+            label:'Buscar producto',
+            icon:'pi pi-fw pi-search-plus',
+            routerLink:'producto-modulo/producto-buscar'
+          },{
+            label:'Buscar producto deshabilitado',
+            icon:'pi pi-fw pi-search-minus',
+            routerLink:'producto-modulo/producto-deshabilitado'
+          }]
         },{
           label: 'Traspasos',
-          icon: ''
+          icon: 'pi pi-fw pi-sync'
         },{
           label: 'Clasificaciones',
-          icon: ''
+          icon: 'pi pi-fw pi-sitemap',
+          routerLink:'clasificacion-modulo',
+          items:[{
+            label:'Clasificaciones',
+            icon:'',
+            routerLink:''
+          },{
+            label:'Marcas',
+            icon:'',
+            routerLink:''
+          },{
+            label:'Medidas',
+            icon:'',
+            routerLink:''
+          },{
+            label:'Almacenes',
+            icon:'',
+            routerLink:''
+          }]
         },{
           label: 'Reportes',
           icon: 'pi pi-fw pi-file-pdf'
@@ -177,13 +268,20 @@ export class AppComponent implements OnInit, DoCheck{
     ]
   }
 
-  ngDoCheck(){
-    this.loadUser();
-  }
-
-  loadUser(){
-    this.identity = this._empleadoService.getIdentity();
-    this.token =  this._empleadoService.getToken();
+  loadMenuAvatar() : void{
+    this.itemsAvatar = [{
+      label:'Perfil',
+      icon:'pi pi-fw pi-user',
+      routerLink:''
+    },{
+      label:'Ajustes',
+      icon:'pi pi-fw pi-user-edit',
+      routerLink:''
+    },{
+      label:'Cerrar sesion',
+      icon:'pi pi-fw pi-sign-out',
+      routerLink:'logout/1'
+    }];
   }
 
 

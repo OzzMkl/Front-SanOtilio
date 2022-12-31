@@ -3,7 +3,7 @@
   <!-- INICIO DEL NAVBAR -->
 
 
-<nav class="navbar navbar-expand-lg navbar-light" style="background-color: #8FB1E3;">
+<!-- <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #8FB1E3;">
   <div class="container-fluid">
     <a class="navbar-brand" href="#">
       <img src="assets/images/logow.png" alt="" width="150" height="50" class="d-inline-block align-text-top">
@@ -111,15 +111,35 @@
      
     </div>
   </div>
-</nav>
+</nav> -->
 <!-- FIN DEL NAVBAR -->
 
 <!-- INICIO MenuBar primeng -->
-<p-menubar [model]="items">
-  <ng-template pTemplate="start">
-    <img src="assets/images/logow.png" height="40" class="p-mr-2">
+<div >
+
+  <p-menubar [model]="items" *ngIf="token; else elseBlock" >
+    <ng-template pTemplate="start">
+      <img src="assets/images/logow.png" height="40" class="p-mr-2" [routerLink]="['/']">
+    </ng-template>
+    <ng-template pTemplate="end">
+      
+      <button type="button" pButton pRipple (click)="menu.toggle($event)" [style]="{background: 'transparent', border: 'none'}">
+        <p-avatar icon="pi pi-user" styleClass="p-mr-2" size="small"  shape="circle" [style]="{'background-color': '#9c27b0', 'color': '#ffffff'}"></p-avatar>
+      </button>
+      <p-menu #menu [popup]="true" [model]="itemsAvatar"></p-menu>
+    </ng-template>
+  </p-menubar>
+  <!--  -->
+  <ng-template #elseBlock>
+    <p-menubar [model]="itemLogin" >
+      <ng-template pTemplate="start">
+        <img src="assets/images/logow.png" height="40" class="p-mr-2" [routerLink]="['/']">
+      </ng-template>
+    </p-menubar>
   </ng-template>
-</p-menubar>
+
+</div>
+
 <!-- FIN MenuBar primeng -->
 
 <!-- CONTENIDO -->

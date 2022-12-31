@@ -33,7 +33,7 @@
     "ngx-barcode": "^0.3.0",
     "ngx-pagination": "^5.1.1",
     "pdfmake": "^0.2.2",
-    "primeicons": "^4.0.1",
+    "primeicons": "^6.0.1",
     "primeng": "^12.0.0",
     "rxjs": "~6.6.0",
     "tslib": "^2.2.0",
