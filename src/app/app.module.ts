@@ -5,7 +5,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import {NgxPaginationModule} from 'ngx-pagination'; // <-- import the module
-import { AngularFileUploaderModule } from "angular-file-uploader";
+// import { AngularFileUploaderModule } from "angular-file-uploader";
 //import { ReactiveFormsModule } from '@angular/forms';
 import { NgxBarcodeModule } from 'ngx-barcode';
 ///primeng
@@ -158,7 +158,7 @@ import { EntregasPendientesComponent } from './components/entregas/entregas-pend
     CommonModule,
     NgbModule,
     NgxPaginationModule,
-    AngularFileUploaderModule,
+    // AngularFileUploaderModule,
     NgxBarcodeModule,
     PrimengModule,
     

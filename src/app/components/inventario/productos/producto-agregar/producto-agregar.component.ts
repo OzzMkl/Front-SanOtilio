@@ -90,21 +90,21 @@ export class ProductoAgregarComponent implements OnInit {
   pCompraImp: number = 0 //precioCompraImpuesto
 
   //configurador para la carga de imagen
-  public afuConfig = {
-    multiple: false,
-    formatsAllowed: ".jpg,.png,.jpeg",
-    maxSize: .5,
-    uploadAPI: {
-      url: global.url+'productos/uploadimage',
-    },
-    theme: "attachPin", 
-    hideProgressBar: false,
-    hideResetBtn: false,
-    hideSelectBtn:false,
-    replaceTexts:{
-      attachPinBtn: 'Subir imagen ..'
-    }
-  };
+  // public afuConfig = {
+  //   multiple: false,
+  //   formatsAllowed: ".jpg,.png,.jpeg",
+  //   maxSize: .5,
+  //   uploadAPI: {
+  //     url: global.url+'productos/uploadimage',
+  //   },
+  //   theme: "attachPin", 
+  //   hideProgressBar: false,
+  //   hideResetBtn: false,
+  //   hideSelectBtn:false,
+  //   replaceTexts:{
+  //     attachPinBtn: 'Subir imagen ..'
+  //   }
+  // };
 
   constructor(
     private _productoService: ProductoService,
