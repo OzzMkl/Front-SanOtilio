@@ -55,15 +55,23 @@
         </div>
       </div>
 
-      <div class="col-1">
+      <!-- <div class="col-1">
         <label for="imagen">Imagen</label>
         <br>
         <div >
             <img src="{{url + 'productos/getImageProduc/' + producto.imagen}}" width="100px" height="100px">
         </div>
-      </div>
+      </div> -->
 
-      <div class="col-2" style="margin: auto auto ;">
+      <div class="col-4">
+        <p-fileUpload
+                mode="basic" 
+                name="file0" 
+                url="{{url + 'productos/uploadimage' + producto.imagen}}"
+                [auto]="true"
+                accept="image/*"
+                [maxFileSize]="500000">
+        </p-fileUpload>
         <!-- <angular-file-uploader
           [config]="afuConfig"
           [resetUpload]="true"

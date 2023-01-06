@@ -16,6 +16,7 @@ import { AvatarGroupModule } from 'primeng/avatargroup';
 import { MenuModule } from 'primeng/menu';
 import { MessagesModule } from 'primeng/messages';
 import { MessageModule } from 'primeng/message';
+import { FileUploadModule } from 'primeng/fileupload';
 
 
 
@@ -35,7 +36,8 @@ import { MessageModule } from 'primeng/message';
     AvatarGroupModule,
     MenuModule,
     MessageModule,
-    MessagesModule
+    MessagesModule,
+    FileUploadModule,
   ],
   imports: [
     CommonModule,
