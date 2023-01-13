@@ -54,7 +54,7 @@ export class ProductoAgregarComponent implements OnInit {
   public productos: Array<any> = [];//getProd
   public producto: Producto;
   public producto_precio : Producto_precio;
-  public pd: any;//getLP
+  // public pd: any;//getLP
   public url: string = global.url;
   //contadores para los text area
   conta: number =0;
@@ -121,7 +121,7 @@ export class ProductoAgregarComponent implements OnInit {
   ) {
     this.producto = new Producto(0,0,0,0,0,null,'',0,'',0,0,'',1,'','',null,0,null,0,0);
     this.producto_precio = new Producto_precio(0,0,0,0,0,0,0,0,0,0,0,0);
-    this.pd=[];
+    // this.pd=[];
    }
 
   ngOnInit(): void {
@@ -131,7 +131,7 @@ export class ProductoAgregarComponent implements OnInit {
     this.getCategoria();
     // this.getSubcategoria();
     this.getAlmacen();
-    this.getLP();
+    //this.getLP();
     this.getProd();
   }
   /**
@@ -163,10 +163,6 @@ export class ProductoAgregarComponent implements OnInit {
   }
 
   submit(form:any){
-    this.getLP();
-    //console.log(this.pd.cbarras+1);
-     this.producto.cbarras =  parseInt(this.pd.cbarras) + 1;
-     //this.producto.cbarras =  parseInt(this.pd.cbarras) + 1;
     this._productoService.registerProducto(this.producto).subscribe(
       response =>{
         //console.log(response);
@@ -175,7 +171,7 @@ export class ProductoAgregarComponent implements OnInit {
       },
       error =>{
         //console.log(this.producto);
-        console.log(<any>error);
+        console.log(error);
         this.toastService.show('Ups... Algo salio mal', { classname: 'bg-danger text-light', delay: 15000 });
       }
     )
@@ -393,8 +389,8 @@ export class ProductoAgregarComponent implements OnInit {
    * @param datos 
    */
   productImage(datos:any){
-    //console.log(datos.body.image);
-    this.producto.imagen = datos.body.image;
+    //console.log(datos.originalEvent.body.image);
+    this.producto.imagen = datos.originalEvent.body.image
   }
 
   /**
@@ -402,19 +398,18 @@ export class ProductoAgregarComponent implements OnInit {
    * con la finalidad de obtener su codigo de barras 
    * y asi sumarle +1 para crear el siguiente codbar
    */
-  getLP(){
-    this._productoService.getLastPro().subscribe(
-       response =>{
-         if(response.status == 'success'){
-           this.pd = response.productos;
-
-         }
-       },
-       error =>{
-         console.log(error);
-       }
-     );
-  }
+  // getLP(){
+  //   this._productoService.getLastPro().subscribe(
+  //      response =>{
+  //        if(response.status == 'success'){
+  //          this.pd = response.productos;
+  //        }
+  //      },
+  //      error =>{
+  //        console.log(error);
+  //      }
+  //    );
+  // }
 
   /**
    * Revisamos el modelo hasTax si es falso verdarero

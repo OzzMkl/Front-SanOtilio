@@ -37,7 +37,7 @@ import { FileUploadModule } from 'primeng/fileupload';
     MenuModule,
     MessageModule,
     MessagesModule,
-    FileUploadModule,
+    FileUploadModule, 
   ],
   imports: [
     CommonModule,
