@@ -11,8 +11,9 @@ export class ProductoService{
 
     constructor( public _http: HttpClient ){ }
     
-    registerProducto(producto:any):Observable<any>{
-            let json = JSON.stringify(producto);
+    registerProducto(producto:any,producto_precio:any):Observable<any>{
+            let combinado = {...producto, ...producto_precio};
+            let json = JSON.stringify(combinado);
             let params = 'json='+json;
             let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');//mandamos el json con las cabeceras para que obtengamos el token
             return this._http.post(this.url+'productos/register',params, {headers:headers} );

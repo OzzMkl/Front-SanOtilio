@@ -89,23 +89,6 @@ export class ProductoAgregarComponent implements OnInit {
 
   pCompraImp: number = 0 //precioCompraImpuesto
 
-  //configurador para la carga de imagen
-  // public afuConfig = {
-  //   multiple: false,
-  //   formatsAllowed: ".jpg,.png,.jpeg",
-  //   maxSize: .5,
-  //   uploadAPI: {
-  //     url: global.url+'productos/uploadimage',
-  //   },
-  //   theme: "attachPin", 
-  //   hideProgressBar: false,
-  //   hideResetBtn: false,
-  //   hideSelectBtn:false,
-  //   replaceTexts:{
-  //     attachPinBtn: 'Subir imagen ..'
-  //   }
-  // };
-
   constructor(
     private _productoService: ProductoService,
     private _medidaService: MedidaService,
@@ -163,7 +146,7 @@ export class ProductoAgregarComponent implements OnInit {
   }
 
   submit(form:any){
-    this._productoService.registerProducto(this.producto).subscribe(
+    this._productoService.registerProducto(this.producto,this.producto_precio).subscribe(
       response =>{
         //console.log(response);
         this._router.navigate(['./producto-modulo/producto-buscar']);
