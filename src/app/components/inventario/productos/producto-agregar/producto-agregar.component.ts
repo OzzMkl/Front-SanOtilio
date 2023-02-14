@@ -419,12 +419,12 @@ export class ProductoAgregarComponent implements OnInit {
     
       switch (this.selectImpuesto){
         case "IVA" : { 
-                        console.log( this.producto_precio.preciocompra / 1.16 )
+                        //console.log( this.producto_precio.preciocompra / 1.16 )
                         this.pCompraImp = this.producto_precio.preciocompra / 1.16;
                         break; 
                       } 
         case "IEPS" : { 
-                        console.log(this.producto_precio.preciocompra / 1.09) 
+                        //console.log(this.producto_precio.preciocompra / 1.09) 
                         this.pCompraImp = this.producto_precio.preciocompra / 1.09;
                         break; 
                       }   
@@ -613,8 +613,54 @@ export class ProductoAgregarComponent implements OnInit {
     }//fin else
   }//fin calculaMonto()
 
+  /**
+   * Cada que quiten el check del input
+   * reseteara los valores a cero
+   * @param e 
+   */
   revisaCheckventa(e:any){
-    console.log(e)
+    let inputId = e.target.id;
+    
+        switch(inputId){
+
+          case "checkP5": {
+             if(this.precio5 === false){
+              this.producto_precio.precio5 = 0;
+              this.producto_precio.porcentaje5 = 0;
+             }
+              break;
+          }
+          case "checkP4": {
+            if(this.precio4 === false){
+             this.producto_precio.precio4 = 0;
+             this.producto_precio.porcentaje4 = 0;
+            }
+              break;
+          }
+          case "checkP3": {
+            if(this.precio3 === false){
+             this.producto_precio.precio3 = 0;
+             this.producto_precio.porcentaje3 = 0;
+            }
+              break;
+          }
+          case "checkP2": {
+            if(this.precio2 === false){
+             this.producto_precio.precio2 = 0;
+             this.producto_precio.porcentaje2 = 0;
+            }
+              break;
+          }
+          case "checkP1": {
+            if(this.precio1 === false){
+             this.producto_precio.precio1 = 0;
+             this.producto_precio.porcentaje1 = 0;
+            }
+              break;
+          }
+       }
+
+    
   }
 
   /*    SERVICIOS 
