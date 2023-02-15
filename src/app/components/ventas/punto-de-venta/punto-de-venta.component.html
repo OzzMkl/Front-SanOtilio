@@ -494,31 +494,35 @@
                 
               </div>
               <br>
-              <table class="table table-dark table-hover">
+              <table class="table table-sm table-dark table-hover">
                 <thead>
                     <tr>
                         <th>CLAVE EXTERNA</th>
                         <th>CODIGO DE BARRAS</th>
                         <th>DESCRIPCION</th>
-                        <th>MEDIDA</th>
                         <th>MARCA</th>
                         <th>PRECIOS</th>
+                        <th>MEDIDA</th>
                         <th>EXISTENCIA</th>
                     </tr>
                 </thead>
-                <tbody *ngFor="let pr of productos | filterProductsModalcbar: buscarProductoCbar| filterProductModal: buscarProducto | filterProductsModalce: buscarProductoCE | paginate:{id:'pcModal',itemsPerPage: 5, currentPage: pageActual2}">
+                <tbody *ngFor="let pr of productos | paginate:{id:'pcModal',itemsPerPage: itemsPerPage, currentPage: pageActual2, totalItems:totalPages}">
                     <tr (click)="seleccionarProducto(pr.idProducto)"  (click)="modal.dismiss('Cross click')">
                         <th scope="row">{{pr.claveEx}}</th>
                         <th scope="row">{{pr.cbarras}}</th>
                         <th scope="row">{{pr.descripcion}}</th>
-                        <th scope="row">{{pr.nombreMedida}}</th>
                         <th scope="row">{{pr.nombreMarca}}</th>
-                        <th scope="row">{{pr.precioS}} ~ {{pr.precioR}}</th>
+                        <th scope="row">PRECIO$$</th>
+                        <th scope="row">{{pr.nombreMedida}}</th>
                         <th scope="row">{{pr.existenciaG}}</th>
                     </tr>
                 </tbody>
               </table>
-              <pagination-controls id="pcModal" (pageChange)="pageActual2 = $event"></pagination-controls>
+              <pagination-controls  id="pcModal"
+                                    (pageChange)="getPage(pageActual2 = $event)"
+                                    previousLabel="Anterior"
+                                    nextLabel="Siguiente" >
+              </pagination-controls>
         </div>
       </div>
 </ng-template>

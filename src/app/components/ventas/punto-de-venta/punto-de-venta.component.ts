@@ -17,6 +17,7 @@ import { NgbModal, ModalDismissReasons, NgbDateStruct} from '@ng-bootstrap/ng-bo
 //pdf
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import { HttpClient } from '@angular/common/http';
 //import jsPDF from 'jspdf/dist/jspdf.node.debug'
 // import { applyPlugin } from 'jspdf-autotable'
 // applyPlugin(jsPDF)
@@ -47,7 +48,9 @@ export class PuntoDeVentaComponent implements OnInit {
   public productoEG:any;
   public userPermisos:any//loaduser
   /**PAGINATOR */
+  public itemsPerPage: number = 0;
   public totalPages: any;
+  public path: any;
   public page: any;
   public next_page: any;
   public prev_page: any;
@@ -90,7 +93,8 @@ export class PuntoDeVentaComponent implements OnInit {
     private _ventasService: VentasService,
     private _empleadoService : EmpleadoService,
     private _empresaService: EmpresaService,
-    private _router:Router) {
+    private _router:Router,
+    private _http: HttpClient) {
     //declaramos modelos
     this.ventag = new Ventag(0,0,2,'',1,null,0,0,0,0,'','',0);
     this.modeloCliente = new Cliente (0,'','','','','',0,1,0);
@@ -225,17 +229,52 @@ export class PuntoDeVentaComponent implements OnInit {
   }
   //obtenemos todos los productos
   getProductos(){
+    //mostramos el spinner
     this.isLoadingProductos=true;
+    //ejeecutamos servicio
     this._productoService.getProductosPV().subscribe( 
       response => {
         if(response.status == 'success'){
-          this.productos = response.productos;
+
+          //asignamos a variable para mostrar
+          this.productos = response.productos.data;
           //console.log(response);
+
+          //navegacion de paginacion
+          this.totalPages = response.productos.total;
+          this.itemsPerPage = response.productos.per_page;
+          this.pageActual2 = response.productos.current_page;
+          this.path = response.productos.path;
+
+          //una vez cargada la informacion quitamos el spinner
           this.isLoadingProductos = false;
         }
       }, error =>{
       console.log(error);
     });
+  }
+  /**
+   * 
+   * @param page
+   * Es el numero de pagina a la cual se va acceder
+   * @description
+   * De acuerdo al numero de pagina recibido lo concatenamos a
+   * la direccion para "ir" a esa direccion y traer la informacion
+   * no retornamos ya que solo actualizamos las variables a mostrar
+   */
+  getPage(page:number) {
+    this._http.get(this.path+'?page='+page).subscribe(
+      (response:any) => {
+        //console.log(response);
+        this.productos = response.productos.data;
+        //navegacion paginacion
+        this.totalPages = response.productos.total;
+        this.itemsPerPage = response.productos.per_page;
+        this.pageActual = response.productos.current_page;
+        this.next_page = response.productos.next_page_url;
+        this.path = response.productos.path
+        
+    })
   }
   //cargamos la informacion al modelo del producto que se selecciono con el click
   seleccionarProducto(idProducto:any){
