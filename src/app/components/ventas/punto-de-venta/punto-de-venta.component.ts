@@ -17,6 +17,7 @@ import { NgbModal, ModalDismissReasons, NgbDateStruct} from '@ng-bootstrap/ng-bo
 //pdf
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import { HttpClient } from '@angular/common/http';
 //import jsPDF from 'jspdf/dist/jspdf.node.debug'
 // import { applyPlugin } from 'jspdf-autotable'
 // applyPlugin(jsPDF)
@@ -47,7 +48,9 @@ export class PuntoDeVentaComponent implements OnInit {
   public productoEG:any;
   public userPermisos:any//loaduser
   /**PAGINATOR */
+  public itemsPerPage: number = 0;
   public totalPages: any;
+  public path: any;
   public page: any;
   public next_page: any;
   public prev_page: any;
@@ -59,7 +62,7 @@ export class PuntoDeVentaComponent implements OnInit {
   seleccionado:number = 1;//para cambiar entre pipes de buscarProducto
   buscarProducto = '';//modal de buscar producto
   buscarProductoCE = '';//modal de buscar producto
-  buscarProductoCbar = '';//modal de buscar producto
+  buscarProductoCbar : number = 0;//modal de buscar producto
   //modelos
   public ventag: Ventag;
   public modeloCliente: Cliente;
@@ -90,7 +93,8 @@ export class PuntoDeVentaComponent implements OnInit {
     private _ventasService: VentasService,
     private _empleadoService : EmpleadoService,
     private _empresaService: EmpresaService,
-    private _router:Router) {
+    private _router:Router,
+    private _http: HttpClient) {
     //declaramos modelos
     this.ventag = new Ventag(0,0,2,'',1,null,0,0,0,0,'','',0);
     this.modeloCliente = new Cliente (0,'','','','','',0,1,0);
@@ -225,17 +229,52 @@ export class PuntoDeVentaComponent implements OnInit {
   }
   //obtenemos todos los productos
   getProductos(){
+    //mostramos el spinner
     this.isLoadingProductos=true;
+    //ejeecutamos servicio
     this._productoService.getProductosPV().subscribe( 
       response => {
         if(response.status == 'success'){
-          this.productos = response.productos;
+
+          //asignamos a variable para mostrar
+          this.productos = response.productos.data;
           //console.log(response);
+
+          //navegacion de paginacion
+          this.totalPages = response.productos.total;
+          this.itemsPerPage = response.productos.per_page;
+          this.pageActual2 = response.productos.current_page;
+          this.path = response.productos.path;
+
+          //una vez cargada la informacion quitamos el spinner
           this.isLoadingProductos = false;
         }
       }, error =>{
       console.log(error);
     });
+  }
+  /**
+   * 
+   * @param page
+   * Es el numero de pagina a la cual se va acceder
+   * @description
+   * De acuerdo al numero de pagina recibido lo concatenamos a
+   * la direccion para "ir" a esa direccion y traer la informacion
+   * no retornamos ya que solo actualizamos las variables a mostrar
+   */
+  getPage(page:number) {
+    this._http.get(this.path+'?page='+page).subscribe(
+      (response:any) => {
+        //console.log(response);
+        this.productos = response.productos.data;
+        //navegacion paginacion
+        this.totalPages = response.productos.total;
+        this.itemsPerPage = response.productos.per_page;
+        this.pageActual = response.productos.current_page;
+        this.next_page = response.productos.next_page_url;
+        this.path = response.productos.path
+        
+    })
   }
   //cargamos la informacion al modelo del producto que se selecciono con el click
   seleccionarProducto(idProducto:any){
@@ -560,6 +599,138 @@ export class PuntoDeVentaComponent implements OnInit {
   cambioSeleccionado(e:any){//limpiamos los inputs del modal
     this.buscarProducto = '';
     this.buscarProductoCE = '';
-    this.buscarProductoCbar = '';
+    this.buscarProductoCbar = 0;
+  }
+    /**
+   * 
+   * @param descripcion 
+   * Recibimos el evento del input
+   * @description
+   * Recibe los valores del Keyup, luego buscamos y actualizamos
+   * los datos que se muestran en la tabla
+   */
+    getSearchDescripcion(descripcion:any){
+    
+      //mostramos el spinner
+      this.isLoadingProductos = true;
+  
+      //si es vacio volvemos a llamar la primera funcion que trae todo
+      if(descripcion.target.value == ''){
+        this.getProductos();
+      }
+  
+      //componemos el codigo a buscar
+      this.buscarProducto = descripcion.target.value;
+  
+      //llamamos al servicio
+      this._productoService.searchDescripcion(this.buscarProducto).subscribe(
+        response =>{
+            if(response.status == 'success'){
+              //asignamos datos a varibale para poder mostrarla en la tabla
+              this.productos = response.productos.data;
+              //console.log(this.productos)
+  
+              //navegacion paginacion
+              this.totalPages = response.productos.total;
+              this.itemsPerPage = response.productos.per_page;
+              this.pageActual = response.productos.current_page;
+              this.next_page = response.productos.next_page_url;
+              this.path = response.productos.path
+              
+              //una ves terminado de cargar quitamos el spinner
+              this.isLoadingProductos = false;
+            }
+        }, error => {
+          console.log(error)
+        }
+      )
+    }
+    /**
+   * 
+   * @param codbar 
+   * Recibimos el evento del input
+   * @description
+   * Recibe los valores del evento keyup, luego busca y actualiza
+   * los datos que se muestran en la tabla
+   */
+  getSearchCodbar(codbar:any){
+
+    //mostramos el spinner
+    this.isLoadingProductos = true;
+
+    //si es vacio volvemos a llamar la primera funcion que trae todo
+    if(codbar.target.value == ''){
+      this.getProductos();
+    }
+
+    //componemos el codigo a buscar
+    this.buscarProductoCbar = codbar.target.value;
+
+    //llamamos al servicio
+    this._productoService.searchCodbar(this.buscarProductoCbar).subscribe(
+      response =>{
+          if(response.status == 'success'){
+            //asignamos datos a varibale para poder mostrarla en la tabla
+            this.productos = response.productos.data;
+            //console.log(this.productos)
+
+            //navegacion paginacion
+            this.totalPages = response.productos.total;
+            this.itemsPerPage = response.productos.per_page;
+            this.pageActual = response.productos.current_page;
+            this.next_page = response.productos.next_page_url;
+            this.path = response.productos.path
+            
+            //una ves terminado de cargar quitamos el spinner
+            this.isLoadingProductos = false;
+          }
+      }, error => {
+        console.log(error)
+      }
+    )
+  }
+  /**
+   * 
+   * @param claveExterna 
+   * Recibimos el evento del input
+   * @description
+   * Recibe los valores del evento keyUp, luego busca y actualiza
+   * los datos de la tabla
+   */
+  getSearch(claveExterna:any){
+
+    //mostramos el spinner 
+    this.isLoadingProductos = true;
+
+    //si es vacio volvemos a llamar la primera funcion
+    if(claveExterna.target.value == ''){
+      this.getProductos();
+    }
+    //componemos la palabra
+    this.buscarProducto = claveExterna.target.value;
+
+    //generamos consulta
+    this._productoService.searchClaveExterna(this.buscarProducto).subscribe(
+      response =>{
+          if(response.status == 'success'){
+
+            //asignamos datos a varibale para poder mostrarla en la tabla
+            this.productos = response.productos.data;
+            //console.log(this.productos)
+
+            //navegacion paginacion
+            this.totalPages = response.productos.total;
+            this.itemsPerPage = response.productos.per_page;
+            this.pageActual = response.productos.current_page;
+            this.next_page = response.productos.next_page_url;
+            this.path = response.productos.path
+            
+            //una ves terminado de cargar quitamos el spinner
+            this.isLoadingProductos = false;
+        }
+      }, error =>{
+          console.log(error)
+      }
+    )
   }
 }

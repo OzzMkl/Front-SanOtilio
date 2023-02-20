@@ -55,23 +55,27 @@
         </div>
       </div>
 
-      <!-- <div class="col-1">
+      <div class="col-2">
         <label for="imagen">Imagen</label>
         <br>
-        <div >
-            <img src="{{url + 'productos/getImageProduc/' + producto.imagen}}" width="100px" height="100px">
-        </div>
-      </div> -->
-
-      <div class="col-4">
         <p-fileUpload
+                chooseLabel="Seleccione"
                 mode="basic" 
                 name="file0" 
                 url="{{url + 'productos/uploadimage' + producto.imagen}}"
                 [auto]="true"
                 accept="image/*"
-                [maxFileSize]="500000">
+                [maxFileSize]="500000"
+                (onUpload)="productImage($event)">
         </p-fileUpload>
+        
+      </div>
+
+      <div class="col-2">
+        <br>
+        <div >
+          <img src="{{url + 'productos/getImageProduc/' + producto.imagen}}" width="100px" height="100px">
+      </div>
         <!-- <angular-file-uploader
           [config]="afuConfig"
           [resetUpload]="true"
@@ -205,7 +209,7 @@
 
     <hr>
 
-    <!-- PRECIOS -->
+    <!-- SECCION PRECIOS -->
     <div class="row align-items-start">
       <h4 class="text-center">PRECIOS</h4>
 
@@ -245,11 +249,11 @@
         </div>
         
       </div>
-    </div><!-- PRIMERA PARTE (precio compra . tiene impuesto . precio compra sin)-->
+    </div>
 
     <div class="row align-items-start">
 
-      <div class="col-4">
+      <!-- <div class="col-4">
 
         <label class="form-label">¿Se factura? *</label>
         <br>
@@ -263,7 +267,7 @@
           <label class="form-label" for="checkNo">No</label>
         </div>
 
-      </div>
+      </div> -->
 
       <div class="col-4">
         <label for="clavesat" class="form-label">Clave sat</label>
@@ -281,7 +285,7 @@
         </div>
       </div>
 
-    </div> <!-- SEGUNDA PARTE (se factura, clave sat, unidad sat) -->
+    </div> 
     
     <!-- INICIO P5 -->
     <div class="row align-items-start">
@@ -289,7 +293,7 @@
 
         <div class="col-2">
           <div class="form-check">
-            <input class="form-check-input" type="checkbox"  id="checkP5" name="precio5" [(ngModel)]="precio5">
+            <input class="form-check-input" type="checkbox"  id="checkP5" name="precio5" [(ngModel)]="precio5" (change)="revisaCheckventa($event)">
             <p style="font-size:28px ;">P5</p>
           </div>
         </div>
@@ -299,10 +303,14 @@
           <label class="form-label">Monto</label>
           <div class="input-group mb-3">
             <span class="input-group-text">$</span>
-            <input type="number" class="form-control" [disabled]="!precio5" id="monto5" min="0" name="monto5" [(ngModel)] = "producto_precio.precio5" 
-            (change)="revisaPreciosventa($event)" (keyup)="calculaPorcentaje($event)">
+            <input type="number" class="form-control" [disabled]="!precio5" id="monto5" name="monto5" #monto5="ngModel"[(ngModel)] = "producto_precio.precio5" 
+            (change)="revisaPreciosventa($event)" (keyup)="calculaPorcentaje($event)" pattern="^[0-9]{1,6}" min="1">
+          </div>
+          <div [hidden]="monto5.valid || monto5.pristine" class="alert alert-danger">
+            INGRESE MONTO MAYOR A PRECIO COMPRA
           </div>
         </div>
+        
 
         <div class="col-3">
           <label class="form-label">Porcentaje</label>
@@ -325,10 +333,10 @@
     <!-- FIN P5 -->
 <br>
     <!-- INICIO P4 -->
-    <div class="row align-items-start" >
+    <div class="row align-items-start" [hidden]="!precio5">
       <div class="col-2">
         <div class="form-check">
-          <input class="form-check-input" type="checkbox"  id="checkP4" name="precio4" [(ngModel)]="precio4" (ngModelChange)="revisaCheckventa($event)">
+          <input class="form-check-input" type="checkbox"  id="checkP4" name="precio4" [(ngModel)]="precio4" (change)="revisaCheckventa($event)">
           <p style="font-size:28px ;">P4</p>
         </div>
       </div>
@@ -336,9 +344,12 @@
       <div class="col-3"><!-- Monto -->
         <div class="input-group mb-3">
           <span class="input-group-text">$</span>
-          <input type="number" class="form-control" [disabled]="!precio4" id="monto4" min="0" name="monto4" [(ngModel)]="producto_precio.precio4" 
-          (change)="revisaPreciosventa($event)" (keyup)="calculaPorcentaje($event)">
+          <input type="number" class="form-control" [disabled]="!precio4" id="monto4"  name="monto4" #monto4="ngModel" [(ngModel)]="producto_precio.precio4" 
+          (change)="revisaPreciosventa($event)" (keyup)="calculaPorcentaje($event)" pattern="^[0-9]{1,6}" min="1">
         </div>
+      </div>
+      <div [hidden]="monto4.valid || monto4.pristine" class="alert alert-danger">
+        CAMPO REQUERIDO | INGRESE SOLO NUMEROS MAYOR A 0 Y MAXIMO 9999999
       </div>
 
       <div class="col-3">
@@ -360,7 +371,7 @@
     <!-- FIN P4 -->
 <br>
     <!-- INICIO P3 -->
-    <div class="row align-items-start">
+    <div class="row align-items-start" [hidden]="!precio4">
       <div class="col-2">
         <div class="form-check">
           <input class="form-check-input" type="checkbox"  id="checkP3" name="precio3" [(ngModel)]="precio3">
@@ -371,9 +382,12 @@
       <div class="col-3"> <!-- Monto  -->
         <div class="input-group mb-3">
           <span class="input-group-text">$</span>
-          <input type="number" class="form-control" [disabled]="!precio3" id="monto3" min="0" name="monto3" [(ngModel)]="producto_precio.precio3"
-          (change)="revisaPreciosventa($event)" (keyup)="calculaPorcentaje($event)">
+          <input type="number" class="form-control" [disabled]="!precio3" id="monto3" name="monto3" #monto3="ngModel" [(ngModel)]="producto_precio.precio3"
+          (change)="revisaPreciosventa($event)" (keyup)="calculaPorcentaje($event)" pattern="^[0-9]{1,6}" min="1">
         </div>
+      </div>
+      <div [hidden]="monto3.valid || monto3.pristine" class="alert alert-danger">
+        CAMPO REQUERIDO | INGRESE SOLO NUMEROS MAYOR A 0 Y MAXIMO 9999999
       </div>
 
       <div class="col-3">
@@ -395,7 +409,7 @@
     <!-- FIN P3 -->
 <br>
     <!-- INICIO P2 -->
-    <div class="row align-items-start">
+    <div class="row align-items-start" [hidden]="!precio3">
       
       <div class="col-2">
         <div class="form-check">
@@ -407,9 +421,12 @@
       <div class="col-3">
         <div class="input-group mb-3"><!-- Monto  -->
           <span class="input-group-text">$</span>
-          <input type="text" class="form-control" [disabled]="!precio2" id="monto2" min="0" name="monto2" [(ngModel)]="producto_precio.precio2"
-          (change)="revisaPreciosventa($event)" (keyup)="calculaPorcentaje($event)">
+          <input type="text" class="form-control" [disabled]="!precio2" id="monto2"  name="monto2" #monto2="ngModel" [(ngModel)]="producto_precio.precio2"
+          (change)="revisaPreciosventa($event)" (keyup)="calculaPorcentaje($event)" pattern="^[0-9]{1,6}" min="1">
         </div>
+      </div>
+      <div [hidden]="monto2.valid || monto2.pristine" class="alert alert-danger">
+        CAMPO REQUERIDO | INGRESE SOLO NUMEROS MAYOR A 0 Y MAXIMO 9999999
       </div>
 
       <div class="col-3">
@@ -431,7 +448,7 @@
     <!-- FIN P2 -->
 <br>
     <!-- INICIO P1 -->
-    <div class="row align-items-start">
+    <div class="row align-items-start" [hidden]="!precio2">
       
           <div class="col-2">
             <div class="form-check">
@@ -443,9 +460,12 @@
           <div class="col-3"><!-- Monto  -->
             <div class="input-group mb-3">
               <span class="input-group-text">$</span>
-              <input type="text" class="form-control" [disabled]="!precio1" id="monto1" min="0" name="monto1" [(ngModel)]="producto_precio.precio1"
-              (change)="revisaPreciosventa($event)" (keyup)="calculaPorcentaje($event)">
+              <input type="text" class="form-control" [disabled]="!precio1" id="monto1" #monto1="ngModel" name="monto1" [(ngModel)]="producto_precio.precio1"
+              (change)="revisaPreciosventa($event)" (keyup)="calculaPorcentaje($event)" pattern="^[0-9]{1,6}" min="1">
             </div>
+          </div>
+          <div [hidden]="monto1.valid || monto1.pristine" class="alert alert-danger">
+            CAMPO REQUERIDO | INGRESE SOLO NUMEROS MAYOR A 0 Y MAXIMO 9999999
           </div>
 
           <div class="col-3"><!-- Porcentaje  -->

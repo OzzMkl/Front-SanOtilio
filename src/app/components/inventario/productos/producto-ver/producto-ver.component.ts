@@ -62,7 +62,7 @@ export class ProductoVerComponent implements OnInit {
           this._productoService.getProdverDos(id).subscribe(
             response=>{
               this.producto = response.producto;
-              this.value = this.producto[0]['cbarras'];
+              //this.value = this.producto[0]['cbarras'];
               console.log(this.producto);
             },
               error =>{

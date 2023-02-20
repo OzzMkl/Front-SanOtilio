@@ -467,58 +467,63 @@
         <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
       </div>
       <div class="modal-body">
-        <div class="text-center text-primary" *ngIf="isLoadingProductos">
-            <div class="spinner-border" role="status" >
-                <span class="visually-hidden">Loading...</span>
-              </div>
-        </div>
-
-        <div *ngIf="!isLoadingProductos">
+        
+        <div >
             <div class="input-group mb-2">
                 <div class="col-2">
-                    <select name="" id="" class="form-select" name="seleccionado" [(ngModel)]="seleccionado" (ngModelChange)="cambioSeleccionado($event)">
+                    <select name="" id="" class="form-select" name="seleccionado" [(ngModel)]="seleccionado">
                         <option value="1" selected>DESCRIPCION</option>
                         <option value="2">CLAVE EXTERNA</option>
                         <option value="3">CODIGO DE BARRAS</option>
                     </select>
                 </div>
                  <div class="col" *ngIf="seleccionado == 1; ">
-                    <input type="text" class="form-control" name="buscarProducto" [(ngModel)]="buscarProducto">
+                    <input type="search" class="form-control" name="buscarProducto" placeholder=" Buscar ..." (keyup)="getSearchDescripcion($event)">
                 </div>
                 <div class="col" *ngIf="seleccionado == 2; ">
-                    <input type="text" class="form-control" name="buscarProductoCE" [(ngModel)]="buscarProductoCE"> 
+                    <input type="text" class="form-control" name="buscarProductoCE" placeholder=" Buscar ..." (keyup)="getSearch($event)"> 
                 </div>
                 <div class="col" *ngIf="seleccionado == 3;  ">
-                    <input type="text" class="form-control" name="buscarProductoCbar" [(ngModel)]="buscarProductoCbar">
+                    <input type="text" class="form-control" name="buscarProductoCbar" placeholder=" Buscar ..." (keyup)="getSearchCodbar($event)">
                 </div>
                 
               </div>
               <br>
-              <table class="table table-dark table-hover">
+                <div class="text-center text-primary" *ngIf="isLoadingProductos">
+                    <div class="spinner-border" role="status" >
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+              <br>
+              <table *ngIf="!isLoadingProductos" class="table table-sm table-dark table-hover">
                 <thead>
                     <tr>
                         <th>CLAVE EXTERNA</th>
                         <th>CODIGO DE BARRAS</th>
                         <th>DESCRIPCION</th>
-                        <th>MEDIDA</th>
                         <th>MARCA</th>
                         <th>PRECIOS</th>
+                        <th>MEDIDA</th>
                         <th>EXISTENCIA</th>
                     </tr>
                 </thead>
-                <tbody *ngFor="let pr of productos | filterProductsModalcbar: buscarProductoCbar| filterProductModal: buscarProducto | filterProductsModalce: buscarProductoCE | paginate:{id:'pcModal',itemsPerPage: 5, currentPage: pageActual2}">
+                <tbody *ngFor="let pr of productos | paginate:{id:'pcModal',itemsPerPage: itemsPerPage, currentPage: pageActual2, totalItems:totalPages}">
                     <tr (click)="seleccionarProducto(pr.idProducto)"  (click)="modal.dismiss('Cross click')">
                         <th scope="row">{{pr.claveEx}}</th>
                         <th scope="row">{{pr.cbarras}}</th>
                         <th scope="row">{{pr.descripcion}}</th>
-                        <th scope="row">{{pr.nombreMedida}}</th>
                         <th scope="row">{{pr.nombreMarca}}</th>
-                        <th scope="row">{{pr.precioS}} ~ {{pr.precioR}}</th>
+                        <th scope="row">PRECIO$$</th>
+                        <th scope="row">{{pr.nombreMedida}}</th>
                         <th scope="row">{{pr.existenciaG}}</th>
                     </tr>
                 </tbody>
               </table>
-              <pagination-controls id="pcModal" (pageChange)="pageActual2 = $event"></pagination-controls>
+              <pagination-controls  id="pcModal"
+                                    (pageChange)="getPage(pageActual2 = $event)"
+                                    previousLabel="Anterior"
+                                    nextLabel="Siguiente" >
+              </pagination-controls>
         </div>
       </div>
 </ng-template>
