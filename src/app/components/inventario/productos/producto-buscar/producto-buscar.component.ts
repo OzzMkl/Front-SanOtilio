@@ -111,6 +111,9 @@ export class ProductoBuscarComponent implements OnInit {
    * no retornamos ya que solo actualizamos las variables a mostrar
    */
   getPage(page:number) {
+    //mostramos el spinner
+    this.isLoading = true;
+
     this._http.get(this.path+'?page='+page).subscribe(
       (response:any) => {
         //console.log(response);
@@ -122,6 +125,8 @@ export class ProductoBuscarComponent implements OnInit {
         this.next_page = response.productos.next_page_url;
         this.path = response.productos.path
         
+        //una vez terminado de cargar quitamos el spinner
+        this.isLoading = false;
     })
   }
 

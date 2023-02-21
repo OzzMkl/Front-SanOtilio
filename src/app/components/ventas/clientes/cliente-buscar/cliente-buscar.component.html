@@ -3,7 +3,7 @@
 </div>
 <div class="container- fluid" *ngIf="clientes">
     <div class="col">
-        <input type="text" class="form-control" name="buscarCliente" placeholder="buscar ..." [(ngModel)]="buscarCliente">
+        <input type="text" class="form-control" name="buscarCliente" placeholder="buscar ...">
     </div>
     <br>
     <div class="text-center text-primary" *ngIf="isLoading">
@@ -21,7 +21,7 @@
                     <th scope="col">TIPO CLIENTE</th>
                 </tr>
             </thead>
-            <tbody *ngFor="let c of clientes | filterClientes: buscarCliente | paginate:{id:'pagCliente',itemsPerPage: 10, currentPage: pageActual}">
+            <tbody *ngFor="let c of clientes | paginate:{id:'pagCliente',itemsPerPage: itemsPerPage, currentPage: pageActual, totalItems:totalPages}">
                 <tr (click)="open(content)" (click)="seleccionarCliente(c.idCliente)">
                     <th scope="row">{{c.nombre}} {{c.aPaterno }} {{c.aMaterno}}</th>
                     <th scope="row">{{c.rfc}}</th>
@@ -30,7 +30,12 @@
                 </tr>
             </tbody>
         </table>
-        <pagination-controls id="pagCliente" (pageChange)="pageActual = $event"></pagination-controls>
+        <pagination-controls 
+                id="pagCliente" 
+                (pageChange)="getPage(pageActual = $event)"
+                previousLabel="Anterior"
+                nextLabel="Siguiente" >
+        </pagination-controls>
     </div>
 </div>
 
