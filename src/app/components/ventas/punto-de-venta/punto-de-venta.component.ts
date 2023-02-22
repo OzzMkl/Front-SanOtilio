@@ -146,6 +146,15 @@ export class PuntoDeVentaComponent implements OnInit {
       console.log(error);
     });
   }
+   /**
+   * 
+   * @param page
+   * Es el numero de pagina a la cual se va acceder
+   * @description
+   * De acuerdo al numero de pagina recibido lo concatenamos a
+   * la direccion para "ir" a esa direccion y traer la informacion
+   * no retornamos ya que solo actualizamos las variables a mostrar
+   */
   getPageClientes(page:number){
     //iniciamos spinner
     this.isLoadingClientes = true;
@@ -164,6 +173,15 @@ export class PuntoDeVentaComponent implements OnInit {
         //una vez terminado quitamos el spinner
         this.isLoadingClientes=false;
       })
+  }
+  searchNombreCliente(){
+    //iniciamos spinner
+    // this.isLoadingClientes = true;
+    // if(){
+
+    // } else {
+
+    // }
   }
   //obtenemos los tipos de clientes para el select del modal para agregar nuevos clientes
   getTipocliente(){

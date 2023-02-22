@@ -62,4 +62,8 @@ export class ClientesService {
   let params = 'json='+json;
   return this._http.put(this.url + 'clientes/updateCdireccion/'+idCliente,params,{headers:this.headers});
  }
+
+ searchNombreCliente(nombreCliente:string):Observable<any>{
+  return this._http.get(this.url+'clientes/searchNombreCliente/'+nombreCliente,{headers:this.headers});
+ }
 }
