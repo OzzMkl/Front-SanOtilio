@@ -181,6 +181,7 @@ export class PuntoDeVentaComponent implements OnInit {
   }
   //accion de guardar el nuevo cliente del modal
   guardarCliente(){
+    //this.modalService.
       if(this.isCompany == true ){
         this.modeloCliente.aMaterno ='';
         this.modeloCliente.aPaterno='';
@@ -197,7 +198,7 @@ export class PuntoDeVentaComponent implements OnInit {
                   this.toastService.show('Cliente registrado correctamente',{classname: 'bg-success text-light', delay: 3000});
                   //console.log(response);
                 },error=>{
-                  this.toastService.show('Cliente registrado, pero sin direccion',{classname: 'bg-danger text-light', delay: 6000})
+                  this.toastService.show('Algo salio mal al guardar la direccion',{classname: 'bg-danger text-light', delay: 6000})
                   console.log(error);
                 });
             }else{
@@ -220,6 +221,7 @@ export class PuntoDeVentaComponent implements OnInit {
       response=>{
         if(response.status == 'success'){
           this.toastService.show('Direccion registrada correctamente',{classname: 'bg-success text-light', delay: 3000});
+          this.getDireccionCliente(this.nuevaDir.idCliente);
         }
         //console.log(response)
        }, error =>{
