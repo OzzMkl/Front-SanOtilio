@@ -50,6 +50,7 @@ export class PuntoDeVentaComponent implements OnInit {
   /**PAGINATOR */
   public itemsPerPage: number = 0;
   public totalPages: any;
+  public totalPagesClientes: any;
   public path: any;
   public page: any;
   public next_page: any;
@@ -121,17 +122,48 @@ export class PuntoDeVentaComponent implements OnInit {
  }
   //traemos todos los clientes
   getClientes(){
+    //iniciamos spinner
     this.isLoadingClientes = true;
+    //ejecutamosservicio
     this._clienteService.getAllClientes().subscribe( 
       response =>{
         if(response.status == 'success'){
-          this.clientes = response.clientes;
+
+          this.clientes = response.clientes.data;
           //console.log(this.clientes);
+
+          //navegacion de paginacion
+          this.totalPagesClientes = response.clientes.total;
+          this.itemsPerPage = response.clientes.per_page;
+          this.pageActual = response.clientes.current_page;
+          this.next_page = response.clientes.next_page_url;
+          this.path = response.clientes.path;
+
+          //una vez terminado de cargar quitamos el spinner
           this.isLoadingClientes = false;
         }
       },error =>{
       console.log(error);
     });
+  }
+  getPageClientes(page:number){
+    //iniciamos spinner
+    this.isLoadingClientes = true;
+
+    this._http.get(this.path+'?page='+page).subscribe(
+      (response:any) => {
+        //console.log(response);
+        this.clientes = response.clientes.data;
+        //navegacion paginacion
+        this.totalPagesClientes = response.clientes.total;
+        this.itemsPerPage = response.clientes.per_page;
+        this.pageActual = response.clientes.current_page;
+        this.next_page = response.clientes.next_page_url;
+        this.path = response.clientes.path
+
+        //una vez terminado quitamos el spinner
+        this.isLoadingClientes=false;
+      })
   }
   //obtenemos los tipos de clientes para el select del modal para agregar nuevos clientes
   getTipocliente(){
