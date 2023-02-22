@@ -45,6 +45,11 @@ export class CompraAgregarIdComponent implements OnInit {
   public detailOrd: any;
   public productosdetailOrd: any;
   public fecha : Date = new Date();
+  public dateOptions: Intl.DateTimeFormatOptions = {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit'
+  };
 //variable para el cambio de fecha
   public isSearch: boolean = true;
 //date!: Date;
@@ -169,7 +174,7 @@ export class CompraAgregarIdComponent implements OnInit {
     // console.log(id);
   }
 
-  onChangeT(subtotal:any){//Recalcula el subtotal al hacer un cambio
+  onChangeT(subtotal:any){//Recalcula el subtotal al hacer un cambio dentro del formulario de productos
     this.producto_compra.subtotal = this.producto_compra.cantidad * this.producto_compra.precio;
     this.producto_compra.subtotal = this.producto_compra.subtotal + (this.producto_compra.subtotal * (this.producto_compra.valorImpuesto / 100)); 
   }
@@ -180,13 +185,13 @@ export class CompraAgregarIdComponent implements OnInit {
     this.buscarProductoCbar = '';
   }
 
-  capturar(datos:any){//Agregar a lista de compras
+  capturar(datos:any){//Agrega un producto a lista de compras
     // if(this.producto_compra.caducidad)
     if(this.test == true){
       this.producto_compra.caducidad = this.modelP.year+'-'+this.modelP.month+'-'+this.modelP.day;//concatenamos la fecha del datepicker
     }
     console.log(datos);
-    console.log(this.producto_compra.caducidad);
+    console.log('Caducidad: ',this.producto_compra.caducidad);
     
     if(this.producto_compra.cantidad <= 0 || this.producto_compra.precio <= 0 || this.producto_compra.subtotal <= 0){
       this.toastService.show('No se pueden agregar productos con cantidad, precio o importe menor o igual a 0',{classname: 'bg-danger text-light', delay: 6000})
@@ -275,8 +280,9 @@ export class CompraAgregarIdComponent implements OnInit {
     doc.setLineWidth(2.5).line(10,53,70,53);
     //           tipografia,negrita        tamaño          texto              x1,y1
     doc.setFont('Helvetica','bold').setFontSize(10).text('NO. COMPRA: '+this.detailComp[0]['idCompra'], 10,60);
-    doc.setFont('Helvetica','normal').setFontSize(10).text('FECHA IMPRESION: '+this.fecha.toLocaleDateString(), 50,65);
-    doc.setFont('Helvetica','normal').setFontSize(10).text('FECHA DE RECEPCION: '+this.detailComp[0]['fechaRecibo'], 115,65);
+    doc.setFont('Helvetica','bold').setFontSize(10).text('FOLIO DEL PROVEEDOR: '+this.detailComp[0]['folioProveedor'], 10,65);
+    doc.setFont('Helvetica','normal').setFontSize(10).text('FECHA IMPRESION: '+this.fecha.toLocaleDateString('es-ES', this.dateOptions), 115,60);
+    doc.setFont('Helvetica','normal').setFontSize(10).text('FECHA DE RECEPCION: '+this.detailComp[0]['fecha_format'].substring(0,10), 115,65);
 
     doc.setLineWidth(1).line(10,70,200,70);
     doc.setFont('Helvetica','normal').setFontSize(10).text('REALIZO: '+ nombreE.toUpperCase(), 10,75);
@@ -321,6 +327,8 @@ export class CompraAgregarIdComponent implements OnInit {
           console.log('---ORDEN DE COMPRA---');
           console.log(response.productos);
           console.log(this.compra);
+          console.log('---------------------');
+
         },error =>{
           console.log(error);
       });
@@ -369,18 +377,19 @@ export class CompraAgregarIdComponent implements OnInit {
     );
   }
 
-  getProd(id:any,cantidad:any){
-    this._productoService.getProdclaveex(id).subscribe(
+  getProd(idProducto:any,cantidad:any){//consultar producto y rellenar el formulario de producto
+    //console.log(idProducto,cantidad)
+    this._productoService.getProdverDos(idProducto).subscribe(
       response =>{
         this.productoVer = response.producto;//informacion completa del producto para recorrerlo atraves del html
+        console.log(this.productoVer);
         this.producto_compra.descripcion = this.productoVer[0]['descripcion'];//asignamos variables
         this.producto_compra.claveEx = this.productoVer[0]['claveEx'];
         this.producto_compra.idProducto = this.productoVer[0]['idProducto'];
         this.producto_compra.nombreMedida = this.productoVer[0]['nombreMedida'];
         this.producto_compra.cantidad = cantidad;
-        //console.log(this.productoVer);
       },error => {
-        console.log(error);
+        //console.log(error);
       }
     );
   }
@@ -475,24 +484,21 @@ export class CompraAgregarIdComponent implements OnInit {
                 this.toastService.show('Ups... Fallo al agregar los productos a la compra', { classname: 'bg-danger text-light', delay: 15000 });
               });
           //Registro de lote
-          this._compraService.registerLote().subscribe( res =>{
-            console.log(res)
-          });
-          //Agregar a PELOTE
+          // this._compraService.registerLote().subscribe( res =>{
+          //   console.log(res)
+          // });
+          //SUMAR EXISTENCIAG
             this._compraService.updateExistencia(this.Lista_compras).subscribe(
               res =>{
                   console.log(res);
-                  this.toastService.show(' ⚠ Producto-Existencia-Lote agregado exitosamente!', { classname: 'bg-success  text-light', delay: 5000 });
+                  this.toastService.show(' ⚠ Existencia actualizada exitosamente!', { classname: 'bg-success  text-light', delay: 5000 });
                   //this.getDetailsOrd();
                   //this.createPDF();
               },error =>{
                 console.log(<any>error);
-                this.toastService.show('Ups... Fallo al agregar los productos a Producto-Existencia-Lote', { classname: 'bg-danger text-light', delay: 15000 });
+                this.toastService.show('Ups... Fallo al agregar los productos', { classname: 'bg-danger text-light', delay: 15000 });
               });
 
-        }else{
-          console.log('fallo');  
-          console.log(response);
         }
       },error =>{
         console.log(<any>error);
@@ -521,14 +527,27 @@ export class CompraAgregarIdComponent implements OnInit {
       }
   }
 
-  editarProducto(dato:any,cantidad:any){//metodo para editar la lista de compras
-    console.log(dato,cantidad);
-    this.lista_productosorden = this.lista_productosorden.filter((item) => item.claveEx !== dato);//eliminamos el producto
+  editarProducto(idProducto:any,cantidad:any){//metodo para editar la lista de productos
+    console.log(idProducto,cantidad);
+    this.lista_productosorden = this.lista_productosorden.filter((item) => item.idProducto !== idProducto);//eliminamos el producto
     //consultamos la informacion para motrar el producto nuevamente
-    this.getProd(dato,cantidad);
+    this.getProd(idProducto,cantidad);
     this.isSearch = false;
   }
 
+  editarProductoC(idProducto:any,cantidad:any,precio:any,subtotal:any){//metodo para editar la lista de compras
+    console.log(idProducto,cantidad);
+    this.Lista_compras = this.Lista_compras.filter((item) => item.idProducto !== idProducto);//eliminamos el producto
+    //consultamos la informacion para motrar el producto nuevamente
+    this.getProd(idProducto,cantidad);
 
+    //Calculo de subtotal y total de la compra
+    this.compra.subtotal=this.compra.subtotal-(cantidad*precio);
+    this.compra.total=this.compra.total-subtotal;
+    console.log('Subtotal: ',this.compra.subtotal);
+    console.log('Total: ',this.compra.total);
+
+    this.isSearch = false;
+  }
 
 }

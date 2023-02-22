@@ -66,7 +66,7 @@
                     </tr>
                 </thead>
                 <tbody *ngFor="let lpo of lista_productosorden | paginate:{ id: 'pcEdit', itemsPerPage: 5, currentPage: pageActual}">
-                    <tr (click)="editarProducto(lpo.claveEx,lpo.cantidad)">
+                    <tr (click)="editarProducto(lpo.idProducto,lpo.cantidad)">
                         <th scope="row">{{lpo.claveEx}}</th>
                         <th scope="row">{{lpo.descripcion}}</th>
                         <th scope="row">{{lpo.nombreMedida}}</th>
@@ -179,14 +179,14 @@
                         <th scope="col">DESCRIPCION</th>
                         <th scope="col">MEDIDA</th>
                         <th scope="col">CANTIDAD</th>
-                        <th scope="col">PRECIO</th>
+                        <th scope="col">PRECIO COMPRA</th>
                         <th scope="col">IMPUESTO</th>
                         <th scope="col">IMPORTE</th>
                         <th scope="col">CADUCIDAD</th>
                     </tr>
                 </thead>
                 <tbody *ngFor="let p_d of Lista_compras | paginate:{itemsPerPage: 5, currentPage: pageActual}">
-                    <tr>
+                    <tr (click)="editarProductoC(p_d.idProducto,p_d.cantidad,p_d.precio,p_d.subtotal)">
                      <th scope="row">{{p_d.claveEx}}</th>
                      <th scope="row">{{p_d.descripcion}}</th>
                      <th scope="row">{{p_d.nombreMedida}}</th>
