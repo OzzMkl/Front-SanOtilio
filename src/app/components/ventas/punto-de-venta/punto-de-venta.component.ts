@@ -174,14 +174,33 @@ export class PuntoDeVentaComponent implements OnInit {
         this.isLoadingClientes=false;
       })
   }
-  searchNombreCliente(){
+  searchNombreClienteS(nombreCliente: any){
     //iniciamos spinner
-    // this.isLoadingClientes = true;
-    // if(){
+    this.isLoadingClientes = true;
+    if(nombreCliente.target.value == ''){
+      this.getClientes();
+    } else {
+      //declaramos la palabra
+      let nomCliente = nombreCliente.target.value;
 
-    // } else {
+      //generamos conulta
+      this._clienteService.searchNombreCliente(nomCliente).subscribe(
+        response => {
+          if(response.status == 'success'){
+            this.clientes = response.clientes.data;
+            
+            //navegacion de paginacion
+            this.totalPagesClientes = response.clientes.total;
+            this.itemsPerPage = response.clientes.per_page;
+            this.pageActual = response.clientes.current_page;
+            this.next_page = response.clientes.next_page_url;
+            this.path = response.clientes.path;
 
-    // }
+            //una vez terminado de cargar quitamos el spinner
+            this.isLoadingClientes = false;
+          }
+        } );
+    }
   }
   //obtenemos los tipos de clientes para el select del modal para agregar nuevos clientes
   getTipocliente(){
