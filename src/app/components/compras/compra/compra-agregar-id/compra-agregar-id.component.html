@@ -7,20 +7,16 @@
                 <label for="idOrd" class="form-label"># Orden</label>
                 <input type="text" class="form-control" id="idOrd" name="idOrd" #idOrd="ngModel" [(ngModel)]="compra.idOrd" readonly>
             </div>
-            <div class="col-2">
-                <label for="idPedido" class="form-label"># Pedido</label>
-                <input type="text" class="form-control" id="idPedido" name="idPedido" #idPedido="ngModel" [(ngModel)]="compra.idPedido" readonly>
-            </div>
-            <div class="col-2">
+            <div class="col-3">
                 <label for="folioProveedor" class="form-label"> Folio del proveedor</label>
                 <input type="text" class="form-control" id="folioProveedor" name="folioProveedor" #folioProveedor="ngModel" [(ngModel)]="compra.folioProveedor">
                 <br>
             </div>
-            <div class="col-4">
+            <div class="col-5">
                 <label for="idProveedor" class="form-label">Seleccionar proveedor</label>
-                <select name="idProveedor" id="idProveedor" class="form-select" #idProveedor="ngModel" [(ngModel)]="compra.idProveedor" (ngModelChange)="onChange($event)">
-                    <option selected disabled value="">Abrir para seleccionar</option>
-                    <option  *ngFor="let proveedor of proveedoresLista" value={{proveedor.idProveedor}}>{{proveedor.nombre}}</option>
+                <select class="form-select" name="idProveedor" #idProveedor="ngModel" id="idProveedor"   [(ngModel)]="compra.idProveedor" (ngModelChange)="onChange($event)">
+                    <option selected disabled>Abrir para seleccionar</option>
+                    <option  *ngFor="let proveedor of proveedoresLista" value="{{proveedor.idProveedor}}">{{proveedor.nombre}}</option>
                 </select>
             </div>
 

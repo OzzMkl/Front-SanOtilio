@@ -116,7 +116,7 @@ export class CompraAgregarIdComponent implements OnInit {
     this.productosOrden = new Producto_orden(0,0,0,'','','');
     this.lista_productosorden = [];
 
-    this.compra = new Compra(0,null,null,0,0,0,0,0,0,null,'',null);
+    this.compra = new Compra(0,null,0,0,0,0,0,0,null,'',null);
     this.producto_compra = new Producto_compra(0,0,0,0,0,null,null,null,null,null,null,0,null);
     this.Lista_compras = [];
     this.url = global.url;
@@ -165,7 +165,7 @@ export class CompraAgregarIdComponent implements OnInit {
   /*************** */
 
    /*Eventos*/
-   onChange(id:any){//Muestra los datos del proveedor al seleccionarlo
+  onChange(id:any){//Muestra los datos del proveedor al seleccionarlo
     this.getProveeVer(id);
   }
 
@@ -321,6 +321,7 @@ export class CompraAgregarIdComponent implements OnInit {
             
             //Asignar propiedades a la compra
             this.compra.idProveedor = response.ordencompra[0]['idProveedor'];
+            this.getProveeVer(this.compra.idProveedor);
             this.compra.idOrd = response.ordencompra[0]['idOrd'];
 
           }
