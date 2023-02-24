@@ -66,4 +66,9 @@ export class ClientesService {
  searchNombreCliente(nombreCliente:string):Observable<any>{
   return this._http.get(this.url+'clientes/searchNombreCliente/'+nombreCliente,{headers:this.headers});
  }
+ /***EJEMPLO PDF */
+ getPDF():Observable<Blob>{
+  return this._http.get(this.url+'clientes/generatePDF',{responseType:'blob'});
+ }
+ /***EJEMPLO PDF */
 }
