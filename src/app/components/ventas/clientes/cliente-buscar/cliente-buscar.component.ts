@@ -194,8 +194,7 @@ export class ClienteBuscarComponent implements OnInit {
   }
 
   /**
-   * Destruye las subscripciones a los observables de regitro proveedor
-   * y obtecion de bancos
+   * Destruye las subscripciones a los observables
    */
   ngOnDestroy(): void {
     this.getClienteSub.unsubscribe();

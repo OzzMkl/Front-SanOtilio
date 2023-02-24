@@ -1,9 +1,24 @@
+/**
+ *  @fileoverview Logica del componente proveedor-buscar
+ *                muestra campo para buscar proveedores
+ *                muestra tabla con los proveedores habilitados paginados
+ * 
+ *  @version 1.0
+ * 
+ *  @autor Oziel pacheco<ozielpacheco.m@gmail.com>
+ *  @copyright Materiales San Otilio
+ * 
+ *  @History
+ * 
+ *  -Primera version escrita por Oziel Pacheco
+ *  -Se agrega la paginacion (Oziel - 23-02-2022)
+ * 
+ */
 import { Component, OnInit } from '@angular/core';
-import { Proveedor } from 'src/app/models/proveedor';
 import { ProveedorService } from 'src/app/services/proveedor.service';
-import { global } from 'src/app/services/global';
-///
-import { Router, ActivatedRoute, Params} from '@angular/router';
+import { Router} from '@angular/router';
+import { HttpClient} from '@angular/common/http';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-proveedor-buscar',
@@ -12,40 +27,54 @@ import { Router, ActivatedRoute, Params} from '@angular/router';
   providers: [ProveedorService]
 })
 export class ProveedorBuscarComponent implements OnInit {
-  
-  public url:string;
-  //public proveedores: Array<Proveedor>;
-  public proveedores: any;
+ 
+  //Variable donde almacenaremos la data del api
+  public proveedores: Array<any> = [];
+  /**PAGINATOR */
   public totalPages: any;
-  public page: any;
+  public path: any;
   public next_page: any;
   public prev_page: any;
-  pageActual: number = 1;
-  fpv = '';
-  datox: any;
+  public itemsPerPage:number=0;
+  pageActual: number = 0;
+  public tipoBusqueda: number = 1;
+  //Spinner
+  public isLoading: boolean = false;
+  //subscription
+  private getProveedorSub : Subscription = new Subscription;
 
   constructor(
     private _proveedorService: ProveedorService,
-    private _route: ActivatedRoute,
-    private _router: Router
-   ) { 
-      
-      this.url = global.url;
-      this.proveedores = [];
-      this.datox ='';
-    }
+    private _router: Router,
+    private _http: HttpClient ) { }
 
   ngOnInit(): void {
     this.getProve();
   }
 
+  /**
+   * Lista de proveedores habilidatos
+   */
   getProve(){
-    this._proveedorService.getProveedores().subscribe(
+    //mostramos el spinner
+    this.isLoading = true;
+    //ejecutamas servicio
+    this.getProveedorSub = this._proveedorService.getProveedores().subscribe(
       response =>{
         if(response.status == 'success'){
-          this.proveedores = response.proveedores;
-          //navegacion de paginacion
+
+          //asignamos a varibale para mostrar
+          this.proveedores = response.proveedores.data;
+
+          //navegacion paginacion
           this.totalPages = response.proveedores.total;
+          this.itemsPerPage = response.proveedores.per_page;
+          this.pageActual = response.proveedores.current_page;
+          this.next_page = response.proveedores.next_page_url;
+          this.path = response.proveedores.path
+          
+          //una vez terminado de cargar quitamos el spinner
+          this.isLoading = false;
           
           //console.log(response.proveedores);
         }
@@ -55,10 +84,46 @@ export class ProveedorBuscarComponent implements OnInit {
       }
     );
   }
+  /**
+   * 
+   * @param page
+   * Es el numero de pagina a la cual se va acceder
+   * @description
+   * De acuerdo al numero de pagina recibido lo concatenamos a
+   * la direccion para "ir" a esa direccion y traer la informacion
+   * no retornamos ya que solo actualizamos las variables a mostrar
+   */
+  getPage(page:number){
+    //iniciamos spinner
+    this.isLoading = true;
 
-  selected(dato:any){
-    this.datox = dato;
-    this._router.navigate(['./proveedor-modulo/proveedorVer/'+this.datox]);
+    this._http.get(this.path+'?page='+page).subscribe(
+      (response:any) => {
+        //asignamos a varibale para mostrar
+        this.proveedores = response.proveedores.data;
+
+        //navegacion paginacion
+        this.totalPages = response.proveedores.total;
+        this.itemsPerPage = response.proveedores.per_page;
+        this.pageActual = response.proveedores.current_page;
+        this.next_page = response.proveedores.next_page_url;
+        this.path = response.proveedores.path
+        
+        //una vez terminado de cargar quitamos el spinner
+        this.isLoading = false;
+        
+    })
+  }
+
+  selected(idProveedor:any){
+    let id = idProveedor;
+    this._router.navigate(['./proveedor-modulo/proveedorVer/'+id]);
+  }
+  /**
+   * Destruye las subscripciones a los observables
+   */
+  ngOnDestroy(): void {
+    this.getProveedorSub.unsubscribe();
   }
 
 }
