@@ -12,10 +12,10 @@
                 </select>
             </div>
             <div class="col" *ngIf="tipoBusqueda == 1">
-                <input type="search" class="form-control" name="searchProducto" placeholder="Buscar ...">
+                <input type="search" class="form-control" name="searchNomProv" placeholder="Buscar ..." (keyup)="getSearchNombreProv($event)" >
             </div>
             <div class="col" *ngIf="tipoBusqueda == 2">
-                <input type="search" class="form-control" name="searchProductoCodBar" placeholder="Buscar ..." >
+                <input type="search" class="form-control" name="searchRfcProve" placeholder="Buscar ..." (keyup)="getSearchRfcProv($event)">
             </div>
         </div>
         <br>

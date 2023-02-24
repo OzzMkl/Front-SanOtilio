@@ -125,5 +125,90 @@ export class ProveedorBuscarComponent implements OnInit {
   ngOnDestroy(): void {
     this.getProveedorSub.unsubscribe();
   }
+  /**
+   * 
+   * @param nombreProveedor 
+   * Recibimos el evento del input
+   * @description
+   * Recibe los valores del evento (keyup), luego busca y actualiza
+   * 
+   */
+  getSearchNombreProv(nombreProveedor:any){
+     //mostramos el spinner
+     this.isLoading = true;
+     let nomProv = nombreProveedor.target.value;
+     if(nomProv == '' || nomProv == null){
+      this.getProve();
+     } else{
+      //ejecutamas servicio
+     this._proveedorService.searchNombreProveedor(nomProv).subscribe(
+      response =>{
+        if(response.status == 'success'){
+
+          //asignamos a varibale para mostrar
+          this.proveedores = response.proveedores.data;
+
+          //navegacion paginacion
+          this.totalPages = response.proveedores.total;
+          this.itemsPerPage = response.proveedores.per_page;
+          this.pageActual = response.proveedores.current_page;
+          this.next_page = response.proveedores.next_page_url;
+          this.path = response.proveedores.path
+          
+          //una vez terminado de cargar quitamos el spinner
+          this.isLoading = false;
+          
+          //console.log(response.proveedores);
+        }
+      },
+      error =>{
+        console.log(error);
+      }
+    );
+     }
+  }
+  /**
+   * 
+   * @param rfc 
+   * Recibimos el evento del input
+   * @description
+   * Recibe los valores del evento (keyup), luego busca y actualiza
+   * 
+   */
+  getSearchRfcProv(rfc:any){
+    //mostramos el spinner
+    this.isLoading = true;
+    let rfcProv = rfc.target.value;
+
+    if(rfcProv == '' || rfcProv == null){
+     this.getProve();
+    } else{
+     //ejecutamas servicio
+    this._proveedorService.searchRfcProveedor(rfcProv).subscribe(
+     response =>{
+       if(response.status == 'success'){
+
+         //asignamos a varibale para mostrar
+         this.proveedores = response.proveedores.data;
+
+         //navegacion paginacion
+         this.totalPages = response.proveedores.total;
+         this.itemsPerPage = response.proveedores.per_page;
+         this.pageActual = response.proveedores.current_page;
+         this.next_page = response.proveedores.next_page_url;
+         this.path = response.proveedores.path
+         
+         //una vez terminado de cargar quitamos el spinner
+         this.isLoading = false;
+         
+         //console.log(response.proveedores);
+       }
+     },
+     error =>{
+       console.log(error);
+     }
+   );
+    }
+ }
 
 }

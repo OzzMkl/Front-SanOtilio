@@ -45,5 +45,8 @@ export class ProveedorService{
     searchNombreProveedor(nombreProveedor:string):Observable<any>{
         return this._http.get(this.url+'proveedor/searchNombreProveedor/'+nombreProveedor,{headers:this.headers});
     }
+    searchRfcProveedor(rfc:string):Observable<any>{
+        return this._http.get(this.url+'proveedor/searchRFCProveedor/'+rfc,{headers:this.headers});
+    }
 
 }
