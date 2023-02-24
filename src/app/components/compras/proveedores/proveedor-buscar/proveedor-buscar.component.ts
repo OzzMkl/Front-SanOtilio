@@ -209,6 +209,6 @@ export class ProveedorBuscarComponent implements OnInit {
      }
    );
     }
- }
+  }
 
 }

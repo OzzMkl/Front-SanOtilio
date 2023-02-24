@@ -41,12 +41,41 @@ export class ProveedorService{
         let params = 'json='+json;
         return this._http.put(this.url + 'proveedor/updatestatus/'+idProveedor,params,{headers:this.headers});
     }
-
+    /**
+     * Busca los proveedores por su nombre
+     * Solo con status 29 HABILITADOS
+     * @param nombreProveedor 
+     * @returns 
+     */
     searchNombreProveedor(nombreProveedor:string):Observable<any>{
         return this._http.get(this.url+'proveedor/searchNombreProveedor/'+nombreProveedor,{headers:this.headers});
     }
+    /**
+     * Busca los proveedores por su RFC
+     * Solo con status 29 HABILITADOS
+     * @param nombreProveedor 
+     * @returns 
+     */
     searchRfcProveedor(rfc:string):Observable<any>{
         return this._http.get(this.url+'proveedor/searchRFCProveedor/'+rfc,{headers:this.headers});
+    }
+     /**
+     * Busca los proveedores por su nombre
+     * Solo con status 30 INHABILITADOS
+     * @param nombreProveedor 
+     * @returns 
+     */
+     searchNombreProveedorI(nombreProveedor:string):Observable<any>{
+        return this._http.get(this.url+'proveedor/searchNombreProveedorI/'+nombreProveedor,{headers:this.headers});
+    }
+    /**
+     * Busca los proveedores por su RFC
+     * Solo con status 30 INHABILITADOS
+     * @param nombreProveedor 
+     * @returns 
+     */
+    searchRfcProveedorI(rfc:string):Observable<any>{
+        return this._http.get(this.url+'proveedor/searchRFCProveedorI/'+rfc,{headers:this.headers});
     }
 
 }
