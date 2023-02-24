@@ -36,10 +36,13 @@ export class ProveedorService{
     getNcps(idProveedor:any):Observable<any>{
         return this._http.get(this.url+'proveedor/getNCP/'+idProveedor, {headers:this.headers} );
     }
-    updateStatus( prove:any, idProveedor:any):Observable<any>{
-        let json = JSON.stringify(prove);
-        let params = 'json='+json;
-        return this._http.put(this.url + 'proveedor/updatestatus/'+idProveedor,params,{headers:this.headers});
+    // updateStatus( prove:any, idProveedor:any):Observable<any>{
+    //     let json = JSON.stringify(prove);
+    //     let params = 'json='+json;
+    //     return this._http.put(this.url + 'proveedor/updatestatus/'+idProveedor,params,{headers:this.headers});
+    // }
+    updateStatus(idProveedor:number):Observable<any>{
+        return this._http.put(this.url+'proveedor/updatestatus/'+idProveedor,{headers:this.headers})
     }
     /**
      * Busca los proveedores por su nombre

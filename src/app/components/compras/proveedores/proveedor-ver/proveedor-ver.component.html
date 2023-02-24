@@ -15,19 +15,19 @@
                         <button type="button" value="Deshabilitados" class="btn btn-warning me-md-2" ngbTooltip="EDITAR" *ngIf="permiso.editar == 1"><i class="bi bi-pencil-square"></i><br></button>
                     </div>
 
-                    <div *ngIf="p.idStatus==1; else elseBlock" class="col-auto">
+                    <div *ngIf="p.idStatus==29; else elseBlock" class="col-auto">
                         <form class="form-group" #upstss="ngForm" (ngSubmit)="onSubmitt(upstss)" >
-                            <input class="form-control" type="text" name="idProveedor" #idProveedor="ngModel" [(ngModel)]="provee.idProveedor" hidden>
-                            <input class="form-control" type="text" value="2" name="idStatus" #idStatus="ngModel" [(ngModel)]="provee.idStatus" hidden>
+                            <!-- <input class="form-control" type="text" name="idProveedor" #idProveedor="ngModel" [(ngModel)]="provee.idProveedor" hidden>
+                            <input class="form-control" type="text" value="2" name="idStatus" #idStatus="ngModel" [(ngModel)]="provee.idStatus" hidden> -->
                             <button type="submit" class="btn btn-danger" ngbTooltip="DESHABILITAR" *ngIf="permiso.cancelar == 1"><i class="bi bi-exclamation-circle"></i><br></button>
                         </form>
 
-                      </div>
-                      <ng-template #elseBlock>
+                    </div>
+                    <ng-template #elseBlock>
                         <div class="col-auto">
                              <form class="form-group" #upsts="ngForm" (ngSubmit)="onSubmit(upsts)" >
-                                <input class="form-control" type="text" name="idProveedor" #idProveedor="ngModel" [(ngModel)]="prove.idProveedor" hidden>
-                                <input class="form-control" type="text" name="idStatus" #idStatus="ngModel" [(ngModel)]="prove.idStatus" hidden>
+                                <!-- <input class="form-control" type="text" name="idProveedor" #idProveedor="ngModel" [(ngModel)]="prove.idProveedor" hidden>
+                                <input class="form-control" type="text" name="idStatus" #idStatus="ngModel" [(ngModel)]="prove.idStatus" hidden> -->
                                 <button type="submit" class="btn btn-danger" ngbTooltip="HABILITAR" *ngIf="permiso.editar == 1"><i class="bi bi-exclamation-circle"></i><br></button>
                             </form>
                         </div>

@@ -4,10 +4,8 @@ import { BancoService } from 'src/app/services/banco.service';
 import { Proveedor } from 'src/app/models/proveedor';
 import { ProveedorService } from 'src/app/services/proveedor.service';
 import { Router, ActivatedRoute, Params } from '@angular/router';
-import { Contacto } from 'src/app/models/contacto';
 import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {ToastService} from 'src/app/services/toast.service';
-import { FormGroup, FormControl} from '@angular/forms';
 import { EmpleadoService } from 'src/app/services/empleado.service';
 
 
@@ -19,25 +17,14 @@ import { EmpleadoService } from 'src/app/services/empleado.service';
 })
 export class ProveedorVerComponent implements OnInit {
 
-  public closeModal: string;
   public proveedor: Array<Proveedor>;
-  public contacto: Array<any>;
-  public ncp: Array<any>;
-  public banco: Array<Banco>;
-  public page_contacto: string;
-  public page_cuenta: string;
-  public page_title: string;
-  public status: string;
+  public contacto: Array<any> = [];
+  public ncp: Array<any> = [];
+  public banco: Array<Banco> = [];
+  public status: string = '';
   public token:any;
-  public prove: Proveedor;
-  public provee: Proveedor;
   public userPermisos:any
-
-
-  // upst = new FormGroup({
-  //   idProveedor: new FormControl(''),
-  //   idStatus: new FormControl(''),
-  // });
+  public closeModal: string = '';
 
   constructor(
 
@@ -52,16 +39,6 @@ export class ProveedorVerComponent implements OnInit {
   ) { 
 
     this.proveedor =[];// new Proveedor (0,'','','','','','','','','','',0,0,1,'','','','','','','','','');
-    this.prove = new Proveedor (0,'','','','','','','','','','',0,0,1,'','','','','','','','','');
-    this.provee = new Proveedor (0,'','','','','','','','','','',0,0,2,'','','','','','','','','');
-    this.contacto = [];
-    this.ncp=[];
-    this.banco = [];
-    this.page_title = 'Ver proveedor';
-    this.page_contacto = 'Contactos';
-    this.page_cuenta = 'Cuentas';
-    this.status = '';
-    this.closeModal ='';
     this.token = this._empleadoService.getToken();
 
   }
@@ -181,14 +158,13 @@ getNCP(){
     this._route.params.subscribe(params => {
       let id = + params['idProveedor'];
 
-    this._proveedorService.updateStatus(this.prove, id).subscribe(
+    this._proveedorService.updateStatus( id).subscribe(
       response =>{
         //console.log(response);
         this._router.navigate(['./proveedor-modulo/proveedorBuscar']);
         this.toastService.show('Proveedor habilitado correctamente', { classname: 'bg-success text-light', delay: 5000 }); 
       },
       error =>{
-        console.log(this.prove);
         console.log(<any>error);
         this.toastService.show('Ups... Algo salio mal', { classname: 'bg-danger text-light', delay: 15000 });
       }
@@ -201,14 +177,13 @@ getNCP(){
     this._route.params.subscribe(params => {
       let id = + params['idProveedor'];
 
-    this._proveedorService.updateStatus(this.provee, id).subscribe(
+    this._proveedorService.updateStatus(id).subscribe(
       response =>{
         //console.log(response);
         this._router.navigate(['./proveedor-modulo/proveedorDeshabilitado']);
         this.toastService.show('Proveedor inhabilitado correctamente', { classname: 'bg-success text-light', delay: 5000 }); 
       },
       error =>{
-        console.log(this.prove);
         console.log(<any>error);
         this.toastService.show('Ups... Algo salio mal', { classname: 'bg-danger text-light', delay: 15000 });
       }
