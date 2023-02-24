@@ -5,10 +5,24 @@
     <div class="container-fluid" *ngIf="compras">
         <div class="input-group mb-2">
             <div class="col-2">
-                <select class="form-select" name="tipoBusqueda">
+                <select class="form-select" name="tipoBusqueda" [(ngModel)]="tipoBusqueda">
                     <option value="1"># Compra</option>
                     <option value="2">Proveedor</option>
+                    <option value="3"># Proveedor</option>
+                    <option value="4">Total</option>
                 </select>
+            </div>
+            <div class="col" *ngIf="tipoBusqueda == 1">
+                <input type="search" class="form-control" name="searchIdCompra" placeholder="Buscar ..." (keyup)="getSearchIdCompra($event)">
+            </div>
+            <div class="col" *ngIf="tipoBusqueda == 2">
+                <input type="search" class="form-control" name="searchNombreProveedor" placeholder="Buscar ..." (keyup)="getSearchNombreProveedor($event)">
+            </div>
+            <div class="col" *ngIf="tipoBusqueda == 3">
+                <input type="search" class="form-control" name="searchFolioProveedor" placeholder="Buscar ..." (keyup)="getSearchFolioProveedor($event)">
+            </div>
+            <div class="col" *ngIf="tipoBusqueda == 4">
+                <input type="search" class="form-control" name="searchTotal" placeholder="Buscar ..." (keyup)="getSearchTotal($event)">
             </div>
         </div>
         <br>
@@ -30,7 +44,7 @@
                     </tr>
                 </thead>
                 <tbody *ngFor="let c of compras | paginate:{id:'pagCompra',itemsPerPage: itemsPerPage, currentPage: pageActual, totalItems:totalPages}">
-                    <tr>
+                    <tr (click)="open(content)" (click)="selected(c.idCompra)">
                         <th scope="row">{{c.idCompra}}</th>
                         <th scope="row">{{c.fechaRecibo | date: 'dd/MM/yyyy'}}</th>
                         <th scope="row">{{c.nombreProveedor}}</th>
@@ -49,4 +63,78 @@
         </div>
     
     </div>
-</div>-
+</div>
+<!-- Modal -->
+<ng-template #content let-modal>
+    <div *ngFor="let dc of detallesCompra">
+        <div class="modal-header">
+            <h4 class="modal-title" id="modal-basic-title">Detalles compra no. {{dc.idCompra}}</h4>
+            <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+        </div>
+        <div class="modal-body">
+            <form>
+                <div class="container">
+                    <div class="row" *ngFor="let permiso of  userPermisos"><!-- Botones y permisos-->
+                        <div class="col-9">
+                            <h4>{{dc.nombreProveedor}}</h4>
+                        </div>
+                        <div class="col-auto" *ngIf="permiso.pdf == 1">
+                            <button type="button" class="btn btn-secondary" ngbTooltip="PDF"><i class="bi bi-file-earmark-pdf"></i><br></button>
+                        </div>
+                        <div class="col-auto" *ngIf="permiso.editar == 1">
+                            <button type="button" class="btn btn-warning" (click)="modal.dismiss('Cross click')" [routerLink]="" ngbTooltip="EDITAR"><i class="bi bi-pencil-square"></i><br></button>
+                        </div>
+                        <div class="col-auto" *ngIf="permiso.cancelar == 1">
+                            <button type="button" class="btn btn-danger" ngbTooltip="CANCELAR"><i class="bi bi-trash3"></i><br></button>
+                        </div>
+                        <div class="col-auto" *ngIf="permiso.editar == 1">
+                          <button type="button" class="btn btn-success" (click)="modal.dismiss('Cross click')" [routerLink]="" ngbTooltip="PASAR A COMPRA"><i class="bi bi-arrow-up-right-square"></i><br></button> 
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row"><!--Informacion de la compra-->
+                        <div class="col-3">
+                          <label for="nombreEmpleado" class="form-label">Realizo</label>
+                          <input id="nombreEmpleado" type="text" class="form-control" value="{{dc.nombreEmpleado}}" readonly>
+                        </div>
+                        <div class="col-3">
+                          <label for="fechaAlta" class="form-label">Fecha de alta</label>
+                          <input type="text" class="form-control" value="{{dc.created_at | date}}" readonly>
+                        </div>
+                        <div class="col-3">
+                          <label for="fechaEstimada" class="form-label">Fecha de recepción</label>
+                          <input id="fechaEstimada" type="text" class="form-control" value="{{dc.fechaRecibo | date}}" readonly>
+                        </div>
+                        <div class="col">
+                          <label for="observaciones">Observaciones</label>
+                          <textarea class="form-control" name="observaciones" id="observaciones" cols="30" rows="2" value="{{dc.observaciones}}" readonly></textarea>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row align-items-start"><!--Lista de productos-->
+                        <h4 class="text-center">LISTA DE PRODUCTOS</h4>
+                        <!-- <table class="table table-dark table-hover" id="table_productos">
+                            <thead>
+                                <tr>
+                                    <th scope="col">CLAVE EXTERNA</th>
+                                    <th scope="col">DESCRIPCION</th>
+                                    <th scope="col">MEDIDA</th>
+                                    <th scope="col">CANTIDAD</th>
+                                </tr>
+                            </thead>
+                            <tbody *ngFor="let p_d of productosDOC | paginate:{ id:'paginationDOC', itemsPerPage: 5, currentPage: pagina}">
+                                <tr>
+                                 <th scope="row">{{p_d.claveEx}}</th>
+                                 <th scope="row">{{p_d.descripcion}}</th>
+                                 <th scope="row">{{p_d.nombreMedida}}</th>
+                                 <th scope="row">{{p_d.cantidad}}</th>
+                                </tr>
+                            </tbody> 
+                        </table>
+                        <pagination-controls id="paginationDOC" (pageChange)="pagina = $event"></pagination-controls>-->
+                    </div> 
+                </div>
+            </form>
+        </div>
+    </div>
+</ng-template>

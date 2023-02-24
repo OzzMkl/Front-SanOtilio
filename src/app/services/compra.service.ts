@@ -47,8 +47,19 @@ export class CompraService {
     return this._http.get(this.url+'compra/listaComprasRecibidas', {headers:this.headers} );
   }
 
-  getsearchIdCompra(idCompra:any):Observable<any>{
+  /**
+   * SERVICIOS DE BUSQUEDA DEL COMPONENTE COMPRA-BUSCAR
+   */
+  getSearchIdCompra(idCompra:any):Observable<any>{
     return this._http.get(this.url+'compra/searchIdCompra/'+idCompra, {headers:this.headers} );
   }
-
+  getSearchNombreProveedor(nombreProveedor:any):Observable<any>{
+    return this._http.get(this.url+'compra/searchNombreProveedor/'+nombreProveedor, {headers:this.headers} );
+  }
+  getSearchFolioProveedor(folioProveedor:any):Observable<any>{
+    return this._http.get(this.url+'compra/searchFolioProveedor/'+folioProveedor, {headers:this.headers} );
+  }
+  getSearchTotal(total:any):Observable<any>{
+    return this._http.get(this.url+'compra/searchTotal/'+total, {headers:this.headers} );
+  }
 }
