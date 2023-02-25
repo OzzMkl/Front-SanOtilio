@@ -16,7 +16,7 @@
                     </div>
 
                     <div *ngIf="p.idStatus==29; else elseBlock" class="col-auto">
-                        <form class="form-group" #upstss="ngForm" (ngSubmit)="onSubmitt(upstss)" >
+                        <form class="form-group" (ngSubmit)="onSubmit()" >
                             <!-- <input class="form-control" type="text" name="idProveedor" #idProveedor="ngModel" [(ngModel)]="provee.idProveedor" hidden>
                             <input class="form-control" type="text" value="2" name="idStatus" #idStatus="ngModel" [(ngModel)]="provee.idStatus" hidden> -->
                             <button type="submit" class="btn btn-danger" ngbTooltip="DESHABILITAR" *ngIf="permiso.cancelar == 1"><i class="bi bi-exclamation-circle"></i><br></button>
@@ -25,7 +25,7 @@
                     </div>
                     <ng-template #elseBlock>
                         <div class="col-auto">
-                             <form class="form-group" #upsts="ngForm" (ngSubmit)="onSubmit(upsts)" >
+                             <form class="form-group" (ngSubmit)="onSubmit()" >
                                 <!-- <input class="form-control" type="text" name="idProveedor" #idProveedor="ngModel" [(ngModel)]="prove.idProveedor" hidden>
                                 <input class="form-control" type="text" name="idStatus" #idStatus="ngModel" [(ngModel)]="prove.idStatus" hidden> -->
                                 <button type="submit" class="btn btn-danger" ngbTooltip="HABILITAR" *ngIf="permiso.editar == 1"><i class="bi bi-exclamation-circle"></i><br></button>

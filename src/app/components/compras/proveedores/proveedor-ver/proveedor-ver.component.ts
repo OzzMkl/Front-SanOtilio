@@ -113,27 +113,27 @@ export class ProveedorVerComponent implements OnInit {
 
   });
   }
-/*Obtener lista de los contactos de un proveedor*/
-getNCP(){
-  //Obtener el id del proveedor de la URL
-  this._route.params.subscribe(params => {
-    let id = + params['idProveedor'];
+  /*Obtener lista de los contactos de un proveedor*/
+  getNCP(){
+    //Obtener el id del proveedor de la URL
+    this._route.params.subscribe(params => {
+      let id = + params['idProveedor'];
 
-    //Peticion ajax para obtener los datos con base en el id del proveedor
-  this._proveedorService.getNcps(id).subscribe(
-    response =>{
-      if(response.status == 'success'){
-        this.ncp = response.ncp;
-        //console.log(response.ncp);
+      //Peticion ajax para obtener los datos con base en el id del proveedor
+    this._proveedorService.getNcps(id).subscribe(
+      response =>{
+        if(response.status == 'success'){
+          this.ncp = response.ncp;
+          //console.log(response.ncp);
+        }
+      },
+      error =>{
+        console.log(error);
       }
-    },
-    error =>{
-      console.log(error);
-    }
-  );
+    );
 
-});
-}
+  });
+  }
   /***MODALES */
   triggerModal(content:any) {
     this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'}).result.then((res) => {
@@ -153,38 +153,21 @@ getNCP(){
     }
   }
   //Metodo para habilitar el proveedor
-  onSubmit(form:any){
+  onSubmit(){
    
     this._route.params.subscribe(params => {
       let id = + params['idProveedor'];
 
     this._proveedorService.updateStatus( id).subscribe(
       response =>{
-        //console.log(response);
-        this._router.navigate(['./proveedor-modulo/proveedorBuscar']);
-        this.toastService.show('Proveedor habilitado correctamente', { classname: 'bg-success text-light', delay: 5000 }); 
+        if(response.status == 'success'){
+          //console.log(response);
+          this._router.navigate(['./proveedor-modulo/proveedorBuscar']);
+          this.toastService.show('Estatus cambiado correctamente', { classname: 'bg-success text-light', delay: 5000 }); 
+        }
       },
       error =>{
-        console.log(<any>error);
-        this.toastService.show('Ups... Algo salio mal', { classname: 'bg-danger text-light', delay: 15000 });
-      }
-    )
-  });
-  }
-  //Metodo para inhabilitar el proveedor
-  onSubmitt(form:any){
-   
-    this._route.params.subscribe(params => {
-      let id = + params['idProveedor'];
-
-    this._proveedorService.updateStatus(id).subscribe(
-      response =>{
-        //console.log(response);
-        this._router.navigate(['./proveedor-modulo/proveedorDeshabilitado']);
-        this.toastService.show('Proveedor inhabilitado correctamente', { classname: 'bg-success text-light', delay: 5000 }); 
-      },
-      error =>{
-        console.log(<any>error);
+        console.log(error);
         this.toastService.show('Ups... Algo salio mal', { classname: 'bg-danger text-light', delay: 15000 });
       }
     )
