@@ -157,8 +157,9 @@ export class ProveedorVerComponent implements OnInit {
    
     this._route.params.subscribe(params => {
       let id = + params['idProveedor'];
+      let idUsuario = this._empleadoService.getIdentity();
 
-    this._proveedorService.updateStatus( id).subscribe(
+    this._proveedorService.updateStatus( id,idUsuario).subscribe(
       response =>{
         if(response.status == 'success'){
           //console.log(response);

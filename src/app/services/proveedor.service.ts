@@ -41,8 +41,10 @@ export class ProveedorService{
     //     let params = 'json='+json;
     //     return this._http.put(this.url + 'proveedor/updatestatus/'+idProveedor,params,{headers:this.headers});
     // }
-    updateStatus(idProveedor:number):Observable<any>{
-        return this._http.put(this.url+'proveedor/updatestatus/'+idProveedor,{headers:this.headers})
+    updateStatus(idProveedor:number,idUsuario:number):Observable<any>{
+        let json = JSON.stringify(idUsuario);
+        let params = 'json='+json; 
+        return this._http.put(this.url+'proveedor/updatestatus/'+idProveedor,params,{headers:this.headers})
     }
     /**
      * Busca los proveedores por su nombre
