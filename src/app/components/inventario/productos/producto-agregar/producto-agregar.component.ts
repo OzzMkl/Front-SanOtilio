@@ -372,24 +372,6 @@ export class ProductoAgregarComponent implements OnInit {
   }
 
   /**
-   * Obtenemos la informacion del ultimo producto agregado
-   * con la finalidad de obtener su codigo de barras 
-   * y asi sumarle +1 para crear el siguiente codbar
-   */
-  // getLP(){
-  //   this._productoService.getLastPro().subscribe(
-  //      response =>{
-  //        if(response.status == 'success'){
-  //          this.pd = response.productos;
-  //        }
-  //      },
-  //      error =>{
-  //        console.log(error);
-  //      }
-  //    );
-  // }
-
-  /**
    * Revisamos el modelo hasTax si es falso verdarero
    * segun su valor llamamos la funcion de calcularImpuesto()
    * o reseteamos los valores a por defecto
