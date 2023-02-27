@@ -1,24 +1,39 @@
 <div class="container">
     <h3 class="text-center">Buscar Proveedores</h3>
-    <br>
 </div>
-<div class="">
-    <div class="loading" *ngIf="!proveedores">
-        Cargando..
-    </div>
-    <div class="container-fluid" *ngIf="proveedores">
+<div class="container-fluid">
+    <div  *ngIf="proveedores">
         <!--CUADRO DE BUSQUEDA-->
-        <div class="form-group">
-            <input type="text" class="form-control" name="fpv" placeholder="Buscar ..." [(ngModel)]="fpv">
+        <div class="input-group mb-2">
+            <div class="col-2">
+                <select class="form-select" name="tipoBusqueda" [(ngModel)]="tipoBusqueda">
+                    <option value="1">Nombre</option>
+                    <option value="2">RFC</option>
+                </select>
+            </div>
+            <div class="col" *ngIf="tipoBusqueda == 1">
+                <input type="search" class="form-control" name="searchNomProv" placeholder="Buscar ..." (keyup)="getSearchNombreProv($event)" >
+            </div>
+            <div class="col" *ngIf="tipoBusqueda == 2">
+                <input type="search" class="form-control" name="searchRfcProve" placeholder="Buscar ..." (keyup)="getSearchRfcProv($event)">
+            </div>
         </div>
         <br>
+
+        <!-- SPINNER  -->
+        <div class="text-center text-primary" *ngIf="isLoading">
+            <div class="spinner-border" role="status" >
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+        <!-- FIN SPINNER  -->
+
         <!--  -->
-        <table class="table table-dark table-hover" >
+        <table class="table table-dark table-hover" *ngIf="!isLoading">
             <thead>
                 <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">RFC</th>
                     <th scope="col">NOMBRE</th>
+                    <th scope="col">RFC</th>
                     <th scope="col">DIRECCION</th>
                     <th scope="col">TELEFONO</th>
                     <th scope="col">CREDITO DIAS</th>
@@ -28,11 +43,10 @@
                     <!-- <th scope="col">ACCION</th> -->
             </tr>
             </thead>
-            <tbody *ngFor="let p of proveedores | filterProveedores:fpv | paginate:{itemsPerPage: 10, currentPage: pageActual}">
+            <tbody *ngFor="let p of proveedores | paginate:{id:'pagProveedor',itemsPerPage: itemsPerPage, currentPage: pageActual, totalItems:totalPages}">
                 <tr (click)="selected(p.idProveedor)">
-                    <th scope="row">{{p.idProveedor}}</th>
-                    <th scope="row">{{p.rfc}}</th>
                     <th scope="row">{{p.nombre}}</th>
+                    <th scope="row">{{p.rfc}}</th>
                     <th scope="row">{{p.estado}} {{p.ciudad}} {{p.cpostal}} {{p.colonia}} {{p.calle}} {{p.numero}}</th>
                     <th scope="row">{{p.telefono}}</th>
                     <th scope="row">{{p.creditoDias}}</th>
@@ -43,6 +57,11 @@
                 </tr>
             </tbody>
         </table>
-       <pagination-controls (pageChange)="pageActual = $event"></pagination-controls>
+        <pagination-controls 
+                id="pagProveedor" 
+                (pageChange)="getPage(pageActual = $event)"
+                previousLabel="Anterior"
+                nextLabel="Siguiente" >
+        </pagination-controls>
     </div>
 </div>

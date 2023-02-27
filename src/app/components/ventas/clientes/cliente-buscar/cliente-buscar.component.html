@@ -3,7 +3,7 @@
 </div>
 <div class="container- fluid" *ngIf="clientes">
     <div class="col">
-        <input type="text" class="form-control" name="buscarCliente" placeholder="buscar ...">
+        <input type="text" class="form-control" name="buscarCliente" placeholder="buscar ..." (keyup)="getSearchNombreCliente($event)">
     </div>
     <br>
     <div class="text-center text-primary" *ngIf="isLoading">

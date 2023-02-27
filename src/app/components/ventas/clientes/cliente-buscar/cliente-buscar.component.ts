@@ -60,6 +60,7 @@ export class ClienteBuscarComponent implements OnInit {
   ngOnInit(): void {
     this.getClientes();
     this.loadUser();
+    this.pdf();
   }
   loadUser(){
     this.userPermisos = this._empleadoService.getPermisosModulo();
@@ -139,6 +140,41 @@ export class ClienteBuscarComponent implements OnInit {
     })
   }
 
+  getSearchNombreCliente(nombreCliente:any){
+    //iniciamos spinner
+    this.isLoading = true;
+    //si es vacio volvemos a llamar la primera funcion que trae todo
+    if(nombreCliente.target.value == '' || nombreCliente.target.value == null){
+      this.getClientes();
+    } else{
+
+        let nomCliente = nombreCliente.target.value;
+        //ejecutamos servicio
+        this.getClienteSub = this._clienteService.searchNombreCliente(nomCliente).subscribe( 
+        response =>{
+          if(response.status == 'success'){
+            //asignamos la lista de clientes
+            this.clientes = response.clientes.data;
+            //console.log(this.clientes);
+
+            //navegacion de paginacion
+            this.totalPages = response.clientes.total;
+            this.itemsPerPage = response.clientes.per_page;
+            this.pageActual = response.clientes.current_page;
+            this.next_page = response.clientes.next_page_url;
+            this.path = response.clientes.path;
+
+            //una vez terminado quitamos el spinner
+            this.isLoading=false;
+
+            
+          }
+        },error =>{
+        console.log(error);
+      });
+    }
+  }
+
   // Modal
   open(content:any) {//abre modal
     this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title', size: 'xl'}).result.then((result) => {
@@ -158,11 +194,20 @@ export class ClienteBuscarComponent implements OnInit {
   }
 
   /**
-   * Destruye las subscripciones a los observables de regitro proveedor
-   * y obtecion de bancos
+   * Destruye las subscripciones a los observables
    */
   ngOnDestroy(): void {
     this.getClienteSub.unsubscribe();
   }
-
+  /***EJEMPLO PDF */
+  pdf(){
+    this._clienteService.getPDF().subscribe(
+      (pdf: Blob) =>{
+        const blob = new Blob([pdf], {type: 'application/pdf'});
+        const url = window.URL.createObjectURL(blob);
+        window.open(url)
+      }
+    )
+  }
+  /***EJEMPLO PDF */
 }

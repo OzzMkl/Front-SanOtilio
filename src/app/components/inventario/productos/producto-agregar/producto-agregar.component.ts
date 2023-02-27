@@ -1,7 +1,5 @@
 /**
- *  @fileoverview Logica del componente producto-buscar
- *                muestra campo para buscar productos
- *                muestra tabla con los productos paginados
+ *  @fileoverview Logica del componente producto-agregar
  * 
  *  @version 1.0
  * 
@@ -54,7 +52,7 @@ export class ProductoAgregarComponent implements OnInit {
   public productos: Array<any> = [];//getProd
   public producto: Producto;
   public producto_precio : Producto_precio;
-  // public pd: any;//getLP
+  //
   public url: string = global.url;
   //contadores para los text area
   conta: number =0;
@@ -104,7 +102,6 @@ export class ProductoAgregarComponent implements OnInit {
   ) {
     this.producto = new Producto(0,0,0,0,0,null,'',0,'',0,0,'',1,'','',null,0,null,0,0);
     this.producto_precio = new Producto_precio(0,0,0,0,0,0,0,0,0,0,0,0);
-    // this.pd=[];
    }
 
   ngOnInit(): void {
@@ -112,9 +109,7 @@ export class ProductoAgregarComponent implements OnInit {
     this.getMarca();
     this.getDepartamentos();
     this.getCategoria();
-    // this.getSubcategoria();
     this.getAlmacen();
-    //this.getLP();
     this.getProd();
   }
   /**

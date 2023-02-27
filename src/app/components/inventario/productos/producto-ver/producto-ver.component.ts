@@ -52,7 +52,7 @@ export class ProductoVerComponent implements OnInit {
       //console.log(id);
 
       //Peticion ajax para obtener los datos con base en el id del proveedor
-    this._productoService.getProdver(id).subscribe(
+    this._productoService.getProdverDos(id).subscribe(
       response =>{
         if(response.status == 'success' && response.producto.length > 0){
           this.producto = response.producto;
