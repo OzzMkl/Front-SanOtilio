@@ -29,6 +29,9 @@ export class ProductoBuscarComponent implements OnInit {
   
   public url:string = global.url;
   public productos: Array<any> = [];
+  public productosMedida: Array<any> = [];
+  public imagenPM: string = '';
+  public isShow: boolean = false;
   /**PAGINATOR */
   public totalPages: any;
   public path: any;
@@ -90,15 +93,20 @@ export class ProductoBuscarComponent implements OnInit {
   }
 
   /**
+   * Recinimos el id y lo buscamos en el sewrvicio
+   * @param idProducto
    * 
-   * @param id 
-   * Es el id del producto a buscar
-   * @description
-   * Redireccionamos al componente producto-ver y mostramos
-   *  los detalles del producto
+   * retornamos la consulta con las medias e imagen del producto
    */
-  selected(id:number){
-    this._router.navigate(['./producto-modulo/producto-ver/'+id]);
+  mostrarPrecios(idProducto:number){
+    this._productoService.searchProductoMedida(idProducto).subscribe(
+      response =>{
+        this.productosMedida = response.productoMedida;
+        this.imagenPM = response.imagen;
+        this.isShow = true;
+    }, error =>{
+      console.log(error);
+    });
   }
 
   /**
@@ -263,6 +271,17 @@ export class ProductoBuscarComponent implements OnInit {
         console.log(error)
       }
     )
+  }
+  /**
+   * 
+   * @param idProducto
+   * Es el id del producto a buscar
+   * @description
+   * Redireccionamos al componente producto-ver y mostramos
+   *  los detalles del producto
+   */
+  verDetallesProducto(idProducto:number){
+    this._router.navigate(['./producto-modulo/producto-ver/'+idProducto]);
   }
 
 }
