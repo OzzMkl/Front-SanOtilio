@@ -13,24 +13,6 @@
           </div>
       </div>
 
-      <div class="col-4">
-        <label for="medida" class="form-label">Medida *</label>
-        <select id="medida" aria-label="Default select example" class="form-select" name="idMedida" #idMedida="ngModel" [(ngModel)]="producto.idMedida" title="medida" required >
-          <option value="">Seleccione una opción</option>
-          <option  *ngFor="let m of medidas" value={{m.idMedida}}>{{m.nombre}}</option>
-        </select>
-        <div [hidden]="idMedida.valid || idMedida.pristine" class="alert alert-danger">
-          CAMPO REQUERIDO
-        </div>
-      </div>
-
-      <div class="col-4">
-        <label for="factorConv" class="form-label">Factor de conversion *</label>
-        <input type="number" class="form-control" id="factorConv" name="factorConv" #factorConv="ngModel" [(ngModel)]="producto.factorConv" pattern="^[0-9]{1,6}" min="1" required>
-        <div [hidden]="factorConv.valid || factorConv.pristine" class="alert alert-danger">
-          CAMPO REQUERIDO | INGRESE SOLO NUMEROS MAYOR A 0 Y MAXIMO 999999
-        </div>
-      </div>
 
       <div class="col-4">
         <label for="descripcion" class="form-label">Descripcion *</label>
@@ -107,14 +89,6 @@
         <input type="number" class="form-control" id="stockmax" name="stockMax" #stockMax="ngModel" [(ngModel)]="producto.stockMax" pattern="^[0-9]{1,6}" min="1" required>
         <div [hidden]="stockMax.valid || stockMax.pristine" class="alert alert-danger">
           CAMPO REQUERIDO | INGRESE SOLO NUMEROS MAYOR A 0 Y MAXIMO 999999
-        </div>
-      </div>
-
-      <div class="col-4">
-        <label for="idps" class="form-label">Medida siguiente</label>
-        <div class="input-group mb-3">
-          <button class="btn btn-outline-secondary" type="button" id="button-addon1" (click)="open(buscarProducto)"><i class="bi bi-search"></i></button>
-          <input type="text" class="form-control" id="idps" name="mClaveEx" value="{{muestraClaveEx}}" readonly>
         </div>
       </div>
 
@@ -494,64 +468,6 @@
 
   </form>
 </div>
-<!-- MODAL MEDIDA SIGUIENTE -->
-<ng-template #buscarProducto let-modal>
-  
-      <div class="modal-header">
-          <h5 class="modal-title" id="modal-basic-title">Productos</h5>
-          <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
-      </div>
-
-      <div class="modal-body" >
-        <!--CUADRO DE BUSQUEDA-->
-        <div class="input-group mb-2">
-          <div class="col-3">
-              <select class="form-select" name="tipoBusqueda" [(ngModel)]="tipoBusqueda">
-                  <option value="1">Clave externa</option>
-                  <option value="2">Codigo de barras</option>
-                  <option value="3">Descripcion</option>
-              </select>
-          </div>
-          <div class="col" *ngIf="tipoBusqueda == 1">
-              <input type="search" class="form-control" name="searchProducto" placeholder="Buscar ..." (keyup)="getSearch($event)">
-          </div>
-          <div class="col" *ngIf="tipoBusqueda == 2">
-              <input type="search" class="form-control" name="searchProductoCodBar" placeholder="Buscar ..." (keyup)="getSearchCodbar($event)">
-          </div>
-          <div class="col" *ngIf="tipoBusqueda == 3">
-              <input type="search" class="form-control" name="searchProductoDescripcion" placeholder="Buscar ..." (keyup)="getSearchDescripcion($event)">
-          </div>
-        </div>
-      <!--FIN CUADRO DE BUSQUEDA-->
-        <!-- INICIO TABLA -->
-        <table class="table table-dark table-hover">
-          <thead>
-            <tr>
-              <th scope="col">Clave externa</th>
-              <th scope="col">Codigo de barras</th>
-              <th scope="col">Descripcion</th>
-            </tr>
-          </thead>
-          <tbody *ngFor="let producto of productos | paginate: { itemsPerPage:itemsPerPage, currentPage: pageActual, totalItems:totalPages }">
-            <tr (click)="seleccionaidProductoSiguiente(producto.idProducto,producto.claveEx)" (click)="modal.dismiss('Cross click')">
-              <th scope="row">{{producto.claveEx}}</th>
-              <th scope="row">{{producto.cbarras}}</th>
-              <th scope="row">{{producto.descripcion}}</th>
-            </tr>
-          </tbody>
-        </table>
-        <!-- FIN TABLA -->
-        <!-- CONTROLES DE PAGINACION -->
-        <pagination-controls 
-            (pageChange)="getPage(pageActual = $event)"
-            previousLabel="Anterior"
-            nextLabel="Siguiente" >
-        </pagination-controls>
-        <!-- FIN CONTROLES DE PAGINACION -->
-      </div>
-  
-</ng-template>
-<!-- FIN MODAL MEDIDA SIGUIENTE -->
 
 <!-- INICIO MODAL CLAVE SAT -->
 <ng-template #buscarClaveSat let-modal>
