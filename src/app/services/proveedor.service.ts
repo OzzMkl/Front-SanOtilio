@@ -22,6 +22,9 @@ export class ProveedorService{
     getProveedores():Observable<any>{
         return this._http.get(this.url+'proveedor/index', {headers:this.headers} );
     }
+    getProveedoresSelect():Observable<any>{
+        return this._http.get(this.url+'proveedor/ObtenerLista', {headers:this.headers} );
+    }
     getProveedoresDes():Observable<any>{
         return this._http.get(this.url+'proveedor/proveedoresDes', {headers:this.headers} );
     }

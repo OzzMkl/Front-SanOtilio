@@ -197,11 +197,11 @@ export class OrdencompraAgregarComponent implements OnInit {
   }
   //Servicios
   getProvee(){
-    this._proveedorService.getProveedores().subscribe(
+    this._proveedorService.getProveedoresSelect().subscribe(
       response => {
         if(response.status == 'success'){
-          this.proveedoresLista = response.proveedores;
-          
+          this.proveedoresLista = response.provedores;
+          console.log(response.provedores);
         }
       },
       error =>{
