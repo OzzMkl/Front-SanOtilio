@@ -146,4 +146,8 @@ export class ProductoService{
     searchDescripcionI(descripcion:string):Observable<any>{
         return this._http.get(this.url+'productos/searchDescripcionI/'+descripcion, {headers:this.headers})
     }
+
+    searchProductoMedida(idProducto:number):Observable<any>{
+        return this._http.get(this.url+'productos/searchProductoMedida/'+idProducto,{headers:this.headers});
+    }
 }

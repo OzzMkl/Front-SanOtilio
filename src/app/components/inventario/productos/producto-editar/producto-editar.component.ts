@@ -56,7 +56,7 @@ export class ProductoEditarComponent implements OnInit {
     this.ptt = [];
     
     this.url = global.url;
-    this.productoModificado = new Producto(0,0,0,0,0,0,'',0,'',0,0,'',0,'','',null,0,null,0,0);
+    this.productoModificado = new Producto(0,0,0,0,'',0,'',0,0,'',0,'','',null,0,0);
 
     this.medidas= [];
     this.marca=[];
@@ -94,11 +94,9 @@ export class ProductoEditarComponent implements OnInit {
          //console.log(this.producto);
          //Se asignan las variables una por una ya que de momento no encontre otra forma xd
          this.productoModificado.idProducto = this.producto[0]['idProducto'];
-         this.productoModificado.idMedida = this.producto[0]['idMedida'];
          this.productoModificado.idMarca = this.producto[0]['idMarca'];
          this.productoModificado.idDep = this.producto[0]['idDep'];
          this.productoModificado.idCat = this.producto[0]['idCat'];
-         this.productoModificado.idSubCat = this.producto[0]['idSubCat'];
          this.productoModificado.claveEx = this.producto[0]['claveEx'];
          this.productoModificado.descripcion = this.producto[0]['descripcion'];
          this.productoModificado.stockMin = this.producto[0]['stockMin'];
@@ -108,8 +106,6 @@ export class ProductoEditarComponent implements OnInit {
          this.productoModificado.claveSat = this.producto[0]['claveSat'];
          this.productoModificado.tEntrega = this.producto[0]['tEntrega'];
          this.productoModificado.idAlmacen = this.producto[0]['idAlmacen'];
-         this.productoModificado.idProductoS = this.producto[0]['idProductoS'];
-         this.productoModificado.factorConv = this.producto[0]['factorConv'];
          this.productoModificado.cbarras = this.producto[0]['cbarras'];
          //para asi asignar el valor del codigo de barras a la variable value
          //esto con la finalidad de poder mostrar el contenido
@@ -121,11 +117,9 @@ export class ProductoEditarComponent implements OnInit {
           response=>{//a la respuesta que se recibe volvemos a asignar los valos a modificar
             this.producto = response.producto;
             this.productoModificado.idProducto = this.producto[0]['idProducto'];
-            this.productoModificado.idMedida = this.producto[0]['idMedida'];
             this.productoModificado.idMarca = this.producto[0]['idMarca'];
             this.productoModificado.idDep = this.producto[0]['idDep'];
             this.productoModificado.idCat = this.producto[0]['idCat'];
-            this.productoModificado.idSubCat = this.producto[0]['idSubCat'];
             this.productoModificado.claveEx = this.producto[0]['claveEx'];
             this.productoModificado.descripcion = this.producto[0]['descripcion'];
             this.productoModificado.stockMin = this.producto[0]['stockMin'];
@@ -135,8 +129,6 @@ export class ProductoEditarComponent implements OnInit {
             this.productoModificado.claveSat = this.producto[0]['claveSat'];
             this.productoModificado.tEntrega = this.producto[0]['tEntrega'];
             this.productoModificado.idAlmacen = this.producto[0]['idAlmacen'];
-            this.productoModificado.idProductoS = this.producto[0]['idProductoS'];
-            this.productoModificado.factorConv = this.producto[0]['factorConv'];
             this.productoModificado.cbarras = this.producto[0]['cbarras'];
             this.value = this.producto[0]['cbarras'];
             //console.log(this.producto);

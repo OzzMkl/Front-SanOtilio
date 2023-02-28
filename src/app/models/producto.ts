@@ -1,11 +1,9 @@
 export class Producto{//Modelo del producto
     constructor(
         public idProducto: number,
-        public idMedida: number,
         public idMarca: number,
         public idDep: number,
         public idCat: number,
-        public idSubCat: any,
         public claveEx: string,
         public cbarras: number,
         public descripcion: string,
@@ -17,8 +15,6 @@ export class Producto{//Modelo del producto
         public claveSat: string,
         public tEntrega: any,
         public idAlmacen: number,
-        public idProductoS: any,
-        public factorConv: number,
         public existenciaG: number
     ){}
 }

@@ -47,7 +47,7 @@ export class ProductoAgregarComponent implements OnInit {
   public marca: Array<any> = [];
   public departamentos: Array<any> = [];
   public categoria: Array<any> = [];
-  //  public subcategoria: Array<any> = [];
+
   public almacenes: Array<any> = [];
   public productos: Array<any> = [];//getProd
   public producto: Producto;
@@ -73,8 +73,6 @@ export class ProductoAgregarComponent implements OnInit {
   searchProductoCodbar=0;
   searchProductoDescrip='';
   public tipoBusqueda: number = 1;
-  //mostrar clave externa en el input
-  public muestraClaveEx: string = '';
   //boleanos
   hasTax: boolean = false
   invoice: boolean = false
@@ -100,7 +98,7 @@ export class ProductoAgregarComponent implements OnInit {
     private _http: HttpClient
 
   ) {
-    this.producto = new Producto(0,0,0,0,0,null,'',0,'',0,0,'',1,'','',null,0,null,0,0);
+    this.producto = new Producto(0,0,0,0,'',0,'',0,0,'',0,'','',null,0,0);
     this.producto_precio = new Producto_precio(0,0,0,0,0,0,0,0,0,0,0,0);
    }
 
@@ -350,18 +348,6 @@ export class ProductoAgregarComponent implements OnInit {
   }
 
   /**
-   * El idProducto que se trae se asigna a la propieda del
-   * producto.idProductoS y claveEx se asigna a una variable
-   * para mostrarla en el formulario
-   * @param idProducto 
-   * @param claveEx 
-   */
-  seleccionaidProductoSiguiente(idProducto:number,claveEx: string){
-    this.muestraClaveEx = claveEx;
-    this.producto.idProductoS = idProducto;
-  }
-
-  /**
    * Asigna el nombre de la imagen cargada a la propiedad de
    * producto.imagen
    * @param datos 
@@ -370,24 +356,6 @@ export class ProductoAgregarComponent implements OnInit {
     //console.log(datos.originalEvent.body.image);
     this.producto.imagen = datos.originalEvent.body.image
   }
-
-  /**
-   * Obtenemos la informacion del ultimo producto agregado
-   * con la finalidad de obtener su codigo de barras 
-   * y asi sumarle +1 para crear el siguiente codbar
-   */
-  // getLP(){
-  //   this._productoService.getLastPro().subscribe(
-  //      response =>{
-  //        if(response.status == 'success'){
-  //          this.pd = response.productos;
-  //        }
-  //      },
-  //      error =>{
-  //        console.log(error);
-  //      }
-  //    );
-  // }
 
   /**
    * Revisamos el modelo hasTax si es falso verdarero

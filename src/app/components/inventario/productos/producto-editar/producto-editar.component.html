@@ -16,17 +16,6 @@
                         <label for="claveEx">Clave Externa</label>
                         <input class="form-control" type="text"  name="claveEx" #claveEx="ngModel" [(ngModel)]=" productoModificado.claveEx">
                     </div>
-                    <div class="col-4">
-                        <label for="Medida">Medida</label>                        
-                        <select id="medida" aria-label="Default select example" class="form-select" name="idMedida" #idMedida="ngModel" [(ngModel)]="productoModificado.idMedida">
-                            <option selected disabled value="">Abrir para seleccionar</option>
-                            <option  *ngFor="let m of medidas" value={{m.idMedida}}>{{m.nombre}}</option>
-                        </select>
-                    </div>
-                    <div class="col-4">
-                        <label for="factorConv">Factor de conversión</label>
-                        <input class="form-control" type="text" name="factorConv" #factorConv="ngModel" [(ngModel)]="productoModificado.factorConv">
-                    </div>
                
             </div>
             <div class="row g-4">
@@ -62,13 +51,6 @@
                     <select id="categoria" class="form-select" name="idCat" #idCat="ngModel" [(ngModel)]="productoModificado.idCat">
                         <option selected>Abrir para seleccionar</option>
                         <option  *ngFor="let cat of categoria" value={{cat.idCat}}>{{cat.nombre}}</option>
-                      </select>
-                </div>
-                <div class="col-4">
-                    <label for="subcategoria">SubCategoria</label>
-                    <select id="subcategoria" class="form-select" name="idSubCat" #idSubCat="ngModel" [(ngModel)]="productoModificado.idSubCat">
-                        <option selected>Abrir para seleccionar</option>
-                        <option  *ngFor="let subc of subcategoria" value={{subc.idSubCat}} >{{subc.nombre}}</option>
                       </select>
                 </div>
             </div>
@@ -133,28 +115,8 @@
                     <label for="stockmax">Stock Max</label>
                     <input type="number" class="form-control" id="stockmax" name="stockMax" #stockMax="ngModel" [(ngModel)]="productoModificado.stockMax" pattern="[0-9]{10}" maxlength="10">
                 </div>
-                <div class="col-4">
-                    <label for="idps">Medida siguiente</label>
-                    <!-- <input type="text" class="form-control" id="idps" name="idProductoS" #idProductoS="ngModel" [(ngModel)]="productoModificado.idProductoS"> -->
-                    <!-- <select id="idps" class="form-select" name="idProductoS" #idProductoS="ngModel" [(ngModel)]="productoModificado.idProductoS">
-                        <option selected>Abrir para seleccionar</option>
-                        <option  *ngFor="let prod of productos" value={{prod.idProducto}} >{{prod.claveEx}}</option>
-                      </select> -->
-                        <input class="form-control" type="text"  list="codes" name="idProductoS" #idProductoS="ngModel" [(ngModel)]="productoModificado.idProductoS" ngbTooltip="Nota aunque aparesca un numero revice">
-                        <datalist id="codes">
-                        <option *ngFor="let prod of productos" [value]="prod.idProducto" >{{prod.claveEx}}</option>
-                        </datalist>
-                </div>
             </div>
             <div class="row g-4">
-                <!-- <div class="col-4">
-                    <label for="precioR">Precio revendedor</label>
-                    <input type="number" class="form-control" id="precioR" name="precioR" #precioR="ngModel" [(ngModel)]="productoModificado.precioR" pattern="[0-9]{10}" maxlength="10">
-                </div>
-                <div class="col-4">
-                    <label for="precioS">Precio publico general</label>
-                    <input type="number" class="form-control" id="precioS" name="precioS" #precioS="ngModel" [(ngModel)]="productoModificado.precioS" pattern="[0-9]{10}" maxlength="10">
-                </div> -->
                 <div class="col-4">
                     <label for="clavesat">Clave sat</label>
                     <input type="number" class="form-control" id="clavesat" name="claveSat" #claveSat="ngModel" [(ngModel)]="productoModificado.claveSat"pattern="[0-9]{15}" maxlength="15">
