@@ -47,7 +47,7 @@ export class ProductoAgregarComponent implements OnInit {
   public marca: Array<any> = [];
   public departamentos: Array<any> = [];
   public categoria: Array<any> = [];
-  //  public subcategoria: Array<any> = [];
+
   public almacenes: Array<any> = [];
   public productos: Array<any> = [];//getProd
   public producto: Producto;
