@@ -133,9 +133,10 @@ export class CompraAgregarIdComponent implements OnInit {
   }
 
   getAllProveedores(){//Rellenamos el select de proveedores
-    this._proveedorService.getProveedores().subscribe(
+    this._proveedorService.getProveedoresSelect().subscribe(
       response =>{
         this.proveedoresLista = response.proveedores;
+        console.log(this.proveedoresLista);
       },error =>{
         console.log(error);
         
