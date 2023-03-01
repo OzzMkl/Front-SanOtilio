@@ -231,11 +231,13 @@
             <tr>
               <th>
                 <input class="form-control" type="number" name="porcentaje1" id="porcentaje1" 
-                        #porcentaje1="ngModel" [(ngModel)]="datosTab1.porcentaje1" min="1" [disabled]="readOn" required>
+                        #porcentaje1="ngModel" [(ngModel)]="datosTab1.porcentaje1" min="1" 
+                        (keyup)="calculaMonto($event)" required>
               </th>
               <th>
                 <input class="form-control" type="number" name="precio1" id="precio1"
-                        #precio1="ngModel" [(ngModel)]="datosTab1.precio1" min="1" required>
+                        #precio1="ngModel" [(ngModel)]="datosTab1.precio1" min="1"
+                        (change)="revisaPreciosventa($event)" (keyup)="calculaPorcentaje($event)" required>
               </th>
             </tr>
             <tr>
