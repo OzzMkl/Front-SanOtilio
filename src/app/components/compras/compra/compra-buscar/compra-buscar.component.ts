@@ -17,12 +17,14 @@ export class CompraBuscarComponent implements OnInit {
 
   //public proveedores: Array<Proveedor>;
   public compras: Array<any> = [];
+
   public totalPages: any;
   public path: any;
   public next_page: any;
   public prev_page: any;
   public itemsPerPage:number=0;
   pageActual: number = 0;
+  
   public detallesCompra:any;
   public productosDOC:any;
 

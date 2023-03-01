@@ -113,7 +113,7 @@ export class CompraAgregarIdComponent implements OnInit {
 
   ) {
     this.orden_compra = new Ordencompra (0,null,0,'',null,0,null,null);
-    this.productosOrden = new Producto_orden(0,0,0,'','','');
+    this.productosOrden = new Producto_orden(0,0,0,0,'','','');
     this.lista_productosorden = [];
 
     this.compra = new Compra(0,null,0,0,0,0,0,0,null,'',null);

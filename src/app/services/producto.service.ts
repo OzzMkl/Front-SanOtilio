@@ -54,6 +54,7 @@ export class ProductoService{
         let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');
         return this._http.get(this.url+'productos/showTwo/'+idProducto, {headers:headers} );
     }
+    /**YA NO USAR ESTE SERVICIO */
     getProdclaveex(claveEx:any):Observable<any>{
         let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');
         return this._http.get(this.url+'productos/searchclaveEx/'+claveEx, {headers:headers} );

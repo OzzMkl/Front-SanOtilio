@@ -23,7 +23,6 @@
                   <button class="btn btn-outline-secondary" (click)="d.toggle()" type="button"><i class="bi bi-calendar-date-fill"> </i> </button>
                 </div>
               </div>
-
            
             <div *ngFor="let p of proveedorVer" class="row align-items-start">
                 <div class="col-2">
@@ -67,7 +66,7 @@
                     <label for="descipcion" class="form-label">Descripcion</label>
                     <input type="text" name="descipcion" class="form-control" value="{{prod.descripcion}}" readonly>
                 </div>
-                <div class="col-3">
+                <div class="col-4">
                     <label for="marca" class="form-label">Marca</label>
                     <input type="text" name="marca" class="form-control" value="{{prod.nombreMarca}}" readonly>
                 </div>
@@ -75,24 +74,21 @@
                     <label for="departamento" class="form-label">Departamento</label>
                     <input type="text" name="departamento" class="form-control" value="{{prod.nombreDep}}" readonly>
                 </div>
-                <div class="col-2">
+                <div class="col-4">
                     <label for="categoria" class="form-label">Categoria</label>
                     <input type="text" name="categoria" class="form-control" value="{{prod.nombreCat}}" readonly>
-                </div>
-                <div class="col-2">
-                    <label for="subcategoria" class="form-label">Subcategoria</label>
-                    <input type="text" name="subcategoria" class="form-control" value="{{prod.nombreSubCat}}" readonly>
                 </div>
                 <div class="col-2">
                     <label for="imagen" class="form-label">Imagen</label>
                     <br>
                     <img src="{{url + 'productos/getImageProduc/' + prod.imagen}}" width="100px" height="100px">
                 </div>
-                <div class="col-2">
-                    <label class="form-label" for="medida">Medida</label>
-                    <input class="form-control" type="text" value="{{prod.nombreMedida}}" readonly>
-                    <input class="form-control" type="text" value="{{prod.idMedida}}" hidden>
-                    
+                <div class="col-5">
+                    <label for="medida" class="form-label">Seleccionar Medida</label>
+                    <select name="idMedida" id="idMedida" class="form-select" [(ngModel)]="producto_orden.idProdMedida" (ngModelChange)="capturaNombreMedida($event)">
+                        <option selected disabled value="">Abrir para seleccionar</option>
+                        <option  *ngFor="let medida of medidasLista" value={{medida.idProdMedida}} >{{medida.nombreMedida}}</option>
+                    </select>
                 </div>
             </div>
         </div>
@@ -108,7 +104,7 @@
                         <th scope="col">CANTIDAD</th>
                     </tr>
                 </thead>
-                <tbody *ngFor="let p_d of Lista_compras | paginate:{id:'pcListaCompras',itemsPerPage: 5, currentPage: pageActual}">
+                <tbody *ngFor="let p_d of Lista_compras | paginate:{id:'pcListaCompras',itemsPerPage: itemsPerPage2, currentPage: pageActual2, totalItems:totalPages2}">
                     <tr>
                      <th scope="row">{{p_d.claveEx}}</th>
                      <th scope="row">{{p_d.descripcion}}</th>
@@ -117,7 +113,7 @@
                     </tr>
                 </tbody>
             </table>
-            <pagination-controls id="pcListaCompras" (pageChange)="pageActual = $event"></pagination-controls>
+            <pagination-controls id="pcListaCompras" (pageChange)="pageActual2 = $event"></pagination-controls>
         </div>
         <hr>
         <div class="row row-cols-lg-auto g-3 align-items-center">
@@ -168,21 +164,24 @@
                     <th>Clave externa</th>
                     <th>Codigo de barras</th>
                     <th>Descripcion</th>
-                    <th>Medida</th>
                     <th>Marca</th>
                 </tr>
             </thead>
-            <tbody *ngFor="let pr of productos | filterProductsModalcbar: buscarProductoCbar| filterProductModal: buscarProducto | filterProductsModalce: buscarProductoCE| paginate:{id:'pcModal',itemsPerPage: 5, currentPage: pageActual2}">
-                <tr (click)="consultarProductoModal(pr.claveEx)" (click)="modal.dismiss('Cross click')">
+            <tbody *ngFor="let pr of productos | filterProductsModalcbar: buscarProductoCbar| filterProductModal: buscarProducto | filterProductsModalce: buscarProductoCE| paginate:{id:'pcModal',itemsPerPage: itemsPerPage, currentPage: pageActual,totalItems:totalPages}">
+                <tr (click)="consultarProductoModal(pr.idProducto)" (click)="modal.dismiss('Cross click')">
                     <th scope="row">{{pr.claveEx}}</th>
                     <th scope="row">{{pr.cbarras}}</th>
                     <th scope="row">{{pr.descripcion}}</th>
-                    <th scope="row">{{pr.nombreMedida}}</th>
                     <th scope="row">{{pr.nombreMarca}}</th>
                 </tr>
             </tbody>
           </table>
-          <pagination-controls id="pcModal" (pageChange)="pageActual2 = $event"></pagination-controls>
+            <pagination-controls 
+                    id="pcModal" 
+                    (pageChange)="getPage(pageActual = $event)"
+                    previousLabel="Anterior"
+                    nextLabel="Siguiente" >
+            </pagination-controls>
       </form>
     </div>
     <!-- <div class="modal-footer">

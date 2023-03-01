@@ -6,6 +6,7 @@ import { global } from 'src/app/services/global';
 import { ToastService } from 'src/app/services/toast.service';
 import { OrdendecompraService } from 'src/app/services/ordendecompra.service';
 import { EmpleadoService } from 'src/app/services/empleado.service';
+import { HttpClient} from '@angular/common/http';
 //Modelos
 import { Ordencompra } from 'src/app/models/orden_compra';
 import { Producto_orden } from 'src/app/models/producto_orden';
@@ -36,11 +37,22 @@ export class OrdencompraAgregarComponent implements OnInit {
   public idUser:any;
   /**PAGINATOR */
   public totalPages: any;
-  public page: any;
+  public path: any;
   public next_page: any;
   public prev_page: any;
-  pageActual: number = 1;
-  pageActual2: number = 1;
+  public itemsPerPage:number=0;
+  pageActual: number = 0;
+/**Paginador lista de productos */
+  public totalPages2: any;
+  public path2: any;
+  public next_page2: any;
+  public prev_page2: any;
+  public itemsPerPage2:number=0;
+  pageActual2: number = 0;
+
+  //spinner
+  public isLoading:boolean = false;
+
 //Modelos de pipes
   seleccionado:number = 1;//para cambiar entre pipes
   buscarProducto = '';
@@ -54,6 +66,7 @@ export class OrdencompraAgregarComponent implements OnInit {
   public ultimaOrden: any;
   public detailOrd: any;
   public productosdetailOrd: any;
+  public medidasLista:any;
   //modelode bootstrap
   //modelode bootstrap
   model!: NgbDateStruct;
@@ -61,6 +74,7 @@ export class OrdencompraAgregarComponent implements OnInit {
   public fecha : Date = new Date();
 
   constructor( private _proveedorService: ProveedorService,
+      private _http: HttpClient,
       private modalService: NgbModal,
       private _productoService: ProductoService,
       public toastService: ToastService,
@@ -68,7 +82,7 @@ export class OrdencompraAgregarComponent implements OnInit {
       public _empleadoService : EmpleadoService
     ) {
     this.orden_compra = new Ordencompra(0,null,0,'',null,0,1,null);
-    this.producto_orden = new Producto_orden(0,0,0,'','','');
+    this.producto_orden = new Producto_orden(0,0,0,0,'','','');
     this.Lista_compras = [];
     this.url = global.url;
     
@@ -130,7 +144,7 @@ export class OrdencompraAgregarComponent implements OnInit {
           if(response.status == 'Success!'){
            // console.log(response)       
            //   this.toastService.show(' ⚠ Orden creada', { classname: 'bg-warning  text-bold', delay: 5000 });
-             this._ordencompraService.registerProductoscompra(this.Lista_compras).subscribe(
+             this._ordencompraService.registerProductosOrdenCompra(this.Lista_compras).subscribe(
                res =>{
                    //console.log(res);
                    this.toastService.show(' ⚠ Orden creada exitosamente!', { classname: 'bg-success  text-light', delay: 5000 });
@@ -222,13 +236,23 @@ export class OrdencompraAgregarComponent implements OnInit {
     );
   }
   getAllProducts(){
+    //mostramos el spinner
+    this.isLoading = true;
+
     this._productoService.getProductos().subscribe(
       response =>{
         if(response.status == 'success'){
-          this.productos = response.productos;
-          //navegacion paginacion
+          //asignamos datos a varibale para poder mostrarla en la tabla
+          this.productos = response.productos.data;
+          //navegacion de paginacion
           this.totalPages = response.productos.total;
-          //console.log(response.productos);
+          this.itemsPerPage = response.productos.per_page;
+          this.pageActual = response.productos.current_page;
+          this.next_page = response.productos.next_page_url;
+          this.path = response.productos.path;
+
+          //una vez terminado quitamos el spinner
+          this.isLoading=false;
         }
       },
       error =>{
@@ -236,15 +260,17 @@ export class OrdencompraAgregarComponent implements OnInit {
       }
     );
   }
-  getProd(id:any){
-    this._productoService.getProdclaveex(id).subscribe(
+  getProd(idProducto:any){
+    this._productoService.getProdverDos(idProducto).subscribe(
       response =>{
         this.productoVer = response.producto;//informacion completa del producto para recorrerlo atraves del html
         this.producto_orden.descripcion = this.productoVer[0]['descripcion'];//asignamos variables
         this.producto_orden.claveEx = this.productoVer[0]['claveEx'];
         this.producto_orden.idProducto = this.productoVer[0]['idProducto'];
-        this.producto_orden.nombreMedida = this.productoVer[0]['nombreMedida'];
-        //console.log(this.productoVer);
+        //this.producto_orden.nombreMedida = this.productoVer[0]['nombreMedida'];
+        this.medidasLista = response.productos_medidas;
+        console.log(this.productoVer);
+        console.log(this.medidasLista);
       },error => {
         console.log(error);
       }
@@ -291,5 +317,42 @@ export class OrdencompraAgregarComponent implements OnInit {
     } else {
       return `with: ${reason}`;
     }
+  }
+
+  /**
+   * PAGINACION 
+   * @param page
+   * Es el numero de pagina a la cual se va acceder
+   * @description
+   * De acuerdo al numero de pagina recibido lo concatenamos a
+   * la direccion para "ir" a esa direccion y traer la informacion
+   * no retornamos ya que solo actualizamos las variables a mostrar
+   */
+  getPage(page:number) {
+    //iniciamos spinner
+    this.isLoading = true;
+
+    this._http.get(this.path+'?page='+page).subscribe(
+      (response:any) => {
+        
+        //asignamos datos a varibale para poder mostrarla en la tabla
+        this.productos = response.productos.data;
+        //navegacion de paginacion
+        this.totalPages = response.productos.total;
+        this.itemsPerPage = response.productos.per_page;
+        this.pageActual = response.productos.current_page;
+        this.next_page = response.productos.next_page_url;
+        this.path = response.productos.path;
+
+        //una vez terminado quitamos el spinner
+        this.isLoading=false;        
+    })
+  }
+  capturaNombreMedida(nombreMedida:any){
+    console.log(nombreMedida);
+    var pm = this.medidasLista.find((x:any) => x.idProdMedida == nombreMedida)!;
+    this.producto_orden.nombreMedida = pm.nombreMedida;
+    //this.producto_orden.nombreMedida = this.medidasLista.filter((item:any) => item.nombreMedida !== nombreMedida);
+    console.log(this.producto_orden.nombreMedida);
   }
 }

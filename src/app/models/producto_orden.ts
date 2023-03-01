@@ -3,6 +3,7 @@ export class Producto_orden{//Modelo de la compra
         public idOrd: number,
         public idProducto: number,
         public cantidad: number,
+        public idProdMedida:number,
         /**Se agregan campos extras para mostrar en la vista de la lista de compras */
         public claveEx: string,
         public nombreMedida: string,

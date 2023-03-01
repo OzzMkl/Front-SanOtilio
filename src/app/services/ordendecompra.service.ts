@@ -18,7 +18,7 @@ export class OrdendecompraService {
     let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');//mandamos el json con las cabeceras para que obtengamos el token
     return this._http.post(this.url+'ordendecompra/register',params, {headers:headers} );
   }
-  registerProductoscompra(Productosorden:any):Observable<any>{
+  registerProductosOrdenCompra(Productosorden:any):Observable<any>{
     let json = JSON.stringify(Productosorden);
     let params = 'json='+json;
     let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');//mandamos el json con las cabeceras para que obtengamos el token
