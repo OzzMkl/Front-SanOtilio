@@ -165,7 +165,7 @@ export class ProductoAgregarComponent implements OnInit {
    */
   productImage(datos:any){
     //console.log(datos.originalEvent.body.image);
-    this.producto.imagen = datos.originalEvent.body.image
+    this.producto.imagen = datos.originalEvent.body.image;
   }
 
   /**
@@ -179,12 +179,14 @@ export class ProductoAgregarComponent implements OnInit {
 
     let inputId = e.target.id;
 
+    console.log(inputId);
+
     /**
      * De acuerdo al valor obtenido del input, ingresamos
      * al caso correspondiente
      */
     switch (inputId){
-        case "monto5" : {
+        case "precio5" : {
               /**
                * Realizamos el calculo del porcentaje : le restamos al precio nuevo (precio5) el precio anterior (precio compra)
                * y el resultado lo dividimos entre el precio  anterior (precio compra)
@@ -195,28 +197,88 @@ export class ProductoAgregarComponent implements OnInit {
               this.datosTab1.porcentaje5 = Math.round((this.datosTab1.porcentaje5 + Number.EPSILON) * 100 ) / 100 ;
               break;
         }
-        case "monto4" : {
+        case "precio4" : {
               this.datosTab1.porcentaje4 = ((this.datosTab1.precio4 - this.datosTab1.preciocompra) / this.datosTab1.preciocompra) * 100 ;
               
               this.datosTab1.porcentaje4 = Math.round((this.datosTab1.porcentaje4 + Number.EPSILON) * 100 ) / 100 ;
           break;
         }
-        case "monto3" : {
+        case "precio3" : {
               this.datosTab1.porcentaje3 = ((this.datosTab1.precio3 - this.datosTab1.preciocompra) / this.datosTab1.preciocompra) * 100 ;
               
               this.datosTab1.porcentaje3 = Math.round((this.datosTab1.porcentaje3 + Number.EPSILON) * 100 ) / 100 ;
           break;
         }
-        case "monto2" : {
+        case "precio2" : {
               this.datosTab1.porcentaje2 = ((this.datosTab1.precio2 - this.datosTab1.preciocompra) / this.datosTab1.preciocompra) * 100 ;
               
               this.datosTab1.porcentaje2 = Math.round((this.datosTab1.porcentaje2 + Number.EPSILON) * 100 ) / 100 ;
           break;
         }
-        case "monto1" : {
+        case "precio1" : {
               this.datosTab1.porcentaje1 = ((this.datosTab1.precio1 - this.datosTab1.preciocompra) / this.datosTab1.preciocompra) * 100 ;
               
               this.datosTab1.porcentaje1 = Math.round((this.datosTab1.porcentaje1 + Number.EPSILON) * 100 ) / 100 ;
+          break;
+        }
+    }
+  }
+
+  /**
+   * Revisa los precios ingresados desde precio5 a precio1
+   * y manda una alerta si el precio ingresado es menor al anterior
+   * @param e 
+   * Recibimos evento de un (change)
+   */
+  revisaPreciosventa(e:any){
+    /**
+     * Tomamos del evento change el id del input modificado
+     */
+    let inputId = e.target.id;
+    
+
+    switch (inputId) {
+        case "precio5": {
+
+            /**
+             * Comparamos el precio ingresdo con el precio anterior
+             * en este caso precio compra y si es menor mandamos una alerta
+             */
+            if(this.datosTab1.precio5 < this.datosTab1.preciocompra){
+              this.toastService.show('El precio 5 no pueder ser menor al precio de compra', { classname: 'bg-danger text-light', delay: 1500 });
+            }
+            break;
+        }
+
+        case "precio4": {
+
+            if(this.datosTab1.precio4 < this.datosTab1.precio5){
+              this.toastService.show('El precio 4 no pueder ser menor que el precio 5', { classname: 'bg-danger text-light', delay: 1500 });
+            }
+            break;
+        }
+
+        case "precio3": {
+
+          if(this.datosTab1.precio3 < this.datosTab1.precio4){
+            this.toastService.show('El precio 3 no pueder ser menor que el precio 4', { classname: 'bg-danger text-light', delay: 1500 });
+          }
+          break;
+
+        }
+        case "precio2": {
+
+          if(this.datosTab1.precio2 < this.datosTab1.precio3){
+            this.toastService.show('El precio 2 no pueder ser menor que el precio 3', { classname: 'bg-danger text-light', delay: 1500 });
+          }
+          break;
+
+        }
+        case "precio1": {
+
+          if(this.datosTab1.precio1 < this.datosTab1.precio2){
+            this.toastService.show('El precio 1 no pueder ser menor que el precio 2', { classname: 'bg-danger text-light', delay: 1500 });
+          }
           break;
         }
     }
@@ -230,6 +292,7 @@ export class ProductoAgregarComponent implements OnInit {
    */
   calculaMonto(e:any){
     let inputId = e.target.id
+    console.log(inputId)
     /**
     * Obtenemos el valor del input y lo convertimos a Float
     * luego lo dividimos entre 100 para obtener su porcentaje
@@ -338,6 +401,7 @@ export class ProductoAgregarComponent implements OnInit {
         break;
     }
   }
+
   revisaPrecioCompra(){
     if(this.datosTab1.preciocompra <= 0){
       this.readOn= false;
