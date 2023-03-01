@@ -13,8 +13,6 @@
  */
 import { Component, OnInit } from '@angular/core';
 import { global } from 'src/app/services/global';
-import { Router } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
 
 /*****SERVICIOS*/
 import { MedidaService } from 'src/app/services/medida.service';
@@ -29,7 +27,7 @@ import { ToastService } from 'src/app/services/toast.service';
 import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 /*MODELOS */
 import { Producto} from 'src/app/models/producto';
-import { Producto_precio } from 'src/app/models/producto_precio';
+import { Productos_medidas } from 'src/app/models/productos_medidas';
 
 
 @Component({
@@ -49,9 +47,7 @@ export class ProductoAgregarComponent implements OnInit {
   public categoria: Array<any> = [];
 
   public almacenes: Array<any> = [];
-  public productos: Array<any> = [];//getProd
   public producto: Producto;
-  public producto_precio : Producto_precio;
   //
   public url: string = global.url;
   //contadores para los text area
@@ -68,25 +64,23 @@ export class ProductoAgregarComponent implements OnInit {
   pageActual: number = 0;
   //CERRAR MODAL
   public closeResult: string = '';
-  //variables para busqueda en modal
-  searchProducto='';
-  searchProductoCodbar=0;
-  searchProductoDescrip='';
-  public tipoBusqueda: number = 1;
-  //boleanos
-  hasTax: boolean = false
-  invoice: boolean = false
-  precio1: boolean = false
-  precio2: boolean = false
-  precio3: boolean = false
-  precio4: boolean = false
-  precio5: boolean = false
-  selectImpuesto: string = ''
-
-  pCompraImp: number = 0 //precioCompraImpuesto
+  //Para mostrar y ocultar las tablas de precios
+  public noMedida: number = 1;
+  public tab2: boolean = true;
+  public tab3: boolean = true;
+  public tab4: boolean = true;
+  public tab5: boolean = true;
+  //Para recoger la informacion de las tablas de precios
+  public datosTab1: Productos_medidas;
+  public datosTab2: Productos_medidas;
+  public datosTab3: Productos_medidas;
+  public datosTab4: Productos_medidas;
+  public datosTab5: Productos_medidas;
+  //
+  public readOn: boolean = false;
 
   constructor(
-    private _productoService: ProductoService,
+    
     private _medidaService: MedidaService,
     private _marcaService: MarcaService,
     private _departamentosService: DepartamentoService,
@@ -94,12 +88,15 @@ export class ProductoAgregarComponent implements OnInit {
     private _almacenService: AlmacenService,
     private modalService: NgbModal,
     public toastService: ToastService,
-    private _router: Router,
-    private _http: HttpClient
 
   ) {
     this.producto = new Producto(0,0,0,0,'',0,'',0,0,'',0,'','',null,0,0);
-    this.producto_precio = new Producto_precio(0,0,0,0,0,0,0,0,0,0,0,0);
+    this.datosTab1 = new Productos_medidas(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
+    this.datosTab2 = new Productos_medidas(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
+    this.datosTab3 = new Productos_medidas(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
+    this.datosTab4 = new Productos_medidas(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
+    this.datosTab5 = new Productos_medidas(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
+    
    }
 
   ngOnInit(): void {
@@ -108,8 +105,8 @@ export class ProductoAgregarComponent implements OnInit {
     this.getDepartamentos();
     this.getCategoria();
     this.getAlmacen();
-    this.getProd();
   }
+
   /**
    * Omite el salto de linea del textarea de descripcion
    * cuenta el numero de caracteres insertados
@@ -138,213 +135,27 @@ export class ProductoAgregarComponent implements OnInit {
     }
   }
 
-  submit(form:any){
-    this._productoService.registerProducto(this.producto,this.producto_precio).subscribe(
-      response =>{
-        //console.log(response);
-        this._router.navigate(['./producto-modulo/producto-buscar']);
-        this.toastService.show('Producto guardado correctamente', { classname: 'bg-success text-light', delay: 5000 });
-      },
-      error =>{
-        //console.log(this.producto);
-        console.log(error);
-        this.toastService.show('Ups... Algo salio mal', { classname: 'bg-danger text-light', delay: 15000 });
-      }
-    )
-  }
-
-  /**
-     * Trae todos los productos con su paginacion
-     * para mostrar en la tabla
-     */
-  getProd(){
-
-    //mostramos el spinner
-    this.isLoading = true;
-
-    //ejecutamos el servicio
-    this._productoService.getProductos().subscribe(
-      response =>{
-        if(response.status == 'success'){
-
-          //asignamos a varibale para mostrar
-          this.productos = response.productos.data;
-          //console.log(this.productos)
-
-          //navegacion paginacion
-          this.totalPages = response.productos.total;
-          this.itemsPerPage = response.productos.per_page;
-          this.pageActual = response.productos.current_page;
-          this.next_page = response.productos.next_page_url;
-          this.path = response.productos.path
-          
-          //una vez terminado de cargar quitamos el spinner
-          this.isLoading = false;
-        }
-      },
-      error =>{
-        console.log(error);
-      }
-    );
-  }
-
   /**
    * 
-   * @param page
-   * Es el numero de pagina a la cual se va acceder
-   * @description
-   * De acuerdo al numero de pagina recibido lo concatenamos a
-   * la direccion para "ir" a esa direccion y traer la informacion
-   * no retornamos ya que solo actualizamos las variables a mostrar
+   * @param form 
    */
-  getPage(page:number) { 
-      this._http.get(this.path+'?page='+page).subscribe(
-        (response:any) => {
-          //console.log(response);
-          this.productos = response.productos.data;
-          //navegacion paginacion
-          this.totalPages = response.productos.total;
-          this.itemsPerPage = response.productos.per_page;
-          this.pageActual = response.productos.current_page;
-          this.next_page = response.productos.next_page_url;
-          this.path = response.productos.path
-          
-      })
-  }
-  
-  /**
-     * 
-     * @param claveExterna 
-     * Recibimos el evento del input
-     * @description
-     * Recibe los valores del evento keyUp, luego busca y actualiza
-     * los datos de la tabla
-     */
-  getSearch(claveExterna:any){
-  
-      //mostramos el spinner 
-      this.isLoading = true;
-  
-      //si es vacio volvemos a llamar la primera funcion
-      if(claveExterna.target.value == ''){
-        this.getProd();
-      }
-      //componemos la palabra
-      this.searchProducto = claveExterna.target.value;
-  
-      //generamos consulta
-      this._productoService.searchClaveExterna(this.searchProducto).subscribe(
-        response =>{
-            if(response.status == 'success'){
-  
-              //asignamos datos a varibale para poder mostrarla en la tabla
-              this.productos = response.productos.data;
-              //console.log(this.productos)
-  
-              //navegacion paginacion
-              this.totalPages = response.productos.total;
-              this.itemsPerPage = response.productos.per_page;
-              this.pageActual = response.productos.current_page;
-              this.next_page = response.productos.next_page_url;
-              this.path = response.productos.path
-              
-              //una ves terminado de cargar quitamos el spinner
-              this.isLoading = false;
-          }
-        }, error =>{
-            console.log(error)
-        }
-      )
-  }
-  
-  /**
-     * 
-     * @param codbar 
-     * Recibimos el evento del input
-     * @description
-     * Recibe los valores del evento keyup, luego busca y actualiza
-     * los datos que se muestran en la tabla
-     */
-  getSearchCodbar(codbar:any){
-  
-      //mostramos el spinner
-      this.isLoading = true;
-  
-      //si es vacio volvemos a llamar la primera funcion que trae todo
-      if(codbar.target.value == ''){
-        this.getProd();
-      }
-  
-      //componemos el codigo a buscar
-      this.searchProductoCodbar = codbar.target.value;
-  
-      //llamamos al servicio
-      this._productoService.searchCodbar(this.searchProductoCodbar).subscribe(
-        response =>{
-            if(response.status == 'success'){
-              //asignamos datos a varibale para poder mostrarla en la tabla
-              this.productos = response.productos.data;
-              //console.log(this.productos)
-  
-              //navegacion paginacion
-              this.totalPages = response.productos.total;
-              this.itemsPerPage = response.productos.per_page;
-              this.pageActual = response.productos.current_page;
-              this.next_page = response.productos.next_page_url;
-              this.path = response.productos.path
-              
-              //una ves terminado de cargar quitamos el spinner
-              this.isLoading = false;
-            }
-        }, error => {
-          console.log(error)
-        }
-      )
-  }
-  
-  /**
-     * 
-     * @param descripcion 
-     * Recibimos el evento del input
-     * @description
-     * Recibe los valores del Keyup, luego buscamos y actualizamos
-     * los datos que se muestran en la tabla
-     */
-  getSearchDescripcion(descripcion:any){
-      
-      //mostramos el spinner
-      this.isLoading = true;
-  
-      //si es vacio volvemos a llamar la primera funcion que trae todo
-      if(descripcion.target.value == ''){
-        this.getProd();
-      }
-  
-      //componemos el codigo a buscar
-      this.searchProductoDescrip = descripcion.target.value;
-  
-      //llamamos al servicio
-      this._productoService.searchDescripcion(this.searchProductoDescrip).subscribe(
-        response =>{
-            if(response.status == 'success'){
-              //asignamos datos a varibale para poder mostrarla en la tabla
-              this.productos = response.productos.data;
-              //console.log(this.productos)
-  
-              //navegacion paginacion
-              this.totalPages = response.productos.total;
-              this.itemsPerPage = response.productos.per_page;
-              this.pageActual = response.productos.current_page;
-              this.next_page = response.productos.next_page_url;
-              this.path = response.productos.path
-              
-              //una ves terminado de cargar quitamos el spinner
-              this.isLoading = false;
-            }
-        }, error => {
-          console.log(error)
-        }
-      )
+  submit(form:any){
+    console.log(this.producto, this.datosTab1)
+
+    // this._productoService.registerProducto(this.producto,this.datosTab1).subscribe(
+    //   response =>{
+    //     if(response.status == 'success'){
+    //       //console.log(response);
+    //       this._router.navigate(['./producto-modulo/producto-buscar']);
+    //       this.toastService.show('Producto guardado correctamente', { classname: 'bg-success text-light', delay: 5000 });
+    //     }
+    //   },
+    //   error =>{
+    //     //console.log(this.producto);
+    //     console.log(error);
+    //     this.toastService.show('Ups... Algo salio mal', { classname: 'bg-danger text-light', delay: 15000 });
+    //   }
+    // )
   }
 
   /**
@@ -355,105 +166,6 @@ export class ProductoAgregarComponent implements OnInit {
   productImage(datos:any){
     //console.log(datos.originalEvent.body.image);
     this.producto.imagen = datos.originalEvent.body.image
-  }
-
-  /**
-   * Revisamos el modelo hasTax si es falso verdarero
-   * segun su valor llamamos la funcion de calcularImpuesto()
-   * o reseteamos los valores a por defecto
-   * @param e 
-   * recive el evento
-   */
-  tieneImpuesto(e:any){
-    if(this.hasTax){
-      this.calcularImpuesto();
-    } else {
-      this.pCompraImp = 0;
-      this.selectImpuesto =''
-    }
-  }
-
-  /**
-   * Deacuerdo a lo que reciba la variable selectImpuesto
-   * se realiza el calculo y se asigna a la variable pCompraImp
-   * pCompraImp es "precioCompra sin Impuesto" 
-   */
-  calcularImpuesto(){
-    
-      switch (this.selectImpuesto){
-        case "IVA" : { 
-                        //console.log( this.producto_precio.preciocompra / 1.16 )
-                        this.pCompraImp = this.producto_precio.preciocompra / 1.16;
-                        break; 
-                      } 
-        case "IEPS" : { 
-                        //console.log(this.producto_precio.preciocompra / 1.09) 
-                        this.pCompraImp = this.producto_precio.preciocompra / 1.09;
-                        break; 
-                      }   
-      }
-    
-    
-    
-  }
-
-  /**
-   * Revisa los precios ingresados desde precio5 a precio1
-   * y manda una alerta si el precio ingresado es menor al anterior
-   * @param e 
-   * Recibimos evento de un (change)
-   */
-  revisaPreciosventa(e:any){
-    /**
-     * Tomamos del evento change el id del input modificado
-     */
-    let inputId = e.target.id;
-
-    switch (inputId) {
-        case "monto5": {
-          
-            /**
-             * Comparamos el precio ingresdo con el precio anterior
-             * en este caso precio compra y si es menor mandamos una alerta
-             */
-            if(this.producto_precio.precio5 < this.producto_precio.preciocompra){
-              this.toastService.show('El precio 5 no pueder ser menor al precio de compra', { classname: 'bg-danger text-light', delay: 1500 });
-            }
-            break;
-        }
-
-        case "monto4": {
-
-            if(this.producto_precio.precio4 < this.producto_precio.precio5){
-              this.toastService.show('El precio 4 no pueder ser menor que el precio 5', { classname: 'bg-danger text-light', delay: 1500 });
-            }
-            break;
-        }
-
-        case "monto3": {
-
-          if(this.producto_precio.precio3 < this.producto_precio.precio4){
-            this.toastService.show('El precio 3 no pueder ser menor que el precio 4', { classname: 'bg-danger text-light', delay: 1500 });
-          }
-          break;
-
-        }
-        case "monto2": {
-
-          if(this.producto_precio.precio2 < this.producto_precio.precio3){
-            this.toastService.show('El precio 2 no pueder ser menor que el precio 3', { classname: 'bg-danger text-light', delay: 1500 });
-          }
-          break;
-
-        }
-        case "monto1": {
-
-          if(this.producto_precio.precio1 < this.producto_precio.precio2){
-            this.toastService.show('El precio 1 no pueder ser menor que el precio 2', { classname: 'bg-danger text-light', delay: 1500 });
-          }
-          break;
-        }
-    }
   }
 
   /**
@@ -478,33 +190,33 @@ export class ProductoAgregarComponent implements OnInit {
                * y el resultado lo dividimos entre el precio  anterior (precio compra)
                * Por ultimo lo multiplicamos por 100
                */
-              this.producto_precio.porcentaje5 = ((this.producto_precio.precio5 - this.producto_precio.preciocompra) / this.producto_precio.preciocompra) * 100 ;
+              this.datosTab1.porcentaje5 = ((this.datosTab1.precio5 - this.datosTab1.preciocompra) / this.datosTab1.preciocompra) * 100 ;
               //Redondeamos el resultado a 2 decimales
-              this.producto_precio.porcentaje5 = Math.round((this.producto_precio.porcentaje5 + Number.EPSILON) * 100 ) / 100 ;
+              this.datosTab1.porcentaje5 = Math.round((this.datosTab1.porcentaje5 + Number.EPSILON) * 100 ) / 100 ;
               break;
         }
         case "monto4" : {
-              this.producto_precio.porcentaje4 = ((this.producto_precio.precio4 - this.producto_precio.preciocompra) / this.producto_precio.preciocompra) * 100 ;
+              this.datosTab1.porcentaje4 = ((this.datosTab1.precio4 - this.datosTab1.preciocompra) / this.datosTab1.preciocompra) * 100 ;
               
-              this.producto_precio.porcentaje4 = Math.round((this.producto_precio.porcentaje4 + Number.EPSILON) * 100 ) / 100 ;
+              this.datosTab1.porcentaje4 = Math.round((this.datosTab1.porcentaje4 + Number.EPSILON) * 100 ) / 100 ;
           break;
         }
         case "monto3" : {
-              this.producto_precio.porcentaje3 = ((this.producto_precio.precio3 - this.producto_precio.preciocompra) / this.producto_precio.preciocompra) * 100 ;
+              this.datosTab1.porcentaje3 = ((this.datosTab1.precio3 - this.datosTab1.preciocompra) / this.datosTab1.preciocompra) * 100 ;
               
-              this.producto_precio.porcentaje3 = Math.round((this.producto_precio.porcentaje3 + Number.EPSILON) * 100 ) / 100 ;
+              this.datosTab1.porcentaje3 = Math.round((this.datosTab1.porcentaje3 + Number.EPSILON) * 100 ) / 100 ;
           break;
         }
         case "monto2" : {
-              this.producto_precio.porcentaje2 = ((this.producto_precio.precio2 - this.producto_precio.preciocompra) / this.producto_precio.preciocompra) * 100 ;
+              this.datosTab1.porcentaje2 = ((this.datosTab1.precio2 - this.datosTab1.preciocompra) / this.datosTab1.preciocompra) * 100 ;
               
-              this.producto_precio.porcentaje2 = Math.round((this.producto_precio.porcentaje2 + Number.EPSILON) * 100 ) / 100 ;
+              this.datosTab1.porcentaje2 = Math.round((this.datosTab1.porcentaje2 + Number.EPSILON) * 100 ) / 100 ;
           break;
         }
         case "monto1" : {
-              this.producto_precio.porcentaje1 = ((this.producto_precio.precio1 - this.producto_precio.preciocompra) / this.producto_precio.preciocompra) * 100 ;
+              this.datosTab1.porcentaje1 = ((this.datosTab1.precio1 - this.datosTab1.preciocompra) / this.datosTab1.preciocompra) * 100 ;
               
-              this.producto_precio.porcentaje1 = Math.round((this.producto_precio.porcentaje1 + Number.EPSILON) * 100 ) / 100 ;
+              this.datosTab1.porcentaje1 = Math.round((this.datosTab1.porcentaje1 + Number.EPSILON) * 100 ) / 100 ;
           break;
         }
     }
@@ -540,35 +252,35 @@ export class ProductoAgregarComponent implements OnInit {
                * Multiplicamos el precio compra por 1. y el valor del inputValue
                * ejem: inputValue = 3    la operacion seria   preciocompra * 1.03
                */
-              this.producto_precio.precio5 =  this.producto_precio.preciocompra * (1+inputValue);
+              this.datosTab1.precio5 =  this.datosTab1.preciocompra * (1+inputValue);
               //Redondeamos el resultado a 2 decimales
-              this.producto_precio.precio5 = Math.round((this.producto_precio.precio5 + Number.EPSILON) * 100 ) / 100;
+              this.datosTab1.precio5 = Math.round((this.datosTab1.precio5 + Number.EPSILON) * 100 ) / 100;
   
               break;
         }
 
         case "porcentaje4" : {
               
-              this.producto_precio.precio4 =  this.producto_precio.preciocompra * (1+inputValue);
-              this.producto_precio.precio4 = Math.round((this.producto_precio.precio4 + Number.EPSILON) * 100 ) / 100;
+              this.datosTab1.precio4 =  this.datosTab1.preciocompra * (1+inputValue);
+              this.datosTab1.precio4 = Math.round((this.datosTab1.precio4 + Number.EPSILON) * 100 ) / 100;
           break;
         }
 
         case "porcentaje3" : {
-              this.producto_precio.precio3 =  this.producto_precio.preciocompra * (1+inputValue);
-              this.producto_precio.precio3 = Math.round((this.producto_precio.precio3 + Number.EPSILON) * 100 ) / 100;
+              this.datosTab1.precio3 =  this.datosTab1.preciocompra * (1+inputValue);
+              this.datosTab1.precio3 = Math.round((this.datosTab1.precio3 + Number.EPSILON) * 100 ) / 100;
           break;
         }
 
         case "porcentaje2" : {
-              this.producto_precio.precio2 =  this.producto_precio.preciocompra * (1+inputValue);
-              this.producto_precio.precio2 = Math.round((this.producto_precio.precio2 + Number.EPSILON) * 100 ) / 100;
+              this.datosTab1.precio2 =  this.datosTab1.preciocompra * (1+inputValue);
+              this.datosTab1.precio2 = Math.round((this.datosTab1.precio2 + Number.EPSILON) * 100 ) / 100;
           break;
         }
 
         case "porcentaje1" : {
-              this.producto_precio.precio1 =  this.producto_precio.preciocompra * (1+inputValue);
-              this.producto_precio.precio1 = Math.round((this.producto_precio.precio1 + Number.EPSILON) * 100 ) / 100;
+              this.datosTab1.precio1 =  this.datosTab1.preciocompra * (1+inputValue);
+              this.datosTab1.precio1 = Math.round((this.datosTab1.precio1 + Number.EPSILON) * 100 ) / 100;
           break;
         }
 
@@ -577,54 +289,63 @@ export class ProductoAgregarComponent implements OnInit {
   }//fin calculaMonto()
 
   /**
-   * Cada que quiten el check del input
-   * reseteara los valores a cero
-   * @param e 
+   * Funcion para el select de no. de medidas
+   * @param model 
+   * recibimos el numero de medidas a ingresar
+   * y mostramos y ocultamos las tablas
    */
-  revisaCheckventa(e:any){
-    let inputId = e.target.id;
-    
-        switch(inputId){
+  seleccionaNoMedidas(model:any){
+    let no = model;
+    switch( no ){
+      case "1":
+          console.log('model '+model);
+          this.tab2 = true;
+          this.tab3 = true;
+          this.tab4 = true;
+          this.tab5 = true;
+        break;
 
-          case "checkP5": {
-             if(this.precio5 === false){
-              this.producto_precio.precio5 = 0;
-              this.producto_precio.porcentaje5 = 0;
-             }
-              break;
-          }
-          case "checkP4": {
-            if(this.precio4 === false){
-             this.producto_precio.precio4 = 0;
-             this.producto_precio.porcentaje4 = 0;
-            }
-              break;
-          }
-          case "checkP3": {
-            if(this.precio3 === false){
-             this.producto_precio.precio3 = 0;
-             this.producto_precio.porcentaje3 = 0;
-            }
-              break;
-          }
-          case "checkP2": {
-            if(this.precio2 === false){
-             this.producto_precio.precio2 = 0;
-             this.producto_precio.porcentaje2 = 0;
-            }
-              break;
-          }
-          case "checkP1": {
-            if(this.precio1 === false){
-             this.producto_precio.precio1 = 0;
-             this.producto_precio.porcentaje1 = 0;
-            }
-              break;
-          }
-       }
+      case "2":
+          console.log('model '+model);
+          this.tab2 = false;
+          this.tab3 = true;
+          this.tab4 = true;
+          this.tab5 = true;
+        break;
 
-    
+      case "3":
+        console.log('model '+model);
+          this.tab2 = false;
+          this.tab3 = false;
+          this.tab4 = true;
+          this.tab5 = true;
+        break;
+
+      case "4":
+        console.log('model '+model);
+          this.tab2 = false;
+          this.tab3 = false;
+          this.tab4 = false;
+          this.tab5 = true;
+        break;
+
+      case "5":
+        console.log('model '+model);
+          this.tab2 = false;
+          this.tab3 = false;
+          this.tab4 = false;
+          this.tab5 = false;
+        break;
+    }
   }
+  revisaPrecioCompra(){
+    if(this.datosTab1.preciocompra <= 0){
+      this.readOn= false;
+    } else{
+      this.readOn = true;
+    }
+  }
+  
 
   /*    SERVICIOS 
    * Todos estos metodos traen la informacion de su nombre

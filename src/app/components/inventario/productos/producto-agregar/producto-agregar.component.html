@@ -4,7 +4,7 @@
     <!-- DATOS PRINCIPALES -->
     <div class="row align-items-start" >
 
-      <h4 class="text-center">Agregar producto</h4>
+      <h4 class="text-center">AGREGAR PRODUCto</h4>
 
       <div class="col-3">
         <label for="ClaveExterna"  class="form-label">Clave externa *</label>
@@ -169,45 +169,16 @@
       <h4 class="text-center">PRECIOS</h4>
 
       <div class="col-4">
-        <!-- <div class="form-check">
-          <input class="form-check-input" type="checkbox"  id="checkPrecioCompra">
-          <label class="form-label" for="checkPrecioCompra">Precio compra</label>
-        </div> -->
         <label class="form-label" for="checkPrecioCompra">Precio compra *</label>
         <div class="input-group mb-3">
           <span class="input-group-text" id="basic-addon1">$</span>
-          <input type="number" class="form-control" name="precioCompra" #precioCompra="ngModel" [(ngModel)]="producto_precio.preciocompra" pattern="^[0-9]{1,6}" min="1"
-          (ngModelChange)="tieneImpuesto($event)" required>
+          <input type="number" class="form-control" name="precioCompra" #precioCompra="ngModel" [(ngModel)]="datosTab1.preciocompra"  min="1"
+           required>
           <div [hidden]="precioCompra.valid || precioCompra.pristine" class="alert alert-danger">
             CAMPO REQUERIDO | INGRESE SOLO NUMEROS MAYOR A 0 Y MAXIMO 9999999
           </div>
         </div>
       </div>
-
-      <div class="col-4">
-        <div class="form-check">
-          <input class="form-check-input" type="checkbox"  id="checkFactura" name="hasTax" [(ngModel)]="hasTax" (ngModelChange)="tieneImpuesto($event)">
-          <label class="form-label" for="checkFactura">¿Tiene impuesto?</label>
-        </div>
-        <select class="form-select" name="selectImpuesto" [(ngModel)]="selectImpuesto" [disabled]="!hasTax" (change)="calcularImpuesto()">
-          <option value="" selected>Seleccione un impuesto</option>
-          <option value="IVA">IVA 16%</option>
-          <option value="IEPS">IEPS 9%</option>
-        </select>
-      </div>
-
-      <div class="col-4">
-        <label class="form-label" for="">Precio compra sin {{selectImpuesto}}</label>
-        <div class="input-group mb-3">
-          <span class="input-group-text" id="basic-addon2">$</span>
-          <input type="text" class="form-control" value="{{pCompraImp | number: '3.1-2'}}" readonly>
-        </div>
-        
-      </div>
-    </div>
-
-    <div class="row align-items-start">
-
       <div class="col-4">
         <label for="clavesat" class="form-label">Clave sat</label>
         <div class="input-group mb-3">
@@ -215,217 +186,187 @@
           <input type="number" class="form-control" id="clavesat" name="claveSat" #claveSat="ngModel" [(ngModel)]="producto.claveSat"pattern="^[0-9]+" min="1"disabled>
         </div>
       </div>
-
       <div class="col-4">
-        <label class="form-label">Unidad sat</label>
-        <div class="input-group mb-3">
-          <button class="btn btn-outline-secondary" type="button" (click)="open(buscarUnidadSat)"><i class="bi bi-search"></i></button>
-          <input type="text" class="form-control" readonly>
-        </div>
+        <label class="form-label" for="noMedidas">No. de medidas</label>
+        <select class="form-select" name="noMedidas" id="totalMedidas" ngModel #noMedidas="ngModel"  (ngModelChange)="seleccionaNoMedidas($event)">
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+        </select>
       </div>
 
-    </div> 
-    
-    <!-- INICIO P5 -->
-    <div class="row align-items-start">
-      <h5>PRECIOS VENTA</h5>
-
-        <div class="col-2">
-          <div class="form-check">
-            <input class="form-check-input" type="checkbox"  id="checkP5" name="precio5" [(ngModel)]="precio5" (change)="revisaCheckventa($event)">
-            <p style="font-size:28px ;">P5</p>
-          </div>
-        </div>
-        
-
-        <div class="col-3">
-          <label class="form-label">Monto</label>
-          <div class="input-group mb-3">
-            <span class="input-group-text">$</span>
-            <input type="number" class="form-control" [disabled]="!precio5" id="monto5" name="monto5" #monto5="ngModel"[(ngModel)] = "producto_precio.precio5" 
-            (change)="revisaPreciosventa($event)" (keyup)="calculaPorcentaje($event)" pattern="^[0-9]{1,6}" min="1">
-          </div>
-          <div [hidden]="monto5.valid || monto5.pristine" class="alert alert-danger">
-            INGRESE MONTO MAYOR A PRECIO COMPRA
-          </div>
-        </div>
-        
-
-        <div class="col-3">
-          <label class="form-label">Porcentaje</label>
-          <div class="input-group mb-3">
-            <span class="input-group-text">%</span>
-            <input type="number" class="form-control" [disabled]="!precio5" id="porcentaje5" min="0" name="porcentaje5" [(ngModel)]="producto_precio.porcentaje5" 
-            (keyup)="calculaMonto($event)">
-          </div>
-        </div>
-      
-        <div class="col-3">
-          <label class="form-label">Ganancia</label>
-          <div class="input-group mb-3">
-            <span class="input-group-text">$</span>
-            <input type="text" class="form-control" readonly>
-          </div>
-        </div>
 
     </div>
-    <!-- FIN P5 -->
-<br>
-    <!-- INICIO P4 -->
-    <div class="row align-items-start" [hidden]="!precio5">
+
+    <!-- TABLAS DE PRECIOS -->
+    <div class="row justify-content-between">
+
+      <!-- tab1 -->
       <div class="col-2">
-        <div class="form-check">
-          <input class="form-check-input" type="checkbox"  id="checkP4" name="precio4" [(ngModel)]="precio4" (change)="revisaCheckventa($event)">
-          <p style="font-size:28px ;">P4</p>
+        <div class="row justify-content-between">
+          <div class="col">
+            <label class="form-label" for="medida1">Medida 1</label>
+            <select class="form-select" name="medida1" id="medida1" #medida1="ngModel" [(ngModel)]="datosTab1.idMedida" required>
+              <option value="0" disabled selected>Seleccione una medida</option>
+              <option  *ngFor="let medida of medidas" value={{medida.idMedida}}>{{medida.nombre}}</option>
+            </select>
+          </div>
+          <div class="col">
+            <label class="form-label" for="unidad1">Unidad</label>
+            <input class="form-control" type="number" name="unidad1" id="unidad1" 
+                    #unidad1="ngModel" [(ngModel)]="datosTab1.unidad"  min="1" required>
+          </div>
         </div>
+        <br>
+        <table class="table table-light " >
+          <thead class="text-center">
+            <tr>
+              <th>%%%</th>
+              <th>$$$</th>
+            </tr>
+          </thead>
+          <tbody >
+            <tr>
+              <th>
+                <input class="form-control" type="number" name="porcentaje1" id="porcentaje1" 
+                        #porcentaje1="ngModel" [(ngModel)]="datosTab1.porcentaje1" min="1" [disabled]="readOn" required>
+              </th>
+              <th>
+                <input class="form-control" type="number" name="precio1" id="precio1"
+                        #precio1="ngModel" [(ngModel)]="datosTab1.precio1" min="1" required>
+              </th>
+            </tr>
+            <tr>
+              <th>
+                <input class="form-control" type="number" name="porcentaje2" id="porcentaje2" 
+                        #porcentaje2="ngModel" [(ngModel)]="datosTab1.porcentaje2" min="1" required>
+              </th>
+              <th>
+                <input class="form-control" type="number" name="precio2" id="precio2"
+                        #precio2="ngModel" [(ngModel)]="datosTab1.precio2" min="1" required>
+              </th>
+            </tr>
+            <tr>
+              <th>
+                <input class="form-control" type="number" name="porcentaje3" id="porcentaje3" 
+                        #porcentaje3="ngModel" [(ngModel)]="datosTab1.porcentaje3" min="1" required>
+              </th>
+              <th>
+                <input class="form-control" type="number" name="precio3" id="precio3"
+                        #precio3="ngModel" [(ngModel)]="datosTab1.precio3" min="1" required>
+              </th>
+            </tr>
+            <tr>
+              <th>
+                <input class="form-control" type="number" name="porcentaje4" id="porcentaje4" 
+                        #porcentaje4="ngModel" [(ngModel)]="datosTab1.porcentaje4" min="1" required>
+              </th>
+              <th>
+                <input class="form-control" type="number" name="precio4" id="precio4"
+                        #precio4="ngModel" [(ngModel)]="datosTab1.precio4" min="1" required>
+              </th>
+            </tr>
+            <tr>
+              <th>
+                <input class="form-control" type="number" name="porcentaje5" id="porcentaje5" 
+                        #porcentaje5="ngModel" [(ngModel)]="datosTab1.porcentaje5" min="1" required>
+              </th>
+              <th>
+                <input class="form-control" type="number" name="precio5" id="precio5"
+                        #precio5="ngModel" [(ngModel)]="datosTab1.precio5" min="1" required>
+              </th>
+            </tr>
+          </tbody>
+        </table>
+
       </div>
-      
-      <div class="col-3"><!-- Monto -->
-        <div class="input-group mb-3">
-          <span class="input-group-text">$</span>
-          <input type="number" class="form-control" [disabled]="!precio4" id="monto4"  name="monto4" #monto4="ngModel" [(ngModel)]="producto_precio.precio4" 
-          (change)="revisaPreciosventa($event)" (keyup)="calculaPorcentaje($event)" pattern="^[0-9]{1,6}" min="1">
+      <!-- tab2 -->
+      <div class="col-2" [hidden]="tab2">
+        <div class="row justify-content-between">
+          <div class="col">
+            <label class="form-label" for="medida2">Medida 2</label>
+            <select class="form-select" name="medida2" id="medida2" #medida2="ngModel" [(ngModel)]="datosTab2.idMedida" >
+              <option value="0" disabled selected>Seleccione una medida</option>
+              <option  *ngFor="let medida of medidas" value={{medida.idMedida}}>{{medida.nombre}}</option>
+            </select>
+          </div>
+          <div class="col">
+            <label class="form-label" for="unidad2">Unidad</label>
+            <input class="form-control" type="number" name="unidad2" id="unidad2" 
+                    #unidad2="ngModel" [(ngModel)]="datosTab2.unidad"  min="0" >
+          </div>
         </div>
-      </div>
-      <div [hidden]="monto4.valid || monto4.pristine" class="alert alert-danger">
-        CAMPO REQUERIDO | INGRESE SOLO NUMEROS MAYOR A 0 Y MAXIMO 9999999
+        <br>
+        <table class="table table-light table-borderless">
+          <thead class="text-center">
+            <tr>
+              <th>%%%</th>
+              <th>$$$</th>
+            </tr>
+          </thead>
+          <tbody >
+            <tr>
+              <th>
+                <input class="form-control" type="number" name="porcentaje1" id="porcentaje1" 
+                        #porcentaje1="ngModel" [(ngModel)]="datosTab2.porcentaje1" min="1" >
+              </th>
+              <th>
+                <input class="form-control" type="number" name="precio1" id="precio1"
+                        #precio1="ngModel" [(ngModel)]="datosTab2.precio1" min="1" >
+              </th>
+            </tr>
+            <tr>
+              <th>
+                <input class="form-control" type="number" name="porcentaje2" id="porcentaje2" 
+                        #porcentaje2="ngModel" [(ngModel)]="datosTab2.porcentaje2" min="1" >
+              </th>
+              <th>
+                <input class="form-control" type="number" name="precio2" id="precio2"
+                        #precio2="ngModel" [(ngModel)]="datosTab2.precio2" min="1" >
+              </th>
+            </tr>
+            <tr>
+              <th>
+                <input class="form-control" type="number" name="porcentaje3" id="porcentaje3" 
+                        #porcentaje3="ngModel" [(ngModel)]="datosTab2.porcentaje3" min="1" >
+              </th>
+              <th>
+                <input class="form-control" type="number" name="precio3" id="precio3"
+                        #precio3="ngModel" [(ngModel)]="datosTab2.precio3" min="1" >
+              </th>
+            </tr>
+            <tr>
+              <th>
+                <input class="form-control" type="number" name="porcentaje4" id="porcentaje4" 
+                        #porcentaje4="ngModel" [(ngModel)]="datosTab2.porcentaje4" min="1" >
+              </th>
+              <th>
+                <input class="form-control" type="number" name="precio4" id="precio4"
+                        #precio4="ngModel" [(ngModel)]="datosTab2.precio4" min="1" >
+              </th>
+            </tr>
+            <tr>
+              <th>
+                <input class="form-control" type="number" name="porcentaje5" id="porcentaje5" 
+                        #porcentaje5="ngModel" [(ngModel)]="datosTab2.porcentaje5" min="1" >
+              </th>
+              <th>
+                <input class="form-control" type="number" name="precio5" id="precio5"
+                        #precio5="ngModel" [(ngModel)]="datosTab2.precio5" min="1" >
+              </th>
+            </tr>
+          </tbody>
+        </table>
+
       </div>
 
-      <div class="col-3">
-        <div class="input-group mb-3"> <!-- Porcentaje  -->
-          <span class="input-group-text">%</span>
-          <input type="number" class="form-control" [disabled]="!precio4" id="porcentaje4" min="0" name="porcentaje4" [(ngModel)]="producto_precio.porcentaje4"
-          (keyup)="calculaMonto($event)">
-        </div>
-      </div>
     
-      <div class="col-3">
-        <div class="input-group mb-3"><!-- Ganancia -->
-          <span class="input-group-text">$</span>
-          <input type="text" class="form-control" readonly>
-        </div>
-      </div>
-
     </div>
-    <!-- FIN P4 -->
-<br>
-    <!-- INICIO P3 -->
-    <div class="row align-items-start" [hidden]="!precio4">
-      <div class="col-2">
-        <div class="form-check">
-          <input class="form-check-input" type="checkbox"  id="checkP3" name="precio3" [(ngModel)]="precio3">
-          <p style="font-size:28px ;">P3</p>
-        </div>
-      </div>
+    <!-- FIN TABLAS DE PRECIOS -->
 
-      <div class="col-3"> <!-- Monto  -->
-        <div class="input-group mb-3">
-          <span class="input-group-text">$</span>
-          <input type="number" class="form-control" [disabled]="!precio3" id="monto3" name="monto3" #monto3="ngModel" [(ngModel)]="producto_precio.precio3"
-          (change)="revisaPreciosventa($event)" (keyup)="calculaPorcentaje($event)" pattern="^[0-9]{1,6}" min="1">
-        </div>
-      </div>
-      <div [hidden]="monto3.valid || monto3.pristine" class="alert alert-danger">
-        CAMPO REQUERIDO | INGRESE SOLO NUMEROS MAYOR A 0 Y MAXIMO 9999999
-      </div>
-
-      <div class="col-3">
-        <div class="input-group mb-3"><!-- Porcentaje  -->
-          <span class="input-group-text">%</span>
-          <input type="text" class="form-control" [disabled]="!precio3" id="porcentaje3" min="0" name="porcentaje3" [(ngModel)]="producto_precio.porcentaje3"
-          (keyup)="calculaMonto($event)">
-        </div>
-      </div>
     
-      <div class="col-3">
-        <div class="input-group mb-3"><!-- Ganancia  -->
-          <span class="input-group-text">$</span>
-          <input type="text" class="form-control" readonly>
-        </div>
-      </div>
-
-    </div>
-    <!-- FIN P3 -->
-<br>
-    <!-- INICIO P2 -->
-    <div class="row align-items-start" [hidden]="!precio3">
-      
-      <div class="col-2">
-        <div class="form-check">
-          <input class="form-check-input" type="checkbox"  id="checkP2" name="precio2" [(ngModel)]="precio2">
-          <p style="font-size:28px ;">P2</p>
-        </div>
-      </div>
-
-      <div class="col-3">
-        <div class="input-group mb-3"><!-- Monto  -->
-          <span class="input-group-text">$</span>
-          <input type="text" class="form-control" [disabled]="!precio2" id="monto2"  name="monto2" #monto2="ngModel" [(ngModel)]="producto_precio.precio2"
-          (change)="revisaPreciosventa($event)" (keyup)="calculaPorcentaje($event)" pattern="^[0-9]{1,6}" min="1">
-        </div>
-      </div>
-      <div [hidden]="monto2.valid || monto2.pristine" class="alert alert-danger">
-        CAMPO REQUERIDO | INGRESE SOLO NUMEROS MAYOR A 0 Y MAXIMO 9999999
-      </div>
-
-      <div class="col-3">
-        <div class="input-group mb-3"><!-- Porcentaje  -->
-          <span class="input-group-text">%</span>
-          <input type="text" class="form-control" [disabled]="!precio2" id="porcentaje2" min="0" name="porcentaje2" [(ngModel)]="producto_precio.porcentaje2"
-          (keyup)="calculaMonto($event)">
-        </div>
-      </div>
-    
-      <div class="col-3">
-        <div class="input-group mb-3"><!-- Ganancia  -->
-          <span class="input-group-text">$</span>
-          <input type="text" class="form-control" readonly>
-        </div>
-      </div>
-
-    </div>
-    <!-- FIN P2 -->
-<br>
-    <!-- INICIO P1 -->
-    <div class="row align-items-start" [hidden]="!precio2">
-      
-          <div class="col-2">
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox"  id="checkP1" name="precio1" [(ngModel)]="precio1">
-              <p style="font-size:28px ;">P1</p>
-            </div>
-          </div>
-
-          <div class="col-3"><!-- Monto  -->
-            <div class="input-group mb-3">
-              <span class="input-group-text">$</span>
-              <input type="text" class="form-control" [disabled]="!precio1" id="monto1" #monto1="ngModel" name="monto1" [(ngModel)]="producto_precio.precio1"
-              (change)="revisaPreciosventa($event)" (keyup)="calculaPorcentaje($event)" pattern="^[0-9]{1,6}" min="1">
-            </div>
-          </div>
-          <div [hidden]="monto1.valid || monto1.pristine" class="alert alert-danger">
-            CAMPO REQUERIDO | INGRESE SOLO NUMEROS MAYOR A 0 Y MAXIMO 9999999
-          </div>
-
-          <div class="col-3"><!-- Porcentaje  -->
-            <div class="input-group mb-3">
-              <span class="input-group-text">%</span>
-              <input type="text" class="form-control" [disabled]="!precio1" id="porcentaje1" min="0" name="porcentaje1" [(ngModel)]="producto_precio.porcentaje1"
-              (keyup)="calculaMonto($event)">
-            </div>
-          </div>
-        
-          <div class="col-3"><!-- Ganancia  -->
-            <div class="input-group mb-3">
-              <span class="input-group-text">$</span>
-              <input type="text" class="form-control" readonly>
-            </div>
-          </div>
-
-    </div>
-    <!-- FIN P1 -->
-
-    <!-- FIN PRECIOS -->
 
     <div class="d-grid gap-2 d-md-flex justify-content-md-end">
         <button type="submit" class="btn btn-primary mx-2"  [disabled]="aProd.invalid">enviar</button>
@@ -472,32 +413,3 @@
   </div>
 </ng-template> -->
 <!-- FIN MODAL CLAVE SAT -->
-
-<!-- INICIO MODAL UNIDAD SAT -->
-<ng-template #buscarUnidadSat let-modal>
-  <div class="modal-header">
-    <h5 class="modal-title" >Buscar unidad sat</h5>
-    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
-  </div>
-  <div class="modal-body">
-    <div class="col">
-      <input class="form-control" type="text" placeholder="Escriba la descripcion del producto a buscar ...">
-    </div>
-    <br>
-    <table class="table table-dark table-hover">
-      <thead>
-        <tr>
-          <th scope="col">Codigo</th>
-          <th scope="col">Descripcion</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <th scope="row">1</th>
-          <th scope="row">1</th>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</ng-template>
-<!-- FIN MODAL UNIDAD SAT -->
