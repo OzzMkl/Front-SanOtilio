@@ -189,7 +189,7 @@ export class OrdencompraAgregarComponent implements OnInit {
     //           tipografia,negrita        tamaño          texto              x1,y1
     doc.setFont('Helvetica','bold').setFontSize(10).text('NO. ORDEN: '+this.detailOrd[0]['idOrd'], 10,60);
     doc.setFont('Helvetica','normal').setFontSize(10).text('FECHA IMPRESION: '+this.fecha.toLocaleDateString(), 50,65);
-    doc.setFont('Helvetica','normal').setFontSize(10).text('FECHA ESTIMADA: '+this.detailOrd[0]['fecha'], 115,65);  
+    doc.setFont('Helvetica','normal').setFontSize(10).text('FECHA ESTIMADA: '+this.detailOrd[0]['fecha'].substring(0,10), 115,65);  
 
     doc.setLineWidth(1).line(10,70,200,70);
     doc.setFont('Helvetica','normal').setFontSize(10).text('REALIZO: '+ nombreE.toUpperCase(), 10,75);
