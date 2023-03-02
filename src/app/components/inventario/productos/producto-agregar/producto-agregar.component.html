@@ -532,6 +532,114 @@
         </table>
 
       </div>
+
+      <!-- tab3 -->
+      <div class="col-4" [hidden]="tab4">
+        <div class="row justify-content-between">
+          <div class="col">
+            <label class="form-label" for="medida4">Medida 4</label>
+            <select class="form-select" name="medida4" id="medida4" #medida4="ngModel" [(ngModel)]="datosTab4.idMedida" required>
+              <option value="" disabled selected>Seleccione una medida</option>
+              <option  *ngFor="let medida of medidas" value={{medida.idMedida}}>{{medida.nombre}}</option>
+            </select>
+            <div [hidden]="medida4.valid || medida4.pristine" class="alert alert-danger">
+              CAMPO REQUERIDO 
+            </div>
+          </div>
+          <div class="col">
+            <label class="form-label" for="unidad4">Unidad</label>
+            <input class="form-control" type="number" name="unidad4" id="unidad4" 
+                    #unidad4="ngModel" [(ngModel)]="datosTab4.unidad"  min="1" required>
+            <div [hidden]="unidad4.valid || unidad4.pristine" class="alert alert-danger">
+              CAMPO REQUERIDO 
+            </div>
+          </div>
+        </div>
+        <div class="row justify-content-between">
+          <div class="col">
+            <label for="form-label">Precio compra medida</label>
+            <input class="form-control" type="text" value="{{datosTab4.preciocompra}}" readonly>
+          </div>
+        </div>
+        <br>
+        <table class="table table-light " >
+          <thead class="text-center">
+            <tr>
+              <th>#</th>
+              <th>Porcentaje</th>
+              <th>Precio</th>
+            </tr>
+          </thead>
+          <tbody >
+            <tr>
+              <th>5</th>
+              <th>
+                <input class="form-control" type="number" name="tab4porcentaje5" id="tab4porcentaje5" 
+                        #tab4porcentaje5="ngModel" [(ngModel)]="datosTab4.porcentaje5" min="1"
+                        (change)="tab4calculaMonto($event)" required>
+              </th>
+              <th>
+                <input class="form-control" type="number" name="tab4precio5" id="tab4precio5"
+                        #tab4precio5="ngModel" [(ngModel)]="datosTab4.precio5" min="1"
+                         (change)="tab4calculaPorcentaje($event)" required>
+              </th>
+            </tr>
+            <tr>
+              <th>4</th>
+              <th>
+                <input class="form-control" type="number" name="tab4porcentaje4" id="tab4porcentaje4" 
+                        #tab4porcentaje4="ngModel" [(ngModel)]="datosTab4.porcentaje4" min="1"
+                        (change)="tab4calculaMonto($event)" required>
+              </th>
+              <th>
+                <input class="form-control" type="number" name="tab4precio4" id="tab4precio4"
+                        #tab4precio4="ngModel" [(ngModel)]="datosTab4.precio4" min="1"
+                         (change)="tab4calculaPorcentaje($event)" required>
+              </th>
+            </tr>
+            <tr>
+              <th>3</th>
+              <th>
+                <input class="form-control" type="number" name="tab4porcentaje3" id="tab4porcentaje3" 
+                        #tab4porcentaje3="ngModel" [(ngModel)]="datosTab4.porcentaje3" min="1"
+                        (change)="tab4calculaMonto($event)" required>
+              </th>
+              <th>
+                <input class="form-control" type="number" name="tab4precio3" id="tab4precio3"
+                        #tab4precio3="ngModel" [(ngModel)]="datosTab4.precio3" min="1"
+                         (change)="tab4calculaPorcentaje($event)" required>
+              </th>
+            </tr>
+            <tr>
+              <th>2</th>
+              <th>
+                <input class="form-control" type="number" name="tab4porcentaje2" id="tab4porcentaje2" 
+                        #tab4porcentaje2="ngModel" [(ngModel)]="datosTab4.porcentaje2" min="1"
+                        (change)="tab4calculaMonto($event)" required>
+              </th>
+              <th>
+                <input class="form-control" type="number" name="tab4precio2" id="tab4precio2"
+                        #tab4precio2="ngModel" [(ngModel)]="datosTab4.precio2" min="1"
+                         (change)="tab4calculaPorcentaje($event)" required>
+              </th>
+            </tr>
+            <tr>
+              <th>1</th>
+              <th>
+                <input  class="form-control" type="number" name="tab4porcentaje1" id="tab4porcentaje1" 
+                        #tab4porcentaje1="ngModel" [(ngModel)]="datosTab4.porcentaje1" min="1" 
+                        (change)="tab4calculaMonto($event)" required>
+              </th>
+              <th><!--[ngClass]="{'is-invalid':ksks}"-->
+                <input  class="form-control"  type="number" name="tab4precio1" id="tab4precio1"
+                        #tab4precio1="ngModel" [(ngModel)]="datosTab4.precio1" min="1"
+                         (change)="tab4calculaPorcentaje($event)" required>
+              </th>
+            </tr>
+          </tbody>
+        </table>
+
+      </div>
     
     </div>
     <!-- FIN TABLAS DE PRECIOS -->
