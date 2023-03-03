@@ -40,6 +40,7 @@ export class CompraAgregarIdComponent implements OnInit {
   public proveedoresLista:any;
   public productos: any;
   public productoVer: any;
+  public productoVerM: any;
   public identity: any;
 //variables de detalles de la orden
   public detailOrd: any;
@@ -54,6 +55,7 @@ export class CompraAgregarIdComponent implements OnInit {
   public isSearch: boolean = true;
 //date!: Date;
   public test: boolean = false;
+  public facturableCheck: boolean = false;
 //modelo de bootstrap datapicker
   model!: NgbDateStruct;
   modelP!: NgbDateStruct;
@@ -117,7 +119,7 @@ export class CompraAgregarIdComponent implements OnInit {
     this.lista_productosorden = [];
 
     this.compra = new Compra(0,null,0,0,0,0,0,0,null,'',null);
-    this.producto_compra = new Producto_compra(0,0,0,0,0,null,null,null,null,null,null,0,null);
+    this.producto_compra = new Producto_compra(0,0,0,0,0,0,null,null,null,null,null,null,0,null);
     this.Lista_compras = [];
     this.url = global.url;
 
@@ -131,12 +133,55 @@ export class CompraAgregarIdComponent implements OnInit {
     this.loadUser();
     this.getImpuesto();
   }
+  //Al iniciar
+  getOrdencompra(){//traemos la informacion de la orden seleccionada
+    //Nos suscribimos al url para extraer el id
+    this._route.params.subscribe( params =>{
+      let id = + params['idOrd'];//la asignamos en una variable
+      //console.log(id);
+      //Mandamos a traer la informacion de la orden de compra
+      this._ordencompraService.getDetailsOrdes(id).subscribe(
+        response =>{
+          if(response.status  == 'success' && response.ordencompra.length > 0 && response.productos.length > 0){
+
+            //asignamos de uno en uno las propiedades de la orden                     
+            this.orden_compra.idProveedor = response.ordencompra[0]['idProveedor'];
+            this.orden_compra.fecha = response.ordencompra[0]['fecha'];
+            //this.date = new Date(response.ordencompra[0]['fecha']);
+            this.orden_compra.idEmpleado = response.ordencompra[0]['idEmpleado'];
+            this.orden_compra.idOrd = response.ordencompra[0]['idOrd'];
+            this.orden_compra.idReq = response.ordencompra[0]['idReq'];
+            this.orden_compra.idStatus = response.ordencompra[0]['idStatus'];
+            this.orden_compra.observaciones = response.ordencompra[0]['observaciones'];
+            this.orden_compra.updated_at = response.ordencompra[0]['updated_at'];
+            //llenamos la lista con la respuesta obtenida
+            this.lista_productosorden = response.productos;
+            //console.log(this.orden_compra.fecha);
+            
+            //Asignar propiedades a la compra
+            this.compra.idProveedor = response.ordencompra[0]['idProveedor'];
+            this.getProveeVer(this.compra.idProveedor);
+            this.compra.idOrd = response.ordencompra[0]['idOrd'];
+            //console.log('Asignacion de datos a compra',this.compra);
+
+
+          }
+          console.log('---INFORMACION ORDEN DE COMPRA---');
+          console.log(response.ordencompra);
+          console.log(response.productos);
+          console.log('---------------------------------');
+
+        },error =>{
+          console.log(error);
+      });
+    });
+  }
 
   getAllProveedores(){//Rellenamos el select de proveedores
     this._proveedorService.getProveedoresSelect().subscribe(
       response =>{
-        this.proveedoresLista = response.proveedores;
-        console.log(this.proveedoresLista);
+        this.proveedoresLista = response.provedores;
+        //console.log(this.proveedoresLista);
       },error =>{
         console.log(error);
         
@@ -163,7 +208,24 @@ export class CompraAgregarIdComponent implements OnInit {
     this.identity = this._empleadoService.getIdentity();
   }
 
+  getImpuesto(){//traemos los impuestos
+    this._impuestoService.getImpuestos().subscribe(
+      response =>{
+        if(response.status == 'success'){
+          this.impuestos = response.impuestos
+          console.log(this.impuestos);
+        }
+      },
+      error => {
+        console.log(error);
+      }
+    );
+  }
   /*************** */
+
+
+
+
 
    /*Eventos*/
   onChange(id:any){//Muestra los datos del proveedor al seleccionarlo
@@ -186,12 +248,17 @@ export class CompraAgregarIdComponent implements OnInit {
     this.buscarProductoCbar = '';
   }
 
+
+
+
+
+
   capturar(datos:any){//Agrega un producto a lista de compras
     // if(this.producto_compra.caducidad)
     if(this.test == true){
       this.producto_compra.caducidad = this.modelP.year+'-'+this.modelP.month+'-'+this.modelP.day;//concatenamos la fecha del datepicker
     }
-    console.log(datos);
+    console.log('capturar',datos);
     console.log('Caducidad: ',this.producto_compra.caducidad);
     
     if(this.producto_compra.cantidad <= 0 || this.producto_compra.precio <= 0 || this.producto_compra.subtotal <= 0){
@@ -208,11 +275,13 @@ export class CompraAgregarIdComponent implements OnInit {
       //Calculo de subtotal y total de la compra
       this.compra.subtotal=(this.producto_compra.cantidad*this.producto_compra.precio)+this.compra.subtotal;
       this.compra.total=this.producto_compra.subtotal+this.compra.total;
+      this.compra.total = Math.round((this.compra.total + Number.EPSILON) * 100 ) / 100 ;
       console.log('Subtotal: ',this.compra.subtotal);
       console.log('Total: ',this.compra.total);
 
       //Reset variables 
       this.productoVer=[];
+      this.productoVerM=[];
       this.producto_compra.claveEx = '';
       this.producto_compra.cantidad = 0 ;
       this.producto_compra.precio = 0 ;
@@ -220,6 +289,7 @@ export class CompraAgregarIdComponent implements OnInit {
       this.producto_compra.valorImpuesto = 0 ;
       this.producto_compra.subtotal = 0 ;
       this.producto_compra.caducidad = '' ;
+      this.producto_compra.idProdMedida = 0;
       if(this.test == true){
         this.modelP.day = 0;
         this.modelP.month = 0;
@@ -231,14 +301,14 @@ export class CompraAgregarIdComponent implements OnInit {
 
 
 
-    console.log(this.Lista_compras);
+    console.log('lista de compras',this.Lista_compras);
     
   }
 
   consultarProductoModal(dato:any){
     let cantidad: any;
     cantidad = 0;
-    this.getProd(dato,cantidad);
+    this.getProd(dato);
     this.isSearch = false;
   }
 
@@ -248,14 +318,14 @@ export class CompraAgregarIdComponent implements OnInit {
     //console.log(this.dato)
     let cantidad: any;
     cantidad = 0;
-    this.getProd(this.dato,cantidad);
+    this.getProd(this.dato);
     this.isSearch = false;
     //console.log(this.producto_orden);
   
   }
   
   public createPDF():void{//Crear PDF
-    //this.getDetailsOrd();
+    //this.getLastCompra();
     const doc = new jsPDF;
 
     //Formateamos la fecha
@@ -296,46 +366,9 @@ export class CompraAgregarIdComponent implements OnInit {
     doc.save('a.pdf')
   } 
 
-  getOrdencompra(){//traemos la informacion de la orden seleccionada
-    //Nos suscribimos al url para extraer el id
-    this._route.params.subscribe( params =>{
-      let id = + params['idOrd'];//la asignamos en una variable
-      //console.log(id);
-      //Mandamos a traer la informacion de la orden de compra
-      this._ordencompraService.getDetailsOrdes(id).subscribe(
-        response =>{
-          if(response.status  == 'success' && response.ordencompra.length > 0 && response.productos.length > 0){
+  
 
-            //asignamos de uno en uno las propiedades de la orden                     
-            this.orden_compra.idProveedor = response.ordencompra[0]['idProveedor'];
-            this.orden_compra.fecha = response.ordencompra[0]['fecha'];
-            //this.date = new Date(response.ordencompra[0]['fecha']);
-            this.orden_compra.idEmpleado = response.ordencompra[0]['idEmpleado'];
-            this.orden_compra.idOrd = response.ordencompra[0]['idOrd'];
-            this.orden_compra.idReq = response.ordencompra[0]['idReq'];
-            this.orden_compra.idStatus = response.ordencompra[0]['idStatus'];
-            this.orden_compra.observaciones = response.ordencompra[0]['observaciones'];
-            this.orden_compra.updated_at = response.ordencompra[0]['updated_at'];
-            //llenamos la lista con la respuesta obtenida
-            this.lista_productosorden = response.productos;
-            //console.log(this.orden_compra.fecha);
-            
-            //Asignar propiedades a la compra
-            this.compra.idProveedor = response.ordencompra[0]['idProveedor'];
-            this.getProveeVer(this.compra.idProveedor);
-            this.compra.idOrd = response.ordencompra[0]['idOrd'];
-
-          }
-          console.log('---ORDEN DE COMPRA---');
-          console.log(response.productos);
-          console.log(this.compra);
-          console.log('---------------------');
-
-        },error =>{
-          console.log(error);
-      });
-    });
-  }
+  
 
 
 /**SERVICIOS */
@@ -379,17 +412,22 @@ export class CompraAgregarIdComponent implements OnInit {
     );
   }
 
-  getProd(idProducto:any,cantidad:any){//consultar producto y rellenar el formulario de producto
-    //console.log(idProducto,cantidad)
-    this._productoService.getProdverDos(idProducto).subscribe(
+  getProd(lpo:any){//consultar producto y rellenar el formulario de producto
+    console.log('getProd(lpo)',lpo);
+    this._productoService.getProdverDos(lpo.idProducto).subscribe(
       response =>{
         this.productoVer = response.producto;//informacion completa del producto para recorrerlo atraves del html
-        console.log(this.productoVer);
+        console.log('productoVer',this.productoVer);
         this.producto_compra.descripcion = this.productoVer[0]['descripcion'];//asignamos variables
         this.producto_compra.claveEx = this.productoVer[0]['claveEx'];
         this.producto_compra.idProducto = this.productoVer[0]['idProducto'];
-        this.producto_compra.nombreMedida = this.productoVer[0]['nombreMedida'];
-        this.producto_compra.cantidad = cantidad;
+        this.producto_compra.cantidad = lpo.cantidad;
+        this.producto_compra.idProdMedida = lpo.idProdMedida;
+        this.productoVerM = response.productos_medidas;//informacion completa de productos_medidas para recorrerlo atraves del html
+        console.log('productoVerM',this.productoVerM);
+        this.producto_compra.nombreMedida = this.productoVerM[0]['nombreMedida'];
+        
+        
       },error => {
         //console.log(error);
       }
@@ -397,7 +435,7 @@ export class CompraAgregarIdComponent implements OnInit {
   }
 
 
-  getDetailsOrd(){
+  getLastCompra(){
     this._compraService.getLastCompra().subscribe(
       response =>{
         if(response.status == 'success'){
@@ -419,20 +457,6 @@ export class CompraAgregarIdComponent implements OnInit {
       });
   }
 
-  getImpuesto(){
-    this._impuestoService.getImpuestos().subscribe(
-      response =>{
-        if(response.status == 'success'){
-          this.impuestos = response.impuestos
-          console.log(this.impuestos);
-        }
-      },
-      error => {
-        console.log(error);
-      }
-    );
-  }
-  
   getImpuestoVer(id:any){
     //console.log(id);
     this._impuestoService.getImpuestoVer(id).subscribe(
@@ -472,14 +496,16 @@ export class CompraAgregarIdComponent implements OnInit {
       //console.log(this.compra);
       this._compraService.registrerCompra(this.compra).subscribe(
       response =>{
-        if(response.status == 'Success!'){
-          // console.log(response)       
+        console.log('response',response)
+        console.log('response.status',response.status)
+        if(response.status == 'success'){
+          console.log(response)       
           //   this.toastService.show(' ⚠ Orden creada', { classname: 'bg-warning  text-bold', delay: 5000 });
             this._compraService.registerProductoscompra(this.Lista_compras).subscribe(
               res =>{
                   console.log(res);
                   this.toastService.show(' ⚠ Compra creada exitosamente!', { classname: 'bg-success  text-light', delay: 5000 });
-                  this.getDetailsOrd();
+                  this.getLastCompra();
                   //this.createPDF();
               },error =>{
                 console.log(<any>error);
@@ -494,7 +520,7 @@ export class CompraAgregarIdComponent implements OnInit {
               res =>{
                   console.log(res);
                   this.toastService.show(' ⚠ Existencia actualizada exitosamente!', { classname: 'bg-success  text-light', delay: 5000 });
-                  //this.getDetailsOrd();
+                  //this.getLastCompra();
                   //this.createPDF();
               },error =>{
                 console.log(<any>error);
@@ -529,23 +555,24 @@ export class CompraAgregarIdComponent implements OnInit {
       }
   }
 
-  editarProducto(idProducto:any,cantidad:any){//metodo para editar la lista de productos
-    console.log(idProducto,cantidad);
-    this.lista_productosorden = this.lista_productosorden.filter((item) => item.idProducto !== idProducto);//eliminamos el producto
+  editarProducto(lpo:any){//metodo para editar la lista de productos
+    console.log(lpo);
+
+    this.lista_productosorden = this.lista_productosorden.filter((item) => item.idProducto !== lpo.idProducto);//eliminamos el producto
     //consultamos la informacion para motrar el producto nuevamente
-    this.getProd(idProducto,cantidad);
+    this.getProd(lpo);
     this.isSearch = false;
   }
 
-  editarProductoC(idProducto:any,cantidad:any,precio:any,subtotal:any){//metodo para editar la lista de compras
-    console.log(idProducto,cantidad);
-    this.Lista_compras = this.Lista_compras.filter((item) => item.idProducto !== idProducto);//eliminamos el producto
+  editarProductoC(p_d:any){//metodo para editar la lista de compras
+    console.log('p_d',p_d);
+    this.Lista_compras = this.Lista_compras.filter((item) => item.idProducto !== p_d.idProducto);//eliminamos el producto
     //consultamos la informacion para motrar el producto nuevamente
-    this.getProd(idProducto,cantidad);
+    this.getProd(p_d);
 
     //Calculo de subtotal y total de la compra
-    this.compra.subtotal=this.compra.subtotal-(cantidad*precio);
-    this.compra.total=this.compra.total-subtotal;
+    this.compra.subtotal=this.compra.subtotal-(p_d.cantidad*p_d.precio);
+    this.compra.total=this.compra.total-p_d.subtotal;
     console.log('Subtotal: ',this.compra.subtotal);
     console.log('Total: ',this.compra.total);
 

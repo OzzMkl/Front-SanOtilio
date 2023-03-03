@@ -66,7 +66,7 @@ export class OrdencompraAgregarComponent implements OnInit {
   public ultimaOrden: any;
   public detailOrd: any;
   public productosdetailOrd: any;
-  public medidasLista:any;
+  public medidasLista:any; //Lista de medidas de un producto en especifico
   //modelode bootstrap
   //modelode bootstrap
   model!: NgbDateStruct;
@@ -348,11 +348,10 @@ export class OrdencompraAgregarComponent implements OnInit {
         this.isLoading=false;        
     })
   }
-  capturaNombreMedida(nombreMedida:any){
-    console.log(nombreMedida);
-    var pm = this.medidasLista.find((x:any) => x.idProdMedida == nombreMedida)!;
+  capturaNombreMedida(idProdMedida:any){
+    console.log(idProdMedida);
+    var pm = this.medidasLista.find((x:any) => x.idProdMedida == idProdMedida)!;
     this.producto_orden.nombreMedida = pm.nombreMedida;
-    //this.producto_orden.nombreMedida = this.medidasLista.filter((item:any) => item.nombreMedida !== nombreMedida);
     console.log(this.producto_orden.nombreMedida);
   }
 }

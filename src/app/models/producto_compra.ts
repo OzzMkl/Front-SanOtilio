@@ -2,6 +2,7 @@ export class Producto_compra{//Modelo de la compra
     constructor(
         public idCompra: number,
         public idProducto: number,
+        public idProdMedida:number,
         public cantidad: number,
         public precio: number,
         public idImpuesto: number,
