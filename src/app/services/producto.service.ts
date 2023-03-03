@@ -1,7 +1,8 @@
 //parte fundamental, púes este archivo se comunica con nuestro back
 import { Injectable } from "@angular/core";
 import { HttpClient, HttpHeaders} from '@angular/common/http';
-import { Observable } from "rxjs";
+import { Observable, throwError } from "rxjs";
+import { catchError, concatMap} from "rxjs/operators";
 import { global } from "./global"; 
 
 @Injectable()
@@ -11,12 +12,30 @@ export class ProductoService{
 
     constructor( public _http: HttpClient ){ }
     
-    registerProducto(producto:any,producto_precio:any):Observable<any>{
-            let combinado = {...producto, ...producto_precio};
+    registerProducto(producto:any,listaProdMedida:any,empleado:any):Observable<any>{
+            let combinado = {...producto, ...empleado};
             let json = JSON.stringify(combinado);
             let params = 'json='+json;
-            let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');//mandamos el json con las cabeceras para que obtengamos el token
-            return this._http.post(this.url+'productos/register',params, {headers:headers} );
+
+            let combinado2 = {...listaProdMedida, ...empleado}
+            let json2 = JSON.stringify(combinado2);
+            let params2 = 'json='+json2;
+
+            return this._http.post(this.url+'productos/register',params, {headers:this.headers} ).pipe(
+                concatMap( (response:any) =>{
+                    //console.log('response service: ',response['status']);
+                    if(response.status = 'success'){
+                        return this._http.post(this.url+'productos/registraPrecioProducto',params2, {headers:this.headers} );
+                    } else{
+                        return throwError('Ocurrio un error al registrar producto');
+                    }
+                }),
+                catchError( error =>{
+                    console.log('Error:', error);
+                    return throwError('Fallo al registrar el producto Error: '+error.error.error.errorInfo['2']);
+                })
+            );
+            //return forkJoin([r1,r2]);
     }
     getProductos():Observable<any>{
         let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');
