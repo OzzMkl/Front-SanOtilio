@@ -23,11 +23,13 @@ import { SubCategoriaService } from 'src/app/services/subcategoria.service';
 import { AlmacenService } from 'src/app/services/almacen.service';
 import { ProductoService } from 'src/app/services/producto.service';
 import { ToastService } from 'src/app/services/toast.service';
+import { EmpleadoService } from 'src/app/services/empleado.service';
 /*NGBOOTSTRAP */
 import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 /*MODELOS */
 import { Producto} from 'src/app/models/producto';
 import { Productos_medidas } from 'src/app/models/productos_medidas';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -45,7 +47,7 @@ export class ProductoAgregarComponent implements OnInit {
   public marca: Array<any> = [];
   public departamentos: Array<any> = [];
   public categoria: Array<any> = [];
-
+  public identity: any;
   public almacenes: Array<any> = [];
   public producto: Producto;
   //
@@ -77,18 +79,18 @@ export class ProductoAgregarComponent implements OnInit {
   public datosTab3: Productos_medidas;
   public datosTab4: Productos_medidas;
   public datosTab5: Productos_medidas;
-  //
-  //public ksks: boolean = false;
 
   constructor(
-    
+    private _productoService: ProductoService,
     private _medidaService: MedidaService,
     private _marcaService: MarcaService,
     private _departamentosService: DepartamentoService,
     private _categoriaService: CategoriaService,
     private _almacenService: AlmacenService,
+    public _empleadoService : EmpleadoService,
     private modalService: NgbModal,
     public toastService: ToastService,
+    public _router: Router
 
   ) {
     this.producto = new Producto(0,0,0,0,'',0,'',0,0,'',0,'','',null,0,0);
@@ -141,23 +143,23 @@ export class ProductoAgregarComponent implements OnInit {
    * @param form 
    */
   submit(form:any){
-    
+    this.loadUser();
     this.insertaListaProdM();
-    console.log(this.producto, this.listaProdMedida)
-    // this._productoService.registerProducto(this.producto,this.datosTab1).subscribe(
-    //   response =>{
-    //     if(response.status == 'success'){
-    //       //console.log(response);
-    //       this._router.navigate(['./producto-modulo/producto-buscar']);
-    //       this.toastService.show('Producto guardado correctamente', { classname: 'bg-success text-light', delay: 5000 });
-    //     }
-    //   },
-    //   error =>{
-    //     //console.log(this.producto);
-    //     console.log(error);
-    //     this.toastService.show('Ups... Algo salio mal', { classname: 'bg-danger text-light', delay: 15000 });
-    //   }
-    // )
+//    console.log(this.producto, this.listaProdMedida)
+      this._productoService.registerProducto(this.producto,this.listaProdMedida,this.identity).subscribe(
+        response =>{
+          //console.log('asdasdasd :',response);
+          if(response.status == 'success'){
+            
+            this._router.navigate(['./producto-modulo/producto-buscar']);
+            this.toastService.show('Producto guardado correctamente', { classname: 'bg-success text-light', delay: 5000 });
+          }
+        },
+        error =>{
+          //console.log(this.producto);
+          //console.log('error ',error);
+          this.toastService.show(error, { classname: 'bg-danger text-light', delay: 15000 });
+        });
   }
 
   /**
@@ -326,6 +328,9 @@ export class ProductoAgregarComponent implements OnInit {
         console.log(error);
       }
     );
+  }
+  loadUser(){
+    this.identity = this._empleadoService.getIdentity();
   }
 
   //MODAL
