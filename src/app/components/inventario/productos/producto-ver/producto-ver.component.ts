@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Producto } from 'src/app/models/producto';
 import { ProductoService } from 'src/app/services/producto.service';
-import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {ToastService} from 'src/app/services/toast.service';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { global } from 'src/app/services/global';
@@ -15,11 +14,11 @@ import { global } from 'src/app/services/global';
 export class ProductoVerComponent implements OnInit {
 
 
-  public producto: Array<any>;
+  public producto: Array<any> = [];
 
-  public closeModal: string;
+  public closeModal: string ='';
 
-  public url:any;
+  public url: string = global.url;
 
   public value: any;
 
@@ -33,9 +32,6 @@ export class ProductoVerComponent implements OnInit {
     private _route: ActivatedRoute,
     public toastService: ToastService
     ){
-    this.producto = [];
-    this.closeModal='';
-    this.url = global.url;
     this.prod =  new Producto(0,0,0,0,'',0,'',0,0,'',0,'','',null,0,0);
     this.prodd = new Producto(0,0,0,0,'',0,'',0,0,'',0,'','',null,0,0);
    }
