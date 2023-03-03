@@ -26,7 +26,7 @@ export class CompraBuscarComponent implements OnInit {
   pageActual: number = 0;
   
   public detallesCompra:any;
-  public productosDOC:any;
+  public productosDC:any;
 
   public tipoBusqueda: number = 1;
   //modal
@@ -268,11 +268,11 @@ export class CompraBuscarComponent implements OnInit {
     this._compraService.getDetailsCompra(idCompra).subscribe(
       response =>{
         if(response.status == 'success'){
-          this.detallesCompra = response.compra;
-          this.productosDOC = response.productos;
+          this.detallesCompra = response.compra; 
+          this.productosDC = response.productos;
 
           console.log(this.detallesCompra);
-          console.log(this.productosDOC);
+          console.log(this.productosDC);
         }else{ console.log('Algo salio mal');}
         
       },error => {
@@ -299,7 +299,7 @@ export class CompraBuscarComponent implements OnInit {
   }
 
   loadUser(){
-    this.userPermisos = this._empleadoService.getPermisosModulo();
+    this.userPermisos = this._empleadoService.getPermisosModulo();  
   }
 
    /**

@@ -66,72 +66,115 @@
 </div>
 <!-- Modal -->
 <ng-template #content let-modal>
-    <div *ngFor="let dc of detallesCompra">
+    <div *ngFor="let datosCompra of detallesCompra">
         <div class="modal-header">
-            <h4 class="modal-title" id="modal-basic-title">Detalles compra no. {{dc.idCompra}}</h4>
+            <h4 class="modal-title" id="modal-basic-title">Detalles compra no. {{datosCompra.idCompra}}</h4>
             <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
         </div>
         <div class="modal-body">
             <form>
                 <div class="container">
-                    <div class="row" *ngFor="let permiso of  userPermisos"><!-- Botones y permisos-->
+                    <div class="row"><!-- Botones y permisos-->
                         <div class="col-9">
-                            <h4>{{dc.nombreProveedor}}</h4>
                         </div>
-                        <div class="col-auto" *ngIf="permiso.pdf == 1">
+                        <div class="col-auto">
                             <button type="button" class="btn btn-secondary" ngbTooltip="PDF"><i class="bi bi-file-earmark-pdf"></i><br></button>
                         </div>
-                        <div class="col-auto" *ngIf="permiso.editar == 1">
+                        <div class="col-auto">
                             <button type="button" class="btn btn-warning" (click)="modal.dismiss('Cross click')" [routerLink]="" ngbTooltip="EDITAR"><i class="bi bi-pencil-square"></i><br></button>
                         </div>
-                        <div class="col-auto" *ngIf="permiso.cancelar == 1">
+                        <div class="col-auto">
                             <button type="button" class="btn btn-danger" ngbTooltip="CANCELAR"><i class="bi bi-trash3"></i><br></button>
-                        </div>
-                        <div class="col-auto" *ngIf="permiso.editar == 1">
-                          <button type="button" class="btn btn-success" (click)="modal.dismiss('Cross click')" [routerLink]="" ngbTooltip="PASAR A COMPRA"><i class="bi bi-arrow-up-right-square"></i><br></button> 
                         </div>
                     </div>
                     <hr>
-                    <div class="row"><!--Informacion de la compra-->
-                        <div class="col-3">
+                    <div>
+                        <h4 class="text-center">DATOS DEL PROVEEDOR</h4>
+                        <div class="row align-items-start">
+                            <div class="col-2">
+                                <label for="idOrd" class="form-label"># Orden</label>
+                                <input type="text" class="form-control" id="idOrd" name="idOrd" value="{{datosCompra.idOrd}}" readonly>
+                            </div>
+                            <div class="col-4">
+                                <label for="folioProveedor" class="form-label"> Folio del proveedor</label>
+                                <input type="text" class="form-control" id="folioProveedor" name="folioProveedor" value="{{datosCompra.folioProveedor}}" readonly>
+                                <br>
+                            </div>
+                            <div class="col-5">
+                                <label for="idProveedor" class="form-label"> Proveedor</label>
+                                <input type="text" class="form-control" id="idProveedor" name="idProveedor" value="{{datosCompra.nombre}}" readonly>
+                                <br>
+                            </div>                                                         
+                            <div class="col-2">
+                                <label for="rfc" class="form-label">RFC</label>
+                                <input type="text" name="rfc" class="form-control" value="{{datosCompra.rfc}}" readonly>
+                            </div>
+                            <div class="col-7">
+                                <label for="direccion" class="form-label">Direccion</label>
+                                <input type="text" name="direccion" class="form-control" value="{{datosCompra.provDireccion}}" readonly>
+                            </div>                    
+                            <div class="col-2">
+                                <label for="telefono" class="form-label">Telefono</label>
+                                <input type="text" name="telefono" class="form-control" value="{{datosCompra.telefono}}" readonly>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    <h4 class="text-center">DATOS DE LA COMPRA</h4>
+                    <div class="row align-items-start">
+                        <div class="col-5">
                           <label for="nombreEmpleado" class="form-label">Realizo</label>
-                          <input id="nombreEmpleado" type="text" class="form-control" value="{{dc.nombreEmpleado}}" readonly>
+                          <input id="nombreEmpleado" type="text" class="form-control" value="{{datosCompra.nombreEmpleado}}" readonly>
                         </div>
                         <div class="col-3">
                           <label for="fechaAlta" class="form-label">Fecha de alta</label>
-                          <input type="text" class="form-control" value="{{dc.created_at | date}}" readonly>
+                          <input type="text" class="form-control" value="{{datosCompra.created_at | date}}" readonly>
                         </div>
                         <div class="col-3">
                           <label for="fechaEstimada" class="form-label">Fecha de recepción</label>
-                          <input id="fechaEstimada" type="text" class="form-control" value="{{dc.fechaRecibo | date}}" readonly>
+                          <input id="fechaEstimada" type="text" class="form-control" value="{{datosCompra.fechaRecibo | date}}" readonly>
                         </div>
-                        <div class="col">
+                        <div class="col-3">
+                            <label for="fechaEstimada" class="form-label">Subtotal</label>
+                            <input id="fechaEstimada" type="text" class="form-control" value="{{datosCompra.subtotal}}" readonly>
+                        </div>
+                        <div class="col-3">
+                            <label for="fechaEstimada" class="form-label">Total</label>
+                            <input id="fechaEstimada" type="text" class="form-control" value="{{datosCompra.total}}" readonly>
+                        </div>
+                        <div class="col-11">
                           <label for="observaciones">Observaciones</label>
-                          <textarea class="form-control" name="observaciones" id="observaciones" cols="30" rows="2" value="{{dc.observaciones}}" readonly></textarea>
+                          <textarea class="form-control" name="observaciones" id="observaciones" cols="30" rows="2" value="{{datosCompra.observaciones}}" readonly></textarea>
                         </div>
                     </div>
                     <hr>
                     <div class="row align-items-start"><!--Lista de productos-->
                         <h4 class="text-center">LISTA DE PRODUCTOS</h4>
-                        <!-- <table class="table table-dark table-hover" id="table_productos">
+                        <table class="table table-dark table-hover" id="table_productos">
                             <thead>
                                 <tr>
                                     <th scope="col">CLAVE EXTERNA</th>
                                     <th scope="col">DESCRIPCION</th>
                                     <th scope="col">MEDIDA</th>
                                     <th scope="col">CANTIDAD</th>
+                                    <th scope="col">PRECIO COMPRA</th>
+                                    <th scope="col">IMPUESTO</th>
+                                    <th scope="col">IMPORTE</th>
                                 </tr>
                             </thead>
-                            <tbody *ngFor="let p_d of productosDOC | paginate:{ id:'paginationDOC', itemsPerPage: 5, currentPage: pagina}">
+                            <tbody *ngFor="let p_d of productosDC | paginate:{ id:'paginationDC', itemsPerPage: 5, currentPage: pageActual}">
                                 <tr>
-                                 <th scope="row">{{p_d.claveEx}}</th>
+                                 <th scope="row">{{p_d.claveExterna}}</th>
                                  <th scope="row">{{p_d.descripcion}}</th>
                                  <th scope="row">{{p_d.nombreMedida}}</th>
                                  <th scope="row">{{p_d.cantidad}}</th>
+                                 <th scope="row">{{p_d.precio}}</th>
+                                 <th scope="row">{{p_d.nombreImpuesto}}</th>
+                                 <th scope="row">{{p_d.cantidad*p_d.precio}}</th>
                                 </tr>
                             </tbody> 
                         </table>
-                        <pagination-controls id="paginationDOC" (pageChange)="pagina = $event"></pagination-controls>-->
+                        <pagination-controls id="paginationDC" (pageChange)="pageActual = $event"></pagination-controls>
                     </div> 
                 </div>
             </form>
