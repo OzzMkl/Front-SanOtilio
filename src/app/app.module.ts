@@ -81,6 +81,7 @@ import { EmpleadoService } from './services/empleado.service';
 import { EntregasModuloComponent } from './components/entregas/entregas-modulo/entregas-modulo.component';
 import { EntregasAgregarComponent } from './components/entregas/entregas-agregar/entregas-agregar.component';
 import { EntregasPendientesComponent } from './components/entregas/entregas-pendientes/entregas-pendientes.component';
+import { CompraEditarComponent } from './components/compras/compra/compra-editar/compra-editar.component';
 
 
 @NgModule({
@@ -147,7 +148,8 @@ import { EntregasPendientesComponent } from './components/entregas/entregas-pend
     CorteDeCajaComponent,
     EntregasModuloComponent,
     EntregasAgregarComponent,
-    EntregasPendientesComponent
+    EntregasPendientesComponent,
+    CompraEditarComponent
   ],
   imports: [
     BrowserModule,
