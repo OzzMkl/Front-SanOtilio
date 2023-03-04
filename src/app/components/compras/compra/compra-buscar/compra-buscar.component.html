@@ -81,7 +81,7 @@
                             <button type="button" class="btn btn-secondary" ngbTooltip="PDF"><i class="bi bi-file-earmark-pdf"></i><br></button>
                         </div>
                         <div class="col-auto">
-                            <button type="button" class="btn btn-warning" (click)="modal.dismiss('Cross click')" [routerLink]="" ngbTooltip="EDITAR"><i class="bi bi-pencil-square"></i><br></button>
+                            <button type="button" class="btn btn-warning" (click)="modal.dismiss('Cross click')" [routerLink]="['../compra-editar',datosCompra.idCompra]" ngbTooltip="EDITAR"><i class="bi bi-pencil-square"></i><br></button>
                         </div>
                         <div class="col-auto">
                             <button type="button" class="btn btn-danger" ngbTooltip="CANCELAR"><i class="bi bi-trash3"></i><br></button>

@@ -17,6 +17,8 @@ import { CompraAgregarIdComponent } from './components/compras/compra/compra-agr
 import { CompraAgregarComponent } from './components/compras/compra/compra-agregar/compra-agregar.component';
 import { CompraBuscarComponent } from './components/compras/compra/compra-buscar/compra-buscar.component';
 import { CompraVerComponent } from './components/compras/compra/compra-ver/compra-ver.component';
+import { CompraEditarComponent } from './components/compras/compra/compra-editar/compra-editar.component';
+
 
 import { ProveedorAgregarComponent } from './components/compras/proveedores/proveedor-agregar/proveedor-agregar.component';
 import { ProveedorModuloComponent } from './components/compras/proveedores/proveedor-modulo/proveedor-modulo.component';
@@ -82,7 +84,8 @@ const routes: Routes = [
       {path: 'compra-agregar-id/:idOrd', component: CompraAgregarIdComponent},
       {path: 'compra-agregar', component: CompraAgregarComponent},
       {path: 'compra-buscar', component: CompraBuscarComponent},
-      {path: 'compra-ver', component: CompraVerComponent}
+      {path: 'compra-ver', component: CompraVerComponent},
+      {path: 'compra-editar/:idCompra', component: CompraEditarComponent}
     ]},
 
   {path: 'proveedor-modulo', component: ProveedorModuloComponent, canActivate:[ProveedorGuard],
