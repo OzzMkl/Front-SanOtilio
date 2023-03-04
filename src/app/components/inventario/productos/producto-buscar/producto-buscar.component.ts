@@ -31,6 +31,7 @@ export class ProductoBuscarComponent implements OnInit {
   public productos: Array<any> = [];
   public productosMedida: Array<any> = [];
   public imagenPM: string = '';
+  public claveExt: string ='';
   public isShow: boolean = false;
   /**PAGINATOR */
   public totalPages: any;
@@ -98,7 +99,8 @@ export class ProductoBuscarComponent implements OnInit {
    * 
    * retornamos la consulta con las medias e imagen del producto
    */
-  mostrarPrecios(idProducto:number){
+  mostrarPrecios(idProducto:number,claveEx:string){
+    this.claveExt = claveEx;
     this._productoService.searchProductoMedida(idProducto).subscribe(
       response =>{
         this.productosMedida = response.productoMedida;
@@ -272,16 +274,4 @@ export class ProductoBuscarComponent implements OnInit {
       }
     )
   }
-  /**
-   * 
-   * @param idProducto
-   * Es el id del producto a buscar
-   * @description
-   * Redireccionamos al componente producto-ver y mostramos
-   *  los detalles del producto
-   */
-  verDetallesProducto(idProducto:number){
-    this._router.navigate(['./producto-modulo/producto-ver/'+idProducto]);
-  }
-
 }

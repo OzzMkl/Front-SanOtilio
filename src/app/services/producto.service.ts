@@ -65,10 +65,10 @@ export class ProductoService{
         let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');
         return this._http.get(this.url+'productos/getlastproduct', {headers:headers} );
     }
-    getProdver(idProducto:any):Observable<any>{
-        let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');
-        return this._http.get(this.url+'productos/'+idProducto, {headers:headers} );
-    }
+    // getProdver(idProducto:any):Observable<any>{
+    //     let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');
+    //     return this._http.get(this.url+'productos/'+idProducto, {headers:headers} );
+    // }
     getProdverDos(idProducto:any):Observable<any>{
         let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');
         return this._http.get(this.url+'productos/showTwo/'+idProducto, {headers:headers} );

@@ -46,7 +46,7 @@
                 </tr>
             </thead>
             <tbody *ngFor="let pr of productos | paginate: { itemsPerPage:itemsPerPage, currentPage: pageActual, totalItems:totalPages }">
-                <tr (click)="mostrarPrecios(pr.idProducto)" >
+                <tr (click)="mostrarPrecios(pr.idProducto,pr.claveEx)" >
                     <th scope="row" >{{pr.claveEx}}</th>
                     <th scope="row">{{pr.cbarras}}</th>
                     <th scope="row">{{pr.descripcion}}</th>
@@ -63,10 +63,10 @@
                     </ng-template> -->
                     <th scope="row"> 
                         <i class="pi pi-eye p-1" pTooltip="Ver" tooltipPosition="top" 
-                            (click)="verDetallesProducto(pr.idProducto)">
+                            [routerLink]="['../producto-ver',pr.idProducto]">
                         </i>
                         <i class="pi pi-file-edit p-1" pTooltip="Editar" tooltipPosition="top"
-                            ></i>
+                            [routerLink]="['../producto-editar',pr.idProducto]"></i>
                     </th>
                 </tr>
             </tbody>
@@ -81,14 +81,18 @@
         <!-- FIN CONTROLES DE PAGINACION -->
     </div>
 
+    <!-- tabla precios por medida -->
     <div class="container">
         <div class=" row justify-content-center">
             <div class="col-2">
                 <img src="{{url + 'productos/getImageProduc/' + this.imagenPM}}" width="150px">
             </div>
-            <div class="col-5">
-                <table class="table table-sm table-dark">
+            <div class="col-5 text-center">
+                <table class="table table-sm table-secondary">
                     <thead>
+                        <tr>
+                            <th colspan="6"><h5 class="fw-bold">{{claveExt}}</h5></th>
+                        </tr>
                         <tr>
                             <th scope="col">MEDIDA</th>
                             <th scope="col">PRECIO 1</th>
