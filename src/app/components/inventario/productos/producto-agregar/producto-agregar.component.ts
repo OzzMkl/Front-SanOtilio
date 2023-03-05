@@ -114,71 +114,7 @@ export class ProductoAgregarComponent implements OnInit {
     this.getAlmacen();
   }
 
-  igualaPorcentaje(e:any){
-
-    switch(e.target.id){
-      case 'checkTab2':
-          if(this.checkTab2){
-            this.datosTab2.porcentaje5 = this.datosTab1.porcentaje5; this.tab2calculaMontoCheck('tab2porcentaje5');
-            this.datosTab2.porcentaje4 = this.datosTab1.porcentaje4; this.tab2calculaMontoCheck('tab2porcentaje4');
-            this.datosTab2.porcentaje3 = this.datosTab1.porcentaje3; this.tab2calculaMontoCheck('tab2porcentaje3');
-            this.datosTab2.porcentaje2 = this.datosTab1.porcentaje2; this.tab2calculaMontoCheck('tab2porcentaje2');
-            this.datosTab2.porcentaje1 = this.datosTab1.porcentaje1; this.tab2calculaMontoCheck('tab2porcentaje1');
-          } else{
-            this.datosTab2.porcentaje5 = 0; this.tab2calculaMontoCheck('tab2porcentaje5');
-            this.datosTab2.porcentaje4 = 0; this.tab2calculaMontoCheck('tab2porcentaje4');
-            this.datosTab2.porcentaje3 = 0; this.tab2calculaMontoCheck('tab2porcentaje3');
-            this.datosTab2.porcentaje2 = 0; this.tab2calculaMontoCheck('tab2porcentaje2');
-            this.datosTab2.porcentaje1 = 0; this.tab2calculaMontoCheck('tab2porcentaje1');
-          }
-      break;
-      case 'checkTab3':
-          if(this.checkTab3){
-            this.datosTab3.porcentaje5 = this.datosTab2.porcentaje5; this.tab2calculaMontoCheck('tab2porcentaje5');
-            this.datosTab3.porcentaje4 = this.datosTab2.porcentaje4; this.tab2calculaMontoCheck('tab2porcentaje4');
-            this.datosTab3.porcentaje3 = this.datosTab2.porcentaje3; this.tab2calculaMontoCheck('tab2porcentaje3');
-            this.datosTab3.porcentaje2 = this.datosTab2.porcentaje2; this.tab2calculaMontoCheck('tab2porcentaje2');
-            this.datosTab3.porcentaje1 = this.datosTab2.porcentaje1; this.tab2calculaMontoCheck('tab2porcentaje1');
-          } else{
-            this.datosTab3.porcentaje5 = 0; this.tab2calculaMontoCheck('tab2porcentaje5');
-            this.datosTab3.porcentaje4 = 0; this.tab2calculaMontoCheck('tab2porcentaje4');
-            this.datosTab3.porcentaje3 = 0; this.tab2calculaMontoCheck('tab2porcentaje3');
-            this.datosTab3.porcentaje2 = 0; this.tab2calculaMontoCheck('tab2porcentaje2');
-            this.datosTab3.porcentaje1 = 0; this.tab2calculaMontoCheck('tab2porcentaje1');
-          }
-      break;
-      case 'checkTab4':
-        if(this.checkTab4){
-          this.datosTab4.porcentaje5 = this.datosTab3.porcentaje5; this.tab2calculaMontoCheck('tab2porcentaje5');
-          this.datosTab4.porcentaje4 = this.datosTab3.porcentaje4; this.tab2calculaMontoCheck('tab2porcentaje4');
-          this.datosTab4.porcentaje3 = this.datosTab3.porcentaje3; this.tab2calculaMontoCheck('tab2porcentaje3');
-          this.datosTab4.porcentaje2 = this.datosTab3.porcentaje2; this.tab2calculaMontoCheck('tab2porcentaje2');
-          this.datosTab4.porcentaje1 = this.datosTab3.porcentaje1; this.tab2calculaMontoCheck('tab2porcentaje1');
-        } else{
-          this.datosTab4.porcentaje5 = 0; this.tab2calculaMontoCheck('tab2porcentaje5');
-          this.datosTab4.porcentaje4 = 0; this.tab2calculaMontoCheck('tab2porcentaje4');
-          this.datosTab4.porcentaje3 = 0; this.tab2calculaMontoCheck('tab2porcentaje3');
-          this.datosTab4.porcentaje2 = 0; this.tab2calculaMontoCheck('tab2porcentaje2');
-          this.datosTab4.porcentaje1 = 0; this.tab2calculaMontoCheck('tab2porcentaje1');
-        }
-      break;
-      case 'checkTab5':
-        if(this.checkTab5){
-          this.datosTab5.porcentaje5 = this.datosTab4.porcentaje5; this.tab2calculaMontoCheck('tab2porcentaje5');
-          this.datosTab5.porcentaje4 = this.datosTab4.porcentaje4; this.tab2calculaMontoCheck('tab2porcentaje4');
-          this.datosTab5.porcentaje3 = this.datosTab4.porcentaje3; this.tab2calculaMontoCheck('tab2porcentaje3');
-          this.datosTab5.porcentaje2 = this.datosTab4.porcentaje2; this.tab2calculaMontoCheck('tab2porcentaje2');
-          this.datosTab5.porcentaje1 = this.datosTab4.porcentaje1; this.tab2calculaMontoCheck('tab2porcentaje1');
-        } else{
-          this.datosTab5.porcentaje5 = 0; this.tab2calculaMontoCheck('tab2porcentaje5');
-          this.datosTab5.porcentaje4 = 0; this.tab2calculaMontoCheck('tab2porcentaje4');
-          this.datosTab5.porcentaje3 = 0; this.tab2calculaMontoCheck('tab2porcentaje3');
-          this.datosTab5.porcentaje2 = 0; this.tab2calculaMontoCheck('tab2porcentaje2');
-          this.datosTab5.porcentaje1 = 0; this.tab2calculaMontoCheck('tab2porcentaje1');
-        }
-      break;
-    }
-  }
+  
 
   /**
    * Omite el salto de linea del textarea de descripcion
@@ -420,6 +356,79 @@ export class ProductoAgregarComponent implements OnInit {
       return 'by clicking on a backdrop';
     } else {
       return `with: ${reason}`;
+    }
+  }
+
+  /**
+   * Capturamos el id del check si es true
+   * llamalos la funcion de calcularPorcentaje
+   * Si es false ponemos todas los precios de la
+   * tabla en ceros
+   * @param e event
+   */
+  igualaPorcentaje(e:any){
+
+    switch(e.target.id){
+      case 'checkTab2':
+          if(this.checkTab2){
+            this.datosTab2.porcentaje5 = this.datosTab1.porcentaje5; this.tab2calculaMontoCheck('tab2porcentaje5');
+            this.datosTab2.porcentaje4 = this.datosTab1.porcentaje4; this.tab2calculaMontoCheck('tab2porcentaje4');
+            this.datosTab2.porcentaje3 = this.datosTab1.porcentaje3; this.tab2calculaMontoCheck('tab2porcentaje3');
+            this.datosTab2.porcentaje2 = this.datosTab1.porcentaje2; this.tab2calculaMontoCheck('tab2porcentaje2');
+            this.datosTab2.porcentaje1 = this.datosTab1.porcentaje1; this.tab2calculaMontoCheck('tab2porcentaje1');
+          } else{
+            this.datosTab2.porcentaje5 = 0; this.tab2calculaMontoCheck('tab2porcentaje5');
+            this.datosTab2.porcentaje4 = 0; this.tab2calculaMontoCheck('tab2porcentaje4');
+            this.datosTab2.porcentaje3 = 0; this.tab2calculaMontoCheck('tab2porcentaje3');
+            this.datosTab2.porcentaje2 = 0; this.tab2calculaMontoCheck('tab2porcentaje2');
+            this.datosTab2.porcentaje1 = 0; this.tab2calculaMontoCheck('tab2porcentaje1');
+          }
+      break;
+      case 'checkTab3':
+          if(this.checkTab3){
+            this.datosTab3.porcentaje5 = this.datosTab2.porcentaje5; this.tab2calculaMontoCheck('tab2porcentaje5');
+            this.datosTab3.porcentaje4 = this.datosTab2.porcentaje4; this.tab2calculaMontoCheck('tab2porcentaje4');
+            this.datosTab3.porcentaje3 = this.datosTab2.porcentaje3; this.tab2calculaMontoCheck('tab2porcentaje3');
+            this.datosTab3.porcentaje2 = this.datosTab2.porcentaje2; this.tab2calculaMontoCheck('tab2porcentaje2');
+            this.datosTab3.porcentaje1 = this.datosTab2.porcentaje1; this.tab2calculaMontoCheck('tab2porcentaje1');
+          } else{
+            this.datosTab3.porcentaje5 = 0; this.tab2calculaMontoCheck('tab2porcentaje5');
+            this.datosTab3.porcentaje4 = 0; this.tab2calculaMontoCheck('tab2porcentaje4');
+            this.datosTab3.porcentaje3 = 0; this.tab2calculaMontoCheck('tab2porcentaje3');
+            this.datosTab3.porcentaje2 = 0; this.tab2calculaMontoCheck('tab2porcentaje2');
+            this.datosTab3.porcentaje1 = 0; this.tab2calculaMontoCheck('tab2porcentaje1');
+          }
+      break;
+      case 'checkTab4':
+        if(this.checkTab4){
+          this.datosTab4.porcentaje5 = this.datosTab3.porcentaje5; this.tab2calculaMontoCheck('tab2porcentaje5');
+          this.datosTab4.porcentaje4 = this.datosTab3.porcentaje4; this.tab2calculaMontoCheck('tab2porcentaje4');
+          this.datosTab4.porcentaje3 = this.datosTab3.porcentaje3; this.tab2calculaMontoCheck('tab2porcentaje3');
+          this.datosTab4.porcentaje2 = this.datosTab3.porcentaje2; this.tab2calculaMontoCheck('tab2porcentaje2');
+          this.datosTab4.porcentaje1 = this.datosTab3.porcentaje1; this.tab2calculaMontoCheck('tab2porcentaje1');
+        } else{
+          this.datosTab4.porcentaje5 = 0; this.tab2calculaMontoCheck('tab2porcentaje5');
+          this.datosTab4.porcentaje4 = 0; this.tab2calculaMontoCheck('tab2porcentaje4');
+          this.datosTab4.porcentaje3 = 0; this.tab2calculaMontoCheck('tab2porcentaje3');
+          this.datosTab4.porcentaje2 = 0; this.tab2calculaMontoCheck('tab2porcentaje2');
+          this.datosTab4.porcentaje1 = 0; this.tab2calculaMontoCheck('tab2porcentaje1');
+        }
+      break;
+      case 'checkTab5':
+        if(this.checkTab5){
+          this.datosTab5.porcentaje5 = this.datosTab4.porcentaje5; this.tab2calculaMontoCheck('tab2porcentaje5');
+          this.datosTab5.porcentaje4 = this.datosTab4.porcentaje4; this.tab2calculaMontoCheck('tab2porcentaje4');
+          this.datosTab5.porcentaje3 = this.datosTab4.porcentaje3; this.tab2calculaMontoCheck('tab2porcentaje3');
+          this.datosTab5.porcentaje2 = this.datosTab4.porcentaje2; this.tab2calculaMontoCheck('tab2porcentaje2');
+          this.datosTab5.porcentaje1 = this.datosTab4.porcentaje1; this.tab2calculaMontoCheck('tab2porcentaje1');
+        } else{
+          this.datosTab5.porcentaje5 = 0; this.tab2calculaMontoCheck('tab2porcentaje5');
+          this.datosTab5.porcentaje4 = 0; this.tab2calculaMontoCheck('tab2porcentaje4');
+          this.datosTab5.porcentaje3 = 0; this.tab2calculaMontoCheck('tab2porcentaje3');
+          this.datosTab5.porcentaje2 = 0; this.tab2calculaMontoCheck('tab2porcentaje2');
+          this.datosTab5.porcentaje1 = 0; this.tab2calculaMontoCheck('tab2porcentaje1');
+        }
+      break;
     }
   }
 
@@ -1043,6 +1052,11 @@ export class ProductoAgregarComponent implements OnInit {
     }//fin else inputValue <= 0
   }//fin calculaMonto()
 
+  /**
+   * Copia los porcentajes de la tabla anterior
+   * y los ingresa en la tabla del check y calcula su porcentaje
+   * @param nomPorcentaje string
+   */
   tab2calculaMontoCheck(nomPorcentaje:string){
     //Revisamos si las unidades no sean iguales o menores a cero
     if(this.datosTab1.unidad <= 0 || this.datosTab2.unidad <= 0){
