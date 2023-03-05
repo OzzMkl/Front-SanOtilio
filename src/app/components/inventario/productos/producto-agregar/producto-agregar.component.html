@@ -565,11 +565,19 @@
         </div>
         <div class="row justify-content-between">
           <div class="col">
-            <label for="form-label">Precio compra medida</label>
-            <input class="form-control" type="text" value="{{datosTab4.preciocompra}}" readonly>
+            <label class="form-label">¿Igualar porcentaje?</label>
+            <br>
+            <input class="form-check-input" type="checkbox" id="checkTab4" 
+                    name="checkTab4" [(ngModel)]="checkTab4" (change)="igualaPorcentaje($event)" >
+          </div>
+          <div class="col">
+            <label class="form-label" for="">Aplicar porcentaje</label>
+            <div class="input-group mb-3">
+              <button class="btn btn-outline-secondary" type="button" id="aplicaPorcentaje4" (click)="asignaPorcentaje($event)">Aplicar</button>
+              <input type="text" class="form-control" placeholder="" id="aplicaValue4">
+            </div>
           </div>
         </div>
-        <br>
         <table class="table table-light " >
           <thead class="text-center">
             <tr>
@@ -668,11 +676,19 @@
         </div>
         <div class="row justify-content-between">
           <div class="col">
-            <label for="form-label">Precio compra medida</label>
-            <input class="form-control" type="text" value="{{datosTab5.preciocompra}}" readonly>
+            <label class="form-label">¿Igualar porcentaje?</label>
+            <br>
+            <input class="form-check-input" type="checkbox" id="checkTab5" 
+                    name="checkTab5" [(ngModel)]="checkTab5" (change)="igualaPorcentaje($event)" >
+          </div>
+          <div class="col">
+            <label class="form-label" for="">Aplicar porcentaje</label>
+            <div class="input-group mb-3">
+              <button class="btn btn-outline-secondary" type="button" id="aplicaPorcentaje5" (click)="asignaPorcentaje($event)">Aplicar</button>
+              <input type="text" class="form-control" placeholder="" id="aplicaValue5">
+            </div>
           </div>
         </div>
-        <br>
         <table class="table table-light " >
           <thead class="text-center">
             <tr>
