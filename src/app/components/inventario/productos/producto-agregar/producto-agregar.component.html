@@ -342,25 +342,18 @@
           <div class="col">
             <label class="form-label">¿Igualar porcentaje?</label>
             <br>
-            <!-- <p-toggleButton id="checked2"
-                            name="checked2"
-                            inputId="checked2"
-                            [(ngModel)]="checked2"
-                            onLabel="Si" 
-                            offLabel="No" 
-                            onIcon="pi pi-checked"
-                            offIcon="pi pi-times"
-                            (onChange)="igualaPrecios($event)" >
-            </p-toggleButton> -->
             <input class="form-check-input" type="checkbox" id="checkTab2" 
                     name="checkTab2" [(ngModel)]="checkTab2" (change)="igualaPorcentaje($event)" >
           </div>
           <div class="col">
-            <label class="form-label" for="">Ingresa procentaje</label>
-            <input class="form-control" type="text" >
+            <label class="form-label" for="">Aplicar porcentaje</label>
+            <div class="input-group mb-3">
+              <button class="btn btn-outline-secondary" type="button" id="aplicaPorcentaje2" (click)="asignaPorcentaje($event)">Aplicar</button>
+              <input type="text" class="form-control" placeholder="" id="aplicaValue2">
+            </div>
           </div>
         </div>
-        <br>
+        
         <table class="table table-light " >
           <thead class="text-center">
             <tr>
@@ -460,11 +453,19 @@
         </div>
         <div class="row justify-content-between">
           <div class="col">
-            <label for="form-label">Precio compra medida</label>
-            <input class="form-control" type="text" value="{{datosTab3.preciocompra}}" readonly>
+            <label class="form-label">¿Igualar porcentaje?</label>
+            <br>
+            <input class="form-check-input" type="checkbox" id="checkTab3" 
+                    name="checkTab3" [(ngModel)]="checkTab3" (change)="igualaPorcentaje($event)" >
+          </div>
+          <div class="col">
+            <label class="form-label" for="">Aplicar porcentaje</label>
+            <div class="input-group mb-3">
+              <button class="btn btn-outline-secondary" type="button" id="aplicaPorcentaje3" (click)="asignaPorcentaje($event)">Aplicar</button>
+              <input type="text" class="form-control" placeholder="" id="aplicaValue3">
+            </div>
           </div>
         </div>
-        <br>
         <table class="table table-light " >
           <thead class="text-center">
             <tr>
