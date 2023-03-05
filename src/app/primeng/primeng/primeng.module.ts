@@ -17,6 +17,8 @@ import { MenuModule } from 'primeng/menu';
 import { MessagesModule } from 'primeng/messages';
 import { MessageModule } from 'primeng/message';
 import { FileUploadModule } from 'primeng/fileupload';
+import {ToggleButtonModule} from 'primeng/togglebutton';
+import {SelectButtonModule} from 'primeng/selectbutton';
 
 
 
@@ -37,7 +39,9 @@ import { FileUploadModule } from 'primeng/fileupload';
     MenuModule,
     MessageModule,
     MessagesModule,
-    FileUploadModule, 
+    FileUploadModule,
+    ToggleButtonModule,
+    SelectButtonModule
   ],
   imports: [
     CommonModule,

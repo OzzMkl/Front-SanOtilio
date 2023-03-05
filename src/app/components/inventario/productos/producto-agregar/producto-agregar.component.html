@@ -4,7 +4,7 @@
     <!-- DATOS PRINCIPALES -->
     <div class="row align-items-start" >
 
-      <h4 class="text-center">AGREGAR PRODUCto</h4>
+      <h4 class="text-center">AGREGAR PRODUCTO</h4>
 
       <div class="col-3">
         <label for="ClaveExterna"  class="form-label">Clave externa *</label>
@@ -179,6 +179,9 @@
           </div>
         </div>
       </div>
+      <!-- <div class="col-3">
+        <label class="form-label" for="checkPrecioCompra">P</label>
+      </div> -->
       <div class="col-4">
         <label for="clavesat" class="form-label">Clave sat</label>
         <div class="input-group mb-3">
@@ -337,8 +340,24 @@
         </div>
         <div class="row justify-content-between">
           <div class="col">
-            <label for="form-label">Precio compra medida</label>
-            <input class="form-control" type="text" value="{{datosTab2.preciocompra}}" readonly>
+            <label class="form-label">¿Igualar porcentaje?</label>
+            <br>
+            <!-- <p-toggleButton id="checked2"
+                            name="checked2"
+                            inputId="checked2"
+                            [(ngModel)]="checked2"
+                            onLabel="Si" 
+                            offLabel="No" 
+                            onIcon="pi pi-checked"
+                            offIcon="pi pi-times"
+                            (onChange)="igualaPrecios($event)" >
+            </p-toggleButton> -->
+            <input class="form-check-input" type="checkbox" id="checkTab2" 
+                    name="checkTab2" [(ngModel)]="checkTab2" (change)="igualaPorcentaje($event)" >
+          </div>
+          <div class="col">
+            <label class="form-label" for="">Ingresa procentaje</label>
+            <input class="form-control" type="text" >
           </div>
         </div>
         <br>
