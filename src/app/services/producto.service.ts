@@ -38,61 +38,46 @@ export class ProductoService{
             //return forkJoin([r1,r2]);
     }
     getProductos():Observable<any>{
-        let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');
-        return this._http.get(this.url+'productos/index', {headers:headers} );
+        return this._http.get(this.url+'productos/index', {headers:this.headers} );
     }
     
     getProductosPV():Observable<any>{
-        let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');
-        return this._http.get(this.url+'productos/indexPV', {headers:headers} );
+        return this._http.get(this.url+'productos/indexPV', {headers:this.headers} );
     }
 
     getProductosDes():Observable<any>{
-        let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');
-        return this._http.get(this.url+'productos/productosDes', {headers:headers} );
+        return this._http.get(this.url+'productos/productosDes', {headers:this.headers} );
     }
-    registerLote(lote:any):Observable<any>{
-        let json = JSON.stringify(lote);
-        let params = 'json='+json;
-        let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');//mandamos el json con las cabeceras para que obtengamos el token
-        return this._http.post(this.url+'lote/register',params, {headers:headers} );
-    }
-    getLotes():Observable<any>{
-        let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');
-        return this._http.get(this.url+'lote/index', {headers:headers} );
-    }
+
     getLastPro():Observable<any>{
-        let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');
-        return this._http.get(this.url+'productos/getlastproduct', {headers:headers} );
+        return this._http.get(this.url+'productos/getlastproduct', {headers:this.headers} );
     }
-    // getProdver(idProducto:any):Observable<any>{
-    //     let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');
-    //     return this._http.get(this.url+'productos/'+idProducto, {headers:headers} );
-    // }
+
     getProdverDos(idProducto:any):Observable<any>{
-        let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');
-        return this._http.get(this.url+'productos/showTwo/'+idProducto, {headers:headers} );
+        return this._http.get(this.url+'productos/showTwo/'+idProducto, {headers:this.headers} );
     }
-    /**YA NO USAR ESTE SERVICIO */
+
+    /**YA NO USAR ESTE SERVICIO ELIMINAR */
     getProdclaveex(claveEx:any):Observable<any>{
         let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');
         return this._http.get(this.url+'productos/searchclaveEx/'+claveEx, {headers:headers} );
     }
+    /** */
+
     updateStatus( prod:any, idProducto:any):Observable<any>{
         let json = JSON.stringify(prod);
         let params = 'json='+json;
-        let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');
-        return this._http.put(this.url + 'productos/updatestatus/'+idProducto,params,{headers: headers});
+        return this._http.put(this.url + 'productos/updatestatus/'+idProducto,params,{headers:this.headers});
     }
+
     updateProducto( productoModificado:any, idProducto:any):Observable<any>{
         let json = JSON.stringify(productoModificado);
         let params = 'json='+json;
-        let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');
-        return this._http.put(this.url + 'productos/updateProduct/'+idProducto,params,{headers: headers});
+        return this._http.put(this.url + 'productos/updateProduct/'+idProducto,params,{headers:this.headers});
     }
+    
     getExistenciaG(idProducto:any):Observable<any>{
-        let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');
-        return this._http.get(this.url+'productos/getExistenciaG/'+idProducto, {headers:headers} );
+        return this._http.get(this.url+'productos/getExistenciaG/'+idProducto, {headers:this.headers} );
     }
     
     /**
