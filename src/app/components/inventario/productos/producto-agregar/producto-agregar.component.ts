@@ -432,6 +432,10 @@ export class ProductoAgregarComponent implements OnInit {
     }
   }
 
+  /**
+   * Asigna el mismo porcentaje para todos los precios
+   * @param e Event
+   */
   asignaPorcentaje(e:any){
     switch(e.target.id){
       case 'aplicaPorcentaje2':
