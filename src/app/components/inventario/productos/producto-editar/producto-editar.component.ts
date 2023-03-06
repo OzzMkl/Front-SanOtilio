@@ -65,6 +65,11 @@ export class ProductoEditarComponent implements OnInit {
   public datosTab3: Productos_medidas;
   public datosTab4: Productos_medidas;
   public datosTab5: Productos_medidas;
+  //checks de  las tablas para la igualacion de porcentajes
+  public checkTab2: boolean = false;
+  public checkTab3: boolean = false;
+  public checkTab4: boolean = false;
+  public checkTab5: boolean = false;
 
   constructor(
     private _productoService: ProductoService,
@@ -425,6 +430,121 @@ export class ProductoEditarComponent implements OnInit {
         return 'by clicking on a backdrop';
       } else {
         return `with: ${reason}`;
+      }
+    }
+
+    /**
+     * Capturamos el id del check si es true
+     * llamalos la funcion de calcularPorcentaje
+     * Si es false ponemos todas los precios de la
+     * tabla en ceros
+     * @param e event
+     */
+    igualaPorcentaje(e:any){
+
+      switch(e.target.id){
+        case 'checkTab2':
+            if(this.checkTab2){
+              this.datosTab2.porcentaje5 = this.datosTab1.porcentaje5; this.tab2calculaMontoCheck('tab2porcentaje5');
+              this.datosTab2.porcentaje4 = this.datosTab1.porcentaje4; this.tab2calculaMontoCheck('tab2porcentaje4');
+              this.datosTab2.porcentaje3 = this.datosTab1.porcentaje3; this.tab2calculaMontoCheck('tab2porcentaje3');
+              this.datosTab2.porcentaje2 = this.datosTab1.porcentaje2; this.tab2calculaMontoCheck('tab2porcentaje2');
+              this.datosTab2.porcentaje1 = this.datosTab1.porcentaje1; this.tab2calculaMontoCheck('tab2porcentaje1');
+            } else{
+              this.datosTab2.porcentaje5 = 0; this.tab2calculaMontoCheck('tab2porcentaje5');
+              this.datosTab2.porcentaje4 = 0; this.tab2calculaMontoCheck('tab2porcentaje4');
+              this.datosTab2.porcentaje3 = 0; this.tab2calculaMontoCheck('tab2porcentaje3');
+              this.datosTab2.porcentaje2 = 0; this.tab2calculaMontoCheck('tab2porcentaje2');
+              this.datosTab2.porcentaje1 = 0; this.tab2calculaMontoCheck('tab2porcentaje1');
+            }
+        break;
+        case 'checkTab3':
+            if(this.checkTab3){
+              this.datosTab3.porcentaje5 = this.datosTab2.porcentaje5; this.tab3calculaMontoCheck('tab3porcentaje5');
+              this.datosTab3.porcentaje4 = this.datosTab2.porcentaje4; this.tab3calculaMontoCheck('tab3porcentaje4');
+              this.datosTab3.porcentaje3 = this.datosTab2.porcentaje3; this.tab3calculaMontoCheck('tab3porcentaje3');
+              this.datosTab3.porcentaje2 = this.datosTab2.porcentaje2; this.tab3calculaMontoCheck('tab3porcentaje2');
+              this.datosTab3.porcentaje1 = this.datosTab2.porcentaje1; this.tab3calculaMontoCheck('tab3porcentaje1');
+            } else{
+              this.datosTab3.porcentaje5 = 0; this.tab3calculaMontoCheck('tab3porcentaje5');
+              this.datosTab3.porcentaje4 = 0; this.tab3calculaMontoCheck('tab3porcentaje4');
+              this.datosTab3.porcentaje3 = 0; this.tab3calculaMontoCheck('tab3porcentaje3');
+              this.datosTab3.porcentaje2 = 0; this.tab3calculaMontoCheck('tab3porcentaje2');
+              this.datosTab3.porcentaje1 = 0; this.tab3calculaMontoCheck('tab3porcentaje1');
+            }
+        break;
+        case 'checkTab4':
+          if(this.checkTab4){
+            this.datosTab4.porcentaje5 = this.datosTab3.porcentaje5; this.tab4calculaMontoCheck('tab4porcentaje5');
+            this.datosTab4.porcentaje4 = this.datosTab3.porcentaje4; this.tab4calculaMontoCheck('tab4porcentaje4');
+            this.datosTab4.porcentaje3 = this.datosTab3.porcentaje3; this.tab4calculaMontoCheck('tab4porcentaje3');
+            this.datosTab4.porcentaje2 = this.datosTab3.porcentaje2; this.tab4calculaMontoCheck('tab4porcentaje2');
+            this.datosTab4.porcentaje1 = this.datosTab3.porcentaje1; this.tab4calculaMontoCheck('tab4porcentaje1');
+          } else{
+            this.datosTab4.porcentaje5 = 0; this.tab4calculaMontoCheck('tab4porcentaje5');
+            this.datosTab4.porcentaje4 = 0; this.tab4calculaMontoCheck('tab4porcentaje4');
+            this.datosTab4.porcentaje3 = 0; this.tab4calculaMontoCheck('tab4porcentaje3');
+            this.datosTab4.porcentaje2 = 0; this.tab4calculaMontoCheck('tab4porcentaje2');
+            this.datosTab4.porcentaje1 = 0; this.tab4calculaMontoCheck('tab4porcentaje1');
+          }
+        break;
+        case 'checkTab5':
+          if(this.checkTab5){
+            this.datosTab5.porcentaje5 = this.datosTab4.porcentaje5; this.tab5calculaMontoCheck('tab5porcentaje5');
+            this.datosTab5.porcentaje4 = this.datosTab4.porcentaje4; this.tab5calculaMontoCheck('tab5porcentaje4');
+            this.datosTab5.porcentaje3 = this.datosTab4.porcentaje3; this.tab5calculaMontoCheck('tab5porcentaje3');
+            this.datosTab5.porcentaje2 = this.datosTab4.porcentaje2; this.tab5calculaMontoCheck('tab5porcentaje2');
+            this.datosTab5.porcentaje1 = this.datosTab4.porcentaje1; this.tab5calculaMontoCheck('tab5porcentaje1');
+          } else{
+            this.datosTab5.porcentaje5 = 0; this.tab5calculaMontoCheck('tab5porcentaje5');
+            this.datosTab5.porcentaje4 = 0; this.tab5calculaMontoCheck('tab5porcentaje4');
+            this.datosTab5.porcentaje3 = 0; this.tab5calculaMontoCheck('tab5porcentaje3');
+            this.datosTab5.porcentaje2 = 0; this.tab5calculaMontoCheck('tab5porcentaje2');
+            this.datosTab5.porcentaje1 = 0; this.tab5calculaMontoCheck('tab5porcentaje1');
+          }
+        break;
+      }
+    }
+
+    /**
+     * Asigna el mismo porcentaje para todos los precios
+     * @param e Event
+     */
+    asignaPorcentaje(e:any){
+      switch(e.target.id){
+        case 'aplicaPorcentaje2':
+            var inputValue  = parseFloat((<HTMLInputElement>document.getElementById('aplicaValue2')).value);
+            this.datosTab2.porcentaje5 = inputValue; this.tab2calculaMontoCheck('tab2porcentaje5');
+            this.datosTab2.porcentaje4 = inputValue; this.tab2calculaMontoCheck('tab2porcentaje4');
+            this.datosTab2.porcentaje3 = inputValue; this.tab2calculaMontoCheck('tab2porcentaje3');
+            this.datosTab2.porcentaje2 = inputValue; this.tab2calculaMontoCheck('tab2porcentaje2');
+            this.datosTab2.porcentaje1 = inputValue; this.tab2calculaMontoCheck('tab2porcentaje1');
+          break;
+        case 'aplicaPorcentaje3':
+            var inputValue  = parseFloat((<HTMLInputElement>document.getElementById('aplicaValue3')).value);
+            this.datosTab3.porcentaje5 = inputValue; this.tab3calculaMontoCheck('tab3porcentaje5');
+            this.datosTab3.porcentaje4 = inputValue; this.tab3calculaMontoCheck('tab3porcentaje4');
+            this.datosTab3.porcentaje3 = inputValue; this.tab3calculaMontoCheck('tab3porcentaje3');
+            this.datosTab3.porcentaje2 = inputValue; this.tab3calculaMontoCheck('tab3porcentaje2');
+            this.datosTab3.porcentaje1 = inputValue; this.tab3calculaMontoCheck('tab3porcentaje1');
+          break;
+        case 'aplicaPorcentaje4':
+            var inputValue  = parseFloat((<HTMLInputElement>document.getElementById('aplicaValue4')).value);
+            this.datosTab4.porcentaje5 = inputValue; this.tab4calculaMontoCheck('tab4porcentaje5');
+            this.datosTab4.porcentaje4 = inputValue; this.tab4calculaMontoCheck('tab4porcentaje4');
+            this.datosTab4.porcentaje3 = inputValue; this.tab4calculaMontoCheck('tab4porcentaje3');
+            this.datosTab4.porcentaje2 = inputValue; this.tab4calculaMontoCheck('tab4porcentaje2');
+            this.datosTab4.porcentaje1 = inputValue; this.tab4calculaMontoCheck('tab4porcentaje1');
+          break;
+        case 'aplicaPorcentaje5':
+            var inputValue  = parseFloat((<HTMLInputElement>document.getElementById('aplicaValue5')).value);
+            this.datosTab5.porcentaje5 = inputValue; this.tab5calculaMontoCheck('tab5porcentaje5');
+            this.datosTab5.porcentaje4 = inputValue; this.tab5calculaMontoCheck('tab5porcentaje4');
+            this.datosTab5.porcentaje3 = inputValue; this.tab5calculaMontoCheck('tab5porcentaje3');
+            this.datosTab5.porcentaje2 = inputValue; this.tab5calculaMontoCheck('tab5porcentaje2');
+            this.datosTab5.porcentaje1 = inputValue; this.tab5calculaMontoCheck('tab5porcentaje1');
+          break;
+
       }
     }
   
@@ -1047,6 +1167,144 @@ export class ProductoEditarComponent implements OnInit {
         }//fin else datosTab1.unidad <=0
       }//fin else inputValue <= 0
     }//fin calculaMonto()
+
+    /**
+   * Copia los porcentajes de la tabla anterior
+   * y los ingresa en la tabla del check y calcula su porcentaje
+   * @param nomPorcentaje string
+   */
+    tab2calculaMontoCheck(nomPorcentaje:string){
+      //Revisamos si las unidades no sean iguales o menores a cero
+      if(this.datosTab1.unidad <= 0 || this.datosTab2.unidad <= 0){
+        //Si es correcto mandamos alerta y no hacemos nada
+        this.toastService.show('Las unidades no puede ser menor o igual a 0', { classname: 'bg-danger text-light',delay: 5000 });
+      } else{
+        //Si las unidades estan bien Obtenemos medida menor multiplicando las unidades
+        var medidaMenor = this.datosTab1.unidad * this.datosTab2.unidad;
+        /**
+         * obtenemos precio compra de la medida dividiendo el precio compra
+         * de la primera medida entre el valor de la medidaMenor
+         * Ejem: datosTab1.preciocompra = 500, datosTab1.unidad = 1, datosTab2.unidad = 20
+         * medidaMenor = 1*20 -> medidaMenor = 20
+         * datosTab2.preciocompra = 500/20  -> datosTab2.preciocompra = 25
+         * 
+         * 25 es el preciocompra de esta medida
+         * 
+         */
+        
+        this.datosTab2.preciocompra = this.datosTab1.preciocompra / medidaMenor
+        this.datosTab2.preciocompra = Math.round((this.datosTab2.preciocompra + Number.EPSILON) * 100 ) / 100 ;
+        // revisamos que porcentaje vamos a calcular
+        switch(nomPorcentaje){
+          case 'tab2porcentaje5':
+              //revisamos que nuestro porcentaje no sea menor o igual a cero
+              if(this.datosTab2.porcentaje5 <= 0){
+                //si el porcentaje si menor a cero mandamos alerta
+                if(this.datosTab2.porcentaje5 < 0){
+                  //Si resulta cierto enviamos alerta
+                  this.toastService.show('El porcentaje 5 no puede ser menor a 0', { classname: 'bg-danger text-light',delay: 5000 });
+                } //si no solo igualamos al precio compra
+                  this.datosTab2.precio5 = this.datosTab2.preciocompra;
+                  this.datosTab2.porcentaje5 = 0;
+              } else{
+                  /**  Si todo es correcto realizamos  operacion
+                     * Multiplicamos el precioCompra por el valor del inputValue mas 1
+                     * ejem: inputValue = .03 , preciocompra = 150
+                     *  (150) * (1 + .03) -> (150)*(1.03) = 154.5
+                     * Nota: .03 por la division entre 100 que se realiza al inputValue
+                     */
+                  let inputValue = this.datosTab2.porcentaje5/100;
+                  this.datosTab2.precio5 =  this.datosTab2.preciocompra * (1+inputValue);
+                  //Redondeamos el resultado a 2 decimales
+                  this.datosTab2.precio5 = Math.round((this.datosTab2.precio5 + Number.EPSILON) * 100 ) / 100;
+                  
+                  let x = {target:{id:'tab2precio5'}}
+                  this.tab2revisaPreciosventa(x);
+              }
+            break;
+          case 'tab2porcentaje4':
+              //revisamos que nuestro porcentaje no sea menor o igual a cero
+              if(this.datosTab2.porcentaje4 <= 0){
+                //si el porcentaje si menor a cero mandamos alerta
+                if(this.datosTab2.porcentaje4 < 0){
+                  //Si resulta cierto enviamos alerta
+                  this.toastService.show('El porcentaje 4 no puede ser menor a 0', { classname: 'bg-danger text-light',delay: 5000 });
+                } //si no solo igualamos al precio compra
+                  this.datosTab2.precio4 = this.datosTab2.preciocompra;
+                  this.datosTab2.porcentaje4 = 0;
+              } else{
+                  let inputValue = this.datosTab2.porcentaje4/100;
+                  this.datosTab2.precio4 =  this.datosTab2.preciocompra * (1+inputValue);
+                  //Redondeamos el resultado a 2 decimales
+                  this.datosTab2.precio4 = Math.round((this.datosTab2.precio4 + Number.EPSILON) * 100 ) / 100;
+                  
+                  let x = {target:{id:'tab2precio4'}}
+                  this.tab2revisaPreciosventa(x);
+              }
+            break;
+          case 'tab2porcentaje3':
+              //revisamos que nuestro porcentaje no sea menor o igual a cero
+              if(this.datosTab2.porcentaje3 <= 0){
+                //si el porcentaje si menor a cero mandamos alerta
+                if(this.datosTab2.porcentaje3 < 0){
+                  //Si resulta cierto enviamos alerta
+                  this.toastService.show('El porcentaje 3 no puede ser menor a 0', { classname: 'bg-danger text-light',delay: 5000 });
+                } //si no solo igualamos al precio compra
+                  this.datosTab2.precio3 = this.datosTab2.preciocompra;
+                  this.datosTab2.porcentaje3 = 0;
+              } else{
+                  let inputValue = this.datosTab2.porcentaje3/100;
+                  this.datosTab2.precio3 =  this.datosTab2.preciocompra * (1+inputValue);
+                  //Redondeamos el resultado a 2 decimales
+                  this.datosTab2.precio3 = Math.round((this.datosTab2.precio3 + Number.EPSILON) * 100 ) / 100;
+                  
+                  let x = {target:{id:'tab2precio3'}}
+                  this.tab2revisaPreciosventa(x);
+              }
+            break;
+          case 'tab2porcentaje2':
+              //revisamos que nuestro porcentaje no sea menor o igual a cero
+              if(this.datosTab2.porcentaje2 <= 0){
+                //si el porcentaje si menor a cero mandamos alerta
+                if(this.datosTab2.porcentaje2 < 0){
+                  //Si resulta cierto enviamos alerta
+                  this.toastService.show('El porcentaje 2 no puede ser menor a 0', { classname: 'bg-danger text-light',delay: 5000 });
+                } //si no solo igualamos al precio compra
+                  this.datosTab2.precio2 = this.datosTab2.preciocompra;
+                  this.datosTab2.porcentaje2 = 0;
+              } else{
+                  let inputValue = this.datosTab2.porcentaje2/100;
+                  this.datosTab2.precio2 =  this.datosTab2.preciocompra * (1+inputValue);
+                  //Redondeamos el resultado a 2 decimales
+                  this.datosTab2.precio2 = Math.round((this.datosTab2.precio2 + Number.EPSILON) * 100 ) / 100;
+                  
+                  let x = {target:{id:'tab2precio2'}}
+                  this.tab2revisaPreciosventa(x);
+              }
+            break;
+          case 'tab2porcentaje1':
+              //revisamos que nuestro porcentaje no sea menor o igual a cero
+              if(this.datosTab2.porcentaje1 <= 0){
+                //si el porcentaje si menor a cero mandamos alerta
+                if(this.datosTab2.porcentaje1 < 0){
+                  //Si resulta cierto enviamos alerta
+                  this.toastService.show('El porcentaje 1 no puede ser menor a 0', { classname: 'bg-danger text-light',delay: 5000 });
+                } //si no solo igualamos al precio compra
+                  this.datosTab2.precio1 = this.datosTab2.preciocompra;
+                  this.datosTab2.porcentaje1 = 0;
+              } else{
+                  let inputValue = this.datosTab2.porcentaje1/100;
+                  this.datosTab2.precio1 =  this.datosTab2.preciocompra * (1+inputValue);
+                  //Redondeamos el resultado a 2 decimales
+                  this.datosTab2.precio1 = Math.round((this.datosTab2.precio1 + Number.EPSILON) * 100 ) / 100;
+                  
+                  let x = {target:{id:'tab2precio1'}}
+                  this.tab2revisaPreciosventa(x);
+              }
+            break;
+        }
+      }
+    }
   
     /******************** TAB3 ********************/
   
@@ -1375,6 +1633,144 @@ export class ProductoEditarComponent implements OnInit {
         }//fin else datosTab1.unidad <=0
       }//fin else inputValue <= 0
     }//fin calculaMonto()
+
+    /**
+   * Copia los porcentajes de la tabla anterior
+   * y los ingresa en la tabla del check y calcula su porcentaje
+   * @param nomPorcentaje string
+   */
+    tab3calculaMontoCheck(nomPorcentaje:string){
+      //Revisamos si las unidades no sean iguales o menores a cero
+      if(this.datosTab1.unidad <= 0 || this.datosTab2.unidad <= 0 || this.datosTab3.unidad <= 0){
+        //Si es correcto mandamos alerta y no hacemos nada
+        this.toastService.show('Las unidades no puede ser menor o igual a 0', { classname: 'bg-danger text-light',delay: 5000 });
+      } else{
+        //Si las unidades estan bien Obtenemos medida menor multiplicando las unidades
+        var medidaMenor = this.datosTab1.unidad * this.datosTab2.unidad * this.datosTab3.unidad;
+        /**
+         * obtenemos precio compra de la medida dividiendo el precio compra
+         * de la primera medida entre el valor de la medidaMenor
+         * Ejem: datosTab1.preciocompra = 500, datosTab1.unidad = 1, datosTab2.unidad = 20
+         * medidaMenor = 1*20 -> medidaMenor = 20
+         * datosTab2.preciocompra = 500/20  -> datosTab2.preciocompra = 25
+         * 
+         * 25 es el preciocompra de esta medida
+         * 
+         */
+        
+        this.datosTab3.preciocompra = this.datosTab1.preciocompra / medidaMenor
+        this.datosTab3.preciocompra = Math.round((this.datosTab3.preciocompra + Number.EPSILON) * 100 ) / 100 ;
+        // revisamos que porcentaje vamos a calcular
+        switch(nomPorcentaje){
+          case 'tab3porcentaje5':
+              //revisamos que nuestro porcentaje no sea menor o igual a cero
+              if(this.datosTab3.porcentaje5 <= 0){
+                //si el porcentaje si menor a cero mandamos alerta
+                if(this.datosTab3.porcentaje5 < 0){
+                  //Si resulta cierto enviamos alerta
+                  this.toastService.show('El porcentaje 5 no puede ser menor a 0', { classname: 'bg-danger text-light',delay: 5000 });
+                } //si no solo igualamos al precio compra
+                  this.datosTab3.precio5 = this.datosTab3.preciocompra;
+                  this.datosTab3.porcentaje5 = 0;
+              } else{
+                  /**  Si todo es correcto realizamos  operacion
+                     * Multiplicamos el precioCompra por el valor del inputValue mas 1
+                     * ejem: inputValue = .03 , preciocompra = 150
+                     *  (150) * (1 + .03) -> (150)*(1.03) = 154.5
+                     * Nota: .03 por la division entre 100 que se realiza al inputValue
+                     */
+                  let inputValue = this.datosTab3.porcentaje5/100;
+                  this.datosTab3.precio5 =  this.datosTab3.preciocompra * (1+inputValue);
+                  //Redondeamos el resultado a 2 decimales
+                  this.datosTab3.precio5 = Math.round((this.datosTab3.precio5 + Number.EPSILON) * 100 ) / 100;
+                  
+                  let x = {target:{id:'tab3precio5'}}
+                  this.tab3revisaPreciosventa(x);
+              }
+            break;
+          case 'tab3porcentaje4':
+              //revisamos que nuestro porcentaje no sea menor o igual a cero
+              if(this.datosTab3.porcentaje4 <= 0){
+                //si el porcentaje si menor a cero mandamos alerta
+                if(this.datosTab3.porcentaje4 < 0){
+                  //Si resulta cierto enviamos alerta
+                  this.toastService.show('El porcentaje 4 no puede ser menor a 0', { classname: 'bg-danger text-light',delay: 5000 });
+                } //si no solo igualamos al precio compra
+                  this.datosTab3.precio4 = this.datosTab3.preciocompra;
+                  this.datosTab3.porcentaje4 = 0;
+              } else{
+                  let inputValue = this.datosTab3.porcentaje4/100;
+                  this.datosTab3.precio4 =  this.datosTab3.preciocompra * (1+inputValue);
+                  //Redondeamos el resultado a 2 decimales
+                  this.datosTab3.precio4 = Math.round((this.datosTab3.precio4 + Number.EPSILON) * 100 ) / 100;
+                  
+                  let x = {target:{id:'tab3precio4'}}
+                  this.tab3revisaPreciosventa(x);
+              }
+            break;
+          case 'tab3porcentaje3':
+              //revisamos que nuestro porcentaje no sea menor o igual a cero
+              if(this.datosTab3.porcentaje3 <= 0){
+                //si el porcentaje si menor a cero mandamos alerta
+                if(this.datosTab3.porcentaje3 < 0){
+                  //Si resulta cierto enviamos alerta
+                  this.toastService.show('El porcentaje 3 no puede ser menor a 0', { classname: 'bg-danger text-light',delay: 5000 });
+                } //si no solo igualamos al precio compra
+                  this.datosTab3.precio3 = this.datosTab3.preciocompra;
+                  this.datosTab3.porcentaje3 = 0;
+              } else{
+                  let inputValue = this.datosTab3.porcentaje3/100;
+                  this.datosTab3.precio3 =  this.datosTab3.preciocompra * (1+inputValue);
+                  //Redondeamos el resultado a 2 decimales
+                  this.datosTab3.precio3 = Math.round((this.datosTab3.precio3 + Number.EPSILON) * 100 ) / 100;
+                  
+                  let x = {target:{id:'tab3precio3'}}
+                  this.tab3revisaPreciosventa(x);
+              }
+            break;
+          case 'tab3porcentaje2':
+              //revisamos que nuestro porcentaje no sea menor o igual a cero
+              if(this.datosTab3.porcentaje2 <= 0){
+                //si el porcentaje si menor a cero mandamos alerta
+                if(this.datosTab3.porcentaje2 < 0){
+                  //Si resulta cierto enviamos alerta
+                  this.toastService.show('El porcentaje 2 no puede ser menor a 0', { classname: 'bg-danger text-light',delay: 5000 });
+                } //si no solo igualamos al precio compra
+                  this.datosTab3.precio2 = this.datosTab3.preciocompra;
+                  this.datosTab3.porcentaje2 = 0;
+              } else{
+                  let inputValue = this.datosTab3.porcentaje2/100;
+                  this.datosTab3.precio2 =  this.datosTab3.preciocompra * (1+inputValue);
+                  //Redondeamos el resultado a 2 decimales
+                  this.datosTab3.precio2 = Math.round((this.datosTab3.precio2 + Number.EPSILON) * 100 ) / 100;
+                  
+                  let x = {target:{id:'tab3precio2'}}
+                  this.tab3revisaPreciosventa(x);
+              }
+            break;
+          case 'tab3porcentaje1':
+              //revisamos que nuestro porcentaje no sea menor o igual a cero
+              if(this.datosTab3.porcentaje1 <= 0){
+                //si el porcentaje si menor a cero mandamos alerta
+                if(this.datosTab3.porcentaje1 < 0){
+                  //Si resulta cierto enviamos alerta
+                  this.toastService.show('El porcentaje 1 no puede ser menor a 0', { classname: 'bg-danger text-light',delay: 5000 });
+                } //si no solo igualamos al precio compra
+                  this.datosTab3.precio1 = this.datosTab3.preciocompra;
+                  this.datosTab3.porcentaje1 = 0;
+              } else{
+                  let inputValue = this.datosTab3.porcentaje1/100;
+                  this.datosTab3.precio1 =  this.datosTab3.preciocompra * (1+inputValue);
+                  //Redondeamos el resultado a 2 decimales
+                  this.datosTab3.precio1 = Math.round((this.datosTab3.precio1 + Number.EPSILON) * 100 ) / 100;
+                  
+                  let x = {target:{id:'tab3precio1'}}
+                  this.tab3revisaPreciosventa(x);
+              }
+            break;
+        }//Fin switch
+      }//fin else
+    }
   
     /******************** TAB4 ********************/
   
@@ -1703,6 +2099,144 @@ export class ProductoEditarComponent implements OnInit {
         }//fin else datosTab1.unidad <=0
       }//fin else inputValue <= 0
     }//fin calculaMonto()
+
+    /**
+   * Copia los porcentajes de la tabla anterior
+   * y los ingresa en la tabla del check y calcula su porcentaje
+   * @param nomPorcentaje string
+   */
+    tab4calculaMontoCheck(nomPorcentaje:string){
+      //Revisamos si las unidades no sean iguales o menores a cero
+      if(this.datosTab1.unidad <= 0 || this.datosTab2.unidad <= 0 || this.datosTab3.unidad <= 0 || this.datosTab4.unidad <= 0){
+        //Si es correcto mandamos alerta y no hacemos nada
+        this.toastService.show('Las unidades no puede ser menor o igual a 0', { classname: 'bg-danger text-light',delay: 5000 });
+      } else{
+        //Si las unidades estan bien Obtenemos medida menor multiplicando las unidades
+        var medidaMenor = this.datosTab1.unidad * this.datosTab2.unidad * this.datosTab3.unidad * this.datosTab4.unidad;
+        /**
+         * obtenemos precio compra de la medida dividiendo el precio compra
+         * de la primera medida entre el valor de la medidaMenor
+         * Ejem: datosTab1.preciocompra = 500, datosTab1.unidad = 1, datosTab2.unidad = 20
+         * medidaMenor = 1*20 -> medidaMenor = 20
+         * datosTab2.preciocompra = 500/20  -> datosTab2.preciocompra = 25
+         * 
+         * 25 es el preciocompra de esta medida
+         * 
+         */
+        
+        this.datosTab4.preciocompra = this.datosTab1.preciocompra / medidaMenor
+        this.datosTab4.preciocompra = Math.round((this.datosTab4.preciocompra + Number.EPSILON) * 100 ) / 100 ;
+        // revisamos que porcentaje vamos a calcular
+        switch(nomPorcentaje){
+          case 'tab4porcentaje5':
+              //revisamos que nuestro porcentaje no sea menor o igual a cero
+              if(this.datosTab4.porcentaje5 <= 0){
+                //si el porcentaje si menor a cero mandamos alerta
+                if(this.datosTab4.porcentaje5 < 0){
+                  //Si resulta cierto enviamos alerta
+                  this.toastService.show('El porcentaje 5 no puede ser menor a 0', { classname: 'bg-danger text-light',delay: 5000 });
+                } //si no solo igualamos al precio compra
+                  this.datosTab4.precio5 = this.datosTab4.preciocompra;
+                  this.datosTab4.porcentaje5 = 0;
+              } else{
+                  /**  Si todo es correcto realizamos  operacion
+                     * Multiplicamos el precioCompra por el valor del inputValue mas 1
+                     * ejem: inputValue = .03 , preciocompra = 150
+                     *  (150) * (1 + .03) -> (150)*(1.03) = 154.5
+                     * Nota: .03 por la division entre 100 que se realiza al inputValue
+                     */
+                  let inputValue = this.datosTab4.porcentaje5/100;
+                  this.datosTab4.precio5 =  this.datosTab4.preciocompra * (1+inputValue);
+                  //Redondeamos el resultado a 2 decimales
+                  this.datosTab4.precio5 = Math.round((this.datosTab4.precio5 + Number.EPSILON) * 100 ) / 100;
+                  
+                  let x = {target:{id:'tab4precio5'}}
+                  this.tab4revisaPreciosventa(x);
+              }
+            break;
+          case 'tab4porcentaje4':
+              //revisamos que nuestro porcentaje no sea menor o igual a cero
+              if(this.datosTab4.porcentaje4 <= 0){
+                //si el porcentaje si menor a cero mandamos alerta
+                if(this.datosTab4.porcentaje4 < 0){
+                  //Si resulta cierto enviamos alerta
+                  this.toastService.show('El porcentaje 4 no puede ser menor a 0', { classname: 'bg-danger text-light',delay: 5000 });
+                } //si no solo igualamos al precio compra
+                  this.datosTab4.precio4 = this.datosTab4.preciocompra;
+                  this.datosTab4.porcentaje4 = 0;
+              } else{
+                  let inputValue = this.datosTab4.porcentaje4/100;
+                  this.datosTab4.precio4 =  this.datosTab4.preciocompra * (1+inputValue);
+                  //Redondeamos el resultado a 2 decimales
+                  this.datosTab4.precio4 = Math.round((this.datosTab4.precio4 + Number.EPSILON) * 100 ) / 100;
+                  
+                  let x = {target:{id:'tab4precio4'}}
+                  this.tab4revisaPreciosventa(x);
+              }
+            break;
+          case 'tab4porcentaje3':
+              //revisamos que nuestro porcentaje no sea menor o igual a cero
+              if(this.datosTab4.porcentaje3 <= 0){
+                //si el porcentaje si menor a cero mandamos alerta
+                if(this.datosTab4.porcentaje3 < 0){
+                  //Si resulta cierto enviamos alerta
+                  this.toastService.show('El porcentaje 3 no puede ser menor a 0', { classname: 'bg-danger text-light',delay: 5000 });
+                } //si no solo igualamos al precio compra
+                  this.datosTab4.precio3 = this.datosTab4.preciocompra;
+                  this.datosTab4.porcentaje3 = 0;
+              } else{
+                  let inputValue = this.datosTab4.porcentaje3/100;
+                  this.datosTab4.precio3 =  this.datosTab4.preciocompra * (1+inputValue);
+                  //Redondeamos el resultado a 2 decimales
+                  this.datosTab4.precio3 = Math.round((this.datosTab4.precio3 + Number.EPSILON) * 100 ) / 100;
+                  
+                  let x = {target:{id:'tab4precio3'}}
+                  this.tab4revisaPreciosventa(x);
+              }
+            break;
+          case 'tab4porcentaje2':
+              //revisamos que nuestro porcentaje no sea menor o igual a cero
+              if(this.datosTab4.porcentaje2 <= 0){
+                //si el porcentaje si menor a cero mandamos alerta
+                if(this.datosTab4.porcentaje2 < 0){
+                  //Si resulta cierto enviamos alerta
+                  this.toastService.show('El porcentaje 2 no puede ser menor a 0', { classname: 'bg-danger text-light',delay: 5000 });
+                } //si no solo igualamos al precio compra
+                  this.datosTab4.precio2 = this.datosTab4.preciocompra;
+                  this.datosTab4.porcentaje2 = 0;
+              } else{
+                  let inputValue = this.datosTab4.porcentaje2/100;
+                  this.datosTab4.precio2 =  this.datosTab4.preciocompra * (1+inputValue);
+                  //Redondeamos el resultado a 2 decimales
+                  this.datosTab4.precio2 = Math.round((this.datosTab4.precio2 + Number.EPSILON) * 100 ) / 100;
+                  
+                  let x = {target:{id:'tab4precio2'}}
+                  this.tab4revisaPreciosventa(x);
+              }
+            break;
+          case 'tab4porcentaje1':
+              //revisamos que nuestro porcentaje no sea menor o igual a cero
+              if(this.datosTab4.porcentaje1 <= 0){
+                //si el porcentaje si menor a cero mandamos alerta
+                if(this.datosTab4.porcentaje1 < 0){
+                  //Si resulta cierto enviamos alerta
+                  this.toastService.show('El porcentaje 1 no puede ser menor a 0', { classname: 'bg-danger text-light',delay: 5000 });
+                } //si no solo igualamos al precio compra
+                  this.datosTab4.precio1 = this.datosTab4.preciocompra;
+                  this.datosTab4.porcentaje1 = 0;
+              } else{
+                  let inputValue = this.datosTab4.porcentaje1/100;
+                  this.datosTab4.precio1 =  this.datosTab4.preciocompra * (1+inputValue);
+                  //Redondeamos el resultado a 2 decimales
+                  this.datosTab4.precio1 = Math.round((this.datosTab4.precio1 + Number.EPSILON) * 100 ) / 100;
+                  
+                  let x = {target:{id:'tab4precio1'}}
+                  this.tab4revisaPreciosventa(x);
+              }
+            break;
+        }//Fin switch
+      }//fin else
+    }
   
     /******************** TAB5 ********************/
   
@@ -2031,5 +2565,142 @@ export class ProductoEditarComponent implements OnInit {
         }//fin else datosTab1.unidad <=0
       }//fin else inputValue <= 0
     }//fin calculaMonto()
+    /**
+   * Copia los porcentajes de la tabla anterior
+   * y los ingresa en la tabla del check y calcula su porcentaje
+   * @param nomPorcentaje string
+   */
+    tab5calculaMontoCheck(nomPorcentaje:string){
+      //Revisamos si las unidades no sean iguales o menores a cero
+      if(this.datosTab1.unidad <= 0 || this.datosTab2.unidad <= 0 || this.datosTab3.unidad <= 0 || this.datosTab4.unidad <= 0 || this.datosTab5.unidad <= 0){
+        //Si es correcto mandamos alerta y no hacemos nada
+        this.toastService.show('Las unidades no puede ser menor o igual a 0', { classname: 'bg-danger text-light',delay: 5000 });
+      } else{
+        //Si las unidades estan bien Obtenemos medida menor multiplicando las unidades
+        var medidaMenor = this.datosTab1.unidad * this.datosTab2.unidad * this.datosTab3.unidad * this.datosTab4.unidad * this.datosTab5.unidad;
+        /**
+         * obtenemos precio compra de la medida dividiendo el precio compra
+         * de la primera medida entre el valor de la medidaMenor
+         * Ejem: datosTab1.preciocompra = 500, datosTab1.unidad = 1, datosTab2.unidad = 20
+         * medidaMenor = 1*20 -> medidaMenor = 20
+         * datosTab2.preciocompra = 500/20  -> datosTab2.preciocompra = 25
+         * 
+         * 25 es el preciocompra de esta medida
+         * 
+         */
+        
+        this.datosTab5.preciocompra = this.datosTab1.preciocompra / medidaMenor
+        this.datosTab5.preciocompra = Math.round((this.datosTab5.preciocompra + Number.EPSILON) * 100 ) / 100 ;
+        // revisamos que porcentaje vamos a calcular
+        switch(nomPorcentaje){
+          case 'tab5porcentaje5':
+              //revisamos que nuestro porcentaje no sea menor o igual a cero
+              if(this.datosTab5.porcentaje5 <= 0){
+                //si el porcentaje si menor a cero mandamos alerta
+                if(this.datosTab5.porcentaje5 < 0){
+                  //Si resulta cierto enviamos alerta
+                  this.toastService.show('El porcentaje 5 no puede ser menor a 0', { classname: 'bg-danger text-light',delay: 5000 });
+                } //si no solo igualamos al precio compra
+                  this.datosTab5.precio5 = this.datosTab5.preciocompra;
+                  this.datosTab5.porcentaje5 = 0;
+              } else{
+                  /**  Si todo es correcto realizamos  operacion
+                     * Multiplicamos el precioCompra por el valor del inputValue mas 1
+                     * ejem: inputValue = .03 , preciocompra = 150
+                     *  (150) * (1 + .03) -> (150)*(1.03) = 154.5
+                     * Nota: .03 por la division entre 100 que se realiza al inputValue
+                     */
+                  let inputValue = this.datosTab5.porcentaje5/100;
+                  this.datosTab5.precio5 =  this.datosTab5.preciocompra * (1+inputValue);
+                  //Redondeamos el resultado a 2 decimales
+                  this.datosTab5.precio5 = Math.round((this.datosTab5.precio5 + Number.EPSILON) * 100 ) / 100;
+                  
+                  let x = {target:{id:'tab5precio5'}}
+                  this.tab5revisaPreciosventa(x);
+              }
+            break;
+          case 'tab5porcentaje4':
+              //revisamos que nuestro porcentaje no sea menor o igual a cero
+              if(this.datosTab5.porcentaje4 <= 0){
+                //si el porcentaje si menor a cero mandamos alerta
+                if(this.datosTab5.porcentaje4 < 0){
+                  //Si resulta cierto enviamos alerta
+                  this.toastService.show('El porcentaje 4 no puede ser menor a 0', { classname: 'bg-danger text-light',delay: 5000 });
+                } //si no solo igualamos al precio compra
+                  this.datosTab5.precio4 = this.datosTab5.preciocompra;
+                  this.datosTab5.porcentaje4 = 0;
+              } else{
+                  let inputValue = this.datosTab5.porcentaje4/100;
+                  this.datosTab5.precio4 =  this.datosTab5.preciocompra * (1+inputValue);
+                  //Redondeamos el resultado a 2 decimales
+                  this.datosTab5.precio4 = Math.round((this.datosTab5.precio4 + Number.EPSILON) * 100 ) / 100;
+                  
+                  let x = {target:{id:'tab5precio4'}}
+                  this.tab5revisaPreciosventa(x);
+              }
+            break;
+          case 'tab5porcentaje3':
+              //revisamos que nuestro porcentaje no sea menor o igual a cero
+              if(this.datosTab5.porcentaje3 <= 0){
+                //si el porcentaje si menor a cero mandamos alerta
+                if(this.datosTab5.porcentaje3 < 0){
+                  //Si resulta cierto enviamos alerta
+                  this.toastService.show('El porcentaje 3 no puede ser menor a 0', { classname: 'bg-danger text-light',delay: 5000 });
+                } //si no solo igualamos al precio compra
+                  this.datosTab5.precio3 = this.datosTab5.preciocompra;
+                  this.datosTab5.porcentaje3 = 0;
+              } else{
+                  let inputValue = this.datosTab5.porcentaje3/100;
+                  this.datosTab5.precio3 =  this.datosTab5.preciocompra * (1+inputValue);
+                  //Redondeamos el resultado a 2 decimales
+                  this.datosTab5.precio3 = Math.round((this.datosTab5.precio3 + Number.EPSILON) * 100 ) / 100;
+                  
+                  let x = {target:{id:'tab5precio3'}}
+                  this.tab5revisaPreciosventa(x);
+              }
+            break;
+          case 'tab5porcentaje2':
+              //revisamos que nuestro porcentaje no sea menor o igual a cero
+              if(this.datosTab5.porcentaje2 <= 0){
+                //si el porcentaje si menor a cero mandamos alerta
+                if(this.datosTab5.porcentaje2 < 0){
+                  //Si resulta cierto enviamos alerta
+                  this.toastService.show('El porcentaje 2 no puede ser menor a 0', { classname: 'bg-danger text-light',delay: 5000 });
+                } //si no solo igualamos al precio compra
+                  this.datosTab5.precio2 = this.datosTab5.preciocompra;
+                  this.datosTab5.porcentaje2 = 0;
+              } else{
+                  let inputValue = this.datosTab5.porcentaje2/100;
+                  this.datosTab5.precio2 =  this.datosTab5.preciocompra * (1+inputValue);
+                  //Redondeamos el resultado a 2 decimales
+                  this.datosTab5.precio2 = Math.round((this.datosTab5.precio2 + Number.EPSILON) * 100 ) / 100;
+                  
+                  let x = {target:{id:'tab5precio2'}}
+                  this.tab5revisaPreciosventa(x);
+              }
+            break;
+          case 'tab5porcentaje1':
+              //revisamos que nuestro porcentaje no sea menor o igual a cero
+              if(this.datosTab5.porcentaje1 <= 0){
+                //si el porcentaje si menor a cero mandamos alerta
+                if(this.datosTab5.porcentaje1 < 0){
+                  //Si resulta cierto enviamos alerta
+                  this.toastService.show('El porcentaje 1 no puede ser menor a 0', { classname: 'bg-danger text-light',delay: 5000 });
+                } //si no solo igualamos al precio compra
+                  this.datosTab5.precio1 = this.datosTab5.preciocompra;
+                  this.datosTab5.porcentaje1 = 0;
+              } else{
+                  let inputValue = this.datosTab5.porcentaje1/100;
+                  this.datosTab5.precio1 =  this.datosTab5.preciocompra * (1+inputValue);
+                  //Redondeamos el resultado a 2 decimales
+                  this.datosTab5.precio1 = Math.round((this.datosTab5.precio1 + Number.EPSILON) * 100 ) / 100;
+                  
+                  let x = {target:{id:'tab5precio1'}}
+                  this.tab5revisaPreciosventa(x);
+              }
+            break;
+        }//Fin switch
+      }//fin else
+    }
   /********************************************************************************************************************************* */
 }
