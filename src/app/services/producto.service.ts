@@ -70,10 +70,26 @@ export class ProductoService{
         return this._http.put(this.url + 'productos/updatestatus/'+idProducto,params,{headers:this.headers});
     }
 
-    updateProducto( productoModificado:any, idProducto:any):Observable<any>{
-        let json = JSON.stringify(productoModificado);
+    updateProducto( producto:any, listaProdMedida:any,empleado:any):Observable<any>{
+        let combinado = {...producto, ...empleado};
+        let json = JSON.stringify(combinado);
         let params = 'json='+json;
-        return this._http.put(this.url + 'productos/updateProduct/'+idProducto,params,{headers:this.headers});
+
+        let combinado2 = {...listaProdMedida, ...empleado}
+        let json2 = JSON.stringify(combinado2);
+        let params2 = 'json='+json2;
+
+        return this._http.put(this.url + 'productos/updateProduct/'+producto.idProducto,params,{headers:this.headers}).pipe(
+            concatMap( (response:any) =>{
+                if(response.status == 'success'){
+                    return this._http.put(this.url+'productos/updatePrecioProducto/'+producto.idProducto,params2, {headers:this.headers} );
+                } else {
+                    return throwError('Ocurrio un error al registrar producto');
+                }
+            }),catchError( error =>{
+                console.log('Error:', error);
+                return throwError('Fallo al actualizar el producto Error: '+error.error.error.errorInfo['2']);
+            }));
     }
     
     getExistenciaG(idProducto:any):Observable<any>{
