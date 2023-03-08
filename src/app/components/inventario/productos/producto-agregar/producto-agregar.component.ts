@@ -99,11 +99,11 @@ export class ProductoAgregarComponent implements OnInit {
 
   ) {
     this.producto = new Producto(0,0,0,0,'',0,'',0,0,'',0,'','',null,0,0);
-    this.datosTab1 = new Productos_medidas(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
-    this.datosTab2 = new Productos_medidas(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
-    this.datosTab3 = new Productos_medidas(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
-    this.datosTab4 = new Productos_medidas(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
-    this.datosTab5 = new Productos_medidas(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
+    this.datosTab1 = new Productos_medidas(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
+    this.datosTab2 = new Productos_medidas(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
+    this.datosTab3 = new Productos_medidas(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
+    this.datosTab4 = new Productos_medidas(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
+    this.datosTab5 = new Productos_medidas(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
    }
 
   ngOnInit(): void {
@@ -240,24 +240,39 @@ export class ProductoAgregarComponent implements OnInit {
     //guardaremos las tablas de medidas en la lista
     switch(this.noMedida){
       case 1:
+            this.datosTab1.idStatus = 31;
             this.listaProdMedida.push({...this.datosTab1});
           break;
       case 2:
+          this.datosTab1.idStatus = 31;
+          this.datosTab2.idStatus = 31;
             this.listaProdMedida.push({...this.datosTab1},
                                       {...this.datosTab2});
           break;
       case 3:
+            this.datosTab1.idStatus = 31;
+            this.datosTab2.idStatus = 31;
+            this.datosTab3.idStatus = 31;
             this.listaProdMedida.push({...this.datosTab1},
                                       {...this.datosTab2},
                                       {...this.datosTab3});
           break;
       case 4:
+            this.datosTab1.idStatus = 31;
+            this.datosTab2.idStatus = 31;
+            this.datosTab3.idStatus = 31;
+            this.datosTab4.idStatus = 31;
             this.listaProdMedida.push({...this.datosTab1},
                                       {...this.datosTab2},
                                       {...this.datosTab3},
                                       {...this.datosTab4}); 
           break;
       case 5:
+            this.datosTab1.idStatus = 31;
+            this.datosTab2.idStatus = 31;
+            this.datosTab3.idStatus = 31;
+            this.datosTab4.idStatus = 31;
+            this.datosTab5.idStatus = 31;
             this.listaProdMedida.push({...this.datosTab1},
                                       {...this.datosTab2},
                                       {...this.datosTab3},
