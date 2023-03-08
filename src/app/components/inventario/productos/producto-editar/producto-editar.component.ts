@@ -54,6 +54,7 @@ export class ProductoEditarComponent implements OnInit {
   public closeResult: string = '';
   //Para mostrar y ocultar las tablas de precios
   public noMedida: number = 1;
+  public selectNoMedida: number = 1;
   public tab2: boolean = true;
   public tab3: boolean = true;
   public tab4: boolean = true;
@@ -85,11 +86,11 @@ export class ProductoEditarComponent implements OnInit {
     private _route: ActivatedRoute,
   ){
     this.producto = new Producto(0,0,0,0,'',0,'',0,0,'',0,'','',null,0,0);
-    this.datosTab1 = new Productos_medidas(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
-    this.datosTab2 = new Productos_medidas(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
-    this.datosTab3 = new Productos_medidas(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
-    this.datosTab4 = new Productos_medidas(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
-    this.datosTab5 = new Productos_medidas(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
+    this.datosTab1 = new Productos_medidas(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
+    this.datosTab2 = new Productos_medidas(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
+    this.datosTab3 = new Productos_medidas(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
+    this.datosTab4 = new Productos_medidas(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
+    this.datosTab5 = new Productos_medidas(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
    }
 
   ngOnInit(): void {
@@ -105,6 +106,8 @@ export class ProductoEditarComponent implements OnInit {
    * Busca el producto, con el id recibido en la url
    */
   getIdProduct(){
+    //mostramos el spinner
+    this.isLoading = true;
     //Obtener el id del producto a modificar de la URL
     this._route.params.subscribe(params => {
      let id = + params['idProducto'];
@@ -134,61 +137,116 @@ export class ProductoEditarComponent implements OnInit {
          this.producto.idAlmacen = response.producto[0]['idAlmacen'];
          this.producto.existenciaG = response.producto[0]['existenciaG'];
          //para asi asignar el valor del codigo de barras a la variable value
-         //esto con la finalidad de poder mostrar el contenido
+         //esto con la finalidad de poder mostrar el codigo de barras
          this.muestraCbarras = this.producto.cbarras;
 
          this.listaProdMedida = response.productos_medidas;
-         console.log(this.listaProdMedida);
-         switch(this.listaProdMedida.length){
-          case 1:
-            //this.datosTab1.idProdMedida = this.listaProdMedida[0][''];
-            break;
-          case 2:break;
-          case 3:break;
-          case 4:break;
-          case 5:break;
-          defaul:
-            console.log('no valido');
-           break;
+         //console.log(this.listaProdMedida)
+         this.noMedida = this.listaProdMedida.length;
+         this.seleccionanoMedidas(this.noMedida.toString());
+
+         //recorremos array de acuerdo a la longitud  de listaProdMedida
+         for(let i= 0; i < this.listaProdMedida.length; i++){
+          //Vamos asignando valores de acuerdo a la vuelta que le damos al array
+          if(i=== 0){
+            this.datosTab1.idProdMedida = this.listaProdMedida[i]['idProdMedida'];
+            this.datosTab1.idProducto = this.listaProdMedida[i]['idProducto'];
+            this.datosTab1.idMedida = this.listaProdMedida[i]['idMedida'];
+            this.datosTab1.unidad = this.listaProdMedida[i]['unidad'];
+            this.datosTab1.preciocompra = this.listaProdMedida[i]['preciocompra'];
+            this.datosTab1.porcentaje1 = this.listaProdMedida[i]['porcentaje1'];
+            this.datosTab1.precio1 = this.listaProdMedida[i]['precio1'];
+            this.datosTab1.porcentaje2 = this.listaProdMedida[i]['porcentaje2'];
+            this.datosTab1.precio2 = this.listaProdMedida[i]['precio2'];
+            this.datosTab1.porcentaje3 = this.listaProdMedida[i]['porcentaje3'];
+            this.datosTab1.precio3 = this.listaProdMedida[i]['precio3'];
+            this.datosTab1.porcentaje4 = this.listaProdMedida[i]['porcentaje4'];
+            this.datosTab1.precio4 = this.listaProdMedida[i]['precio4'];
+            this.datosTab1.porcentaje5 = this.listaProdMedida[i]['porcentaje5'];
+            this.datosTab1.precio5 = this.listaProdMedida[i]['precio5'];
+            this.datosTab1.idStatus = this.listaProdMedida[i]['idStatus'];
+
+          } else if(i=== 1){
+            this.datosTab2.idProdMedida = this.listaProdMedida[i]['idProdMedida'];
+            this.datosTab2.idProducto = this.listaProdMedida[i]['idProducto'];
+            this.datosTab2.idMedida = this.listaProdMedida[i]['idMedida'];
+            this.datosTab2.unidad = this.listaProdMedida[i]['unidad'];
+            this.datosTab2.preciocompra = this.listaProdMedida[i]['preciocompra'];
+            this.datosTab2.porcentaje1 = this.listaProdMedida[i]['porcentaje1'];
+            this.datosTab2.precio1 = this.listaProdMedida[i]['precio1'];
+            this.datosTab2.porcentaje2 = this.listaProdMedida[i]['porcentaje2'];
+            this.datosTab2.precio2 = this.listaProdMedida[i]['precio2'];
+            this.datosTab2.porcentaje3 = this.listaProdMedida[i]['porcentaje3'];
+            this.datosTab2.precio3 = this.listaProdMedida[i]['precio3'];
+            this.datosTab2.porcentaje4 = this.listaProdMedida[i]['porcentaje4'];
+            this.datosTab2.precio4 = this.listaProdMedida[i]['precio4'];
+            this.datosTab2.porcentaje5 = this.listaProdMedida[i]['porcentaje5'];
+            this.datosTab2.precio5 = this.listaProdMedida[i]['precio5'];
+            this.datosTab2.idStatus = this.listaProdMedida[i]['idStatus'];
+          } else if(i=== 2){
+            this.datosTab3.idProdMedida = this.listaProdMedida[i]['idProdMedida'];
+            this.datosTab3.idProducto = this.listaProdMedida[i]['idProducto'];
+            this.datosTab3.idMedida = this.listaProdMedida[i]['idMedida'];
+            this.datosTab3.unidad = this.listaProdMedida[i]['unidad'];
+            this.datosTab3.preciocompra = this.listaProdMedida[i]['preciocompra'];
+            this.datosTab3.porcentaje1 = this.listaProdMedida[i]['porcentaje1'];
+            this.datosTab3.precio1 = this.listaProdMedida[i]['precio1'];
+            this.datosTab3.porcentaje2 = this.listaProdMedida[i]['porcentaje2'];
+            this.datosTab3.precio2 = this.listaProdMedida[i]['precio2'];
+            this.datosTab3.porcentaje3 = this.listaProdMedida[i]['porcentaje3'];
+            this.datosTab3.precio3 = this.listaProdMedida[i]['precio3'];
+            this.datosTab3.porcentaje4 = this.listaProdMedida[i]['porcentaje4'];
+            this.datosTab3.precio4 = this.listaProdMedida[i]['precio4'];
+            this.datosTab3.porcentaje5 = this.listaProdMedida[i]['porcentaje5'];
+            this.datosTab3.precio5 = this.listaProdMedida[i]['precio5'];
+            this.datosTab3.idStatus = this.listaProdMedida[i]['idStatus'];
+          } else if(i=== 3){
+            this.datosTab4.idProdMedida = this.listaProdMedida[i]['idProdMedida'];
+            this.datosTab4.idProducto = this.listaProdMedida[i]['idProducto'];
+            this.datosTab4.idMedida = this.listaProdMedida[i]['idMedida'];
+            this.datosTab4.unidad = this.listaProdMedida[i]['unidad'];
+            this.datosTab4.preciocompra = this.listaProdMedida[i]['preciocompra'];
+            this.datosTab4.porcentaje1 = this.listaProdMedida[i]['porcentaje1'];
+            this.datosTab4.precio1 = this.listaProdMedida[i]['precio1'];
+            this.datosTab4.porcentaje2 = this.listaProdMedida[i]['porcentaje2'];
+            this.datosTab4.precio2 = this.listaProdMedida[i]['precio2'];
+            this.datosTab4.porcentaje3 = this.listaProdMedida[i]['porcentaje3'];
+            this.datosTab4.precio3 = this.listaProdMedida[i]['precio3'];
+            this.datosTab4.porcentaje4 = this.listaProdMedida[i]['porcentaje4'];
+            this.datosTab4.precio4 = this.listaProdMedida[i]['precio4'];
+            this.datosTab4.porcentaje5 = this.listaProdMedida[i]['porcentaje5'];
+            this.datosTab4.precio5 = this.listaProdMedida[i]['precio5'];
+            this.datosTab4.idStatus = this.listaProdMedida[i]['idStatus'];
+          }else if(i=== 4){ 
+            this.datosTab5.idProdMedida = this.listaProdMedida[i]['idProdMedida'];
+            this.datosTab5.idProducto = this.listaProdMedida[i]['idProducto'];
+            this.datosTab5.idMedida = this.listaProdMedida[i]['idMedida'];
+            this.datosTab5.unidad = this.listaProdMedida[i]['unidad'];
+            this.datosTab5.preciocompra = this.listaProdMedida[i]['preciocompra'];
+            this.datosTab5.porcentaje1 = this.listaProdMedida[i]['porcentaje1'];
+            this.datosTab5.precio1 = this.listaProdMedida[i]['precio1'];
+            this.datosTab5.porcentaje2 = this.listaProdMedida[i]['porcentaje2'];
+            this.datosTab5.precio2 = this.listaProdMedida[i]['precio2'];
+            this.datosTab5.porcentaje3 = this.listaProdMedida[i]['porcentaje3'];
+            this.datosTab5.precio3 = this.listaProdMedida[i]['precio3'];
+            this.datosTab5.porcentaje4 = this.listaProdMedida[i]['porcentaje4'];
+            this.datosTab5.precio4 = this.listaProdMedida[i]['precio4'];
+            this.datosTab5.porcentaje5 = this.listaProdMedida[i]['porcentaje5'];
+            this.datosTab5.precio5 = this.listaProdMedida[i]['precio5'];
+            this.datosTab5.idStatus = this.listaProdMedida[i]['idStatus'];
+          }
          }
-       }
-     },
+         //una vez terminado de cargar quitamos el spinner
+          this.isLoading = false;
+       }//fin if
+     },//fin response
      error =>{
        console.log(error);
      }
-   );
+   );//finsubscribe getProdverdos
 
- });
+  });//finsubscribe params
   }
-
-  //Envio de datos del formulario para la actualizacion del producto
-  // onSubmit(form:any){
-  //   //obtenemos primero el id del prodycto a modificar y dentro de el
-  //   this._route.params.subscribe(params => {
-  //     let id = + params['idProducto'];
-
-  // //ejecutamos el servicio de actualizacion del producto mando el objeto con los datos junto con el id obteniedo en el paso anterior
-  //   this._productoService.updateProducto(this.productoModificado, id).subscribe(
-  //     response =>{
-  //       //console.log(response);
-  //       //lo mandamos al modulo buscar
-  //       this._router.navigate(['./producto-modulo/producto-buscar']);
-  //       //mostramos mensaje de que la modificacion salio correctamente
-  //       this.toastService.show('Producto '+this.productoModificado.claveEx+' modificado correctamente', { classname: 'bg-success text-light', delay: 5000 }); 
-      
-  //     },
-  //     error =>{
-  //     // console.log(this.productoModificado);//muestra lo que se mando
-  //       console.log(<any>error);//muestra el error
-  //       this.toastService.show('Ups... Algo salio mal', { classname: 'bg-danger text-light', delay: 15000 });//mensaje de que salio mal la operacion
-      
-  //     }
-  //   )
-  // });
-  // }
-
-
-
   /********************************************************************************************************************************* */
     /**
    * Omite el salto de linea del textarea de descripcion
@@ -225,19 +283,19 @@ export class ProductoEditarComponent implements OnInit {
     submit(form:any){
       this.loadUser();
       this.insertaListaProdM();
-  //    console.log(this.producto, this.listaProdMedida)
-        this._productoService.registerProducto(this.producto,this.listaProdMedida,this.identity).subscribe(
+      //console.log(this.producto, this.listaProdMedida)
+        this._productoService.updateProducto(this.producto,this.listaProdMedida,this.identity).subscribe(
           response =>{
-            //console.log('asdasdasd :',response);
+            console.log('asdasdasd :',response);
             if(response.status == 'success'){
-              
-              this._router.navigate(['./producto-modulo/producto-buscar']);
-              this.toastService.show('Producto guardado correctamente', { classname: 'bg-success text-light', delay: 5000 });
-            }
+
+               this._router.navigate(['./producto-modulo/producto-buscar']);
+               this.toastService.show('Producto '+this.producto.claveEx+' actualizado correctamente', { classname: 'bg-success text-light', delay: 5000 });
+             }
           },
           error =>{
             //console.log(this.producto);
-            //console.log('error ',error);
+            console.log('error ',error);
             this.toastService.show(error, { classname: 'bg-danger text-light', delay: 15000 });
           });
     }
@@ -258,10 +316,9 @@ export class ProductoEditarComponent implements OnInit {
      * recibimos el numero de medidas a ingresar
      * y mostramos y ocultamos las tablas
      */
-    seleccionaNoMedidas(model:any){
+    seleccionanoMedidas(e:any){
       
-      let no = model;
-      switch( no ){
+      switch( e ){
         case "1":
             this.tab2 = true;
             this.tab3 = true;
@@ -314,24 +371,39 @@ export class ProductoEditarComponent implements OnInit {
       //guardaremos las tablas de medidas en la lista
       switch(this.noMedida){
         case 1:
+              this.datosTab1.idStatus = 31;
               this.listaProdMedida.push({...this.datosTab1});
             break;
         case 2:
+              this.datosTab1.idStatus = 31;
+              this.datosTab2.idStatus = 31;
               this.listaProdMedida.push({...this.datosTab1},
                                         {...this.datosTab2});
             break;
         case 3:
+              this.datosTab1.idStatus = 31;
+              this.datosTab2.idStatus = 31;
+              this.datosTab3.idStatus = 31;
               this.listaProdMedida.push({...this.datosTab1},
                                         {...this.datosTab2},
                                         {...this.datosTab3});
             break;
         case 4:
+              this.datosTab1.idStatus = 31;
+              this.datosTab2.idStatus = 31;
+              this.datosTab3.idStatus = 31;
+              this.datosTab4.idStatus = 31;
               this.listaProdMedida.push({...this.datosTab1},
                                         {...this.datosTab2},
                                         {...this.datosTab3},
                                         {...this.datosTab4}); 
             break;
         case 5:
+              this.datosTab1.idStatus = 31;
+              this.datosTab2.idStatus = 31;
+              this.datosTab3.idStatus = 31;
+              this.datosTab4.idStatus = 31;
+              this.datosTab5.idStatus = 31;
               this.listaProdMedida.push({...this.datosTab1},
                                         {...this.datosTab2},
                                         {...this.datosTab3},

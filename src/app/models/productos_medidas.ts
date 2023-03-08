@@ -20,5 +20,7 @@ export class Productos_medidas{//Modelo del producto_precio
         
         public porcentaje5: number,
         public precio5: number,
+
+        public idStatus:number
     ){}
 }

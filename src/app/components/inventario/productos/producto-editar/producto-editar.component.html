@@ -1,10 +1,15 @@
 <div class="container">
-  <form class="form-group" #aProd="ngForm" (ngSubmit)="submit(aProd)">
+  <div class="text-center text-primary" *ngIf="isLoading">
+    <div class="spinner-border" role="status" >
+        <span class="visually-hidden">Loading...</span>
+      </div>
+</div>
+  <form class="form-group" #aProd="ngForm" (ngSubmit)="submit(aProd)" *ngIf="!isLoading">
     
     <!-- DATOS PRINCIPALES -->
     <div class="row align-items-start" >
 
-      <h4 class="text-center">AGREGAR PRODUCTO</h4>
+      <h4 class="text-center">EDITAR PRODUCTO</h4>
 
       <div class="col-3">
         <label for="ClaveExterna"  class="form-label">Clave externa *</label>
@@ -192,15 +197,14 @@
 
       <div class="col-4">
         <label class="form-label" for="noMedidas">No. de medidas *</label>
-        <select class="form-select" name="noMedidas" id="totalMedidas" ngModel #noMedidas="ngModel"  (ngModelChange)="seleccionaNoMedidas($event)" required>
-          <option value="" disabled selected>Seleccione una opcion</option>
-          <option value="1">1</option>
+        <select class="form-select" name="noMedidas"  #selectNoMedida="ngModel"  [(ngModel)]="noMedida" (ngModelChange)="seleccionanoMedidas($event)"  required>
+          <option value="1" selected>1</option>
           <option value="2">2</option>
           <option value="3">3</option>
           <option value="4">4</option>
           <option value="5">5</option>
         </select>
-        <div [hidden]="noMedidas.valid || noMedidas.pristine" class="alert alert-danger">
+        <div [hidden]="selectNoMedida.valid || selectNoMedida.pristine" class="alert alert-danger">
           CAMPO REQUERIDO 
         </div>
       </div>
