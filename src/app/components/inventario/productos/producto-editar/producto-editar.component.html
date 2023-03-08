@@ -173,7 +173,7 @@
     <div class="row align-items-start">
       <h4 class="text-center">PRECIOS</h4>
 
-      <div class="col-4">
+      <div class="col-3">
         <label class="form-label" for="checkPrecioCompra">Precio compra *</label>
         <div class="input-group mb-3">
           <span class="input-group-text" id="basic-addon1">$</span>
@@ -184,10 +184,22 @@
           </div>
         </div>
       </div>
+      <div class="col-2">
+          <label class="form-label" for="">¿Mantener precios?</label>
+          <br>
+            <input class="form-check-input" type="checkbox" id="checkMantPrecio" 
+                    name="checkMantPrecio" [(ngModel)]="checkMantPrecio" (change)="mantenerPrecios($event)" >
+      </div>
+      <div class="col-2">
+        <label class="form-label" for="">¿Mantener porcentajes?</label>
+        <br>
+            <input class="form-check-input" type="checkbox" id="checkMantPorce" 
+                    name="checkMantPorce" [(ngModel)]="checkMantPorce" (change)="mantenerPorcentaje($event)" >
+    </div>
       <!-- <div class="col-3">
         <label class="form-label" for="checkPrecioCompra">P</label>
       </div> -->
-      <div class="col-4">
+      <div class="col-3">
         <label for="clavesat" class="form-label">Clave sat</label>
         <div class="input-group mb-3">
           <button class="btn btn-outline-secondary" type="button" id="button-addonSeaarch" (click)="open(buscarClaveSat)"><i class="bi bi-search"></i></button>
@@ -195,7 +207,7 @@
         </div>
       </div>
 
-      <div class="col-4">
+      <div class="col-2">
         <label class="form-label" for="noMedidas">No. de medidas *</label>
         <select class="form-select" name="noMedidas"  #selectNoMedida="ngModel"  [(ngModel)]="noMedida" (ngModelChange)="seleccionanoMedidas($event)"  required>
           <option value="1" selected>1</option>
