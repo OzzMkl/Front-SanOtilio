@@ -71,6 +71,9 @@ export class ProductoEditarComponent implements OnInit {
   public checkTab3: boolean = false;
   public checkTab4: boolean = false;
   public checkTab5: boolean = false;
+  public checkMantPrecio: boolean = false;
+  public checkMantPorce: boolean = false;
+  
 
   constructor(
     private _productoService: ProductoService,
@@ -248,6 +251,223 @@ export class ProductoEditarComponent implements OnInit {
   });//finsubscribe params
   }
   /********************************************************************************************************************************* */
+
+    /**
+     * Permite mantener los precios establecidos al cambiar el precio de compra
+     * Si el precio compra es mayor a un precio de cualquier medida este lo pone al precio de compra
+     * 
+     * @param e Event
+     */
+    mantenerPrecios(e:any){
+      if(this.checkMantPrecio){
+        this.checkMantPorce = false;
+        switch(this.noMedida){
+          case 1:
+              var x5 = {target:{id:'precio5'}}; this.calculaPorcentaje(x5);
+              var x4 = {target:{id:'precio4'}}; this.calculaPorcentaje(x4);
+              var x3 = {target:{id:'precio3'}}; this.calculaPorcentaje(x3);
+              var x2 = {target:{id:'precio2'}}; this.calculaPorcentaje(x2);
+              var x1 = {target:{id:'precio1'}}; this.calculaPorcentaje(x1);
+            break;
+          case 2:
+              var x5 = {target:{id:'precio5'}}; this.calculaPorcentaje(x5);
+              var x4 = {target:{id:'precio4'}}; this.calculaPorcentaje(x4);
+              var x3 = {target:{id:'precio3'}}; this.calculaPorcentaje(x3);
+              var x2 = {target:{id:'precio2'}}; this.calculaPorcentaje(x2);
+              var x1 = {target:{id:'precio1'}}; this.calculaPorcentaje(x1);
+
+              var z5 = {target:{id:'tab2precio5'}}; this.tab2calculaPorcentaje(z5);
+              var z4 = {target:{id:'tab2precio4'}}; this.tab2calculaPorcentaje(z4);
+              var z3 = {target:{id:'tab2precio3'}}; this.tab2calculaPorcentaje(z3);
+              var z2 = {target:{id:'tab2precio2'}}; this.tab2calculaPorcentaje(z2);
+              var z1 = {target:{id:'tab2precio1'}}; this.tab2calculaPorcentaje(z1);
+            break;
+          case 3:
+              var x5 = {target:{id:'precio5'}}; this.calculaPorcentaje(x5);
+              var x4 = {target:{id:'precio4'}}; this.calculaPorcentaje(x4);
+              var x3 = {target:{id:'precio3'}}; this.calculaPorcentaje(x3);
+              var x2 = {target:{id:'precio2'}}; this.calculaPorcentaje(x2);
+              var x1 = {target:{id:'precio1'}}; this.calculaPorcentaje(x1);
+
+              var z5 = {target:{id:'tab2precio5'}}; this.tab2calculaPorcentaje(z5);
+              var z4 = {target:{id:'tab2precio4'}}; this.tab2calculaPorcentaje(z4);
+              var z3 = {target:{id:'tab2precio3'}}; this.tab2calculaPorcentaje(z3);
+              var z2 = {target:{id:'tab2precio2'}}; this.tab2calculaPorcentaje(z2);
+              var z1 = {target:{id:'tab2precio1'}}; this.tab2calculaPorcentaje(z1);
+
+              var y5 = {target:{id:'tab3precio5'}}; this.tab3calculaPorcentaje(y5);
+              var y4 = {target:{id:'tab3precio4'}}; this.tab3calculaPorcentaje(y4);
+              var y3 = {target:{id:'tab3precio3'}}; this.tab3calculaPorcentaje(y3);
+              var y2 = {target:{id:'tab3precio2'}}; this.tab3calculaPorcentaje(y2);
+              var y1 = {target:{id:'tab3precio1'}}; this.tab3calculaPorcentaje(y1);
+            break;
+          case 4:
+              var x5 = {target:{id:'precio5'}}; this.calculaPorcentaje(x5);
+              var x4 = {target:{id:'precio4'}}; this.calculaPorcentaje(x4);
+              var x3 = {target:{id:'precio3'}}; this.calculaPorcentaje(x3);
+              var x2 = {target:{id:'precio2'}}; this.calculaPorcentaje(x2);
+              var x1 = {target:{id:'precio1'}}; this.calculaPorcentaje(x1);
+
+              var z5 = {target:{id:'tab2precio5'}}; this.tab2calculaPorcentaje(z5);
+              var z4 = {target:{id:'tab2precio4'}}; this.tab2calculaPorcentaje(z4);
+              var z3 = {target:{id:'tab2precio3'}}; this.tab2calculaPorcentaje(z3);
+              var z2 = {target:{id:'tab2precio2'}}; this.tab2calculaPorcentaje(z2);
+              var z1 = {target:{id:'tab2precio1'}}; this.tab2calculaPorcentaje(z1);
+
+              var y5 = {target:{id:'tab3precio5'}}; this.tab3calculaPorcentaje(y5);
+              var y4 = {target:{id:'tab3precio4'}}; this.tab3calculaPorcentaje(y4);
+              var y3 = {target:{id:'tab3precio3'}}; this.tab3calculaPorcentaje(y3);
+              var y2 = {target:{id:'tab3precio2'}}; this.tab3calculaPorcentaje(y2);
+              var y1 = {target:{id:'tab3precio1'}}; this.tab3calculaPorcentaje(y1);
+
+              var w5 = {target:{id:'tab4precio5'}}; this.tab4calculaPorcentaje(w5);
+              var w4 = {target:{id:'tab4precio4'}}; this.tab4calculaPorcentaje(w4);
+              var w3 = {target:{id:'tab4precio3'}}; this.tab4calculaPorcentaje(w3);
+              var w2 = {target:{id:'tab4precio2'}}; this.tab4calculaPorcentaje(w2);
+              var w1 = {target:{id:'tab4precio1'}}; this.tab4calculaPorcentaje(w1);
+            break;
+          case 5:
+              var x5 = {target:{id:'precio5'}}; this.calculaPorcentaje(x5);
+              var x4 = {target:{id:'precio4'}}; this.calculaPorcentaje(x4);
+              var x3 = {target:{id:'precio3'}}; this.calculaPorcentaje(x3);
+              var x2 = {target:{id:'precio2'}}; this.calculaPorcentaje(x2);
+              var x1 = {target:{id:'precio1'}}; this.calculaPorcentaje(x1);
+
+              var z5 = {target:{id:'tab2precio5'}}; this.tab2calculaPorcentaje(z5);
+              var z4 = {target:{id:'tab2precio4'}}; this.tab2calculaPorcentaje(z4);
+              var z3 = {target:{id:'tab2precio3'}}; this.tab2calculaPorcentaje(z3);
+              var z2 = {target:{id:'tab2precio2'}}; this.tab2calculaPorcentaje(z2);
+              var z1 = {target:{id:'tab2precio1'}}; this.tab2calculaPorcentaje(z1);
+
+              var y5 = {target:{id:'tab3precio5'}}; this.tab3calculaPorcentaje(y5);
+              var y4 = {target:{id:'tab3precio4'}}; this.tab3calculaPorcentaje(y4);
+              var y3 = {target:{id:'tab3precio3'}}; this.tab3calculaPorcentaje(y3);
+              var y2 = {target:{id:'tab3precio2'}}; this.tab3calculaPorcentaje(y2);
+              var y1 = {target:{id:'tab3precio1'}}; this.tab3calculaPorcentaje(y1);
+
+              var w5 = {target:{id:'tab4precio5'}}; this.tab4calculaPorcentaje(w5);
+              var w4 = {target:{id:'tab4precio4'}}; this.tab4calculaPorcentaje(w4);
+              var w3 = {target:{id:'tab4precio3'}}; this.tab4calculaPorcentaje(w3);
+              var w2 = {target:{id:'tab4precio2'}}; this.tab4calculaPorcentaje(w2);
+              var w1 = {target:{id:'tab4precio1'}}; this.tab4calculaPorcentaje(w1);
+
+              var t5 = {target:{id:'tab5precio5'}}; this.tab5calculaPorcentaje(t5);
+              var t4 = {target:{id:'tab5precio4'}}; this.tab5calculaPorcentaje(t4);
+              var t3 = {target:{id:'tab5precio3'}}; this.tab5calculaPorcentaje(t3);
+              var t2 = {target:{id:'tab5precio2'}}; this.tab5calculaPorcentaje(t2);
+              var t1 = {target:{id:'tab5precio1'}}; this.tab5calculaPorcentaje(t1);
+            break;
+        }
+      }
+    }
+    
+    /**
+     * Permite mantener los porcentajes al cambiar el precio de compra
+     * @param e Event
+     */
+    mantenerPorcentaje(e:any){
+      if(this.checkMantPorce){
+        this.checkMantPrecio = false;
+        switch(this.noMedida){
+          case 1:
+              var x5 = {target:{id:'porcentaje5'}}; this.calculaMonto(x5);
+              var x4 = {target:{id:'porcentaje4'}}; this.calculaMonto(x4);
+              var x3 = {target:{id:'porcentaje3'}}; this.calculaMonto(x3);
+              var x2 = {target:{id:'porcentaje2'}}; this.calculaMonto(x2);
+              var x1 = {target:{id:'porcentaje1'}}; this.calculaMonto(x1);
+            break;
+          case 2:
+              var x5 = {target:{id:'porcentaje5'}}; this.calculaMonto(x5);
+              var x4 = {target:{id:'porcentaje4'}}; this.calculaMonto(x4);
+              var x3 = {target:{id:'porcentaje3'}}; this.calculaMonto(x3);
+              var x2 = {target:{id:'porcentaje2'}}; this.calculaMonto(x2);
+              var x1 = {target:{id:'porcentaje1'}}; this.calculaMonto(x1);
+
+              var z5 = {target:{id:'tab2porcentaje5'}}; this.tab2calculaMonto(z5);
+              var z4 = {target:{id:'tab2porcentaje4'}}; this.tab2calculaMonto(z4);
+              var z3 = {target:{id:'tab2porcentaje3'}}; this.tab2calculaMonto(z3);
+              var z2 = {target:{id:'tab2porcentaje2'}}; this.tab2calculaMonto(z2);
+              var z1 = {target:{id:'tab2porcentaje1'}}; this.tab2calculaMonto(z1);
+            break;
+          case 3:
+              var x5 = {target:{id:'porcentaje5'}}; this.calculaMonto(x5);
+              var x4 = {target:{id:'porcentaje4'}}; this.calculaMonto(x4);
+              var x3 = {target:{id:'porcentaje3'}}; this.calculaMonto(x3);
+              var x2 = {target:{id:'porcentaje2'}}; this.calculaMonto(x2);
+              var x1 = {target:{id:'porcentaje1'}}; this.calculaMonto(x1);
+
+              var z5 = {target:{id:'tab2porcentaje5'}}; this.tab2calculaMonto(z5);
+              var z4 = {target:{id:'tab2porcentaje4'}}; this.tab2calculaMonto(z4);
+              var z3 = {target:{id:'tab2porcentaje3'}}; this.tab2calculaMonto(z3);
+              var z2 = {target:{id:'tab2porcentaje2'}}; this.tab2calculaMonto(z2);
+              var z1 = {target:{id:'tab2porcentaje1'}}; this.tab2calculaMonto(z1);
+
+              var y5 = {target:{id:'tab3porcentaje5'}}; this.tab3calculaMonto(y5);
+              var y4 = {target:{id:'tab3porcentaje4'}}; this.tab3calculaMonto(y4);
+              var y3 = {target:{id:'tab3porcentaje3'}}; this.tab3calculaMonto(y3);
+              var y2 = {target:{id:'tab3porcentaje2'}}; this.tab3calculaMonto(y2);
+              var y1 = {target:{id:'tab3porcentaje1'}}; this.tab3calculaMonto(y1);
+            break;
+          case 4:
+              var x5 = {target:{id:'porcentaje5'}}; this.calculaMonto(x5);
+              var x4 = {target:{id:'porcentaje4'}}; this.calculaMonto(x4);
+              var x3 = {target:{id:'porcentaje3'}}; this.calculaMonto(x3);
+              var x2 = {target:{id:'porcentaje2'}}; this.calculaMonto(x2);
+              var x1 = {target:{id:'porcentaje1'}}; this.calculaMonto(x1);
+
+              var z5 = {target:{id:'tab2porcentaje5'}}; this.tab2calculaMonto(z5);
+              var z4 = {target:{id:'tab2porcentaje4'}}; this.tab2calculaMonto(z4);
+              var z3 = {target:{id:'tab2porcentaje3'}}; this.tab2calculaMonto(z3);
+              var z2 = {target:{id:'tab2porcentaje2'}}; this.tab2calculaMonto(z2);
+              var z1 = {target:{id:'tab2porcentaje1'}}; this.tab2calculaMonto(z1);
+
+              var y5 = {target:{id:'tab3porcentaje5'}}; this.tab3calculaMonto(y5);
+              var y4 = {target:{id:'tab3porcentaje4'}}; this.tab3calculaMonto(y4);
+              var y3 = {target:{id:'tab3porcentaje3'}}; this.tab3calculaMonto(y3);
+              var y2 = {target:{id:'tab3porcentaje2'}}; this.tab3calculaMonto(y2);
+              var y1 = {target:{id:'tab3porcentaje1'}}; this.tab3calculaMonto(y1);
+
+              var w5 = {target:{id:'tab4porcentaje5'}}; this.tab4calculaMonto(w5);
+              var w4 = {target:{id:'tab4porcentaje4'}}; this.tab4calculaMonto(w4);
+              var w3 = {target:{id:'tab4porcentaje3'}}; this.tab4calculaMonto(w3);
+              var w2 = {target:{id:'tab4porcentaje2'}}; this.tab4calculaMonto(w2);
+              var w1 = {target:{id:'tab4porcentaje1'}}; this.tab4calculaMonto(w1);
+            break;
+          case 5:
+              var x5 = {target:{id:'porcentaje5'}}; this.calculaMonto(x5);
+              var x4 = {target:{id:'porcentaje4'}}; this.calculaMonto(x4);
+              var x3 = {target:{id:'porcentaje3'}}; this.calculaMonto(x3);
+              var x2 = {target:{id:'porcentaje2'}}; this.calculaMonto(x2);
+              var x1 = {target:{id:'porcentaje1'}}; this.calculaMonto(x1);
+
+              var z5 = {target:{id:'tab2porcentaje5'}}; this.tab2calculaMonto(z5);
+              var z4 = {target:{id:'tab2porcentaje4'}}; this.tab2calculaMonto(z4);
+              var z3 = {target:{id:'tab2porcentaje3'}}; this.tab2calculaMonto(z3);
+              var z2 = {target:{id:'tab2porcentaje2'}}; this.tab2calculaMonto(z2);
+              var z1 = {target:{id:'tab2porcentaje1'}}; this.tab2calculaMonto(z1);
+
+              var y5 = {target:{id:'tab3porcentaje5'}}; this.tab3calculaMonto(y5);
+              var y4 = {target:{id:'tab3porcentaje4'}}; this.tab3calculaMonto(y4);
+              var y3 = {target:{id:'tab3porcentaje3'}}; this.tab3calculaMonto(y3);
+              var y2 = {target:{id:'tab3porcentaje2'}}; this.tab3calculaMonto(y2);
+              var y1 = {target:{id:'tab3porcentaje1'}}; this.tab3calculaMonto(y1);
+
+              var w5 = {target:{id:'tab4porcentaje5'}}; this.tab4calculaMonto(w5);
+              var w4 = {target:{id:'tab4porcentaje4'}}; this.tab4calculaMonto(w4);
+              var w3 = {target:{id:'tab4porcentaje3'}}; this.tab4calculaMonto(w3);
+              var w2 = {target:{id:'tab4porcentaje2'}}; this.tab4calculaMonto(w2);
+              var w1 = {target:{id:'tab4porcentaje1'}}; this.tab4calculaMonto(w1);
+
+              var t5 = {target:{id:'tab5porcentaje5'}}; this.tab5calculaMonto(t5);
+              var t4 = {target:{id:'tab5porcentaje4'}}; this.tab5calculaMonto(t4);
+              var t3 = {target:{id:'tab5porcentaje3'}}; this.tab5calculaMonto(t3);
+              var t2 = {target:{id:'tab5porcentaje2'}}; this.tab5calculaMonto(t2);
+              var t1 = {target:{id:'tab5porcentaje1'}}; this.tab5calculaMonto(t1);
+            break;
+        }
+      }
+    }
+
     /**
    * Omite el salto de linea del textarea de descripcion
    * cuenta el numero de caracteres insertados
@@ -1148,7 +1368,7 @@ export class ProductoEditarComponent implements OnInit {
        * revisamos que el porcentaje no sea menor o igual a cero
        * Si es asi mandamos una alerta
        */
-      if(inputValue <= 0){
+      if(inputValue < 0){
   
         this.toastService.show('No puedes ingresar porcentajes negativos ', { classname: 'bg-danger text-light',delay: 5000 });
         switch(inputId){
@@ -1614,7 +1834,7 @@ export class ProductoEditarComponent implements OnInit {
        * revisamos que el porcentaje no sea menor o igual a cero
        * Si es asi mandamos una alerta
        */
-      if(inputValue <= 0){
+      if(inputValue < 0){
   
         this.toastService.show('No puedes ingresar porcentajes negativos ', { classname: 'bg-danger text-light',delay: 5000 });
         switch(inputId){
