@@ -221,7 +221,16 @@
         </div>
       </div>
 
-
+    </div>
+    <div class="row justify-content-center">
+      <div class="col-3">
+        <label class="form-label text-center" for="">Aumentar o disminuir precio</label>
+        <div class="input-group mb-3">
+          <button class="btn btn-outline-danger" type="button" id="button-addon1" (click)="disminuyePrecioV()"><i class="pi pi-minus"></i></button>
+          <input type="text" class="form-control" placeholder="Ingresa el monto" min="0" name="mmValue" id="mmValue" #mmvalue="ngModel" [(ngModel)]="mmValue">
+          <button class="btn btn-outline-success" type="button" id="button-addon2" (click)="aumentaPrecioV()"><i class="pi pi-plus"></i></button>
+        </div>
+      </div>
     </div>
 
     <!-- TABLAS DE PRECIOS -->
