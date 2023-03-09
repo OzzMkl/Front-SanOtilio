@@ -54,6 +54,7 @@ export class ProductoEditarComponent implements OnInit {
   public closeResult: string = '';
   //Para mostrar y ocultar las tablas de precios
   public noMedida: number = 1;
+  public selectNoMedida: number = 1;
   public tab2: boolean = true;
   public tab3: boolean = true;
   public tab4: boolean = true;
@@ -66,10 +67,14 @@ export class ProductoEditarComponent implements OnInit {
   public datosTab4: Productos_medidas;
   public datosTab5: Productos_medidas;
   //checks de  las tablas para la igualacion de porcentajes
+  public checkMuestraPrecios: boolean = false;
   public checkTab2: boolean = false;
   public checkTab3: boolean = false;
   public checkTab4: boolean = false;
   public checkTab5: boolean = false;
+  public checkMantPrecio: boolean = false;
+  public checkMantPorce: boolean = false;
+  public mmValue: number = 0;
 
   constructor(
     private _productoService: ProductoService,
@@ -85,11 +90,11 @@ export class ProductoEditarComponent implements OnInit {
     private _route: ActivatedRoute,
   ){
     this.producto = new Producto(0,0,0,0,'',0,'',0,0,'',0,'','',null,0,0);
-    this.datosTab1 = new Productos_medidas(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
-    this.datosTab2 = new Productos_medidas(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
-    this.datosTab3 = new Productos_medidas(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
-    this.datosTab4 = new Productos_medidas(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
-    this.datosTab5 = new Productos_medidas(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
+    this.datosTab1 = new Productos_medidas(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
+    this.datosTab2 = new Productos_medidas(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
+    this.datosTab3 = new Productos_medidas(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
+    this.datosTab4 = new Productos_medidas(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
+    this.datosTab5 = new Productos_medidas(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
    }
 
   ngOnInit(): void {
@@ -105,6 +110,8 @@ export class ProductoEditarComponent implements OnInit {
    * Busca el producto, con el id recibido en la url
    */
   getIdProduct(){
+    //mostramos el spinner
+    this.isLoading = true;
     //Obtener el id del producto a modificar de la URL
     this._route.params.subscribe(params => {
      let id = + params['idProducto'];
@@ -134,62 +141,334 @@ export class ProductoEditarComponent implements OnInit {
          this.producto.idAlmacen = response.producto[0]['idAlmacen'];
          this.producto.existenciaG = response.producto[0]['existenciaG'];
          //para asi asignar el valor del codigo de barras a la variable value
-         //esto con la finalidad de poder mostrar el contenido
+         //esto con la finalidad de poder mostrar el codigo de barras
          this.muestraCbarras = this.producto.cbarras;
 
          this.listaProdMedida = response.productos_medidas;
-         console.log(this.listaProdMedida);
-         switch(this.listaProdMedida.length){
-          case 1:
-            //this.datosTab1.idProdMedida = this.listaProdMedida[0][''];
-            break;
-          case 2:break;
-          case 3:break;
-          case 4:break;
-          case 5:break;
-          defaul:
-            console.log('no valido');
-           break;
+         //console.log(this.listaProdMedida)
+         this.noMedida = this.listaProdMedida.length;
+         this.seleccionanoMedidas(this.noMedida.toString());
+
+         //recorremos array de acuerdo a la longitud  de listaProdMedida
+         for(let i= 0; i < this.listaProdMedida.length; i++){
+          //Vamos asignando valores de acuerdo a la vuelta que le damos al array
+          if(i=== 0){
+            this.datosTab1.idProdMedida = this.listaProdMedida[i]['idProdMedida'];
+            this.datosTab1.idProducto = this.listaProdMedida[i]['idProducto'];
+            this.datosTab1.idMedida = this.listaProdMedida[i]['idMedida'];
+            this.datosTab1.unidad = this.listaProdMedida[i]['unidad'];
+            this.datosTab1.preciocompra = this.listaProdMedida[i]['preciocompra'];
+            this.datosTab1.porcentaje1 = this.listaProdMedida[i]['porcentaje1'];
+            this.datosTab1.precio1 = this.listaProdMedida[i]['precio1'];
+            this.datosTab1.porcentaje2 = this.listaProdMedida[i]['porcentaje2'];
+            this.datosTab1.precio2 = this.listaProdMedida[i]['precio2'];
+            this.datosTab1.porcentaje3 = this.listaProdMedida[i]['porcentaje3'];
+            this.datosTab1.precio3 = this.listaProdMedida[i]['precio3'];
+            this.datosTab1.porcentaje4 = this.listaProdMedida[i]['porcentaje4'];
+            this.datosTab1.precio4 = this.listaProdMedida[i]['precio4'];
+            this.datosTab1.porcentaje5 = this.listaProdMedida[i]['porcentaje5'];
+            this.datosTab1.precio5 = this.listaProdMedida[i]['precio5'];
+            this.datosTab1.idStatus = this.listaProdMedida[i]['idStatus'];
+
+          } else if(i=== 1){
+            this.datosTab2.idProdMedida = this.listaProdMedida[i]['idProdMedida'];
+            this.datosTab2.idProducto = this.listaProdMedida[i]['idProducto'];
+            this.datosTab2.idMedida = this.listaProdMedida[i]['idMedida'];
+            this.datosTab2.unidad = this.listaProdMedida[i]['unidad'];
+            this.datosTab2.preciocompra = this.listaProdMedida[i]['preciocompra'];
+            this.datosTab2.porcentaje1 = this.listaProdMedida[i]['porcentaje1'];
+            this.datosTab2.precio1 = this.listaProdMedida[i]['precio1'];
+            this.datosTab2.porcentaje2 = this.listaProdMedida[i]['porcentaje2'];
+            this.datosTab2.precio2 = this.listaProdMedida[i]['precio2'];
+            this.datosTab2.porcentaje3 = this.listaProdMedida[i]['porcentaje3'];
+            this.datosTab2.precio3 = this.listaProdMedida[i]['precio3'];
+            this.datosTab2.porcentaje4 = this.listaProdMedida[i]['porcentaje4'];
+            this.datosTab2.precio4 = this.listaProdMedida[i]['precio4'];
+            this.datosTab2.porcentaje5 = this.listaProdMedida[i]['porcentaje5'];
+            this.datosTab2.precio5 = this.listaProdMedida[i]['precio5'];
+            this.datosTab2.idStatus = this.listaProdMedida[i]['idStatus'];
+          } else if(i=== 2){
+            this.datosTab3.idProdMedida = this.listaProdMedida[i]['idProdMedida'];
+            this.datosTab3.idProducto = this.listaProdMedida[i]['idProducto'];
+            this.datosTab3.idMedida = this.listaProdMedida[i]['idMedida'];
+            this.datosTab3.unidad = this.listaProdMedida[i]['unidad'];
+            this.datosTab3.preciocompra = this.listaProdMedida[i]['preciocompra'];
+            this.datosTab3.porcentaje1 = this.listaProdMedida[i]['porcentaje1'];
+            this.datosTab3.precio1 = this.listaProdMedida[i]['precio1'];
+            this.datosTab3.porcentaje2 = this.listaProdMedida[i]['porcentaje2'];
+            this.datosTab3.precio2 = this.listaProdMedida[i]['precio2'];
+            this.datosTab3.porcentaje3 = this.listaProdMedida[i]['porcentaje3'];
+            this.datosTab3.precio3 = this.listaProdMedida[i]['precio3'];
+            this.datosTab3.porcentaje4 = this.listaProdMedida[i]['porcentaje4'];
+            this.datosTab3.precio4 = this.listaProdMedida[i]['precio4'];
+            this.datosTab3.porcentaje5 = this.listaProdMedida[i]['porcentaje5'];
+            this.datosTab3.precio5 = this.listaProdMedida[i]['precio5'];
+            this.datosTab3.idStatus = this.listaProdMedida[i]['idStatus'];
+          } else if(i=== 3){
+            this.datosTab4.idProdMedida = this.listaProdMedida[i]['idProdMedida'];
+            this.datosTab4.idProducto = this.listaProdMedida[i]['idProducto'];
+            this.datosTab4.idMedida = this.listaProdMedida[i]['idMedida'];
+            this.datosTab4.unidad = this.listaProdMedida[i]['unidad'];
+            this.datosTab4.preciocompra = this.listaProdMedida[i]['preciocompra'];
+            this.datosTab4.porcentaje1 = this.listaProdMedida[i]['porcentaje1'];
+            this.datosTab4.precio1 = this.listaProdMedida[i]['precio1'];
+            this.datosTab4.porcentaje2 = this.listaProdMedida[i]['porcentaje2'];
+            this.datosTab4.precio2 = this.listaProdMedida[i]['precio2'];
+            this.datosTab4.porcentaje3 = this.listaProdMedida[i]['porcentaje3'];
+            this.datosTab4.precio3 = this.listaProdMedida[i]['precio3'];
+            this.datosTab4.porcentaje4 = this.listaProdMedida[i]['porcentaje4'];
+            this.datosTab4.precio4 = this.listaProdMedida[i]['precio4'];
+            this.datosTab4.porcentaje5 = this.listaProdMedida[i]['porcentaje5'];
+            this.datosTab4.precio5 = this.listaProdMedida[i]['precio5'];
+            this.datosTab4.idStatus = this.listaProdMedida[i]['idStatus'];
+          }else if(i=== 4){ 
+            this.datosTab5.idProdMedida = this.listaProdMedida[i]['idProdMedida'];
+            this.datosTab5.idProducto = this.listaProdMedida[i]['idProducto'];
+            this.datosTab5.idMedida = this.listaProdMedida[i]['idMedida'];
+            this.datosTab5.unidad = this.listaProdMedida[i]['unidad'];
+            this.datosTab5.preciocompra = this.listaProdMedida[i]['preciocompra'];
+            this.datosTab5.porcentaje1 = this.listaProdMedida[i]['porcentaje1'];
+            this.datosTab5.precio1 = this.listaProdMedida[i]['precio1'];
+            this.datosTab5.porcentaje2 = this.listaProdMedida[i]['porcentaje2'];
+            this.datosTab5.precio2 = this.listaProdMedida[i]['precio2'];
+            this.datosTab5.porcentaje3 = this.listaProdMedida[i]['porcentaje3'];
+            this.datosTab5.precio3 = this.listaProdMedida[i]['precio3'];
+            this.datosTab5.porcentaje4 = this.listaProdMedida[i]['porcentaje4'];
+            this.datosTab5.precio4 = this.listaProdMedida[i]['precio4'];
+            this.datosTab5.porcentaje5 = this.listaProdMedida[i]['porcentaje5'];
+            this.datosTab5.precio5 = this.listaProdMedida[i]['precio5'];
+            this.datosTab5.idStatus = this.listaProdMedida[i]['idStatus'];
+          }
          }
-       }
-     },
+         //una vez terminado de cargar quitamos el spinner
+          this.isLoading = false;
+       }//fin if
+     },//fin response
      error =>{
        console.log(error);
      }
-   );
+   );//finsubscribe getProdverdos
 
- });
+  });//finsubscribe params
   }
-
-  //Envio de datos del formulario para la actualizacion del producto
-  // onSubmit(form:any){
-  //   //obtenemos primero el id del prodycto a modificar y dentro de el
-  //   this._route.params.subscribe(params => {
-  //     let id = + params['idProducto'];
-
-  // //ejecutamos el servicio de actualizacion del producto mando el objeto con los datos junto con el id obteniedo en el paso anterior
-  //   this._productoService.updateProducto(this.productoModificado, id).subscribe(
-  //     response =>{
-  //       //console.log(response);
-  //       //lo mandamos al modulo buscar
-  //       this._router.navigate(['./producto-modulo/producto-buscar']);
-  //       //mostramos mensaje de que la modificacion salio correctamente
-  //       this.toastService.show('Producto '+this.productoModificado.claveEx+' modificado correctamente', { classname: 'bg-success text-light', delay: 5000 }); 
-      
-  //     },
-  //     error =>{
-  //     // console.log(this.productoModificado);//muestra lo que se mando
-  //       console.log(<any>error);//muestra el error
-  //       this.toastService.show('Ups... Algo salio mal', { classname: 'bg-danger text-light', delay: 15000 });//mensaje de que salio mal la operacion
-      
-  //     }
-  //   )
-  // });
-  // }
-
-
-
   /********************************************************************************************************************************* */
+
+    /**
+     * Permite mantener los precios establecidos al cambiar el precio de compra
+     * Si el precio compra es mayor a un precio de cualquier medida este lo pone al precio de compra
+     * 
+     * @param e Event
+     */
+    mantenerPrecios(e:any){
+      if(this.checkMantPrecio){
+        this.checkMantPorce = false;
+        switch(this.noMedida){
+          case 1:
+              var x5 = {target:{id:'precio5'}}; this.calculaPorcentaje(x5);
+              var x4 = {target:{id:'precio4'}}; this.calculaPorcentaje(x4);
+              var x3 = {target:{id:'precio3'}}; this.calculaPorcentaje(x3);
+              var x2 = {target:{id:'precio2'}}; this.calculaPorcentaje(x2);
+              var x1 = {target:{id:'precio1'}}; this.calculaPorcentaje(x1);
+            break;
+          case 2:
+              var x5 = {target:{id:'precio5'}}; this.calculaPorcentaje(x5);
+              var x4 = {target:{id:'precio4'}}; this.calculaPorcentaje(x4);
+              var x3 = {target:{id:'precio3'}}; this.calculaPorcentaje(x3);
+              var x2 = {target:{id:'precio2'}}; this.calculaPorcentaje(x2);
+              var x1 = {target:{id:'precio1'}}; this.calculaPorcentaje(x1);
+
+              var z5 = {target:{id:'tab2precio5'}}; this.tab2calculaPorcentaje(z5);
+              var z4 = {target:{id:'tab2precio4'}}; this.tab2calculaPorcentaje(z4);
+              var z3 = {target:{id:'tab2precio3'}}; this.tab2calculaPorcentaje(z3);
+              var z2 = {target:{id:'tab2precio2'}}; this.tab2calculaPorcentaje(z2);
+              var z1 = {target:{id:'tab2precio1'}}; this.tab2calculaPorcentaje(z1);
+            break;
+          case 3:
+              var x5 = {target:{id:'precio5'}}; this.calculaPorcentaje(x5);
+              var x4 = {target:{id:'precio4'}}; this.calculaPorcentaje(x4);
+              var x3 = {target:{id:'precio3'}}; this.calculaPorcentaje(x3);
+              var x2 = {target:{id:'precio2'}}; this.calculaPorcentaje(x2);
+              var x1 = {target:{id:'precio1'}}; this.calculaPorcentaje(x1);
+
+              var z5 = {target:{id:'tab2precio5'}}; this.tab2calculaPorcentaje(z5);
+              var z4 = {target:{id:'tab2precio4'}}; this.tab2calculaPorcentaje(z4);
+              var z3 = {target:{id:'tab2precio3'}}; this.tab2calculaPorcentaje(z3);
+              var z2 = {target:{id:'tab2precio2'}}; this.tab2calculaPorcentaje(z2);
+              var z1 = {target:{id:'tab2precio1'}}; this.tab2calculaPorcentaje(z1);
+
+              var y5 = {target:{id:'tab3precio5'}}; this.tab3calculaPorcentaje(y5);
+              var y4 = {target:{id:'tab3precio4'}}; this.tab3calculaPorcentaje(y4);
+              var y3 = {target:{id:'tab3precio3'}}; this.tab3calculaPorcentaje(y3);
+              var y2 = {target:{id:'tab3precio2'}}; this.tab3calculaPorcentaje(y2);
+              var y1 = {target:{id:'tab3precio1'}}; this.tab3calculaPorcentaje(y1);
+            break;
+          case 4:
+              var x5 = {target:{id:'precio5'}}; this.calculaPorcentaje(x5);
+              var x4 = {target:{id:'precio4'}}; this.calculaPorcentaje(x4);
+              var x3 = {target:{id:'precio3'}}; this.calculaPorcentaje(x3);
+              var x2 = {target:{id:'precio2'}}; this.calculaPorcentaje(x2);
+              var x1 = {target:{id:'precio1'}}; this.calculaPorcentaje(x1);
+
+              var z5 = {target:{id:'tab2precio5'}}; this.tab2calculaPorcentaje(z5);
+              var z4 = {target:{id:'tab2precio4'}}; this.tab2calculaPorcentaje(z4);
+              var z3 = {target:{id:'tab2precio3'}}; this.tab2calculaPorcentaje(z3);
+              var z2 = {target:{id:'tab2precio2'}}; this.tab2calculaPorcentaje(z2);
+              var z1 = {target:{id:'tab2precio1'}}; this.tab2calculaPorcentaje(z1);
+
+              var y5 = {target:{id:'tab3precio5'}}; this.tab3calculaPorcentaje(y5);
+              var y4 = {target:{id:'tab3precio4'}}; this.tab3calculaPorcentaje(y4);
+              var y3 = {target:{id:'tab3precio3'}}; this.tab3calculaPorcentaje(y3);
+              var y2 = {target:{id:'tab3precio2'}}; this.tab3calculaPorcentaje(y2);
+              var y1 = {target:{id:'tab3precio1'}}; this.tab3calculaPorcentaje(y1);
+
+              var w5 = {target:{id:'tab4precio5'}}; this.tab4calculaPorcentaje(w5);
+              var w4 = {target:{id:'tab4precio4'}}; this.tab4calculaPorcentaje(w4);
+              var w3 = {target:{id:'tab4precio3'}}; this.tab4calculaPorcentaje(w3);
+              var w2 = {target:{id:'tab4precio2'}}; this.tab4calculaPorcentaje(w2);
+              var w1 = {target:{id:'tab4precio1'}}; this.tab4calculaPorcentaje(w1);
+            break;
+          case 5:
+              var x5 = {target:{id:'precio5'}}; this.calculaPorcentaje(x5);
+              var x4 = {target:{id:'precio4'}}; this.calculaPorcentaje(x4);
+              var x3 = {target:{id:'precio3'}}; this.calculaPorcentaje(x3);
+              var x2 = {target:{id:'precio2'}}; this.calculaPorcentaje(x2);
+              var x1 = {target:{id:'precio1'}}; this.calculaPorcentaje(x1);
+
+              var z5 = {target:{id:'tab2precio5'}}; this.tab2calculaPorcentaje(z5);
+              var z4 = {target:{id:'tab2precio4'}}; this.tab2calculaPorcentaje(z4);
+              var z3 = {target:{id:'tab2precio3'}}; this.tab2calculaPorcentaje(z3);
+              var z2 = {target:{id:'tab2precio2'}}; this.tab2calculaPorcentaje(z2);
+              var z1 = {target:{id:'tab2precio1'}}; this.tab2calculaPorcentaje(z1);
+
+              var y5 = {target:{id:'tab3precio5'}}; this.tab3calculaPorcentaje(y5);
+              var y4 = {target:{id:'tab3precio4'}}; this.tab3calculaPorcentaje(y4);
+              var y3 = {target:{id:'tab3precio3'}}; this.tab3calculaPorcentaje(y3);
+              var y2 = {target:{id:'tab3precio2'}}; this.tab3calculaPorcentaje(y2);
+              var y1 = {target:{id:'tab3precio1'}}; this.tab3calculaPorcentaje(y1);
+
+              var w5 = {target:{id:'tab4precio5'}}; this.tab4calculaPorcentaje(w5);
+              var w4 = {target:{id:'tab4precio4'}}; this.tab4calculaPorcentaje(w4);
+              var w3 = {target:{id:'tab4precio3'}}; this.tab4calculaPorcentaje(w3);
+              var w2 = {target:{id:'tab4precio2'}}; this.tab4calculaPorcentaje(w2);
+              var w1 = {target:{id:'tab4precio1'}}; this.tab4calculaPorcentaje(w1);
+
+              var t5 = {target:{id:'tab5precio5'}}; this.tab5calculaPorcentaje(t5);
+              var t4 = {target:{id:'tab5precio4'}}; this.tab5calculaPorcentaje(t4);
+              var t3 = {target:{id:'tab5precio3'}}; this.tab5calculaPorcentaje(t3);
+              var t2 = {target:{id:'tab5precio2'}}; this.tab5calculaPorcentaje(t2);
+              var t1 = {target:{id:'tab5precio1'}}; this.tab5calculaPorcentaje(t1);
+            break;
+        }
+      }
+    }
+    
+    /**
+     * Permite mantener los porcentajes al cambiar el precio de compra
+     * @param e Event
+     */
+    mantenerPorcentaje(e:any){
+      if(this.checkMantPorce){
+        this.checkMantPrecio = false;
+        switch(this.noMedida){
+          case 1:
+              var x5 = {target:{id:'porcentaje5'}}; this.calculaMonto(x5);
+              var x4 = {target:{id:'porcentaje4'}}; this.calculaMonto(x4);
+              var x3 = {target:{id:'porcentaje3'}}; this.calculaMonto(x3);
+              var x2 = {target:{id:'porcentaje2'}}; this.calculaMonto(x2);
+              var x1 = {target:{id:'porcentaje1'}}; this.calculaMonto(x1);
+            break;
+          case 2:
+              var x5 = {target:{id:'porcentaje5'}}; this.calculaMonto(x5);
+              var x4 = {target:{id:'porcentaje4'}}; this.calculaMonto(x4);
+              var x3 = {target:{id:'porcentaje3'}}; this.calculaMonto(x3);
+              var x2 = {target:{id:'porcentaje2'}}; this.calculaMonto(x2);
+              var x1 = {target:{id:'porcentaje1'}}; this.calculaMonto(x1);
+
+              var z5 = {target:{id:'tab2porcentaje5'}}; this.tab2calculaMonto(z5);
+              var z4 = {target:{id:'tab2porcentaje4'}}; this.tab2calculaMonto(z4);
+              var z3 = {target:{id:'tab2porcentaje3'}}; this.tab2calculaMonto(z3);
+              var z2 = {target:{id:'tab2porcentaje2'}}; this.tab2calculaMonto(z2);
+              var z1 = {target:{id:'tab2porcentaje1'}}; this.tab2calculaMonto(z1);
+            break;
+          case 3:
+              var x5 = {target:{id:'porcentaje5'}}; this.calculaMonto(x5);
+              var x4 = {target:{id:'porcentaje4'}}; this.calculaMonto(x4);
+              var x3 = {target:{id:'porcentaje3'}}; this.calculaMonto(x3);
+              var x2 = {target:{id:'porcentaje2'}}; this.calculaMonto(x2);
+              var x1 = {target:{id:'porcentaje1'}}; this.calculaMonto(x1);
+
+              var z5 = {target:{id:'tab2porcentaje5'}}; this.tab2calculaMonto(z5);
+              var z4 = {target:{id:'tab2porcentaje4'}}; this.tab2calculaMonto(z4);
+              var z3 = {target:{id:'tab2porcentaje3'}}; this.tab2calculaMonto(z3);
+              var z2 = {target:{id:'tab2porcentaje2'}}; this.tab2calculaMonto(z2);
+              var z1 = {target:{id:'tab2porcentaje1'}}; this.tab2calculaMonto(z1);
+
+              var y5 = {target:{id:'tab3porcentaje5'}}; this.tab3calculaMonto(y5);
+              var y4 = {target:{id:'tab3porcentaje4'}}; this.tab3calculaMonto(y4);
+              var y3 = {target:{id:'tab3porcentaje3'}}; this.tab3calculaMonto(y3);
+              var y2 = {target:{id:'tab3porcentaje2'}}; this.tab3calculaMonto(y2);
+              var y1 = {target:{id:'tab3porcentaje1'}}; this.tab3calculaMonto(y1);
+            break;
+          case 4:
+              var x5 = {target:{id:'porcentaje5'}}; this.calculaMonto(x5);
+              var x4 = {target:{id:'porcentaje4'}}; this.calculaMonto(x4);
+              var x3 = {target:{id:'porcentaje3'}}; this.calculaMonto(x3);
+              var x2 = {target:{id:'porcentaje2'}}; this.calculaMonto(x2);
+              var x1 = {target:{id:'porcentaje1'}}; this.calculaMonto(x1);
+
+              var z5 = {target:{id:'tab2porcentaje5'}}; this.tab2calculaMonto(z5);
+              var z4 = {target:{id:'tab2porcentaje4'}}; this.tab2calculaMonto(z4);
+              var z3 = {target:{id:'tab2porcentaje3'}}; this.tab2calculaMonto(z3);
+              var z2 = {target:{id:'tab2porcentaje2'}}; this.tab2calculaMonto(z2);
+              var z1 = {target:{id:'tab2porcentaje1'}}; this.tab2calculaMonto(z1);
+
+              var y5 = {target:{id:'tab3porcentaje5'}}; this.tab3calculaMonto(y5);
+              var y4 = {target:{id:'tab3porcentaje4'}}; this.tab3calculaMonto(y4);
+              var y3 = {target:{id:'tab3porcentaje3'}}; this.tab3calculaMonto(y3);
+              var y2 = {target:{id:'tab3porcentaje2'}}; this.tab3calculaMonto(y2);
+              var y1 = {target:{id:'tab3porcentaje1'}}; this.tab3calculaMonto(y1);
+
+              var w5 = {target:{id:'tab4porcentaje5'}}; this.tab4calculaMonto(w5);
+              var w4 = {target:{id:'tab4porcentaje4'}}; this.tab4calculaMonto(w4);
+              var w3 = {target:{id:'tab4porcentaje3'}}; this.tab4calculaMonto(w3);
+              var w2 = {target:{id:'tab4porcentaje2'}}; this.tab4calculaMonto(w2);
+              var w1 = {target:{id:'tab4porcentaje1'}}; this.tab4calculaMonto(w1);
+            break;
+          case 5:
+              var x5 = {target:{id:'porcentaje5'}}; this.calculaMonto(x5);
+              var x4 = {target:{id:'porcentaje4'}}; this.calculaMonto(x4);
+              var x3 = {target:{id:'porcentaje3'}}; this.calculaMonto(x3);
+              var x2 = {target:{id:'porcentaje2'}}; this.calculaMonto(x2);
+              var x1 = {target:{id:'porcentaje1'}}; this.calculaMonto(x1);
+
+              var z5 = {target:{id:'tab2porcentaje5'}}; this.tab2calculaMonto(z5);
+              var z4 = {target:{id:'tab2porcentaje4'}}; this.tab2calculaMonto(z4);
+              var z3 = {target:{id:'tab2porcentaje3'}}; this.tab2calculaMonto(z3);
+              var z2 = {target:{id:'tab2porcentaje2'}}; this.tab2calculaMonto(z2);
+              var z1 = {target:{id:'tab2porcentaje1'}}; this.tab2calculaMonto(z1);
+
+              var y5 = {target:{id:'tab3porcentaje5'}}; this.tab3calculaMonto(y5);
+              var y4 = {target:{id:'tab3porcentaje4'}}; this.tab3calculaMonto(y4);
+              var y3 = {target:{id:'tab3porcentaje3'}}; this.tab3calculaMonto(y3);
+              var y2 = {target:{id:'tab3porcentaje2'}}; this.tab3calculaMonto(y2);
+              var y1 = {target:{id:'tab3porcentaje1'}}; this.tab3calculaMonto(y1);
+
+              var w5 = {target:{id:'tab4porcentaje5'}}; this.tab4calculaMonto(w5);
+              var w4 = {target:{id:'tab4porcentaje4'}}; this.tab4calculaMonto(w4);
+              var w3 = {target:{id:'tab4porcentaje3'}}; this.tab4calculaMonto(w3);
+              var w2 = {target:{id:'tab4porcentaje2'}}; this.tab4calculaMonto(w2);
+              var w1 = {target:{id:'tab4porcentaje1'}}; this.tab4calculaMonto(w1);
+
+              var t5 = {target:{id:'tab5porcentaje5'}}; this.tab5calculaMonto(t5);
+              var t4 = {target:{id:'tab5porcentaje4'}}; this.tab5calculaMonto(t4);
+              var t3 = {target:{id:'tab5porcentaje3'}}; this.tab5calculaMonto(t3);
+              var t2 = {target:{id:'tab5porcentaje2'}}; this.tab5calculaMonto(t2);
+              var t1 = {target:{id:'tab5porcentaje1'}}; this.tab5calculaMonto(t1);
+            break;
+        }
+      }
+    }
+
     /**
    * Omite el salto de linea del textarea de descripcion
    * cuenta el numero de caracteres insertados
@@ -225,21 +504,37 @@ export class ProductoEditarComponent implements OnInit {
     submit(form:any){
       this.loadUser();
       this.insertaListaProdM();
-  //    console.log(this.producto, this.listaProdMedida)
-        this._productoService.registerProducto(this.producto,this.listaProdMedida,this.identity).subscribe(
+      //console.log(this.producto, this.listaProdMedida)
+
+      //Revisamo si quieren actualizar precios
+      if(this.checkMuestraPrecios){
+        this._productoService.updateProducto(this.producto,this.listaProdMedida,this.identity).subscribe(
           response =>{
             //console.log('asdasdasd :',response);
             if(response.status == 'success'){
-              
-              this._router.navigate(['./producto-modulo/producto-buscar']);
-              this.toastService.show('Producto guardado correctamente', { classname: 'bg-success text-light', delay: 5000 });
-            }
+
+               this._router.navigate(['./producto-modulo/producto-buscar']);
+               this.toastService.show('Producto '+this.producto.claveEx+' actualizado correctamente', { classname: 'bg-success text-light', delay: 5000 });
+             }
           },
           error =>{
             //console.log(this.producto);
-            //console.log('error ',error);
+            console.log('error ',error);
             this.toastService.show(error, { classname: 'bg-danger text-light', delay: 15000 });
           });
+      } //si no solo se guarda la informacion del producto
+        else{
+          this._productoService.putProducto(this.producto,this.identity).subscribe(
+            response =>{
+              if(response.status == 'success'){
+                this._router.navigate(['./producto-modulo/producto-buscar']);
+                this.toastService.show('Producto '+this.producto.claveEx+' actualizado correctamente', { classname: 'bg-success text-light', delay: 5000 });
+              }
+            }, error =>{
+              console.log(error)
+              this.toastService.show(error.message, { classname: 'bg-danger text-light', delay: 15000 });
+            });
+        }
     }
   
     /**
@@ -258,10 +553,9 @@ export class ProductoEditarComponent implements OnInit {
      * recibimos el numero de medidas a ingresar
      * y mostramos y ocultamos las tablas
      */
-    seleccionaNoMedidas(model:any){
+    seleccionanoMedidas(e:any){
       
-      let no = model;
-      switch( no ){
+      switch( e ){
         case "1":
             this.tab2 = true;
             this.tab3 = true;
@@ -303,6 +597,7 @@ export class ProductoEditarComponent implements OnInit {
           break;
       }
     }
+
     /***
      * ingresa a la lista de Productos_medidas
      * el numero de medidas que se seleccionaron
@@ -314,30 +609,329 @@ export class ProductoEditarComponent implements OnInit {
       //guardaremos las tablas de medidas en la lista
       switch(this.noMedida){
         case 1:
+              this.datosTab1.idStatus = 31;
               this.listaProdMedida.push({...this.datosTab1});
             break;
         case 2:
+              this.datosTab1.idStatus = 31;
+              this.datosTab2.idStatus = 31;
               this.listaProdMedida.push({...this.datosTab1},
                                         {...this.datosTab2});
             break;
         case 3:
+              this.datosTab1.idStatus = 31;
+              this.datosTab2.idStatus = 31;
+              this.datosTab3.idStatus = 31;
               this.listaProdMedida.push({...this.datosTab1},
                                         {...this.datosTab2},
                                         {...this.datosTab3});
             break;
         case 4:
+              this.datosTab1.idStatus = 31;
+              this.datosTab2.idStatus = 31;
+              this.datosTab3.idStatus = 31;
+              this.datosTab4.idStatus = 31;
               this.listaProdMedida.push({...this.datosTab1},
                                         {...this.datosTab2},
                                         {...this.datosTab3},
                                         {...this.datosTab4}); 
             break;
         case 5:
+              this.datosTab1.idStatus = 31;
+              this.datosTab2.idStatus = 31;
+              this.datosTab3.idStatus = 31;
+              this.datosTab4.idStatus = 31;
+              this.datosTab5.idStatus = 31;
               this.listaProdMedida.push({...this.datosTab1},
                                         {...this.datosTab2},
                                         {...this.datosTab3},
                                         {...this.datosTab4},
                                         {...this.datosTab5}); 
             break;
+      }
+    }
+
+    /**
+     * Permite aumentar el precio de venta directamente a todas las medidas
+     * y a todos los precios
+     */
+    aumentaPrecioV(){
+      var inputValue  = parseFloat((<HTMLInputElement>document.getElementById('mmValue')).value);
+      var suma2 =0;
+      var suma3 =0;
+      var suma4 =0;
+      var suma5 =0;
+      if(inputValue > 0){
+        switch(this.noMedida){
+          case 1:
+             this.datosTab1.precio5= this.datosTab1.precio5 + inputValue; var x5 = {target:{id:'precio5'}}; this.calculaPorcentaje(x5);
+             this.datosTab1.precio4= this.datosTab1.precio4 + inputValue; var x4 = {target:{id:'precio4'}}; this.calculaPorcentaje(x4);
+             this.datosTab1.precio3= this.datosTab1.precio3 + inputValue; var x3 = {target:{id:'precio3'}}; this.calculaPorcentaje(x3);
+             this.datosTab1.precio2= this.datosTab1.precio2 + inputValue; var x2 = {target:{id:'precio2'}}; this.calculaPorcentaje(x2);
+             this.datosTab1.precio1= this.datosTab1.precio1 + inputValue; var x1 = {target:{id:'precio1'}}; this.calculaPorcentaje(x1);
+            break;
+          case 2:
+              
+              suma2 = inputValue/ (this.datosTab1.unidad * this.datosTab2.unidad);
+              suma2 = Math.round((suma2 + Number.EPSILON) * 100 ) / 100 ;
+
+              this.datosTab1.precio5= this.datosTab1.precio5 + inputValue; var x5 = {target:{id:'precio5'}}; this.calculaPorcentaje(x5);
+              this.datosTab1.precio4= this.datosTab1.precio4 + inputValue; var x4 = {target:{id:'precio4'}}; this.calculaPorcentaje(x4);
+              this.datosTab1.precio3= this.datosTab1.precio3 + inputValue; var x3 = {target:{id:'precio3'}}; this.calculaPorcentaje(x3);
+              this.datosTab1.precio2= this.datosTab1.precio2 + inputValue; var x2 = {target:{id:'precio2'}}; this.calculaPorcentaje(x2);
+              this.datosTab1.precio1= this.datosTab1.precio1 + inputValue; var x1 = {target:{id:'precio1'}}; this.calculaPorcentaje(x1);
+
+              this.datosTab2.precio5= Math.round((this.datosTab2.precio5 + suma2 + Number.EPSILON)* 100)/100; var z5 = {target:{id:'tab2precio5'}}; this.tab2calculaPorcentaje(z5);
+              this.datosTab2.precio4= Math.round((this.datosTab2.precio4 + suma2 + Number.EPSILON)* 100)/100; var z4 = {target:{id:'tab2precio4'}}; this.tab2calculaPorcentaje(z4);
+              this.datosTab2.precio3= Math.round((this.datosTab2.precio3 + suma2 + Number.EPSILON)* 100)/100; var z3 = {target:{id:'tab2precio3'}}; this.tab2calculaPorcentaje(z3);
+              this.datosTab2.precio2= Math.round((this.datosTab2.precio2 + suma2 + Number.EPSILON)* 100)/100; var z2 = {target:{id:'tab2precio2'}}; this.tab2calculaPorcentaje(z2);
+              this.datosTab2.precio1= Math.round((this.datosTab2.precio1 + suma2 + Number.EPSILON)* 100)/100; var z1 = {target:{id:'tab2precio1'}}; this.tab2calculaPorcentaje(z1);
+            break;
+          case 3:
+              suma2 = inputValue/ (this.datosTab1.unidad * this.datosTab2.unidad);
+              suma2 = Math.round((suma2 + Number.EPSILON) * 100 ) / 100 ;
+
+              suma3 = inputValue/ (this.datosTab1.unidad * this.datosTab2.unidad * this.datosTab3.unidad);  
+              suma3 = Math.round((suma3 + Number.EPSILON) * 100 ) / 100 ;
+
+              this.datosTab1.precio5= this.datosTab1.precio5 + inputValue; var x5 = {target:{id:'precio5'}}; this.calculaPorcentaje(x5);
+              this.datosTab1.precio4= this.datosTab1.precio4 + inputValue; var x4 = {target:{id:'precio4'}}; this.calculaPorcentaje(x4);
+              this.datosTab1.precio3= this.datosTab1.precio3 + inputValue; var x3 = {target:{id:'precio3'}}; this.calculaPorcentaje(x3);
+              this.datosTab1.precio2= this.datosTab1.precio2 + inputValue; var x2 = {target:{id:'precio2'}}; this.calculaPorcentaje(x2);
+              this.datosTab1.precio1= this.datosTab1.precio1 + inputValue; var x1 = {target:{id:'precio1'}}; this.calculaPorcentaje(x1);
+
+              this.datosTab2.precio5= Math.round((this.datosTab2.precio5 + suma2 + Number.EPSILON)* 100)/100; var z5 = {target:{id:'tab2precio5'}}; this.tab2calculaPorcentaje(z5);
+              this.datosTab2.precio4= Math.round((this.datosTab2.precio4 + suma2 + Number.EPSILON)* 100)/100; var z4 = {target:{id:'tab2precio4'}}; this.tab2calculaPorcentaje(z4);
+              this.datosTab2.precio3= Math.round((this.datosTab2.precio3 + suma2 + Number.EPSILON)* 100)/100; var z3 = {target:{id:'tab2precio3'}}; this.tab2calculaPorcentaje(z3);
+              this.datosTab2.precio2= Math.round((this.datosTab2.precio2 + suma2 + Number.EPSILON)* 100)/100; var z2 = {target:{id:'tab2precio2'}}; this.tab2calculaPorcentaje(z2);
+              this.datosTab2.precio1= Math.round((this.datosTab2.precio1 + suma2 + Number.EPSILON)* 100)/100; var z1 = {target:{id:'tab2precio1'}}; this.tab2calculaPorcentaje(z1);
+
+              this.datosTab3.precio5= Math.round((this.datosTab3.precio5 + suma3 + Number.EPSILON)* 100)/100; var y5 = {target:{id:'tab3precio5'}}; this.tab3calculaPorcentaje(y5);
+              this.datosTab3.precio4= Math.round((this.datosTab3.precio4 + suma3 + Number.EPSILON)* 100)/100; var y4 = {target:{id:'tab3precio4'}}; this.tab3calculaPorcentaje(y4);
+              this.datosTab3.precio3= Math.round((this.datosTab3.precio3 + suma3 + Number.EPSILON)* 100)/100; var y3 = {target:{id:'tab3precio3'}}; this.tab3calculaPorcentaje(y3);
+              this.datosTab3.precio2= Math.round((this.datosTab3.precio2 + suma3 + Number.EPSILON)* 100)/100; var y2 = {target:{id:'tab3precio2'}}; this.tab3calculaPorcentaje(y2);
+              this.datosTab3.precio1= Math.round((this.datosTab3.precio1 + suma3 + Number.EPSILON)* 100)/100; var y1 = {target:{id:'tab3precio1'}}; this.tab3calculaPorcentaje(y1);
+            break;
+          case 4:
+              suma2 = inputValue/ (this.datosTab1.unidad * this.datosTab2.unidad);
+              suma2 = Math.round((suma2 + Number.EPSILON) * 100 ) / 100 ;
+
+              suma3 = inputValue / (this.datosTab1.unidad * this.datosTab2.unidad * this.datosTab3.unidad);
+              suma3 = Math.round((suma3 + Number.EPSILON) * 100 ) / 100 ;
+                  
+              suma4 = inputValue/ (this.datosTab1.unidad * this.datosTab2.unidad * this.datosTab3.unidad * this.datosTab4.unidad);
+              suma4 = Math.round((suma4 + Number.EPSILON) * 100 ) / 100 ;
+
+              this.datosTab1.precio5= this.datosTab1.precio5 + inputValue; var x5 = {target:{id:'precio5'}}; this.calculaPorcentaje(x5);
+              this.datosTab1.precio4= this.datosTab1.precio4 + inputValue; var x4 = {target:{id:'precio4'}}; this.calculaPorcentaje(x4);
+              this.datosTab1.precio3= this.datosTab1.precio3 + inputValue; var x3 = {target:{id:'precio3'}}; this.calculaPorcentaje(x3);
+              this.datosTab1.precio2= this.datosTab1.precio2 + inputValue; var x2 = {target:{id:'precio2'}}; this.calculaPorcentaje(x2);
+              this.datosTab1.precio1= this.datosTab1.precio1 + inputValue; var x1 = {target:{id:'precio1'}}; this.calculaPorcentaje(x1);
+
+              this.datosTab2.precio5= Math.round((this.datosTab2.precio5 + suma2 + Number.EPSILON)* 100)/100; var z5 = {target:{id:'tab2precio5'}}; this.tab2calculaPorcentaje(z5);
+              this.datosTab2.precio4= Math.round((this.datosTab2.precio4 + suma2 + Number.EPSILON)* 100)/100; var z4 = {target:{id:'tab2precio4'}}; this.tab2calculaPorcentaje(z4);
+              this.datosTab2.precio3= Math.round((this.datosTab2.precio3 + suma2 + Number.EPSILON)* 100)/100; var z3 = {target:{id:'tab2precio3'}}; this.tab2calculaPorcentaje(z3);
+              this.datosTab2.precio2= Math.round((this.datosTab2.precio2 + suma2 + Number.EPSILON)* 100)/100; var z2 = {target:{id:'tab2precio2'}}; this.tab2calculaPorcentaje(z2);
+              this.datosTab2.precio1= Math.round((this.datosTab2.precio1 + suma2 + Number.EPSILON)* 100)/100; var z1 = {target:{id:'tab2precio1'}}; this.tab2calculaPorcentaje(z1);
+
+              this.datosTab3.precio5= Math.round((this.datosTab3.precio5 + suma3 + Number.EPSILON)* 100)/100; var y5 = {target:{id:'tab3precio5'}}; this.tab3calculaPorcentaje(y5);
+              this.datosTab3.precio4= Math.round((this.datosTab3.precio4 + suma3 + Number.EPSILON)* 100)/100; var y4 = {target:{id:'tab3precio4'}}; this.tab3calculaPorcentaje(y4);
+              this.datosTab3.precio3= Math.round((this.datosTab3.precio3 + suma3 + Number.EPSILON)* 100)/100; var y3 = {target:{id:'tab3precio3'}}; this.tab3calculaPorcentaje(y3);
+              this.datosTab3.precio2= Math.round((this.datosTab3.precio2 + suma3 + Number.EPSILON)* 100)/100; var y2 = {target:{id:'tab3precio2'}}; this.tab3calculaPorcentaje(y2);
+              this.datosTab3.precio1= Math.round((this.datosTab3.precio1 + suma3 + Number.EPSILON)* 100)/100; var y1 = {target:{id:'tab3precio1'}}; this.tab3calculaPorcentaje(y1);
+
+              this.datosTab4.precio5= Math.round((this.datosTab4.precio5 + suma4 + Number.EPSILON)* 100)/100; var w5 = {target:{id:'tab4precio5'}}; this.tab4calculaPorcentaje(w5);
+              this.datosTab4.precio4= Math.round((this.datosTab4.precio4 + suma4 + Number.EPSILON)* 100)/100; var w4 = {target:{id:'tab4precio4'}}; this.tab4calculaPorcentaje(w4);
+              this.datosTab4.precio3= Math.round((this.datosTab4.precio3 + suma4 + Number.EPSILON)* 100)/100; var w3 = {target:{id:'tab4precio3'}}; this.tab4calculaPorcentaje(w3);
+              this.datosTab4.precio2= Math.round((this.datosTab4.precio2 + suma4 + Number.EPSILON)* 100)/100; var w2 = {target:{id:'tab4precio2'}}; this.tab4calculaPorcentaje(w2);
+              this.datosTab4.precio1= Math.round((this.datosTab4.precio1 + suma4 + Number.EPSILON)* 100)/100; var w1 = {target:{id:'tab4precio1'}}; this.tab4calculaPorcentaje(w1);
+            break;
+          case 5:
+              suma2 = inputValue/ (this.datosTab1.unidad * this.datosTab2.unidad);
+              suma2 = Math.round((suma2 + Number.EPSILON) * 100 ) / 100 ;
+
+              suma3 = inputValue / (this.datosTab1.unidad * this.datosTab2.unidad * this.datosTab3.unidad);
+              suma3 = Math.round((suma3 + Number.EPSILON) * 100 ) / 100 ;
+                  
+              suma4 = inputValue/ (this.datosTab1.unidad * this.datosTab2.unidad * this.datosTab3.unidad * this.datosTab4.unidad);
+              suma4 = Math.round((suma4 + Number.EPSILON) * 100 ) / 100 ;
+                    
+              suma5 = inputValue/ (this.datosTab1.unidad * this.datosTab2.unidad * this.datosTab3.unidad * this.datosTab4.unidad * this.datosTab5.unidad);
+              suma5 = Math.round((suma5 + Number.EPSILON) * 100 ) / 100 ;
+
+              this.datosTab1.precio5= this.datosTab1.precio5 + inputValue; var x5 = {target:{id:'precio5'}}; this.calculaPorcentaje(x5);
+              this.datosTab1.precio4= this.datosTab1.precio4 + inputValue; var x4 = {target:{id:'precio4'}}; this.calculaPorcentaje(x4);
+              this.datosTab1.precio3= this.datosTab1.precio3 + inputValue; var x3 = {target:{id:'precio3'}}; this.calculaPorcentaje(x3);
+              this.datosTab1.precio2= this.datosTab1.precio2 + inputValue; var x2 = {target:{id:'precio2'}}; this.calculaPorcentaje(x2);
+              this.datosTab1.precio1= this.datosTab1.precio1 + inputValue; var x1 = {target:{id:'precio1'}}; this.calculaPorcentaje(x1);
+
+              this.datosTab2.precio5= Math.round((this.datosTab2.precio5 + suma2 + Number.EPSILON)* 100)/100; var z5 = {target:{id:'tab2precio5'}}; this.tab2calculaPorcentaje(z5);
+              this.datosTab2.precio4= Math.round((this.datosTab2.precio4 + suma2 + Number.EPSILON)* 100)/100; var z4 = {target:{id:'tab2precio4'}}; this.tab2calculaPorcentaje(z4);
+              this.datosTab2.precio3= Math.round((this.datosTab2.precio3 + suma2 + Number.EPSILON)* 100)/100; var z3 = {target:{id:'tab2precio3'}}; this.tab2calculaPorcentaje(z3);
+              this.datosTab2.precio2= Math.round((this.datosTab2.precio2 + suma2 + Number.EPSILON)* 100)/100; var z2 = {target:{id:'tab2precio2'}}; this.tab2calculaPorcentaje(z2);
+              this.datosTab2.precio1= Math.round((this.datosTab2.precio1 + suma2 + Number.EPSILON)* 100)/100; var z1 = {target:{id:'tab2precio1'}}; this.tab2calculaPorcentaje(z1);
+
+              this.datosTab3.precio5= Math.round((this.datosTab3.precio5 + suma3 + Number.EPSILON)* 100)/100; var y5 = {target:{id:'tab3precio5'}}; this.tab3calculaPorcentaje(y5);
+              this.datosTab3.precio4= Math.round((this.datosTab3.precio4 + suma3 + Number.EPSILON)* 100)/100; var y4 = {target:{id:'tab3precio4'}}; this.tab3calculaPorcentaje(y4);
+              this.datosTab3.precio3= Math.round((this.datosTab3.precio3 + suma3 + Number.EPSILON)* 100)/100; var y3 = {target:{id:'tab3precio3'}}; this.tab3calculaPorcentaje(y3);
+              this.datosTab3.precio2= Math.round((this.datosTab3.precio2 + suma3 + Number.EPSILON)* 100)/100; var y2 = {target:{id:'tab3precio2'}}; this.tab3calculaPorcentaje(y2);
+              this.datosTab3.precio1= Math.round((this.datosTab3.precio1 + suma3 + Number.EPSILON)* 100)/100; var y1 = {target:{id:'tab3precio1'}}; this.tab3calculaPorcentaje(y1);
+
+              this.datosTab4.precio5= Math.round((this.datosTab4.precio5 + suma4 + Number.EPSILON)* 100)/100; var w5 = {target:{id:'tab4precio5'}}; this.tab4calculaPorcentaje(w5);
+              this.datosTab4.precio4= Math.round((this.datosTab4.precio4 + suma4 + Number.EPSILON)* 100)/100; var w4 = {target:{id:'tab4precio4'}}; this.tab4calculaPorcentaje(w4);
+              this.datosTab4.precio3= Math.round((this.datosTab4.precio3 + suma4 + Number.EPSILON)* 100)/100; var w3 = {target:{id:'tab4precio3'}}; this.tab4calculaPorcentaje(w3);
+              this.datosTab4.precio2= Math.round((this.datosTab4.precio2 + suma4 + Number.EPSILON)* 100)/100; var w2 = {target:{id:'tab4precio2'}}; this.tab4calculaPorcentaje(w2);
+              this.datosTab4.precio1= Math.round((this.datosTab4.precio1 + suma4 + Number.EPSILON)* 100)/100; var w1 = {target:{id:'tab4precio1'}}; this.tab4calculaPorcentaje(w1);
+
+              this.datosTab5.precio5= Math.round((this.datosTab5.precio5 + suma5 + Number.EPSILON)* 100)/100; var t5 = {target:{id:'tab5precio5'}}; this.tab5calculaPorcentaje(t5);
+              this.datosTab5.precio4= Math.round((this.datosTab5.precio4 + suma5 + Number.EPSILON)* 100)/100; var t4 = {target:{id:'tab5precio4'}}; this.tab5calculaPorcentaje(t4);
+              this.datosTab5.precio3= Math.round((this.datosTab5.precio3 + suma5 + Number.EPSILON)* 100)/100; var t3 = {target:{id:'tab5precio3'}}; this.tab5calculaPorcentaje(t3);
+              this.datosTab5.precio2= Math.round((this.datosTab5.precio2 + suma5 + Number.EPSILON)* 100)/100; var t2 = {target:{id:'tab5precio2'}}; this.tab5calculaPorcentaje(t2);
+              this.datosTab5.precio1= Math.round((this.datosTab5.precio1 + suma5 + Number.EPSILON)* 100)/100; var t1 = {target:{id:'tab5precio1'}}; this.tab5calculaPorcentaje(t1);
+            break;
+        }
+      }
+    }
+
+    /**
+     * Permite restar al precio de venta directamente a todas las medidas
+     * y a todos los precios
+     */
+    disminuyePrecioV(){
+      var inputValue  = parseFloat((<HTMLInputElement>document.getElementById('mmValue')).value);
+      var suma2 =0;
+      var suma3 =0;
+      var suma4 =0;
+      var suma5 =0;
+      if(inputValue > 0){
+        switch(this.noMedida){
+          case 1:
+             this.datosTab1.precio5= this.datosTab1.precio5 - inputValue; var x5 = {target:{id:'precio5'}}; this.calculaPorcentaje(x5);
+             this.datosTab1.precio4= this.datosTab1.precio4 - inputValue; var x4 = {target:{id:'precio4'}}; this.calculaPorcentaje(x4);
+             this.datosTab1.precio3= this.datosTab1.precio3 - inputValue; var x3 = {target:{id:'precio3'}}; this.calculaPorcentaje(x3);
+             this.datosTab1.precio2= this.datosTab1.precio2 - inputValue; var x2 = {target:{id:'precio2'}}; this.calculaPorcentaje(x2);
+             this.datosTab1.precio1= this.datosTab1.precio1 - inputValue; var x1 = {target:{id:'precio1'}}; this.calculaPorcentaje(x1);
+            break;
+          case 2:
+              
+              suma2 = inputValue/ (this.datosTab1.unidad * this.datosTab2.unidad);
+              suma2 = Math.round((suma2 + Number.EPSILON) * 100 ) / 100 ;
+
+              this.datosTab1.precio5= this.datosTab1.precio5 - inputValue; var x5 = {target:{id:'precio5'}}; this.calculaPorcentaje(x5);
+              this.datosTab1.precio4= this.datosTab1.precio4 - inputValue; var x4 = {target:{id:'precio4'}}; this.calculaPorcentaje(x4);
+              this.datosTab1.precio3= this.datosTab1.precio3 - inputValue; var x3 = {target:{id:'precio3'}}; this.calculaPorcentaje(x3);
+              this.datosTab1.precio2= this.datosTab1.precio2 - inputValue; var x2 = {target:{id:'precio2'}}; this.calculaPorcentaje(x2);
+              this.datosTab1.precio1= this.datosTab1.precio1 - inputValue; var x1 = {target:{id:'precio1'}}; this.calculaPorcentaje(x1);
+
+              this.datosTab2.precio5= Math.round((this.datosTab2.precio5 - suma2 + Number.EPSILON)* 100)/100; var z5 = {target:{id:'tab2precio5'}}; this.tab2calculaPorcentaje(z5);
+              this.datosTab2.precio4= Math.round((this.datosTab2.precio4 - suma2 + Number.EPSILON)* 100)/100; var z4 = {target:{id:'tab2precio4'}}; this.tab2calculaPorcentaje(z4);
+              this.datosTab2.precio3= Math.round((this.datosTab2.precio3 - suma2 + Number.EPSILON)* 100)/100; var z3 = {target:{id:'tab2precio3'}}; this.tab2calculaPorcentaje(z3);
+              this.datosTab2.precio2= Math.round((this.datosTab2.precio2 - suma2 + Number.EPSILON)* 100)/100; var z2 = {target:{id:'tab2precio2'}}; this.tab2calculaPorcentaje(z2);
+              this.datosTab2.precio1= Math.round((this.datosTab2.precio1 - suma2 + Number.EPSILON)* 100)/100; var z1 = {target:{id:'tab2precio1'}}; this.tab2calculaPorcentaje(z1);
+            break;
+          case 3:
+              suma2 = inputValue/ (this.datosTab1.unidad * this.datosTab2.unidad);
+              suma2 = Math.round((suma2 + Number.EPSILON) * 100 ) / 100 ;
+
+              suma3 = inputValue/ (this.datosTab1.unidad * this.datosTab2.unidad * this.datosTab3.unidad);  
+              suma3 = Math.round((suma3 + Number.EPSILON) * 100 ) / 100 ;
+
+              this.datosTab1.precio5= this.datosTab1.precio5 - inputValue; var x5 = {target:{id:'precio5'}}; this.calculaPorcentaje(x5);
+              this.datosTab1.precio4= this.datosTab1.precio4 - inputValue; var x4 = {target:{id:'precio4'}}; this.calculaPorcentaje(x4);
+              this.datosTab1.precio3= this.datosTab1.precio3 - inputValue; var x3 = {target:{id:'precio3'}}; this.calculaPorcentaje(x3);
+              this.datosTab1.precio2= this.datosTab1.precio2 - inputValue; var x2 = {target:{id:'precio2'}}; this.calculaPorcentaje(x2);
+              this.datosTab1.precio1= this.datosTab1.precio1 - inputValue; var x1 = {target:{id:'precio1'}}; this.calculaPorcentaje(x1);
+
+              this.datosTab2.precio5= Math.round((this.datosTab2.precio5 - suma2 + Number.EPSILON)* 100)/100; var z5 = {target:{id:'tab2precio5'}}; this.tab2calculaPorcentaje(z5);
+              this.datosTab2.precio4= Math.round((this.datosTab2.precio4 - suma2 + Number.EPSILON)* 100)/100; var z4 = {target:{id:'tab2precio4'}}; this.tab2calculaPorcentaje(z4);
+              this.datosTab2.precio3= Math.round((this.datosTab2.precio3 - suma2 + Number.EPSILON)* 100)/100; var z3 = {target:{id:'tab2precio3'}}; this.tab2calculaPorcentaje(z3);
+              this.datosTab2.precio2= Math.round((this.datosTab2.precio2 - suma2 + Number.EPSILON)* 100)/100; var z2 = {target:{id:'tab2precio2'}}; this.tab2calculaPorcentaje(z2);
+              this.datosTab2.precio1= Math.round((this.datosTab2.precio1 - suma2 + Number.EPSILON)* 100)/100; var z1 = {target:{id:'tab2precio1'}}; this.tab2calculaPorcentaje(z1);
+
+              this.datosTab3.precio5= Math.round((this.datosTab3.precio5 - suma3 + Number.EPSILON)* 100)/100; var y5 = {target:{id:'tab3precio5'}}; this.tab3calculaPorcentaje(y5);
+              this.datosTab3.precio4= Math.round((this.datosTab3.precio4 - suma3 + Number.EPSILON)* 100)/100; var y4 = {target:{id:'tab3precio4'}}; this.tab3calculaPorcentaje(y4);
+              this.datosTab3.precio3= Math.round((this.datosTab3.precio3 - suma3 + Number.EPSILON)* 100)/100; var y3 = {target:{id:'tab3precio3'}}; this.tab3calculaPorcentaje(y3);
+              this.datosTab3.precio2= Math.round((this.datosTab3.precio2 - suma3 + Number.EPSILON)* 100)/100; var y2 = {target:{id:'tab3precio2'}}; this.tab3calculaPorcentaje(y2);
+              this.datosTab3.precio1= Math.round((this.datosTab3.precio1 - suma3 + Number.EPSILON)* 100)/100; var y1 = {target:{id:'tab3precio1'}}; this.tab3calculaPorcentaje(y1);
+            break;
+          case 4:
+              suma2 = inputValue/ (this.datosTab1.unidad * this.datosTab2.unidad);
+              suma2 = Math.round((suma2 + Number.EPSILON) * 100 ) / 100 ;
+
+              suma3 = inputValue / (this.datosTab1.unidad * this.datosTab2.unidad * this.datosTab3.unidad);
+              suma3 = Math.round((suma3 + Number.EPSILON) * 100 ) / 100 ;
+                  
+              suma4 = inputValue/ (this.datosTab1.unidad * this.datosTab2.unidad * this.datosTab3.unidad * this.datosTab4.unidad);
+              suma4 = Math.round((suma4 + Number.EPSILON) * 100 ) / 100 ;
+
+              this.datosTab1.precio5= this.datosTab1.precio5 - inputValue; var x5 = {target:{id:'precio5'}}; this.calculaPorcentaje(x5);
+              this.datosTab1.precio4= this.datosTab1.precio4 - inputValue; var x4 = {target:{id:'precio4'}}; this.calculaPorcentaje(x4);
+              this.datosTab1.precio3= this.datosTab1.precio3 - inputValue; var x3 = {target:{id:'precio3'}}; this.calculaPorcentaje(x3);
+              this.datosTab1.precio2= this.datosTab1.precio2 - inputValue; var x2 = {target:{id:'precio2'}}; this.calculaPorcentaje(x2);
+              this.datosTab1.precio1= this.datosTab1.precio1 - inputValue; var x1 = {target:{id:'precio1'}}; this.calculaPorcentaje(x1);
+
+              this.datosTab2.precio5= Math.round((this.datosTab2.precio5 - suma2 + Number.EPSILON)* 100)/100; var z5 = {target:{id:'tab2precio5'}}; this.tab2calculaPorcentaje(z5);
+              this.datosTab2.precio4= Math.round((this.datosTab2.precio4 - suma2 + Number.EPSILON)* 100)/100; var z4 = {target:{id:'tab2precio4'}}; this.tab2calculaPorcentaje(z4);
+              this.datosTab2.precio3= Math.round((this.datosTab2.precio3 - suma2 + Number.EPSILON)* 100)/100; var z3 = {target:{id:'tab2precio3'}}; this.tab2calculaPorcentaje(z3);
+              this.datosTab2.precio2= Math.round((this.datosTab2.precio2 - suma2 + Number.EPSILON)* 100)/100; var z2 = {target:{id:'tab2precio2'}}; this.tab2calculaPorcentaje(z2);
+              this.datosTab2.precio1= Math.round((this.datosTab2.precio1 - suma2 + Number.EPSILON)* 100)/100; var z1 = {target:{id:'tab2precio1'}}; this.tab2calculaPorcentaje(z1);
+
+              this.datosTab3.precio5= Math.round((this.datosTab3.precio5 - suma3 + Number.EPSILON)* 100)/100; var y5 = {target:{id:'tab3precio5'}}; this.tab3calculaPorcentaje(y5);
+              this.datosTab3.precio4= Math.round((this.datosTab3.precio4 - suma3 + Number.EPSILON)* 100)/100; var y4 = {target:{id:'tab3precio4'}}; this.tab3calculaPorcentaje(y4);
+              this.datosTab3.precio3= Math.round((this.datosTab3.precio3 - suma3 + Number.EPSILON)* 100)/100; var y3 = {target:{id:'tab3precio3'}}; this.tab3calculaPorcentaje(y3);
+              this.datosTab3.precio2= Math.round((this.datosTab3.precio2 - suma3 + Number.EPSILON)* 100)/100; var y2 = {target:{id:'tab3precio2'}}; this.tab3calculaPorcentaje(y2);
+              this.datosTab3.precio1= Math.round((this.datosTab3.precio1 - suma3 + Number.EPSILON)* 100)/100; var y1 = {target:{id:'tab3precio1'}}; this.tab3calculaPorcentaje(y1);
+
+              this.datosTab4.precio5= Math.round((this.datosTab4.precio5 - suma4 + Number.EPSILON)* 100)/100; var w5 = {target:{id:'tab4precio5'}}; this.tab4calculaPorcentaje(w5);
+              this.datosTab4.precio4= Math.round((this.datosTab4.precio4 - suma4 + Number.EPSILON)* 100)/100; var w4 = {target:{id:'tab4precio4'}}; this.tab4calculaPorcentaje(w4);
+              this.datosTab4.precio3= Math.round((this.datosTab4.precio3 - suma4 + Number.EPSILON)* 100)/100; var w3 = {target:{id:'tab4precio3'}}; this.tab4calculaPorcentaje(w3);
+              this.datosTab4.precio2= Math.round((this.datosTab4.precio2 - suma4 + Number.EPSILON)* 100)/100; var w2 = {target:{id:'tab4precio2'}}; this.tab4calculaPorcentaje(w2);
+              this.datosTab4.precio1= Math.round((this.datosTab4.precio1 - suma4 + Number.EPSILON)* 100)/100; var w1 = {target:{id:'tab4precio1'}}; this.tab4calculaPorcentaje(w1);
+            break;
+          case 5:
+              suma2 = inputValue/ (this.datosTab1.unidad * this.datosTab2.unidad);
+              suma2 = Math.round((suma2 + Number.EPSILON) * 100 ) / 100 ;
+
+              suma3 = inputValue / (this.datosTab1.unidad * this.datosTab2.unidad * this.datosTab3.unidad);
+              suma3 = Math.round((suma3 + Number.EPSILON) * 100 ) / 100 ;
+                  
+              suma4 = inputValue/ (this.datosTab1.unidad * this.datosTab2.unidad * this.datosTab3.unidad * this.datosTab4.unidad);
+              suma4 = Math.round((suma4 + Number.EPSILON) * 100 ) / 100 ;
+                    
+              suma5 = inputValue/ (this.datosTab1.unidad * this.datosTab2.unidad * this.datosTab3.unidad * this.datosTab4.unidad * this.datosTab5.unidad);
+              suma5 = Math.round((suma5 + Number.EPSILON) * 100 ) / 100 ;
+
+              this.datosTab1.precio5= this.datosTab1.precio5 - inputValue; var x5 = {target:{id:'precio5'}}; this.calculaPorcentaje(x5);
+              this.datosTab1.precio4= this.datosTab1.precio4 - inputValue; var x4 = {target:{id:'precio4'}}; this.calculaPorcentaje(x4);
+              this.datosTab1.precio3= this.datosTab1.precio3 - inputValue; var x3 = {target:{id:'precio3'}}; this.calculaPorcentaje(x3);
+              this.datosTab1.precio2= this.datosTab1.precio2 - inputValue; var x2 = {target:{id:'precio2'}}; this.calculaPorcentaje(x2);
+              this.datosTab1.precio1= this.datosTab1.precio1 - inputValue; var x1 = {target:{id:'precio1'}}; this.calculaPorcentaje(x1);
+
+              this.datosTab2.precio5= Math.round((this.datosTab2.precio5 - suma2 + Number.EPSILON)* 100)/100; var z5 = {target:{id:'tab2precio5'}}; this.tab2calculaPorcentaje(z5);
+              this.datosTab2.precio4= Math.round((this.datosTab2.precio4 - suma2 + Number.EPSILON)* 100)/100; var z4 = {target:{id:'tab2precio4'}}; this.tab2calculaPorcentaje(z4);
+              this.datosTab2.precio3= Math.round((this.datosTab2.precio3 - suma2 + Number.EPSILON)* 100)/100; var z3 = {target:{id:'tab2precio3'}}; this.tab2calculaPorcentaje(z3);
+              this.datosTab2.precio2= Math.round((this.datosTab2.precio2 - suma2 + Number.EPSILON)* 100)/100; var z2 = {target:{id:'tab2precio2'}}; this.tab2calculaPorcentaje(z2);
+              this.datosTab2.precio1= Math.round((this.datosTab2.precio1 - suma2 + Number.EPSILON)* 100)/100; var z1 = {target:{id:'tab2precio1'}}; this.tab2calculaPorcentaje(z1);
+
+              this.datosTab3.precio5= Math.round((this.datosTab3.precio5 - suma3 + Number.EPSILON)* 100)/100; var y5 = {target:{id:'tab3precio5'}}; this.tab3calculaPorcentaje(y5);
+              this.datosTab3.precio4= Math.round((this.datosTab3.precio4 - suma3 + Number.EPSILON)* 100)/100; var y4 = {target:{id:'tab3precio4'}}; this.tab3calculaPorcentaje(y4);
+              this.datosTab3.precio3= Math.round((this.datosTab3.precio3 - suma3 + Number.EPSILON)* 100)/100; var y3 = {target:{id:'tab3precio3'}}; this.tab3calculaPorcentaje(y3);
+              this.datosTab3.precio2= Math.round((this.datosTab3.precio2 - suma3 + Number.EPSILON)* 100)/100; var y2 = {target:{id:'tab3precio2'}}; this.tab3calculaPorcentaje(y2);
+              this.datosTab3.precio1= Math.round((this.datosTab3.precio1 - suma3 + Number.EPSILON)* 100)/100; var y1 = {target:{id:'tab3precio1'}}; this.tab3calculaPorcentaje(y1);
+
+              this.datosTab4.precio5= Math.round((this.datosTab4.precio5 - suma4 + Number.EPSILON)* 100)/100; var w5 = {target:{id:'tab4precio5'}}; this.tab4calculaPorcentaje(w5);
+              this.datosTab4.precio4= Math.round((this.datosTab4.precio4 - suma4 + Number.EPSILON)* 100)/100; var w4 = {target:{id:'tab4precio4'}}; this.tab4calculaPorcentaje(w4);
+              this.datosTab4.precio3= Math.round((this.datosTab4.precio3 - suma4 + Number.EPSILON)* 100)/100; var w3 = {target:{id:'tab4precio3'}}; this.tab4calculaPorcentaje(w3);
+              this.datosTab4.precio2= Math.round((this.datosTab4.precio2 - suma4 + Number.EPSILON)* 100)/100; var w2 = {target:{id:'tab4precio2'}}; this.tab4calculaPorcentaje(w2);
+              this.datosTab4.precio1= Math.round((this.datosTab4.precio1 - suma4 + Number.EPSILON)* 100)/100; var w1 = {target:{id:'tab4precio1'}}; this.tab4calculaPorcentaje(w1);
+
+              this.datosTab5.precio5= Math.round((this.datosTab5.precio5 - suma5 + Number.EPSILON)* 100)/100; var t5 = {target:{id:'tab5precio5'}}; this.tab5calculaPorcentaje(t5);
+              this.datosTab5.precio4= Math.round((this.datosTab5.precio4 - suma5 + Number.EPSILON)* 100)/100; var t4 = {target:{id:'tab5precio4'}}; this.tab5calculaPorcentaje(t4);
+              this.datosTab5.precio3= Math.round((this.datosTab5.precio3 - suma5 + Number.EPSILON)* 100)/100; var t3 = {target:{id:'tab5precio3'}}; this.tab5calculaPorcentaje(t3);
+              this.datosTab5.precio2= Math.round((this.datosTab5.precio2 - suma5 + Number.EPSILON)* 100)/100; var t2 = {target:{id:'tab5precio2'}}; this.tab5calculaPorcentaje(t2);
+              this.datosTab5.precio1= Math.round((this.datosTab5.precio1 - suma5 + Number.EPSILON)* 100)/100; var t1 = {target:{id:'tab5precio1'}}; this.tab5calculaPorcentaje(t1);
+            break;
+        }
       }
     }
   
@@ -1076,7 +1670,7 @@ export class ProductoEditarComponent implements OnInit {
        * revisamos que el porcentaje no sea menor o igual a cero
        * Si es asi mandamos una alerta
        */
-      if(inputValue <= 0){
+      if(inputValue < 0){
   
         this.toastService.show('No puedes ingresar porcentajes negativos ', { classname: 'bg-danger text-light',delay: 5000 });
         switch(inputId){
@@ -1542,7 +2136,7 @@ export class ProductoEditarComponent implements OnInit {
        * revisamos que el porcentaje no sea menor o igual a cero
        * Si es asi mandamos una alerta
        */
-      if(inputValue <= 0){
+      if(inputValue < 0){
   
         this.toastService.show('No puedes ingresar porcentajes negativos ', { classname: 'bg-danger text-light',delay: 5000 });
         switch(inputId){

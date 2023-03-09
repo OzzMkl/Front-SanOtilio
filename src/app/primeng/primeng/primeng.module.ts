@@ -19,6 +19,7 @@ import { MessageModule } from 'primeng/message';
 import { FileUploadModule } from 'primeng/fileupload';
 import {ToggleButtonModule} from 'primeng/togglebutton';
 import {SelectButtonModule} from 'primeng/selectbutton';
+import {FieldsetModule} from 'primeng/fieldset';
 
 
 
@@ -41,7 +42,8 @@ import {SelectButtonModule} from 'primeng/selectbutton';
     MessagesModule,
     FileUploadModule,
     ToggleButtonModule,
-    SelectButtonModule
+    SelectButtonModule,
+    FieldsetModule
   ],
   imports: [
     CommonModule,

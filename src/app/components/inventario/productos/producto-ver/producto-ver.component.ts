@@ -1,9 +1,12 @@
 import { Component, OnInit } from '@angular/core';
+import { Router, ActivatedRoute} from '@angular/router';
+//Modelo
 import { Producto } from 'src/app/models/producto';
+//Servicio
 import { ProductoService } from 'src/app/services/producto.service';
 import {ToastService} from 'src/app/services/toast.service';
-import { Router, ActivatedRoute, Params } from '@angular/router';
 import { global } from 'src/app/services/global';
+import { Productos_medidas } from 'src/app/models/productos_medidas';
 
 @Component({
   selector: 'app-producto-ver',
@@ -13,18 +16,34 @@ import { global } from 'src/app/services/global';
 })
 export class ProductoVerComponent implements OnInit {
 
-
-  public producto: Array<any> = [];
-
-  public closeModal: string ='';
-
+  //variables de servicios
+  public producto: any;
+  public identity: any;
   public url: string = global.url;
-
-  public value: any;
-
-  public prod: Producto;
-  public prodd: Producto;
- 
+  //  para el codbar
+  public muestraCbarras: any;
+  //spinner
+  public isLoading: boolean = false;
+  //Para recoger la informacion de las tablas de precios
+  public listaProdMedida: Array<Productos_medidas> = [];
+  public datosTab1: Productos_medidas;
+  public datosTab2: Productos_medidas;
+  public datosTab3: Productos_medidas;
+  public datosTab4: Productos_medidas;
+  public datosTab5: Productos_medidas;
+  //Para mostrar y ocultar las tablas de precios
+  public noMedida: number = 1;
+  public selectNoMedida: number = 1;
+  public tab2: boolean = true;
+  public tab3: boolean = true;
+  public tab4: boolean = true;
+  public tab5: boolean = true;
+  //para asignar nombre de la medida
+  public medida1: string = '';
+  public medida2: string = '';
+  public medida3: string = '';
+  public medida4: string = '';
+  public medida5: string = '';
 
   constructor( 
     private _productoService: ProductoService,
@@ -32,84 +51,200 @@ export class ProductoVerComponent implements OnInit {
     private _route: ActivatedRoute,
     public toastService: ToastService
     ){
-    this.prod =  new Producto(0,0,0,0,'',0,'',0,0,'',0,'','',null,0,0);
-    this.prodd = new Producto(0,0,0,0,'',0,'',0,0,'',0,'','',null,0,0);
+      this.datosTab1 = new Productos_medidas(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
+      this.datosTab2 = new Productos_medidas(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
+      this.datosTab3 = new Productos_medidas(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
+      this.datosTab4 = new Productos_medidas(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
+      this.datosTab5 = new Productos_medidas(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
    }
 
   ngOnInit(): void {
     this.getIdProduct();
-    
   }
 
+  /**
+   * Busca el producto, con el id recibido en la url
+   */
   getIdProduct(){
-     //Obtener el id del proveedor de la URL
-     this._route.params.subscribe(params => {
-      let id = + params['idProducto'];
-      //console.log(id);
-
-      //Peticion ajax para obtener los datos con base en el id del proveedor
-    this._productoService.getProdverDos(id).subscribe(
-      response =>{
-        if(response.status == 'success' && response.producto.length > 0){
-          this.producto = response.producto;
-          this.value = this.producto[0]['cbarras'];
-          console.log(this.producto);
-        }else{
-          this._productoService.getProdverDos(id).subscribe(
-            response=>{
-              this.producto = response.producto;
-              //this.value = this.producto[0]['cbarras'];
-              console.log(this.producto);
-            },
-              error =>{
-                console.log(error);
-              }
-          );
-        }
-      },
-      error =>{
-        console.log(error);
-      }
-    );
-
-  });
-  }
-
-  onSubmitt(form:any){
+    //mostramos el spinner
+    this.isLoading = true;
+    //Obtener el id del producto a modificar de la URL
     this._route.params.subscribe(params => {
-      let id = + params['idProducto'];
+     let id = + params['idProducto'];
+     //console.log(id);
 
-    this._productoService.updateStatus(this.prod, id).subscribe(
-      response =>{
-        //console.log(response);
-        this._router.navigate(['./producto-modulo/producto-deshabilitado']);
-       this.toastService.show('Producto deshabilitado correctamente', { classname: 'bg-success text-light', delay: 5000 }); 
-      },
-      error =>{
-        //console.log(this.prod);
-        console.log(<any>error);
-      this.toastService.show('Ups... Algo salio mal', { classname: 'bg-danger text-light', delay: 15000 });
-      }
-    )
-  });
+     //Peticion ajax para obtener los datos con base en el id del proveedor
+   this._productoService.getProdverDos(id).subscribe(//traemos el servicio
+     response =>{//asignamos la respuesta
+      if(response.status == 'success'){
+         //console.log(response);
+
+         this.producto = response.producto
+         //para asi asignar el valor del codigo de barras a la variable value
+         //esto con la finalidad de poder mostrar el codigo de barras
+         this.muestraCbarras = this.producto.cbarras;
+
+         this.listaProdMedida = response.productos_medidas;
+         //console.log(this.listaProdMedida)
+         this.noMedida = this.listaProdMedida.length;
+
+         this.seleccionanoMedidas(this.noMedida.toString());
+
+         //recorremos array de acuerdo a la longitud  de listaProdMedida
+         for(let i= 0; i < this.listaProdMedida.length; i++){
+          //Vamos asignando valores de acuerdo a la vuelta que le damos al array
+          if(i=== 0){
+            this.datosTab1.idProdMedida = this.listaProdMedida[i]['idProdMedida'];
+            this.datosTab1.idProducto = this.listaProdMedida[i]['idProducto'];
+            this.datosTab1.idMedida = this.listaProdMedida[i]['idMedida'];
+            this.datosTab1.unidad = this.listaProdMedida[i]['unidad'];
+            this.datosTab1.preciocompra = this.listaProdMedida[i]['preciocompra'];
+            this.datosTab1.porcentaje1 = this.listaProdMedida[i]['porcentaje1'];
+            this.datosTab1.precio1 = this.listaProdMedida[i]['precio1'];
+            this.datosTab1.porcentaje2 = this.listaProdMedida[i]['porcentaje2'];
+            this.datosTab1.precio2 = this.listaProdMedida[i]['precio2'];
+            this.datosTab1.porcentaje3 = this.listaProdMedida[i]['porcentaje3'];
+            this.datosTab1.precio3 = this.listaProdMedida[i]['precio3'];
+            this.datosTab1.porcentaje4 = this.listaProdMedida[i]['porcentaje4'];
+            this.datosTab1.precio4 = this.listaProdMedida[i]['precio4'];
+            this.datosTab1.porcentaje5 = this.listaProdMedida[i]['porcentaje5'];
+            this.datosTab1.precio5 = this.listaProdMedida[i]['precio5'];
+            this.datosTab1.idStatus = this.listaProdMedida[i]['idStatus'];
+            this.medida1 = response.productos_medidas[i]['nombreMedida'];
+          } else if(i=== 1){
+            this.datosTab2.idProdMedida = this.listaProdMedida[i]['idProdMedida'];
+            this.datosTab2.idProducto = this.listaProdMedida[i]['idProducto'];
+            this.datosTab2.idMedida = this.listaProdMedida[i]['idMedida'];
+            this.datosTab2.unidad = this.listaProdMedida[i]['unidad'];
+            this.datosTab2.preciocompra = this.listaProdMedida[i]['preciocompra'];
+            this.datosTab2.porcentaje1 = this.listaProdMedida[i]['porcentaje1'];
+            this.datosTab2.precio1 = this.listaProdMedida[i]['precio1'];
+            this.datosTab2.porcentaje2 = this.listaProdMedida[i]['porcentaje2'];
+            this.datosTab2.precio2 = this.listaProdMedida[i]['precio2'];
+            this.datosTab2.porcentaje3 = this.listaProdMedida[i]['porcentaje3'];
+            this.datosTab2.precio3 = this.listaProdMedida[i]['precio3'];
+            this.datosTab2.porcentaje4 = this.listaProdMedida[i]['porcentaje4'];
+            this.datosTab2.precio4 = this.listaProdMedida[i]['precio4'];
+            this.datosTab2.porcentaje5 = this.listaProdMedida[i]['porcentaje5'];
+            this.datosTab2.precio5 = this.listaProdMedida[i]['precio5'];
+            this.datosTab2.idStatus = this.listaProdMedida[i]['idStatus'];
+            this.medida2 = response.productos_medidas[i]['nombreMedida'];
+          } else if(i=== 2){
+            this.datosTab3.idProdMedida = this.listaProdMedida[i]['idProdMedida'];
+            this.datosTab3.idProducto = this.listaProdMedida[i]['idProducto'];
+            this.datosTab3.idMedida = this.listaProdMedida[i]['idMedida'];
+            this.datosTab3.unidad = this.listaProdMedida[i]['unidad'];
+            this.datosTab3.preciocompra = this.listaProdMedida[i]['preciocompra'];
+            this.datosTab3.porcentaje1 = this.listaProdMedida[i]['porcentaje1'];
+            this.datosTab3.precio1 = this.listaProdMedida[i]['precio1'];
+            this.datosTab3.porcentaje2 = this.listaProdMedida[i]['porcentaje2'];
+            this.datosTab3.precio2 = this.listaProdMedida[i]['precio2'];
+            this.datosTab3.porcentaje3 = this.listaProdMedida[i]['porcentaje3'];
+            this.datosTab3.precio3 = this.listaProdMedida[i]['precio3'];
+            this.datosTab3.porcentaje4 = this.listaProdMedida[i]['porcentaje4'];
+            this.datosTab3.precio4 = this.listaProdMedida[i]['precio4'];
+            this.datosTab3.porcentaje5 = this.listaProdMedida[i]['porcentaje5'];
+            this.datosTab3.precio5 = this.listaProdMedida[i]['precio5'];
+            this.datosTab3.idStatus = this.listaProdMedida[i]['idStatus'];
+            this.medida3 = response.productos_medidas[i]['nombreMedida'];
+          } else if(i=== 3){
+            this.datosTab4.idProdMedida = this.listaProdMedida[i]['idProdMedida'];
+            this.datosTab4.idProducto = this.listaProdMedida[i]['idProducto'];
+            this.datosTab4.idMedida = this.listaProdMedida[i]['idMedida'];
+            this.datosTab4.unidad = this.listaProdMedida[i]['unidad'];
+            this.datosTab4.preciocompra = this.listaProdMedida[i]['preciocompra'];
+            this.datosTab4.porcentaje1 = this.listaProdMedida[i]['porcentaje1'];
+            this.datosTab4.precio1 = this.listaProdMedida[i]['precio1'];
+            this.datosTab4.porcentaje2 = this.listaProdMedida[i]['porcentaje2'];
+            this.datosTab4.precio2 = this.listaProdMedida[i]['precio2'];
+            this.datosTab4.porcentaje3 = this.listaProdMedida[i]['porcentaje3'];
+            this.datosTab4.precio3 = this.listaProdMedida[i]['precio3'];
+            this.datosTab4.porcentaje4 = this.listaProdMedida[i]['porcentaje4'];
+            this.datosTab4.precio4 = this.listaProdMedida[i]['precio4'];
+            this.datosTab4.porcentaje5 = this.listaProdMedida[i]['porcentaje5'];
+            this.datosTab4.precio5 = this.listaProdMedida[i]['precio5'];
+            this.datosTab4.idStatus = this.listaProdMedida[i]['idStatus'];
+            this.medida4 = response.productos_medidas[i]['nombreMedida'];
+          }else if(i=== 4){ 
+            this.datosTab5.idProdMedida = this.listaProdMedida[i]['idProdMedida'];
+            this.datosTab5.idProducto = this.listaProdMedida[i]['idProducto'];
+            this.datosTab5.idMedida = this.listaProdMedida[i]['idMedida'];
+            this.datosTab5.unidad = this.listaProdMedida[i]['unidad'];
+            this.datosTab5.preciocompra = this.listaProdMedida[i]['preciocompra'];
+            this.datosTab5.porcentaje1 = this.listaProdMedida[i]['porcentaje1'];
+            this.datosTab5.precio1 = this.listaProdMedida[i]['precio1'];
+            this.datosTab5.porcentaje2 = this.listaProdMedida[i]['porcentaje2'];
+            this.datosTab5.precio2 = this.listaProdMedida[i]['precio2'];
+            this.datosTab5.porcentaje3 = this.listaProdMedida[i]['porcentaje3'];
+            this.datosTab5.precio3 = this.listaProdMedida[i]['precio3'];
+            this.datosTab5.porcentaje4 = this.listaProdMedida[i]['porcentaje4'];
+            this.datosTab5.precio4 = this.listaProdMedida[i]['precio4'];
+            this.datosTab5.porcentaje5 = this.listaProdMedida[i]['porcentaje5'];
+            this.datosTab5.precio5 = this.listaProdMedida[i]['precio5'];
+            this.datosTab5.idStatus = this.listaProdMedida[i]['idStatus'];
+            this.medida5 = response.productos_medidas[i]['nombreMedida'];
+          }
+         }
+         //una vez terminado de cargar quitamos el spinner
+          this.isLoading = false;
+       }//fin if
+     },//fin response
+     error =>{
+       console.log(error);
+     }
+   );//finsubscribe getProdverdos
+
+  });//finsubscribe params
   }
-  onSubmit(form:any){
-    this._route.params.subscribe(params => {
-      let id = + params['idProducto'];
+  /**
+     * Funcion para el select de no. de medidas
+     * @param model 
+     * recibimos el numero de medidas a ingresar
+     * y mostramos y ocultamos las tablas
+     */
+  seleccionanoMedidas(e:any){
+      
+    switch( e ){
+      case "1":
+          this.tab2 = true;
+          this.tab3 = true;
+          this.tab4 = true;
+          this.tab5 = true;
+          this.noMedida =1;
+        break;
 
-    this._productoService.updateStatus(this.prodd, id).subscribe(
-      response =>{
-        //console.log(response);
-        this._router.navigate(['./producto-modulo/producto-buscar']);
-       this.toastService.show('Producto: '+this.prodd.claveEx+' habilitado correctamente', { classname: 'bg-success text-light', delay: 5000 }); 
-      },
-      error =>{
-        //console.log(this.prodd);
-        console.log(<any>error);
-      this.toastService.show('Ups... Algo salio mal', { classname: 'bg-danger text-light', delay: 15000 });
-      }
-    )
-  });
+      case "2":
+          this.tab2 = false;
+          this.tab3 = true;
+          this.tab4 = true;
+          this.tab5 = true;
+          this.noMedida =2;
+        break;
+
+      case "3":
+          this.tab2 = false;
+          this.tab3 = false;
+          this.tab4 = true;
+          this.tab5 = true;
+          this.noMedida =3;
+        break;
+
+      case "4":
+          this.tab2 = false;
+          this.tab3 = false;
+          this.tab4 = false;
+          this.tab5 = true;
+          this.noMedida =4;
+        break;
+
+      case "5":
+          this.tab2 = false;
+          this.tab3 = false;
+          this.tab4 = false;
+          this.tab5 = false;
+          this.noMedida =5;
+        break;
+    }
   }
 
 }
