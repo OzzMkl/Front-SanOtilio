@@ -16,7 +16,6 @@ import { Component, OnInit } from '@angular/core';
 import { ProductoService } from 'src/app/services/producto.service';
 import { HttpClient} from '@angular/common/http';
 import { global } from 'src/app/services/global';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-producto-deshabilitados',
@@ -28,6 +27,10 @@ export class ProductoDeshabilitadosComponent implements OnInit {
 
   public url:string = global.url;
   public productos: Array<any> = [];
+  public productosMedida: Array<any> = [];
+  public imagenPM: string = '';
+  public claveExt: string ='';
+  public isShow: boolean = false;
   /**PAGINATOR */
   public totalPages: any;
   public path: any;
@@ -46,7 +49,6 @@ export class ProductoDeshabilitadosComponent implements OnInit {
 
   constructor(
     private _productoService: ProductoService,
-    private _router: Router,
     private _http: HttpClient
   ) { }
 
@@ -67,16 +69,16 @@ export class ProductoDeshabilitadosComponent implements OnInit {
     this._productoService.getProductosDes().subscribe(
       response =>{
         if(response.status == 'success'){
-
+          //console.log(response);
           //asignamos la respues a la variable a mostrar
-          this.productos = response.productos;
+          this.productos = response.productos.data;
 
           //navegacion paginacion
           this.totalPages = response.productos.total;
           this.itemsPerPage = response.productos.per_page;
           this.pageActual = response.productos.current_page;
           this.next_page = response.productos.next_page_url;
-          this.path = response.productos.path
+          this.path = response.productos.path;
           
           //una vez terminado de cargar quitamos el spinner
           this.isLoading = false;
@@ -88,17 +90,24 @@ export class ProductoDeshabilitadosComponent implements OnInit {
     );
   }
 
-  /**
+    /**
+   * Recinimos el id y lo buscamos en el sewrvicio
+   * @param idProducto
    * 
-   * @param id 
-   * Es el id del producto a buscar
-   * @description
-   * Redireccionamos al componente producto-ver y mostramos
-   *  los detalles del producto
+   * retornamos la consulta con las medias e imagen del producto
    */
-  selected(id:number){
-    this._router.navigate(['./producto-modulo/producto-ver/'+id]);
-  }
+    mostrarPrecios(idProducto:number,claveEx:string){
+      this.claveExt = claveEx;
+      this._productoService.searchProductoMedidaI(idProducto).subscribe(
+        response =>{
+          //console.log(response);
+          this.productosMedida = response.productoMedida;
+          this.imagenPM = response.imagen;
+          this.isShow = true;
+      }, error =>{
+        console.log(error);
+      });
+    }
 
   /**
    * 
@@ -110,6 +119,8 @@ export class ProductoDeshabilitadosComponent implements OnInit {
    * no retornamos ya que solo actualizamos las variables a mostrar
    */
    getPage(page:number) {
+    //mostramos spinner
+    this.isLoading = true;
     this._http.get(this.path+'?page='+page).subscribe(
       (response:any) => {
         //console.log(response);
@@ -119,8 +130,9 @@ export class ProductoDeshabilitadosComponent implements OnInit {
         this.itemsPerPage = response.productos.per_page;
         this.pageActual = response.productos.current_page;
         this.next_page = response.productos.next_page_url;
-        this.path = response.productos.path
+        this.path = response.productos.path;
         
+        this.isLoading = false;
     })
   }
 
@@ -138,10 +150,10 @@ export class ProductoDeshabilitadosComponent implements OnInit {
     this.isLoading = true;
 
     //si es vacio volvemos a llamar la primera funcion
-    if(claveExterna.target.value == ''){
+    if(claveExterna.target.value == '' || claveExterna.target.value == null){
       this.getProd();
-    }
-    //componemos la palabra
+    } else{
+      //componemos la palabra
     this.searchProducto = claveExterna.target.value;
 
     //generamos consulta
@@ -158,15 +170,16 @@ export class ProductoDeshabilitadosComponent implements OnInit {
             this.itemsPerPage = response.productos.per_page;
             this.pageActual = response.productos.current_page;
             this.next_page = response.productos.next_page_url;
-            this.path = response.productos.path
+            this.path = response.productos.path;
             
             //una ves terminado de cargar quitamos el spinner
             this.isLoading = false;
         }
       }, error =>{
-          console.log(error)
-      }
-    )
+          console.log(error);
+      });
+    }
+    
   }
 
   /**
@@ -183,10 +196,10 @@ export class ProductoDeshabilitadosComponent implements OnInit {
     this.isLoading = true;
 
     //si es vacio volvemos a llamar la primera funcion que trae todo
-    if(codbar.target.value == ''){
+    if(codbar.target.value == '' || codbar.target.value == null){
       this.getProd();
-    }
-
+    } else{
+      
     //componemos el codigo a buscar
     this.searchProductoCodbar = codbar.target.value;
 
@@ -203,15 +216,16 @@ export class ProductoDeshabilitadosComponent implements OnInit {
             this.itemsPerPage = response.productos.per_page;
             this.pageActual = response.productos.current_page;
             this.next_page = response.productos.next_page_url;
-            this.path = response.productos.path
+            this.path = response.productos.path;
             
             //una ves terminado de cargar quitamos el spinner
             this.isLoading = false;
           }
       }, error => {
-        console.log(error)
-      }
-    )
+        console.log(error);
+      });
+    }
+
   }
 
   /**
@@ -228,11 +242,10 @@ export class ProductoDeshabilitadosComponent implements OnInit {
     this.isLoading = true;
 
     //si es vacio volvemos a llamar la primera funcion que trae todo
-    if(descripcion.target.value == ''){
+    if(descripcion.target.value == '' || descripcion.target.value == null){
       this.getProd();
-    }
-
-    //componemos el codigo a buscar
+    } else{
+      //componemos el codigo a buscar
     this.searchProductoDescrip = descripcion.target.value;
 
     //llamamos al servicio
@@ -248,15 +261,15 @@ export class ProductoDeshabilitadosComponent implements OnInit {
             this.itemsPerPage = response.productos.per_page;
             this.pageActual = response.productos.current_page;
             this.next_page = response.productos.next_page_url;
-            this.path = response.productos.path
+            this.path = response.productos.path;
             
             //una ves terminado de cargar quitamos el spinner
             this.isLoading = false;
           }
       }, error => {
-        console.log(error)
-      }
-    )
+        console.log(error);
+      });
+    }
   }
 
 }
