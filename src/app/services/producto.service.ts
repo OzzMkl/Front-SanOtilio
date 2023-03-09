@@ -37,6 +37,7 @@ export class ProductoService{
             );
             //return forkJoin([r1,r2]);
     }
+
     getProductos():Observable<any>{
         return this._http.get(this.url+'productos/index', {headers:this.headers} );
     }
@@ -70,6 +71,13 @@ export class ProductoService{
         return this._http.put(this.url + 'productos/updatestatus/'+idProducto,params,{headers:this.headers});
     }
 
+    /**
+     * Este envia la informacion del producto mas la informacion de sus medidas
+     * @param producto Producto
+     * @param listaProdMedida Array<Medidas>
+     * @param empleado Empleado
+     * @returns Observable
+     */
     updateProducto( producto:any, listaProdMedida:any,empleado:any):Observable<any>{
         let combinado = {...producto, ...empleado};
         let json = JSON.stringify(combinado);
@@ -90,6 +98,20 @@ export class ProductoService{
                 console.log('Error:', error);
                 return throwError('Fallo al actualizar el producto Error: '+error.error.error.errorInfo['2']);
             }));
+    }
+
+    /**
+     * Actualiza unicamente la informacion del producto
+     * @param producto Producto
+     * @param empleado Empleado
+     * @returns 
+     */
+    putProducto(producto:any, empleado:any):Observable<any>{
+        let combinado = {...producto, ...empleado};
+        let json = JSON.stringify(combinado);
+        let params = 'json='+json;
+
+        return this._http.put(this.url+'productos/updateProduct/'+producto.idProducto,params,{headers:this.headers});
     }
     
     getExistenciaG(idProducto:any):Observable<any>{
