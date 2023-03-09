@@ -67,6 +67,7 @@ export class ProductoEditarComponent implements OnInit {
   public datosTab4: Productos_medidas;
   public datosTab5: Productos_medidas;
   //checks de  las tablas para la igualacion de porcentajes
+  public checkMuestraPrecios: boolean = false;
   public checkTab2: boolean = false;
   public checkTab3: boolean = false;
   public checkTab4: boolean = false;
@@ -504,9 +505,12 @@ export class ProductoEditarComponent implements OnInit {
       this.loadUser();
       this.insertaListaProdM();
       //console.log(this.producto, this.listaProdMedida)
+
+      //Revisamo si quieren actualizar precios
+      if(this.checkMuestraPrecios){
         this._productoService.updateProducto(this.producto,this.listaProdMedida,this.identity).subscribe(
           response =>{
-            console.log('asdasdasd :',response);
+            //console.log('asdasdasd :',response);
             if(response.status == 'success'){
 
                this._router.navigate(['./producto-modulo/producto-buscar']);
@@ -518,6 +522,19 @@ export class ProductoEditarComponent implements OnInit {
             console.log('error ',error);
             this.toastService.show(error, { classname: 'bg-danger text-light', delay: 15000 });
           });
+      } //si no solo se guarda la informacion del producto
+        else{
+          this._productoService.putProducto(this.producto,this.identity).subscribe(
+            response =>{
+              if(response.status == 'success'){
+                this._router.navigate(['./producto-modulo/producto-buscar']);
+                this.toastService.show('Producto '+this.producto.claveEx+' actualizado correctamente', { classname: 'bg-success text-light', delay: 5000 });
+              }
+            }, error =>{
+              console.log(error)
+              this.toastService.show(error.message, { classname: 'bg-danger text-light', delay: 15000 });
+            });
+        }
     }
   
     /**
