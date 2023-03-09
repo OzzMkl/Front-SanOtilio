@@ -193,4 +193,7 @@ export class ProductoService{
     searchProductoMedida(idProducto:number):Observable<any>{
         return this._http.get(this.url+'productos/searchProductoMedida/'+idProducto,{headers:this.headers});
     }
+    searchProductoMedidaI(idProducto:number):Observable<any>{
+        return this._http.get(this.url+'productos/searchProductoMedidaI/'+idProducto,{headers:this.headers});
+    }
 }
