@@ -580,6 +580,7 @@ export class ProductoEditarComponent implements OnInit {
           break;
       }
     }
+
     /***
      * ingresa a la lista de Productos_medidas
      * el numero de medidas que se seleccionaron
@@ -632,6 +633,11 @@ export class ProductoEditarComponent implements OnInit {
             break;
       }
     }
+
+    /**
+     * Permite aumentar el precio de venta directamente a todas las medidas
+     * y a todos los precios
+     */
     aumentaPrecioV(){
       var inputValue  = parseFloat((<HTMLInputElement>document.getElementById('mmValue')).value);
       var suma2 =0;
@@ -769,6 +775,11 @@ export class ProductoEditarComponent implements OnInit {
         }
       }
     }
+
+    /**
+     * Permite restar al precio de venta directamente a todas las medidas
+     * y a todos los precios
+     */
     disminuyePrecioV(){
       var inputValue  = parseFloat((<HTMLInputElement>document.getElementById('mmValue')).value);
       var suma2 =0;
