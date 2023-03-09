@@ -271,6 +271,8 @@ export class OrdencompraAgregarComponent implements OnInit {
         this.medidasLista = response.productos_medidas;
         console.log(this.productoVer);
         console.log(this.medidasLista);
+        //Si el producto tiene una sola medida se asigna directo
+        if(this.medidasLista.length = 1){ this.producto_orden.idProdMedida = this.medidasLista[0].idProdMedida }
       },error => {
         console.log(error);
       }

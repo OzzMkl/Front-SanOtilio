@@ -89,7 +89,9 @@ export class CompraAgregarIdComponent implements OnInit {
 
   //modelo de bootstrap
   today = this.calendar.getToday();
-  
+
+  //Variables para actualizar medida
+  public medidaActualizada:any;
 
   public compra: Compra;
   public Lista_compras: Array<Producto_compra>;
@@ -422,11 +424,14 @@ export class CompraAgregarIdComponent implements OnInit {
         this.producto_compra.claveEx = this.productoVer[0]['claveEx'];
         this.producto_compra.idProducto = this.productoVer[0]['idProducto'];
         this.producto_compra.cantidad = lpo.cantidad;
-        this.producto_compra.idProdMedida = lpo.idProdMedida;
         this.productoVerM = response.productos_medidas;//informacion completa de productos_medidas para recorrerlo atraves del html
         console.log('productoVerM',this.productoVerM);
-        this.producto_compra.nombreMedida = this.productoVerM[0]['nombreMedida'];
-        
+        //obtener idProdMedida actualizado y asignarlo
+        //buscar lpo.nombreMedida en productoVerM, regresar y asignar this.producto_compra.idProdMedida, this.producto_compra.nombreMedida
+        this.medidaActualizada = this.productoVerM.find( (x:any) => x.nombreMedida == lpo.nombreMedida);
+        console.log('medidaActualizada',this.medidaActualizada);
+        this.producto_compra.idProdMedida = this.medidaActualizada.idProdMedida;
+        this.producto_compra.nombreMedida = this.medidaActualizada.nombreMedida;
         
       },error => {
         //console.log(error);
@@ -556,7 +561,7 @@ export class CompraAgregarIdComponent implements OnInit {
   }
 
   editarProducto(lpo:any){//metodo para editar la lista de productos
-    console.log(lpo);
+    console.log('editarProducto',lpo);
 
     this.lista_productosorden = this.lista_productosorden.filter((item) => item.idProducto !== lpo.idProducto);//eliminamos el producto
     //consultamos la informacion para motrar el producto nuevamente

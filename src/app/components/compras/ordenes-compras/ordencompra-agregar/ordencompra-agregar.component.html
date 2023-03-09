@@ -104,7 +104,7 @@
                         <th scope="col">CANTIDAD</th>
                     </tr>
                 </thead>
-                <tbody *ngFor="let p_d of Lista_compras | paginate:{id:'pcListaCompras',itemsPerPage: itemsPerPage2, currentPage: pageActual2, totalItems:totalPages2}">
+                <tbody *ngFor="let p_d of Lista_compras | paginate:{id:'pcListaCompras',itemsPerPage: 5, currentPage: pageActual2}">
                     <tr>
                      <th scope="row">{{p_d.claveEx}}</th>
                      <th scope="row">{{p_d.descripcion}}</th>
