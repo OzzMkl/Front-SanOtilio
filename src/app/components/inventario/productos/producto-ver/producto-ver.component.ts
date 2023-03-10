@@ -1,12 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute} from '@angular/router';
-//Modelo
-import { Producto } from 'src/app/models/producto';
 //Servicio
 import { ProductoService } from 'src/app/services/producto.service';
 import {ToastService} from 'src/app/services/toast.service';
 import { global } from 'src/app/services/global';
 import { Productos_medidas } from 'src/app/models/productos_medidas';
+import {MenuItem} from 'primeng/api';
 
 @Component({
   selector: 'app-producto-ver',
@@ -44,6 +43,8 @@ export class ProductoVerComponent implements OnInit {
   public medida3: string = '';
   public medida4: string = '';
   public medida5: string = '';
+  //
+  items: MenuItem[] =[];
 
   constructor( 
     private _productoService: ProductoService,
@@ -60,6 +61,50 @@ export class ProductoVerComponent implements OnInit {
 
   ngOnInit(): void {
     this.getIdProduct();
+    this.menu();
+  }
+  /**
+   * Estructura del menu desplegable
+   */
+  menu(){
+    this.items = [
+      {
+          label: 'Opciones',
+          items: [{
+              label: 'PDF',
+              icon: 'pi pi-file-pdf'
+          },
+          {
+              label: 'Editar',
+              icon: 'pi pi-file-edit'
+          }
+      ]}
+    ];
+  }
+  /**
+   * 
+   */
+  prueba(statuss:number){
+    switch(statuss){
+      case 31:
+          this.items[0].items?.push({
+            label: 'Deshabilitar',
+            icon: 'pi pi-exclamation-triangle',
+            command: () => {
+              //this.update();
+            }
+          });
+        break;
+      case 32:
+          this.items[0].items?.push({
+            label: 'Habilitar',
+            icon: 'pi pi-exclamation-triangle',
+            command: () => {
+              //this.update();
+            }
+          });
+        break;        
+    }
   }
 
   /**
@@ -79,10 +124,12 @@ export class ProductoVerComponent implements OnInit {
       if(response.status == 'success'){
          //console.log(response);
 
-         this.producto = response.producto
+         this.producto = response.producto;
+
+         this.prueba(response.producto[0]['statuss'])
          //para asi asignar el valor del codigo de barras a la variable value
          //esto con la finalidad de poder mostrar el codigo de barras
-         this.muestraCbarras = this.producto.cbarras;
+         this.muestraCbarras = response.producto[0]['cbarras'];
 
          this.listaProdMedida = response.productos_medidas;
          //console.log(this.listaProdMedida)
