@@ -260,8 +260,14 @@ export class CompraAgregarIdComponent implements OnInit {
     if(this.test == true){
       this.producto_compra.caducidad = this.modelP.year+'-'+this.modelP.month+'-'+this.modelP.day;//concatenamos la fecha del datepicker
     }
-    console.log('capturar',datos);
+    console.log('capturar',datos.idProdMedida);
     console.log('Caducidad: ',this.producto_compra.caducidad);
+
+    //Asignar idProdMedida y nombreMedida antes de capturar
+    this.medidaActualizada = this.productoVerM.find( (x:any) => x.idProdMedida == datos.idProdMedida);
+    this.producto_compra.idProdMedida = parseInt(this.medidaActualizada.idProdMedida);
+    this.producto_compra.nombreMedida = this.medidaActualizada.nombreMedida;
+
     
     if(this.producto_compra.cantidad <= 0 || this.producto_compra.precio <= 0 || this.producto_compra.subtotal <= 0){
       this.toastService.show('No se pueden agregar productos con cantidad, precio o importe menor o igual a 0',{classname: 'bg-danger text-light', delay: 6000})
@@ -271,7 +277,7 @@ export class CompraAgregarIdComponent implements OnInit {
       //verificamos si la lista de compras ya contiene el producto buscandolo por idProducto
       this.toastService.show('Ese producto ya esta en la lista',{classname: 'bg-danger text-light', delay: 6000})
     }else{
-      this.Lista_compras.push({...this.producto_compra});
+      this.Lista_compras.push({...this.producto_compra}); 
       this.isSearch=true;
 
       //Calculo de subtotal y total de la compra
@@ -430,8 +436,9 @@ export class CompraAgregarIdComponent implements OnInit {
         //buscar lpo.nombreMedida en productoVerM, regresar y asignar this.producto_compra.idProdMedida, this.producto_compra.nombreMedida
         this.medidaActualizada = this.productoVerM.find( (x:any) => x.nombreMedida == lpo.nombreMedida);
         console.log('medidaActualizada',this.medidaActualizada);
-        this.producto_compra.idProdMedida = this.medidaActualizada.idProdMedida;
+        this.producto_compra.idProdMedida = parseInt(this.medidaActualizada.idProdMedida);
         this.producto_compra.nombreMedida = this.medidaActualizada.nombreMedida;
+        console.log('producto_compra',this.producto_compra)
         
       },error => {
         //console.log(error);
