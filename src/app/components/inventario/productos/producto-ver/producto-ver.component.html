@@ -1,337 +1,350 @@
+<p-toast></p-toast>
 <div class="container" >
-    <div class="text-center text-primary" *ngIf="isLoading">
-        <div class="spinner-border" role="status" >
-            <span class="visually-hidden">Loading...</span>
-          </div>
-    </div>
-    <div *ngIf="!isLoading" >
-        <div *ngFor="let p of producto">
+    
+    <p-panel header="Detalles del producto">
+        <ng-template pTemplate="icons">
+            <button pButton class="p-panel-header-icon p-link" icon="pi pi-cog" (click)="menu.toggle($event)">
+            </button>
+            <p-menu #menu id="config_menu" [model]="items" [popup]="true"></p-menu>
+        </ng-template>
 
-            <div class="row align-items-start">
-                <!-- DATOS PRINCIPALES -->
-                <h4 class="text-center">{{p.claveEx}}</h4>
-                <div class="col-3">
-                    <label class="form-label" for="">Clave Externa</label>
-                    <input class="form-control" type="text" value="{{p.claveEx}}" readonly>
-                </div>
-                <div class="col-3">
-                    <label class="form-label" for="">Marca</label>
-                    <input class="form-control" type="text" value="{{p.nombreMarca}}" readonly>
-                </div>
-                <div class="col-3">
-                    <label class="form-label" for="">Deoartamento</label>
-                    <input class="form-control" type="text" value="{{p.nombreDep}}" readonly>
-                </div>
-                <div class="col-3">
-                    <label class="form-label" for="">Categoria</label>
-                    <input class="form-control" type="text" value="{{p.nombreCat}}" readonly>
-                </div>
-                <div class="col-6">
-                    <label class="form-label" for="">Descripcion</label>
-                    <textarea class="form-control" type="text" value="{{p.descripcion}}" rows="2" readonly></textarea>
-                </div>
-                <div class="col-6">
-                    <label class="form-label" for="">Ubicacion</label>
-                    <textarea class="form-control" type="text" value="{{p.ubicacion}}" rows="2" readonly></textarea>
-                </div>
-                <div class="col-3">
-                    <label class="form-label" for="">Imagen</label><br>
-                    <img src="{{url + 'productos/getImageProduc/' + p.imagen}}" width="100px" height="100px">
-                </div>
-                <div class="col-3">
-                    <label class="form-label" for="">Almacen</label>
-                    <input class="form-control" type="text" value="{{p.nombreAlmacen}}" readonly>
-                </div>
-                <div class="col-3">
-                    <label class="form-label" for="">Tiempo de entrega</label>
-                    <input class="form-control" type="text" value="{{p.tEntrega}}" readonly>
-                </div>
-                <div class="col-1">
-                    <label class="form-label" for="">Stock Min</label>
-                    <input class="form-control" type="text" value="{{p.stockMin}}" readonly>
-                </div>
-                <div class="col-1">
-                    <label class="form-label" for="">Stock Max</label>
-                    <input class="form-control" type="text" value="{{p.stockMax}}" readonly>
-                </div>
-
-                <!-- FIN DATOS PRINCIPALES -->
+        <div class="text-center text-primary" *ngIf="isLoading">
+            <div class="spinner-border" role="status" >
+                <span class="visually-hidden">Loading...</span>
             </div>
-            <hr>
-
-            <div class="row justify-content-between">
-                <h4 class="text-center">PRECIOS</h4>
-                <div class="col-4">
-                    <label class="form-label" for="">Precio compra</label>
-                    <input class="form-control" type="text" value="{{datosTab1.preciocompra | currency}}" readonly>
-                </div>
-                <div class="col-4">
-                    <label class="form-label" for="">Clave sat</label>
-                    <input class="form-control" type="text" value="{{p.claveSat}}" readonly>
-                </div>
-                <div class="col-4">
-                    <label class="form-label" for="">No. de medidas</label>
-                    <input class="form-control" type="text" value="{{noMedida}}" readonly>
-                </div>
-            </div>
-            <!-- TABLAS DE PRECIOS -->
-            <div class="row justify-content-between">
-                <!-- tab1 -->
-                <div class="col-4">
-                    <div class="row justify-content-between">
-                        <div class="col">
-                            <label class="form-label" for="">Medida 1</label>
-                            <input class="form-control" type="text" value="{{medida1}}" readonly>
-                        </div>
-                        <div class="col">
-                            <label class="form-label" for="">Unidad</label>
-                            <input class="form-control" type="text" value="{{datosTab1.unidad}}" readonly>
-                        </div>
-                    </div>
-                    <br>
-                    <table class="table table-light">
-                        <thead class="text-center">
-                            <tr>
-                                <th>#</th>
-                                <th>Porcentaje</th>
-                                <th>Precio</th>
-                              </tr>
-                        </thead>
-                        <tbody class="text-center">
-                            <tr>
-                                <th>5</th>
-                                <th>{{datosTab1.porcentaje5}}</th>
-                                <th>{{datosTab1.precio5 | currency}}</th>
-                            </tr>
-                            <tr>
-                                <th>4</th>
-                                <th>{{datosTab1.porcentaje4}}</th>
-                                <th>{{datosTab1.precio4 | currency}}</th>
-                            </tr>
-                            <tr>
-                                <th>3</th>
-                                <th>{{datosTab1.porcentaje3}}</th>
-                                <th>{{datosTab1.precio3 | currency}}</th>
-                            </tr>
-                            <tr>
-                                <th>2</th>
-                                <th>{{datosTab1.porcentaje2}}</th>
-                                <th>{{datosTab1.precio2 | currency}}</th>
-                            </tr>
-                            <tr>
-                                <th>1</th>
-                                <th>{{datosTab1.porcentaje1}}</th>
-                                <th>{{datosTab1.precio1 | currency}}</th>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <!-- tab2 -->
-                <div class="col-4" [hidden]="tab2">
-                    <div class="row justify-content-between">
-                        <div class="col">
-                            <label class="form-label" for="">Medida 2</label>
-                            <input class="form-control" type="text" value="{{medida2}}" readonly>
-                        </div>
-                        <div class="col">
-                            <label class="form-label" for="">Unidad</label>
-                            <input class="form-control" type="text" value="{{datosTab2.unidad}}" readonly>
-                        </div>
-                    </div>
-                    <br>
-                    <table class="table table-light">
-                        <thead class="text-center">
-                            <tr>
-                                <th>#</th>
-                                <th>Porcentaje</th>
-                                <th>Precio</th>
-                              </tr>
-                        </thead>
-                        <tbody class="text-center">
-                            <tr>
-                                <th>5</th>
-                                <th>{{datosTab2.porcentaje5}}</th>
-                                <th>{{datosTab2.precio5 | currency}}</th>
-                            </tr>
-                            <tr>
-                                <th>4</th>
-                                <th>{{datosTab2.porcentaje4}}</th>
-                                <th>{{datosTab2.precio4 | currency}}</th>
-                            </tr>
-                            <tr>
-                                <th>3</th>
-                                <th>{{datosTab2.porcentaje3}}</th>
-                                <th>{{datosTab2.precio3 | currency}}</th>
-                            </tr>
-                            <tr>
-                                <th>2</th>
-                                <th>{{datosTab2.porcentaje2}}</th>
-                                <th>{{datosTab2.precio2 | currency}}</th>
-                            </tr>
-                            <tr>
-                                <th>1</th>
-                                <th>{{datosTab2.porcentaje1}}</th>
-                                <th>{{datosTab2.precio1 | currency}}</th>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <!-- tab3 -->
-                <div class="col-4" [hidden]="tab3">
-                    <div class="row justify-content-between">
-                        <div class="col">
-                            <label class="form-label" for="">Medida 3</label>
-                            <input class="form-control" type="text" value="{{medida3}}" readonly>
-                        </div>
-                        <div class="col">
-                            <label class="form-label" for="">Unidad</label>
-                            <input class="form-control" type="text" value="{{datosTab3.unidad}}" readonly>
-                        </div>
-                    </div>
-                    <br>
-                    <table class="table table-light">
-                        <thead class="text-center">
-                            <tr>
-                                <th>#</th>
-                                <th>Porcentaje</th>
-                                <th>Precio</th>
-                              </tr>
-                        </thead>
-                        <tbody class="text-center">
-                            <tr>
-                                <th>5</th>
-                                <th>{{datosTab3.porcentaje5}}</th>
-                                <th>{{datosTab3.precio5 | currency}}</th>
-                            </tr>
-                            <tr>
-                                <th>4</th>
-                                <th>{{datosTab3.porcentaje4}}</th>
-                                <th>{{datosTab3.precio4 | currency}}</th>
-                            </tr>
-                            <tr>
-                                <th>3</th>
-                                <th>{{datosTab3.porcentaje3}}</th>
-                                <th>{{datosTab3.precio3 | currency}}</th>
-                            </tr>
-                            <tr>
-                                <th>2</th>
-                                <th>{{datosTab3.porcentaje2}}</th>
-                                <th>{{datosTab3.precio2 | currency}}</th>
-                            </tr>
-                            <tr>
-                                <th>1</th>
-                                <th>{{datosTab3.porcentaje1}}</th>
-                                <th>{{datosTab3.precio1 | currency}}</th>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <!-- tab4 -->
-                <div class="col-4" [hidden]="tab4">
-                    <div class="row justify-content-between">
-                        <div class="col">
-                            <label class="form-label" for="">Medida 4</label>
-                            <input class="form-control" type="text" value="{{medida4}}" readonly>
-                        </div>
-                        <div class="col">
-                            <label class="form-label" for="">Unidad</label>
-                            <input class="form-control" type="text" value="{{datosTab4.unidad}}" readonly>
-                        </div>
-                    </div>
-                    <br>
-                    <table class="table table-light">
-                        <thead class="text-center">
-                            <tr>
-                                <th>#</th>
-                                <th>Porcentaje</th>
-                                <th>Precio</th>
-                              </tr>
-                        </thead>
-                        <tbody class="text-center">
-                            <tr>
-                                <th>5</th>
-                                <th>{{datosTab4.porcentaje5}}</th>
-                                <th>{{datosTab4.precio5 | currency}}</th>
-                            </tr>
-                            <tr>
-                                <th>4</th>
-                                <th>{{datosTab4.porcentaje4}}</th>
-                                <th>{{datosTab4.precio4 | currency}}</th>
-                            </tr>
-                            <tr>
-                                <th>3</th>
-                                <th>{{datosTab4.porcentaje3}}</th>
-                                <th>{{datosTab4.precio3 | currency}}</th>
-                            </tr>
-                            <tr>
-                                <th>2</th>
-                                <th>{{datosTab4.porcentaje2}}</th>
-                                <th>{{datosTab4.precio2 | currency}}</th>
-                            </tr>
-                            <tr>
-                                <th>1</th>
-                                <th>{{datosTab4.porcentaje1}}</th>
-                                <th>{{datosTab4.precio1 | currency}}</th>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <!-- tab5 -->
-                <div class="col-4" [hidden]="tab5">
-                    <div class="row justify-content-between">
-                        <div class="col">
-                            <label class="form-label" for="">Medida 5</label>
-                            <input class="form-control" type="text" value="{{medida5}}" readonly>
-                        </div>
-                        <div class="col">
-                            <label class="form-label" for="">Unidad</label>
-                            <input class="form-control" type="text" value="{{datosTab5.unidad}}" readonly>
-                        </div>
-                    </div>
-                    <br>
-                    <table class="table table-light">
-                        <thead class="text-center">
-                            <tr>
-                                <th>#</th>
-                                <th>Porcentaje</th>
-                                <th>Precio</th>
-                              </tr>
-                        </thead>
-                        <tbody class="text-center">
-                            <tr>
-                                <th>5</th>
-                                <th>{{datosTab5.porcentaje5}}</th>
-                                <th>{{datosTab5.precio5 | currency}}</th>
-                            </tr>
-                            <tr>
-                                <th>4</th>
-                                <th>{{datosTab5.porcentaje4}}</th>
-                                <th>{{datosTab5.precio4 | currency}}</th>
-                            </tr>
-                            <tr>
-                                <th>3</th>
-                                <th>{{datosTab5.porcentaje3}}</th>
-                                <th>{{datosTab5.precio3 | currency}}</th>
-                            </tr>
-                            <tr>
-                                <th>2</th>
-                                <th>{{datosTab5.porcentaje2}}</th>
-                                <th>{{datosTab5.precio2 | currency}}</th>
-                            </tr>
-                            <tr>
-                                <th>1</th>
-                                <th>{{datosTab5.porcentaje1}}</th>
-                                <th>{{datosTab5.precio1 | currency}}</th>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-            </div>
-            <!-- FIN TABLAS DE PRECIOS -->
-
         </div>
-    </div>
+        <div *ngIf="!isLoading" >
+            <div *ngFor="let p of producto">
+    
+                <div class="row align-items-start">
+                    <!-- DATOS PRINCIPALES -->
+                    <h4 class="text-center">PRODUCTO: {{p.claveEx}}</h4>
+                    <div class="col-3">
+                        <label class="form-label" for="">Marca</label>
+                        <input class="form-control" type="text" value="{{p.nombreMarca}}" readonly>
+                    </div>
+                    <div class="col-3">
+                        <label class="form-label" for="">Deoartamento</label>
+                        <input class="form-control" type="text" value="{{p.nombreDep}}" readonly>
+                    </div>
+                    <div class="col-3">
+                        <label class="form-label" for="">Categoria</label>
+                        <input class="form-control" type="text" value="{{p.nombreCat}}" readonly>
+                    </div>
+                    <div class="col-3">
+                        <label class="form-label" for="">Almacen</label>
+                        <input class="form-control" type="text" value="{{p.nombreAlmacen}}" readonly>
+                    </div>
+    
+                    <div class="col-6">
+                        <label class="form-label" for="">Descripcion</label>
+                        <textarea class="form-control" type="text" value="{{p.descripcion}}" rows="2" readonly></textarea>
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label" for="">Ubicacion</label>
+                        <textarea class="form-control" type="text" value="{{p.ubicacion}}" rows="2" readonly></textarea>
+                    </div>
+    
+                    <div class="col-2">
+                        <label class="form-label" for="">Imagen</label><br>
+                        <img src="{{url + 'productos/getImageProduc/' + p.imagen}}" width="100px" height="100px">
+                    </div>
+                    
+                    <div class="col-2">
+                        <label class="form-label" for="">Tiempo de entrega</label>
+                        <input class="form-control" type="text" value="{{p.tEntrega}}" readonly>
+                    </div>
+                    <div class="col-1">
+                        <label class="form-label" for="">Stock Min</label>
+                        <input class="form-control" type="text" value="{{p.stockMin}}" readonly>
+                    </div>
+                    <div class="col-1">
+                        <label class="form-label" for="">Stock Max</label>
+                        <input class="form-control" type="text" value="{{p.stockMax}}" readonly>
+                    </div>
+                    <div class="col-6 text-center">
+                        <h6 class="text-center">Codigo de barras</h6>
+                        <ngx-barcode [bc-value]="muestraCbarras" [bc-display-value]="true"></ngx-barcode>
+                    </div>
+    
+                    <!-- FIN DATOS PRINCIPALES -->
+                </div>
+                <hr>
+    
+                <div class="row justify-content-between">
+                    <h4 class="text-center">PRECIOS</h4>
+                    <div class="col-4">
+                        <label class="form-label" for="">Precio compra</label>
+                        <input class="form-control" type="text" value="{{datosTab1.preciocompra | currency}}" readonly>
+                    </div>
+                    <div class="col-4">
+                        <label class="form-label" for="">Clave sat</label>
+                        <input class="form-control" type="text" value="{{p.claveSat}}" readonly>
+                    </div>
+                    <div class="col-4">
+                        <label class="form-label" for="">No. de medidas</label>
+                        <input class="form-control" type="text" value="{{noMedida}}" readonly>
+                    </div>
+                </div>
+                <!-- TABLAS DE PRECIOS -->
+                <div class="row justify-content-between">
+                    <!-- tab1 -->
+                    <div class="col-4">
+                        <div class="row justify-content-between">
+                            <div class="col">
+                                <label class="form-label" for="">Medida 1</label>
+                                <input class="form-control" type="text" value="{{medida1}}" readonly>
+                            </div>
+                            <div class="col">
+                                <label class="form-label" for="">Unidad</label>
+                                <input class="form-control" type="text" value="{{datosTab1.unidad}}" readonly>
+                            </div>
+                        </div>
+                        <br>
+                        <table class="table table-light">
+                            <thead class="text-center">
+                                <tr>
+                                    <th>#</th>
+                                    <th>Porcentaje</th>
+                                    <th>Precio</th>
+                                  </tr>
+                            </thead>
+                            <tbody class="text-center">
+                                <tr>
+                                    <th>5</th>
+                                    <th>{{datosTab1.porcentaje5}}</th>
+                                    <th>{{datosTab1.precio5 | currency}}</th>
+                                </tr>
+                                <tr>
+                                    <th>4</th>
+                                    <th>{{datosTab1.porcentaje4}}</th>
+                                    <th>{{datosTab1.precio4 | currency}}</th>
+                                </tr>
+                                <tr>
+                                    <th>3</th>
+                                    <th>{{datosTab1.porcentaje3}}</th>
+                                    <th>{{datosTab1.precio3 | currency}}</th>
+                                </tr>
+                                <tr>
+                                    <th>2</th>
+                                    <th>{{datosTab1.porcentaje2}}</th>
+                                    <th>{{datosTab1.precio2 | currency}}</th>
+                                </tr>
+                                <tr>
+                                    <th>1</th>
+                                    <th>{{datosTab1.porcentaje1}}</th>
+                                    <th>{{datosTab1.precio1 | currency}}</th>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- tab2 -->
+                    <div class="col-4" [hidden]="tab2">
+                        <div class="row justify-content-between">
+                            <div class="col">
+                                <label class="form-label" for="">Medida 2</label>
+                                <input class="form-control" type="text" value="{{medida2}}" readonly>
+                            </div>
+                            <div class="col">
+                                <label class="form-label" for="">Unidad</label>
+                                <input class="form-control" type="text" value="{{datosTab2.unidad}}" readonly>
+                            </div>
+                        </div>
+                        <br>
+                        <table class="table table-light">
+                            <thead class="text-center">
+                                <tr>
+                                    <th>#</th>
+                                    <th>Porcentaje</th>
+                                    <th>Precio</th>
+                                  </tr>
+                            </thead>
+                            <tbody class="text-center">
+                                <tr>
+                                    <th>5</th>
+                                    <th>{{datosTab2.porcentaje5}}</th>
+                                    <th>{{datosTab2.precio5 | currency}}</th>
+                                </tr>
+                                <tr>
+                                    <th>4</th>
+                                    <th>{{datosTab2.porcentaje4}}</th>
+                                    <th>{{datosTab2.precio4 | currency}}</th>
+                                </tr>
+                                <tr>
+                                    <th>3</th>
+                                    <th>{{datosTab2.porcentaje3}}</th>
+                                    <th>{{datosTab2.precio3 | currency}}</th>
+                                </tr>
+                                <tr>
+                                    <th>2</th>
+                                    <th>{{datosTab2.porcentaje2}}</th>
+                                    <th>{{datosTab2.precio2 | currency}}</th>
+                                </tr>
+                                <tr>
+                                    <th>1</th>
+                                    <th>{{datosTab2.porcentaje1}}</th>
+                                    <th>{{datosTab2.precio1 | currency}}</th>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- tab3 -->
+                    <div class="col-4" [hidden]="tab3">
+                        <div class="row justify-content-between">
+                            <div class="col">
+                                <label class="form-label" for="">Medida 3</label>
+                                <input class="form-control" type="text" value="{{medida3}}" readonly>
+                            </div>
+                            <div class="col">
+                                <label class="form-label" for="">Unidad</label>
+                                <input class="form-control" type="text" value="{{datosTab3.unidad}}" readonly>
+                            </div>
+                        </div>
+                        <br>
+                        <table class="table table-light">
+                            <thead class="text-center">
+                                <tr>
+                                    <th>#</th>
+                                    <th>Porcentaje</th>
+                                    <th>Precio</th>
+                                  </tr>
+                            </thead>
+                            <tbody class="text-center">
+                                <tr>
+                                    <th>5</th>
+                                    <th>{{datosTab3.porcentaje5}}</th>
+                                    <th>{{datosTab3.precio5 | currency}}</th>
+                                </tr>
+                                <tr>
+                                    <th>4</th>
+                                    <th>{{datosTab3.porcentaje4}}</th>
+                                    <th>{{datosTab3.precio4 | currency}}</th>
+                                </tr>
+                                <tr>
+                                    <th>3</th>
+                                    <th>{{datosTab3.porcentaje3}}</th>
+                                    <th>{{datosTab3.precio3 | currency}}</th>
+                                </tr>
+                                <tr>
+                                    <th>2</th>
+                                    <th>{{datosTab3.porcentaje2}}</th>
+                                    <th>{{datosTab3.precio2 | currency}}</th>
+                                </tr>
+                                <tr>
+                                    <th>1</th>
+                                    <th>{{datosTab3.porcentaje1}}</th>
+                                    <th>{{datosTab3.precio1 | currency}}</th>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- tab4 -->
+                    <div class="col-4" [hidden]="tab4">
+                        <div class="row justify-content-between">
+                            <div class="col">
+                                <label class="form-label" for="">Medida 4</label>
+                                <input class="form-control" type="text" value="{{medida4}}" readonly>
+                            </div>
+                            <div class="col">
+                                <label class="form-label" for="">Unidad</label>
+                                <input class="form-control" type="text" value="{{datosTab4.unidad}}" readonly>
+                            </div>
+                        </div>
+                        <br>
+                        <table class="table table-light">
+                            <thead class="text-center">
+                                <tr>
+                                    <th>#</th>
+                                    <th>Porcentaje</th>
+                                    <th>Precio</th>
+                                  </tr>
+                            </thead>
+                            <tbody class="text-center">
+                                <tr>
+                                    <th>5</th>
+                                    <th>{{datosTab4.porcentaje5}}</th>
+                                    <th>{{datosTab4.precio5 | currency}}</th>
+                                </tr>
+                                <tr>
+                                    <th>4</th>
+                                    <th>{{datosTab4.porcentaje4}}</th>
+                                    <th>{{datosTab4.precio4 | currency}}</th>
+                                </tr>
+                                <tr>
+                                    <th>3</th>
+                                    <th>{{datosTab4.porcentaje3}}</th>
+                                    <th>{{datosTab4.precio3 | currency}}</th>
+                                </tr>
+                                <tr>
+                                    <th>2</th>
+                                    <th>{{datosTab4.porcentaje2}}</th>
+                                    <th>{{datosTab4.precio2 | currency}}</th>
+                                </tr>
+                                <tr>
+                                    <th>1</th>
+                                    <th>{{datosTab4.porcentaje1}}</th>
+                                    <th>{{datosTab4.precio1 | currency}}</th>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- tab5 -->
+                    <div class="col-4" [hidden]="tab5">
+                        <div class="row justify-content-between">
+                            <div class="col">
+                                <label class="form-label" for="">Medida 5</label>
+                                <input class="form-control" type="text" value="{{medida5}}" readonly>
+                            </div>
+                            <div class="col">
+                                <label class="form-label" for="">Unidad</label>
+                                <input class="form-control" type="text" value="{{datosTab5.unidad}}" readonly>
+                            </div>
+                        </div>
+                        <br>
+                        <table class="table table-light">
+                            <thead class="text-center">
+                                <tr>
+                                    <th>#</th>
+                                    <th>Porcentaje</th>
+                                    <th>Precio</th>
+                                  </tr>
+                            </thead>
+                            <tbody class="text-center">
+                                <tr>
+                                    <th>5</th>
+                                    <th>{{datosTab5.porcentaje5}}</th>
+                                    <th>{{datosTab5.precio5 | currency}}</th>
+                                </tr>
+                                <tr>
+                                    <th>4</th>
+                                    <th>{{datosTab5.porcentaje4}}</th>
+                                    <th>{{datosTab5.precio4 | currency}}</th>
+                                </tr>
+                                <tr>
+                                    <th>3</th>
+                                    <th>{{datosTab5.porcentaje3}}</th>
+                                    <th>{{datosTab5.precio3 | currency}}</th>
+                                </tr>
+                                <tr>
+                                    <th>2</th>
+                                    <th>{{datosTab5.porcentaje2}}</th>
+                                    <th>{{datosTab5.precio2 | currency}}</th>
+                                </tr>
+                                <tr>
+                                    <th>1</th>
+                                    <th>{{datosTab5.porcentaje1}}</th>
+                                    <th>{{datosTab5.precio1 | currency}}</th>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+    
+                </div>
+                <!-- FIN TABLAS DE PRECIOS -->
+    
+            </div>
+        </div>
+    </p-panel>
 </div>
   
   

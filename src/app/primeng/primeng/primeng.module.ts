@@ -20,6 +20,7 @@ import { FileUploadModule } from 'primeng/fileupload';
 import {ToggleButtonModule} from 'primeng/togglebutton';
 import {SelectButtonModule} from 'primeng/selectbutton';
 import {FieldsetModule} from 'primeng/fieldset';
+import { ToastModule } from 'primeng/toast';
 
 
 
@@ -43,7 +44,8 @@ import {FieldsetModule} from 'primeng/fieldset';
     FileUploadModule,
     ToggleButtonModule,
     SelectButtonModule,
-    FieldsetModule
+    FieldsetModule,
+    ToastModule
   ],
   imports: [
     CommonModule,

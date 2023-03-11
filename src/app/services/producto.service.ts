@@ -12,6 +12,14 @@ export class ProductoService{
 
     constructor( public _http: HttpClient ){ }
     
+    /**
+     * Registra el nuevo producto con sus nuevas medidas
+     * 
+     * @param producto Producto
+     * @param listaProdMedida  Array<Producto>
+     * @param empleado Empleado
+     * @returns 
+     */
     registerProducto(producto:any,listaProdMedida:any,empleado:any):Observable<any>{
             let combinado = {...producto, ...empleado};
             let json = JSON.stringify(combinado);
@@ -38,35 +46,63 @@ export class ProductoService{
             //return forkJoin([r1,r2]);
     }
 
+    /**
+     * Listado de productos habilitados (general)
+     * @returns 
+     */
     getProductos():Observable<any>{
         return this._http.get(this.url+'productos/index', {headers:this.headers} );
     }
     
+    /**
+     * Listado de prodcutos para punto de venta
+     * @returns 
+     */
     getProductosPV():Observable<any>{
         return this._http.get(this.url+'productos/indexPV', {headers:this.headers} );
     }
 
+    /**
+     * Listado de prodcutos deshabilitados (general)
+     * @returns 
+     */
     getProductosDes():Observable<any>{
         return this._http.get(this.url+'productos/productosDes', {headers:this.headers} );
     }
 
+    ///////////////revisar si se ocupa
     getLastPro():Observable<any>{
         return this._http.get(this.url+'productos/getlastproduct', {headers:this.headers} );
     }
+    /////////////////////////////////////////
 
+    /**
+     * Trae todos los detalles del producto
+     * @param idProducto number
+     * @returns 
+     */
     getProdverDos(idProducto:any):Observable<any>{
         return this._http.get(this.url+'productos/showTwo/'+idProducto, {headers:this.headers} );
     }
 
-    /**YA NO USAR ESTE SERVICIO ELIMINAR */
+    ///////////////////////////////////////////////////////////////////////
     getProdclaveex(claveEx:any):Observable<any>{
         let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');
         return this._http.get(this.url+'productos/searchclaveEx/'+claveEx, {headers:headers} );
     }
-    /** */
+    //////////////////////////////////////////////////////////////////////
 
-    updateStatus( prod:any, idProducto:any):Observable<any>{
-        let json = JSON.stringify(prod);
+    /**
+     * Actualza unicamente el status
+     * 
+     * @param idProducto number
+     * @param producto Producto
+     * @param empleado Empleado
+     * @returns 
+     */
+    updateStatus( idProducto:number, producto:any, empleado:any):Observable<any>{
+        let combinado = {...producto, ...empleado};
+        let json = JSON.stringify(combinado);
         let params = 'json='+json;
         return this._http.put(this.url + 'productos/updatestatus/'+idProducto,params,{headers:this.headers});
     }
@@ -114,13 +150,18 @@ export class ProductoService{
         return this._http.put(this.url+'productos/updateProduct/'+producto.idProducto,params,{headers:this.headers});
     }
     
+    /**
+     * 
+     * @param idProducto 
+     * @returns 
+     */
     getExistenciaG(idProducto:any):Observable<any>{
         return this._http.get(this.url+'productos/getExistenciaG/'+idProducto, {headers:this.headers} );
     }
     
     /**
      * Busca los productos apartir de su clave externa
-     * solo busca los productos que tengan estatus 1 (activos/habilitados)
+     * solo busca los productos que tengan estatus 31 (activos/habilitados)
      * 
      * @param claveExterna 
      * Recibimos parametro a buscar
@@ -133,7 +174,7 @@ export class ProductoService{
 
     /**
      * Busca los productos apartir de su codigo de barras
-     * solo busca productos habilitados statuss 1
+     * solo busca productos habilitados statuss 31
      * @param codbar 
      * parametro a buscar
      * @returns 
@@ -145,7 +186,7 @@ export class ProductoService{
 
     /**
      * Busca los productos apartir de su descripcion
-     * solo busca los productos activos estatus 1
+     * solo busca los productos activos estatus 31
      * @param descripcion 
      * recibe la descripcion a buscar
      * @returns 
@@ -156,7 +197,7 @@ export class ProductoService{
 
     /**
      * Busca los productos apartir de su clave externa
-     * solo busca los productos que tengan estatus 2 (deshabilitado/inactivo)
+     * solo busca los productos que tengan estatus 32 (deshabilitado/inactivo)
      * 
      * @param claveExterna 
      * Recibimos parametro a buscar
@@ -169,7 +210,7 @@ export class ProductoService{
 
     /**
      * Busca los productos apartir de su codigo de barras
-     * solo busca productos habilitados statuss 2
+     * solo busca productos deshabilitados statuss 32
      * @param codbar 
      * parametro a buscar
      * @returns 
@@ -181,7 +222,7 @@ export class ProductoService{
 
     /**
      * Busca los productos apartir de su descripcion
-     * solo busca los productos activos estatus 2
+     * solo busca los productos deshabiliotados estatus 32
      * @param descripcion 
      * recibe la descripcion a buscar
      * @returns 
@@ -190,9 +231,22 @@ export class ProductoService{
         return this._http.get(this.url+'productos/searchDescripcionI/'+descripcion, {headers:this.headers})
     }
 
+    /**
+     * Busca la medida de los productos habilitados
+     * Busca la imagen del producto
+     * @param idProducto number
+     * @returns 
+     */
     searchProductoMedida(idProducto:number):Observable<any>{
         return this._http.get(this.url+'productos/searchProductoMedida/'+idProducto,{headers:this.headers});
     }
+
+    /**
+     * Busca la medida de los productos deshabilitados
+     * busca la imagen
+     * @param idProducto number
+     * @returns 
+     */
     searchProductoMedidaI(idProducto:number):Observable<any>{
         return this._http.get(this.url+'productos/searchProductoMedidaI/'+idProducto,{headers:this.headers});
     }
