@@ -103,6 +103,7 @@ export class ProductoVerComponent implements OnInit {
          //console.log(response);
 
          this.producto = response.producto;
+         //console.log(this.producto[0])
 
          this.prueba(response.producto[0]['statuss'])
          //para asi asignar el valor del codigo de barras a la variable value
@@ -305,10 +306,11 @@ export class ProductoVerComponent implements OnInit {
       let id = + params['idProducto'];
       var identity = this._empleadoService.getIdentity();
 
+
       this._productoService.updateStatus(id,this.producto,identity).subscribe(
         response =>{
           if(response.status == 'success'){
-            this.messageService.add({severity:'success', summary:'Producto Actualizado'});
+            this.messageService.add({severity:'success', summary:'Estatus Actualizado', detail:'El producto: '+this.producto[0]['claveEx']+' se a actualizado'});
             this._router.navigate(['./producto-modulo/producto-buscar']);
             //this.getIdProduct();
           }
