@@ -5,13 +5,14 @@ import { ProductoService } from 'src/app/services/producto.service';
 import {ToastService} from 'src/app/services/toast.service';
 import { global } from 'src/app/services/global';
 import { Productos_medidas } from 'src/app/models/productos_medidas';
-import {MenuItem} from 'primeng/api';
+import {MenuItem, MessageService} from 'primeng/api';
+import { EmpleadoService } from 'src/app/services/empleado.service';
 
 @Component({
   selector: 'app-producto-ver',
   templateUrl: './producto-ver.component.html',
   styleUrls: ['./producto-ver.component.css'],
-  providers:[ProductoService]
+  providers:[ProductoService,MessageService]
 })
 export class ProductoVerComponent implements OnInit {
 
@@ -48,9 +49,11 @@ export class ProductoVerComponent implements OnInit {
 
   constructor( 
     private _productoService: ProductoService,
+    private _empleadoService: EmpleadoService,
     private _router: Router,
     private _route: ActivatedRoute,
-    public toastService: ToastService
+    public toastService: ToastService,
+    private messageService: MessageService
     ){
       this.datosTab1 = new Productos_medidas(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
       this.datosTab2 = new Productos_medidas(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
@@ -61,7 +64,6 @@ export class ProductoVerComponent implements OnInit {
 
   ngOnInit(): void {
     this.getIdProduct();
-    this.menu();
   }
   /**
    * Estructura del menu desplegable
@@ -81,36 +83,12 @@ export class ProductoVerComponent implements OnInit {
       ]}
     ];
   }
-  /**
-   * 
-   */
-  prueba(statuss:number){
-    switch(statuss){
-      case 31:
-          this.items[0].items?.push({
-            label: 'Deshabilitar',
-            icon: 'pi pi-exclamation-triangle',
-            command: () => {
-              //this.update();
-            }
-          });
-        break;
-      case 32:
-          this.items[0].items?.push({
-            label: 'Habilitar',
-            icon: 'pi pi-exclamation-triangle',
-            command: () => {
-              //this.update();
-            }
-          });
-        break;        
-    }
-  }
 
   /**
    * Busca el producto, con el id recibido en la url
    */
   getIdProduct(){
+    this.menu();
     //mostramos el spinner
     this.isLoading = true;
     //Obtener el id del producto a modificar de la URL
@@ -293,5 +271,54 @@ export class ProductoVerComponent implements OnInit {
         break;
     }
   }
+   /**
+   * 
+   */
+   prueba(statuss:number){
+    switch(statuss){
+      case 31:
+          this.items[0].items?.push({
+            label: 'Deshabilitar',
+            icon: 'pi pi-exclamation-triangle',
+            command: () => {
+              this.actualizaStatus();
+            }
+          });
+        break;
+      case 32:
+          this.items[0].items?.push({
+            label: 'Habilitar',
+            icon: 'pi pi-exclamation-triangle',
+            command: () => {
+              this.actualizaStatus();
+            }
+          });
+        break;        
+    }
+  }
+  
+  /**
+   * Actualiza el status del producto
+   */
+  actualizaStatus(){
+    this._route.params.subscribe( params =>{
+      let id = + params['idProducto'];
+      var identity = this._empleadoService.getIdentity();
 
+      this._productoService.updateStatus(id,this.producto,identity).subscribe(
+        response =>{
+          if(response.status == 'success'){
+            this.messageService.add({severity:'success', summary:'Producto Actualizado'});
+            this._router.navigate(['./producto-modulo/producto-buscar']);
+            //this.getIdProduct();
+          }
+  
+        }, error =>{
+          console.log(error);
+        });
+    });
+  }
+  ngOnDestroy():void{
+    
+  }
 }
