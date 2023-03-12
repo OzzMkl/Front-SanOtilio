@@ -57,6 +57,7 @@ export class ClientesService {
   let params = 'json='+json;
   return this._http.put(this.url + 'clientes/updateCliente/'+idCliente,params,{headers:this.headers});
  }
+
  updateCdireccion(cdireccion:any,idCliente:any):Observable<any>{
   let json = JSON.stringify(cdireccion);
   let params = 'json='+json;
@@ -66,9 +67,10 @@ export class ClientesService {
  searchNombreCliente(nombreCliente:string):Observable<any>{
   return this._http.get(this.url+'clientes/searchNombreCliente/'+nombreCliente,{headers:this.headers});
  }
+
  /***EJEMPLO PDF */
- getPDF():Observable<Blob>{
-  return this._http.get(this.url+'clientes/generatePDF',{responseType:'blob'});
- }
+//  getPDF():Observable<Blob>{
+//   return this._http.get(this.url+'clientes/generatePDF',{responseType:'blob'});
+//  }
  /***EJEMPLO PDF */
 }

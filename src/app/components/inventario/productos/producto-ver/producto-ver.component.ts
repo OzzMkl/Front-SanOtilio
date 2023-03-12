@@ -222,6 +222,7 @@ export class ProductoVerComponent implements OnInit {
 
   });//finsubscribe params
   }
+
   /**
      * Funcion para el select de no. de medidas
      * @param model 
@@ -272,6 +273,7 @@ export class ProductoVerComponent implements OnInit {
         break;
     }
   }
+
    /**
    * 
    */
@@ -311,8 +313,8 @@ export class ProductoVerComponent implements OnInit {
         response =>{
           if(response.status == 'success'){
             this.messageService.add({severity:'success', summary:'Estatus Actualizado', detail:'El producto: '+this.producto[0]['claveEx']+' se a actualizado'});
-            this._router.navigate(['./producto-modulo/producto-buscar']);
-            //this.getIdProduct();
+            //this._router.navigate(['./producto-modulo/producto-buscar']);
+            this.getIdProduct();
           }
   
         }, error =>{
@@ -320,6 +322,7 @@ export class ProductoVerComponent implements OnInit {
         });
     });
   }
+
   ngOnDestroy():void{
     
   }

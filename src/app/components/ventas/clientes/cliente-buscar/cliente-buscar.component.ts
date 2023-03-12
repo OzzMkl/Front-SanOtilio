@@ -60,11 +60,13 @@ export class ClienteBuscarComponent implements OnInit {
   ngOnInit(): void {
     this.getClientes();
     this.loadUser();
-    this.pdf();
+    //this.pdf();
   }
+
   loadUser(){
     this.userPermisos = this._empleadoService.getPermisosModulo();
   }
+
   seleccionarCliente(idCliente:any){
     this._clienteService.getDetallesCliente(idCliente).subscribe( 
       response =>{
@@ -110,6 +112,7 @@ export class ClienteBuscarComponent implements OnInit {
       console.log(error);
     });
   }
+
   /**
    * 
    * @param page
@@ -199,15 +202,16 @@ export class ClienteBuscarComponent implements OnInit {
   ngOnDestroy(): void {
     this.getClienteSub.unsubscribe();
   }
+
   /***EJEMPLO PDF */
-  pdf(){
-    this._clienteService.getPDF().subscribe(
-      (pdf: Blob) =>{
-        const blob = new Blob([pdf], {type: 'application/pdf'});
-        const url = window.URL.createObjectURL(blob);
-        window.open(url)
-      }
-    )
-  }
+  // pdf(){
+  //   this._clienteService.getPDF().subscribe(
+  //     (pdf: Blob) =>{
+  //       const blob = new Blob([pdf], {type: 'application/pdf'});
+  //       const url = window.URL.createObjectURL(blob);
+  //       window.open(url)
+  //     }
+  //   )
+  // }
   /***EJEMPLO PDF */
 }
