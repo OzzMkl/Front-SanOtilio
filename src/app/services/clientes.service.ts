@@ -26,14 +26,16 @@ export class ClientesService {
   return this._http.get(this.url+'clientes/indexTipocliente', {headers:this.headers} );
  }
 
- postCliente(cliente:any):Observable<any>{
-  let json = JSON.stringify(cliente);
+ postCliente(cliente:any,empleado:any):Observable<any>{
+  let combinado = {...cliente, ...empleado};
+  let json = JSON.stringify(combinado);
   let params = 'json='+json;
   return this._http.post(this.url+'clientes/register',params, {headers:this.headers} );
  }
 
- postCdireccion(cdireccion:any):Observable<any>{
-  let json = JSON.stringify(cdireccion);
+ postCdireccion(cdireccion:any,empleado:any):Observable<any>{
+  let combinado = {...cdireccion,...empleado};
+  let json = JSON.stringify(combinado);
   let params = 'json='+json;
   return this._http.post(this.url+'clientes/registerCdireccion',params, {headers:this.headers} );
  }

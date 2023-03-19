@@ -236,6 +236,8 @@ export class CotizacionEditarComponent implements OnInit {
   }
   //accion de guardar el nuevo cliente del modal
   guardarCliente(){
+    var identity = this._empleadoService.getIdentity();
+
     if(this.isCompany == true ){
       this.modeloCliente.aMaterno ='';
       this.modeloCliente.aPaterno='';
@@ -243,11 +245,11 @@ export class CotizacionEditarComponent implements OnInit {
     if(this.isRFC == false){
       this.modeloCliente.rfc = 'XAXX010101000';
     }
-    this._clienteService.postCliente(this.modeloCliente).subscribe( 
+    this._clienteService.postCliente(this.modeloCliente,identity).subscribe( 
       response =>{
         if(response.status == 'success'){
           if(this.checkDireccion == true){
-            this._clienteService.postCdireccion(this.cdireccion).subscribe( 
+            this._clienteService.postCdireccion(this.cdireccion,identity).subscribe( 
               response=>{
                 this.toastService.show('Cliente registrado correctamente',{classname: 'bg-success text-light', delay: 3000});
                 //console.log(response);
