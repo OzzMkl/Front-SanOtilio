@@ -1,3 +1,4 @@
+<p-toast></p-toast>
 <div class="container">
     <div class="row">
         <div class="col">
@@ -17,24 +18,28 @@
             <div *ngIf="isCompany == false; else elseBlock" class="row">
                 <div class="col-4">
                     <label class="form-label" for="">Nombre(s)</label>
-                    <input class="form-control" oninput="this.value = this.value.toUpperCase()" type="text" name="nombre" #nombre="ngModel" [(ngModel)]="cliente.nombre" ngModel required>
+                    <input class="form-control" oninput="this.value = this.value.toUpperCase()" type="text" maxlength="254"
+                            name="nombre" #nombre="ngModel" [(ngModel)]="cliente.nombre" ngModel required>
                     <div [hidden]="nombre.valid || nombre.pristine" class="alert alert-danger">
                       CAMPO REQUERIDO
                     </div>
                 </div>
                 <div class="col-3">
                     <label class="form-label" for="">Apellido paterno</label>
-                    <input class="form-control" oninput="this.value = this.value.toUpperCase()" type="text" name="aPaterno" #aPaterno="ngModel" [(ngModel)]="cliente.aPaterno">
+                    <input class="form-control" oninput="this.value = this.value.toUpperCase()" type="text" maxlength="80"
+                            name="aPaterno" #aPaterno="ngModel" [(ngModel)]="cliente.aPaterno">
                 </div>
                 <div class="col-3">
                     <label class="form-label" for="">Apellido materno</label>
-                    <input class="form-control" oninput="this.value = this.value.toUpperCase()" type="text" name="aMaterno" #aMaterno="ngModel" [(ngModel)]="cliente.aMaterno">
+                    <input class="form-control" oninput="this.value = this.value.toUpperCase()" type="text" maxlength="80"
+                            name="aMaterno" #aMaterno="ngModel" [(ngModel)]="cliente.aMaterno">
                 </div>
             </div>
             <ng-template #elseBlock>
                 <div class="col-12">
                     <label class="form-label" for="">Nombre de empresa</label>
-                    <input class="form-control" oninput="this.value = this.value.toUpperCase()" type="text" name="nombre" #nombre="ngModel" [(ngModel)]="cliente.nombre" ngModel required>
+                    <input class="form-control" oninput="this.value = this.value.toUpperCase()" type="text" maxlength="254"
+                            name="nombre" #nombre="ngModel" [(ngModel)]="cliente.nombre" ngModel required>
                     <div [hidden]="nombre.valid || nombre.pristine" class="alert alert-danger">
                       CAMPO REQUERIDO
                     </div>
@@ -43,17 +48,21 @@
             
             <div class="col-3">
                 <label class="form-label" for="">Correo</label>
-                <input class="form-control"  type="email" name="correo" #correo="ngModel" [(ngModel)]="cliente.correo" ngModel pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" required>
+                <input class="form-control"  type="email" name="correo" #correo="ngModel" maxlength="80"
+                        [(ngModel)]="cliente.correo" ngModel pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" required>
                 <div [hidden]="correo.valid || correo.pristine" class="alert alert-danger">
                   CAMPO REQUERIDO EN FORMATO : correo@domino.com
                 </div>
             </div>
             <div class="col-3">
                 <label class="form-label" for="">Tipo cliente</label>
-                <select class="form-select" name="idTipo" #idTipo="ngModel" [(ngModel)]="cliente.idTipo" ngModel required>
-                    <option selected disabled>Abrir para seleccionar</option>
+                <select class="form-select" name="idTipo" #idTipo="ngModel" [(ngModel)]="cliente.idTipo"  required>
+                    <!-- <option selected disabled>Abrir para seleccionar</option> -->
                     <option *ngFor="let tp of tipocliente" value="{{tp.idTipo}}">{{tp.nombre}}</option>
                 </select>
+                <div [hidden]="idTipo.valid || idTipo .pristine" class="alert alert-danger">
+                  CAMPO REQUERIDO EN FORMATO : correo@domino.com
+                </div>
             </div>
             <!--  -->
             <div class="col-2 ">
@@ -75,7 +84,8 @@
                 </label>
               </div>
               <div *ngIf="isRFC == true; else RFCgenerico">
-                <input class="form-control" maxlength="13" oninput="this.value = this.value.toUpperCase()" type="text" name="rfc" #rfc="ngModel" [(ngModel)]="cliente.rfc">
+                <input class="form-control" maxlength="13" oninput="this.value = this.value.toUpperCase()" type="text" maxlength="14"
+                         name="rfc" #rfc="ngModel" [(ngModel)]="cliente.rfc">
                 <div [hidden]="rfc.valid || rfc.pristine" class="alert alert-danger">
                   CAMPO REQUERIDO
                 </div>
@@ -95,7 +105,7 @@
 
             <div *ngIf="isCredito == true;" class="col-3 ">
                 <label class="form-label" for="">Cantidad de credito</label>
-                <input class="form-control" type="number" maxlength="6" name="credito" #credito="ngModel" [(ngModel)]="cliente.credito">
+                <input class="form-control" type="number" name="credito" #credito="ngModel" pattern="^[0-9]{1,10}" [(ngModel)]="cliente.credito">
             </div>
             
         </div>
@@ -116,7 +126,7 @@
 
 <!-- Modal -->
 <ng-template #content let-modal>
-    <form (ngSubmit)="capturarDireccion()">
+    <form #FormCdireccion="ngForm">
     <div>
         <div class="modal-header">
             <h4 class="modal-title" id="modal-basic-title">Agregar direccion</h4>
@@ -126,55 +136,98 @@
             
                 <div  class="row align-items-start">
                   <div class="col-3">
-                      <label class="form-label" for="">Pais</label>
-                      <input class="form-control" oninput="this.value = this.value.toUpperCase()" type="text" value="Mexico" name="pais" #pais="ngModel" [(ngModel)]="cdireccion.pais" readonly>
+                      <label class="form-label" for="">Pais *</label>
+                      <input class="form-control" oninput="this.value = this.value.toUpperCase()" type="text" 
+                              value="Mexico" name="pais" #pais="ngModel" [(ngModel)]="cdireccion.pais" maxlength="50" readonly>
                   </div>
+
                   <div class="col-3">
-                    <label class="form-label" for="">Estado</label>
-                    <input class="form-control" oninput="this.value = this.value.toUpperCase()" type="text" value="Puebla" name="estado" #estado="ngModel" [(ngModel)]="cdireccion.estado" readonly>
+                    <label class="form-label" for="">Estado *</label>
+                    <input class="form-control" oninput="this.value = this.value.toUpperCase()" type="text"
+                            value="Puebla" name="estado" #estado="ngModel" [(ngModel)]="cdireccion.estado" maxlength="50" readonly>
                   </div>
+
                   <div class="col-3">
-                    <label class="form-label" for="">Ciudad</label>
-                    <input class="form-control" oninput="this.value = this.value.toUpperCase()" type="text" name="ciudad" #ciudad="ngModel" [(ngModel)]="cdireccion.ciudad" >
+                    <label class="form-label" for="">Ciudad *</label>
+                    <input class="form-control" oninput="this.value = this.value.toUpperCase()" type="text"
+                            name="ciudad" #ciudad="ngModel" [(ngModel)]="cdireccion.ciudad" maxlength="50" required >
+                    <div [hidden]="ciudad.valid || ciudad.pristine" class="alert alert-danger">
+                      CAMPO REQUERIDO
+                    </div>
                   </div>
+
                   <div class="col-3">
-                    <label class="form-label" for="">Colonia</label>
-                    <input class="form-control" oninput="this.value = this.value.toUpperCase()" type="text" name="colonia" #colonia="ngModel" [(ngModel)]="cdireccion.colonia" >
+                    <label class="form-label" for="">Colonia *</label>
+                    <input class="form-control" oninput="this.value = this.value.toUpperCase()" type="text"
+                            name="colonia" #colonia="ngModel" [(ngModel)]="cdireccion.colonia" maxlength="50" required >
+                    <div [hidden]="colonia.valid || colonia.pristine" class="alert alert-danger">
+                      CAMPO REQUERIDO
+                    </div>
                   </div>
+
                   <div class="col-3">
-                    <label class="form-label" for="">Calle</label>
-                    <input class="form-control" oninput="this.value = this.value.toUpperCase()" type="text" name="calle" #calle="ngModel" [(ngModel)]="cdireccion.calle" >
+                    <label class="form-label" for="">Calle *</label>
+                    <input class="form-control" oninput="this.value = this.value.toUpperCase()" type="text"
+                            name="calle" #calle="ngModel" [(ngModel)]="cdireccion.calle" maxlength="50" required >
+                    <div [hidden]="calle.valid || calle.pristine" class="alert alert-danger">
+                      CAMPO REQUERIDO
+                    </div>
                   </div>
+
                   <div class="col-3">
-                    <label class="form-label" for="">Numero exterior</label>
-                    <input class="form-control" oninput="this.value = this.value.toUpperCase()" type="text" name="numExt" #numExt="ngModel" [(ngModel)]="cdireccion.numExt" >
+                    <label class="form-label" for="">Numero exterior *</label>
+                    <input class="form-control" oninput="this.value = this.value.toUpperCase()" type="text"
+                            name="numExt" #numExt="ngModel" [(ngModel)]="cdireccion.numExt" maxlength="10" required >
+                    <div [hidden]="numExt.valid || numExt.pristine" class="alert alert-danger">
+                      CAMPO REQUERIDO
+                    </div>      
                   </div>
+
                   <div class="col-3">
                     <label class="form-label" for="">Numero interior</label>
-                    <input class="form-control" oninput="this.value = this.value.toUpperCase()" type="text" name="numInt" #numInt="ngModel" [(ngModel)]="cdireccion.numInt" >
+                    <input class="form-control" oninput="this.value = this.value.toUpperCase()" type="text"
+                            name="numInt" #numInt="ngModel" [(ngModel)]="cdireccion.numInt" maxlength="10" >
                   </div>
+
                   <div class="col-3">
                     <label class="form-label" for="">Entre calles</label>
-                    <input class="form-control" oninput="this.value = this.value.toUpperCase()" type="text" name="entreCalles" #entreCalles="ngModel" [(ngModel)]="cdireccion.entreCalles" >
+                    <input class="form-control" oninput="this.value = this.value.toUpperCase()" type="text"
+                            name="entreCalles" #entreCalles="ngModel" [(ngModel)]="cdireccion.entreCalles" maxlength="50" >
                   </div>
+
                   <div class="col-3">
-                    <label class="form-label" for="">Codigo postal</label>
-                    <input class="form-control" type="number" maxlength="0" min="0" name="cp" #cp="ngModel" [(ngModel)]="cdireccion.cp" >
+                    <label class="form-label" for="">Codigo postal *</label>
+                    <input class="form-control" type="number" pattern="^[0-9]{1,5}" min="0"
+                            name="cp" #cp="ngModel" [(ngModel)]="cdireccion.cp" required >
+                    <div [hidden]="cp.valid || cp.pristine" class="alert alert-danger">
+                      SOLO INGRESAR DE 1 HASTA 5 NUMEROS
+                    </div> 
                   </div>
+
                   <div class="col-3">
-                    <label class="form-label" for="">Telefono</label>
-                    <input class="form-control" type="number" maxlength="10" min="0" name="telefono" #telefono="ngModel" [(ngModel)]="cdireccion.telefono" >
+                    <label class="form-label" for="">Telefono *</label>
+                    <input class="form-control" type="number" maxlength="10" min="0" pattern="^[0-9]{1,10}"
+                            name="telefono" #telefono="ngModel" [(ngModel)]="cdireccion.telefono" required >
+                    <div [hidden]="telefono.valid || telefono.pristine" class="alert alert-danger">
+                      CAMPO REQUERIDO
+                      SOLO INGRESAR HASTA 10 NUMEROS
+                    </div> 
                   </div>
+
                   <div class="col">
-                    <label class="form-label" for="">Referencia</label>
-                    <textarea class="form-control" oninput="this.value = this.value.toUpperCase()" cols="30" rows="2" name="referencia" #referencia="ngModel" [(ngModel)]="cdireccion.referencia"></textarea>
+                    <label class="form-label" for="">Referencia *</label>
+                    <textarea class="form-control" oninput="this.value = this.value.toUpperCase()" maxlength="254"
+                                cols="30" rows="2" name="referencia" #referencia="ngModel" [(ngModel)]="cdireccion.referencia"></textarea>
                   </div>
+                  <div [hidden]="referencia.valid || referencia.pristine" class="alert alert-danger">
+                    CAMPO REQUERIDO
+                  </div> 
                 </div>
             
           </div>
     </div>
     <div class="modal-footer">
-      <button type="submit" class="btn btn-success" (click)="modal.close('Save click')" >Guardar</button>
+      <button type="button" class="btn btn-success" [disabled]="FormCdireccion.invalid" (click)="modal.close('Save click')" >Guardar</button>
     </div>  
     </form>
 </ng-template>

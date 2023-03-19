@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 //servicio
 import { ClientesService } from 'src/app/services/clientes.service';
-import { ToastService } from 'src/app/services/toast.service';
+import { MessageService } from 'primeng/api';
 //modelo
 import { Cliente } from 'src/app/models/cliente';
 import { Cdireccion} from 'src/app/models/cdireccion'
@@ -12,7 +12,8 @@ import { NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
 @Component({
   selector: 'app-cliente-editar',
   templateUrl: './cliente-editar.component.html',
-  styleUrls: ['./cliente-editar.component.css']
+  styleUrls: ['./cliente-editar.component.css'],
+  providers:[MessageService]
 })
 export class ClienteEditarComponent implements OnInit {
 
@@ -30,7 +31,7 @@ export class ClienteEditarComponent implements OnInit {
   public listaDirecciones: Array<Cdireccion>;
 
   constructor(private _clienteService: ClientesService, private modalService:NgbModal,
-    public toastService: ToastService, private _route: ActivatedRoute) {
+    public messageService: MessageService, private _route: ActivatedRoute) {
 
       this.clienteEditado = new Cliente (0,'','','','','',0,1,0);
       this.dirEditada = new Cdireccion (0,'Mexico','Puebla','','','','','','',0,'',0,1,'');
@@ -41,6 +42,7 @@ export class ClienteEditarComponent implements OnInit {
     this.getIdCliente();
     this.getTipocliente();
   }
+
   getIdCliente(){//obtenemos informacion del cliente de acuerdo a su id
     //cogemos el id desde el link
     this._route.params.subscribe( params => {
@@ -88,7 +90,7 @@ export class ClienteEditarComponent implements OnInit {
       });
   }
   capturarDireccion(){//agregamos la direccion a la lista de direcciones
-    this.listaDirecciones.push({...this.dirEditada})
+    this.listaDirecciones.push({...this.dirEditada});
   }
   editarDireccion(direccion:any,content:any){//edcion de la direccion al dar click
     //creamos variable
@@ -130,16 +132,16 @@ export class ClienteEditarComponent implements OnInit {
           this._clienteService.updateCdireccion(this.listaDirecciones,this.clienteEditado.idCliente).subscribe(
             response =>{
               if(response.status == 'success'){
-                this.toastService.show('Cliente actualizado correctamente',{classname: 'bg-success text-light', delay: 3000});
+                //this.toastService.show('Cliente actualizado correctamente',{classname: 'bg-success text-light', delay: 3000});
               }
               console.log(response)
             },error=>{console.log(error);})
         }else{
-          this.toastService.show('Algo salio mal al actualizar el cliente',{classname: 'bg-danger text-light', delay: 6000});
+          //this.toastService.show('Algo salio mal al actualizar el cliente',{classname: 'bg-danger text-light', delay: 6000});
         }
         //console.log(response);
       },error=>{
-        this.toastService.show('Algo salio mal',{classname: 'bg-danger text-light', delay: 6000});
+        //this.toastService.show('Algo salio mal',{classname: 'bg-danger text-light', delay: 6000});
         console.log(error);
       });
   }
@@ -148,8 +150,10 @@ export class ClienteEditarComponent implements OnInit {
 open(content:any) {//abre modal
   this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title', size: 'xl'}).result.then((result) => {
     this.closeResult = `Closed with: ${result}`;
+    this.messageService.add({severity:'warn', summary:'Advertencia1', sticky: true});
   }, (reason) => {
     this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+    this.messageService.add({severity:'warn', summary:'Advertencia2', sticky: true});
   });
 }
 private getDismissReason(reason: any): string {//cierra modal con teclado ESC o al picar fuera del modal
