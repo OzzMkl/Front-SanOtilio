@@ -111,16 +111,23 @@ export class PuntoDeVentaComponent implements OnInit {
   this.getDatosEmpresa();
   //this.creaPDFcotizacion();
   }
- getDatosEmpresa(){
-   this._empresaService.getDatosEmpresa().subscribe( 
-     response => {
-       if(response.status == 'success'){
-          this.empresa = response.empresa;
-          //console.log(this.empresa)
-       }
-     },error => {console.log(error)});
- }
-  //traemos todos los clientes
+
+  /**
+   * Trae la informacion de la empresa
+   */
+  getDatosEmpresa(){
+    this._empresaService.getDatosEmpresa().subscribe( 
+      response => {
+        if(response.status == 'success'){
+            this.empresa = response.empresa;
+            //console.log(this.empresa)
+        }
+      },error => {console.log(error);});
+  }
+
+  /**
+   * Trae la informacion de los clientes
+   */
   getClientes(){
     //iniciamos spinner
     this.isLoadingClientes = true;
@@ -146,6 +153,7 @@ export class PuntoDeVentaComponent implements OnInit {
       console.log(error);
     });
   }
+
    /**
    * 
    * @param page
@@ -174,6 +182,11 @@ export class PuntoDeVentaComponent implements OnInit {
         this.isLoadingClientes=false;
       })
   }
+
+  /**
+   * Buscar clientes por nombre
+   * @param nombreCliente 
+   */
   searchNombreClienteS(nombreCliente: any){
     //iniciamos spinner
     this.isLoadingClientes = true;
@@ -202,7 +215,10 @@ export class PuntoDeVentaComponent implements OnInit {
         } );
     }
   }
-  //obtenemos los tipos de clientes para el select del modal para agregar nuevos clientes
+
+  /**
+   * Obtener tipo de clientes al agregar uno nuevo
+   */
   getTipocliente(){
     this._clienteService.getTipocliente().subscribe(
       response =>{
@@ -211,7 +227,11 @@ export class PuntoDeVentaComponent implements OnInit {
         console.log(error);
       });
   }
-  //obtener direcciones del cliente si es que se envia la venta
+
+  /**
+   * Consulta las direciones del cliente
+   * @param idCliente 
+   */
   getDireccionCliente(idCliente:any){
   this._clienteService.getDireccionCliente(idCliente).subscribe( 
     response => {
@@ -223,7 +243,11 @@ export class PuntoDeVentaComponent implements OnInit {
       console.log(error);
     });
   }
-  //traemos la informacion del cliente seleccionado
+
+  /**
+   * Trae detalles del cliente
+   * @param idCliente 
+   */
   seleccionarCliente(idCliente:any){
     this.ventag.cdireccion = '';
     this.seEnvia == false;
@@ -244,10 +268,16 @@ export class PuntoDeVentaComponent implements OnInit {
         console.log(error);
       });
   }
-  //cargamos la informacion selccionada a la propiedad de venta.dirCliente direccion del cliente
+
+  /**
+   * 
+   * @param direccion 
+   * Carga la direccion seleccionada a la propiedad venta.cdireccion
+   */
   seleccionarDireccion(direccion:any){
     this.ventag.cdireccion=direccion;
   }
+
   //accion de guardar el nuevo cliente del modal
   guardarCliente(){
     var identity = this._empleadoService.getIdentity();
@@ -284,6 +314,7 @@ export class PuntoDeVentaComponent implements OnInit {
     
     
   }
+
   //guarda una nueva direccion
   guardarNuevaDireccion(){
     this.nuevaDir.idCliente = this.ventag.idCliente;
@@ -299,6 +330,7 @@ export class PuntoDeVentaComponent implements OnInit {
     });
     //this.getDireccionCliente(this.ventag.idCliente);
   }
+
   //obtenemos todos los productos
   getProductos(){
     //mostramos el spinner
@@ -325,6 +357,7 @@ export class PuntoDeVentaComponent implements OnInit {
       console.log(error);
     });
   }
+
   /**
    * 
    * @param page
@@ -348,6 +381,7 @@ export class PuntoDeVentaComponent implements OnInit {
         
     })
   }
+
   //cargamos la informacion al modelo del producto que se selecciono con el click
   seleccionarProducto(idProducto:any){
     //console.log(idProducto);
@@ -370,6 +404,7 @@ export class PuntoDeVentaComponent implements OnInit {
       console.log(error);
     });
   }
+
   //calculamos el subtotal por producto
   calculaSubtotalPP(){
     if(this.productoVentag.precio < this.producto[0]['precioR']){
@@ -383,7 +418,8 @@ export class PuntoDeVentaComponent implements OnInit {
       this.isSearch=false;
     }
   }
-//agregar producto a lista de ventas
+
+  //agregar producto a lista de ventas
   agregarProductoLista(){
     if( this.productoVentag.cantidad <= 0){
       this.toastService.show('No se pueden agregar productos con cantidad 0 ó menor a 0',{classname: 'bg-danger text-light', delay: 6000})
@@ -419,6 +455,7 @@ export class PuntoDeVentaComponent implements OnInit {
     }
 
   }
+
   //traemos la informacion del usuario logeado
   loadUser(){
     this.identity = this._empleadoService.getIdentity();
@@ -429,6 +466,7 @@ export class PuntoDeVentaComponent implements OnInit {
       this.toastService.show('Acceso denegado', { classname: 'bg-danger  text-light', delay: 5000 });
     }
   }
+
   //evitamod que den enter en el textarea de observaciones
   omitirEnter(event:any){
     if(event.which === 13 && !event.shiftKey){
@@ -437,6 +475,7 @@ export class PuntoDeVentaComponent implements OnInit {
       
     }
   }
+
   //editar/eliminar producto de la lista de compras
   editarProductoLista(dato:any){
     //buscamos el producto a eliminar para traer sus propiedades
@@ -465,6 +504,7 @@ export class PuntoDeVentaComponent implements OnInit {
         console.log(error);
       });
   }
+
   //guardamos cotizacion en DB
   creaCotizacion(){
 
@@ -495,6 +535,7 @@ export class PuntoDeVentaComponent implements OnInit {
     //console.log(this.ventag);
     //console.log(this.lista_productoVentag);
   }
+
   //Obtener detalles de cotizacion registrada
   obtenerUltimaCotiza(){
     this._ventasService.getLastCotiza().subscribe( 
@@ -515,6 +556,7 @@ export class PuntoDeVentaComponent implements OnInit {
         console.log(error);
       });
   }
+
   //CREACION DE PDF PARA COTIZACIONES
   creaPDFcotizacion(){
     const doc = new jsPDF;
@@ -573,6 +615,7 @@ export class PuntoDeVentaComponent implements OnInit {
     //GUARDAMOS PDF
     doc.save("cotizacion-"+this.detallesCotiza[0]['idCotiza']+".pdf");
   }
+
   creaVenta(){
     //asignamos id del empleado
     this.ventag.idEmpleado = this.identity['sub'];
@@ -604,6 +647,7 @@ export class PuntoDeVentaComponent implements OnInit {
       );
     }
   }
+
   // Metodos del  modal
   open(content:any) {//abrir modal aplica para la mayoria de los modales
     this.getClientes();
@@ -614,6 +658,7 @@ export class PuntoDeVentaComponent implements OnInit {
       this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
     });
   }
+
   private getDismissReason(reason: any): string {//cerrarmodal
     if (reason === ModalDismissReasons.ESC) {
       return 'by pressing ESC';
@@ -623,6 +668,7 @@ export class PuntoDeVentaComponent implements OnInit {
       return `with: ${reason}`;
     }
   }
+
   modalSeEnvia(content:any){//abre modal para seleccionaar direccion del cliente
     //si el chek de se envia es true abrimos modal
     if(this.seEnvia == true){
@@ -637,6 +683,7 @@ export class PuntoDeVentaComponent implements OnInit {
       this.ventag.cdireccion = '';
     }
   }
+
   modalAgregarDireccion(content:any){
     this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title', size: 'xl'}).result.then((result) => {
       this.closeResult = `Closed with: ${result}`;
@@ -644,6 +691,7 @@ export class PuntoDeVentaComponent implements OnInit {
       this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
     });
   }
+
   modalBuscarProducto(content:any){
     this.getProductos();
     this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title', size: 'xl'}).result.then((result) => {
@@ -652,6 +700,7 @@ export class PuntoDeVentaComponent implements OnInit {
       this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
     });
   }
+
   modalAlertaExistencia(content:any){
     
     let encontrado = this.lista_productoVentag.find(x => x.tieneStock == false);
@@ -668,55 +717,58 @@ export class PuntoDeVentaComponent implements OnInit {
 
     
   }
+
   cambioSeleccionado(e:any){//limpiamos los inputs del modal
     this.buscarProducto = '';
     this.buscarProductoCE = '';
     this.buscarProductoCbar = 0;
   }
-    /**
-   * 
-   * @param descripcion 
-   * Recibimos el evento del input
-   * @description
-   * Recibe los valores del Keyup, luego buscamos y actualizamos
-   * los datos que se muestran en la tabla
-   */
-    getSearchDescripcion(descripcion:any){
-    
-      //mostramos el spinner
-      this.isLoadingProductos = true;
-  
-      //si es vacio volvemos a llamar la primera funcion que trae todo
-      if(descripcion.target.value == ''){
-        this.getProductos();
-      }
-  
-      //componemos el codigo a buscar
-      this.buscarProducto = descripcion.target.value;
-  
-      //llamamos al servicio
-      this._productoService.searchDescripcion(this.buscarProducto).subscribe(
-        response =>{
-            if(response.status == 'success'){
-              //asignamos datos a varibale para poder mostrarla en la tabla
-              this.productos = response.productos.data;
-              //console.log(this.productos)
-  
-              //navegacion paginacion
-              this.totalPages = response.productos.total;
-              this.itemsPerPage = response.productos.per_page;
-              this.pageActual = response.productos.current_page;
-              this.next_page = response.productos.next_page_url;
-              this.path = response.productos.path
-              
-              //una ves terminado de cargar quitamos el spinner
-              this.isLoadingProductos = false;
-            }
-        }, error => {
-          console.log(error)
-        }
-      )
-    }
+
+  /**
+  * 
+  * @param descripcion 
+  * Recibimos el evento del input
+  * @description
+  * Recibe los valores del Keyup, luego buscamos y actualizamos
+  * los datos que se muestran en la tabla
+  */
+  getSearchDescripcion(descripcion:any){
+   
+     //mostramos el spinner
+     this.isLoadingProductos = true;
+
+     //si es vacio volvemos a llamar la primera funcion que trae todo
+     if(descripcion.target.value == ''){
+       this.getProductos();
+     }
+
+     //componemos el codigo a buscar
+     this.buscarProducto = descripcion.target.value;
+
+     //llamamos al servicio
+     this._productoService.searchDescripcion(this.buscarProducto).subscribe(
+       response =>{
+           if(response.status == 'success'){
+             //asignamos datos a varibale para poder mostrarla en la tabla
+             this.productos = response.productos.data;
+             //console.log(this.productos)
+
+             //navegacion paginacion
+             this.totalPages = response.productos.total;
+             this.itemsPerPage = response.productos.per_page;
+             this.pageActual = response.productos.current_page;
+             this.next_page = response.productos.next_page_url;
+             this.path = response.productos.path
+             
+             //una ves terminado de cargar quitamos el spinner
+             this.isLoadingProductos = false;
+           }
+       }, error => {
+         console.log(error)
+       }
+     )
+  }
+   
     /**
    * 
    * @param codbar 
@@ -761,6 +813,7 @@ export class PuntoDeVentaComponent implements OnInit {
       }
     )
   }
+
   /**
    * 
    * @param claveExterna 
@@ -805,4 +858,5 @@ export class PuntoDeVentaComponent implements OnInit {
       }
     )
   }
+
 }
