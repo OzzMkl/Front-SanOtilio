@@ -3,6 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 //servicio
 import { ClientesService } from 'src/app/services/clientes.service';
 import { MessageService } from 'primeng/api';
+import { EmpleadoService } from 'src/app/services/empleado.service';
 //modelo
 import { Cliente } from 'src/app/models/cliente';
 import { Cdireccion} from 'src/app/models/cdireccion'
@@ -30,8 +31,11 @@ export class ClienteEditarComponent implements OnInit {
   public dirEditada: Cdireccion;
   public listaDirecciones: Array<Cdireccion>;
 
-  constructor(private _clienteService: ClientesService, private modalService:NgbModal,
-    public messageService: MessageService, private _route: ActivatedRoute) {
+  constructor(  private _clienteService: ClientesService,
+                private _empleadoService: EmpleadoService,
+                private modalService:NgbModal,
+                public messageService: MessageService,
+                private _route: ActivatedRoute) {
 
       this.clienteEditado = new Cliente (0,'','','','','',0,1,0);
       this.dirEditada = new Cdireccion (0,'Mexico','Puebla','','','','','','',0,'',0,1,'');
@@ -117,7 +121,14 @@ export class ClienteEditarComponent implements OnInit {
     //mandammos a abrir el modal para editar la direccion
     this.open(content);
   }
+  /**
+   * Actualiza la informacion del cliente
+   * junto con su direccion
+   */
   actualizarCliente(){
+
+    var identity = this._empleadoService.getIdentity();
+
     if(this.isCompany == true ){
       this.clienteEditado.aMaterno ='';
       this.clienteEditado.aPaterno='';
@@ -126,22 +137,34 @@ export class ClienteEditarComponent implements OnInit {
       this.clienteEditado.rfc ='XAXX010101000';
     }
     //console.log(this.listaDirecciones);
-    this._clienteService.updateCliente(this.clienteEditado,this.clienteEditado.idCliente).subscribe( 
+    this._clienteService.updateCliente(this.clienteEditado,this.clienteEditado.idCliente,identity).subscribe( 
       response =>{
         if(response.status == 'success'){
-          this._clienteService.updateCdireccion(this.listaDirecciones,this.clienteEditado.idCliente).subscribe(
-            response =>{
-              if(response.status == 'success'){
-                //this.toastService.show('Cliente actualizado correctamente',{classname: 'bg-success text-light', delay: 3000});
-              }
-              console.log(response)
-            },error=>{console.log(error);})
+          this.messageService.add({severity:'success', summary:'Actualizacion exitosa', detail: 'Cliente actualizado correctamente', sticky: true});
+
+          if(this.listaDirecciones.length > 0){
+
+            this._clienteService.updateCdireccion(this.listaDirecciones,this.clienteEditado.idCliente).subscribe(
+              response =>{
+                if(response.status == 'success'){
+                  this.messageService.add({severity:'success', summary:'Actualizacion exitosa', detail:'La direccion se actualizo correctamente', sticky: true});
+                }
+                //console.log(response)
+              },error=>{
+                this.messageService.add({severity:'error', summary:'Algo salio mal', detail:error.error.message, sticky: true});
+                console.log(error);
+              });
+
+          } else{
+            this.messageService.add({severity:'warn', summary:'Advertencia', detail:'No se actualizo ninguna direccion', sticky: true});
+          }
+          
         }else{
           //this.toastService.show('Algo salio mal al actualizar el cliente',{classname: 'bg-danger text-light', delay: 6000});
         }
         //console.log(response);
       },error=>{
-        //this.toastService.show('Algo salio mal',{classname: 'bg-danger text-light', delay: 6000});
+        this.messageService.add({severity:'error', summary:'Algo salio mal', detail:error.message, sticky: true});
         console.log(error);
       });
   }
@@ -149,11 +172,11 @@ export class ClienteEditarComponent implements OnInit {
 // Modal
 open(content:any) {//abre modal
   this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title', size: 'xl'}).result.then((result) => {
-    this.closeResult = `Closed with: ${result}`;
     this.messageService.add({severity:'warn', summary:'Advertencia1', sticky: true});
+    this.closeResult = `Closed with: ${result}`;
   }, (reason) => {
     this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-    this.messageService.add({severity:'warn', summary:'Advertencia2', sticky: true});
+    //this.messageService.add({severity:'warn', summary:'Advertencia2 ->'+this.closeResult, sticky: true});
   });
 }
 private getDismissReason(reason: any): string {//cierra modal con teclado ESC o al picar fuera del modal
