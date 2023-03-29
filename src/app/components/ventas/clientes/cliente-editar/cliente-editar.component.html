@@ -17,25 +17,29 @@
         <div class="row align-items-start">
             <div *ngIf="isCompany == false; else elseBlock" class="row">
                 <div class="col-4">
-                    <label class="form-label" for="">Nombre(s)</label>
-                    <input class="form-control" type="text" name="nombre" #nombre="ngModel" [(ngModel)]="clienteEditado.nombre" required>
+                    <label class="form-label" for="">Nombre(s) *</label>
+                    <input class="form-control" oninput="this.value = this.value.toUpperCase()" type="text" maxlength="254"
+                            name="nombre" #nombre="ngModel" [(ngModel)]="clienteEditado.nombre" required>
                     <div [hidden]="nombre.valid || nombre.pristine" class="alert alert-danger">
                       CAMPO REQUERIDO
                     </div>
                 </div>
                 <div class="col-3">
                     <label class="form-label" for="">Apellido paterno</label>
-                    <input class="form-control" type="text" name="aPaterno" #aPaterno="ngModel" [(ngModel)]="clienteEditado.aPaterno" >
+                    <input class="form-control" oninput="this.value = this.value.toUpperCase()" type="text" maxlength="80"
+                            name="aPaterno" #aPaterno="ngModel" [(ngModel)]="clienteEditado.aPaterno" >
                 </div>
                 <div class="col-3">
                     <label class="form-label" for="">Apellido materno</label>
-                    <input class="form-control" type="text" name="aMaterno" #aMaterno="ngModel" [(ngModel)]="clienteEditado.aMaterno">
+                    <input class="form-control" oninput="this.value = this.value.toUpperCase()" type="text" maxlength="80"
+                            name="aMaterno" #aMaterno="ngModel" [(ngModel)]="clienteEditado.aMaterno">
                 </div>
             </div>
             <ng-template #elseBlock>
                 <div class="col-12">
-                    <label class="form-label" for="">Nombre de empresa</label>
-                    <input class="form-control" type="text" name="nombre" #nombre="ngModel" [(ngModel)]="clienteEditado.nombre" required>
+                    <label class="form-label" for="">Nombre de empresa *</label>
+                    <input class="form-control" oninput="this.value = this.value.toUpperCase()" type="text" maxlength="254"
+                            name="nombre" #nombre="ngModel" [(ngModel)]="clienteEditado.nombre" required>
                     <div [hidden]="nombre.valid || nombre.pristine" class="alert alert-danger">
                       CAMPO REQUERIDO
                     </div>
@@ -43,22 +47,23 @@
             </ng-template>
             
             <div class="col-3">
-                <label class="form-label" for="">Correo</label>
-                <input class="form-control" type="email" name="correo" #correo="ngModel" [(ngModel)]="clienteEditado.correo" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" required>
+                <label class="form-label" for="">Correo *</label>
+                <input class="form-control" type="email" name="correo" #correo="ngModel" maxlength="80" 
+                        [(ngModel)]="clienteEditado.correo" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" required>
                 <div [hidden]="correo.valid || correo.pristine" class="alert alert-danger">
                   CAMPO REQUERIDO EN FORMATO : correo@domino.com
                 </div>
             </div>
             <div class="col-3">
-                <label class="form-label" for="">Tipo cliente</label>
-                <select class="form-select" name="idTipo" #idTipo="ngModel" [(ngModel)]="clienteEditado.idTipo">
-                    <option selected disabled>Abrir para seleccionar</option>
+                <label class="form-label" for="">Tipo cliente *</label>
+                <select class="form-select" name="idTipo" #idTipo="ngModel" [(ngModel)]="clienteEditado.idTipo" required>
+                    <!-- <option selected disabled>Abrir para seleccionar</option> -->
                     <option *ngFor="let tp of tipocliente" value="{{tp.idTipo}}">{{tp.nombre}}</option>
                 </select>
             </div>
             <div class="col-2">
                 <label class="form-label" for="">.</label>
-                <button class="btn btn-success form-control" type="button" (click)="open(content)"> Agregar dirección</button>
+                <button class="btn btn-success form-control" type="button" (click)="open(content)">¿Agregar dirección?</button>
             </div>
         </div>
         <hr>
@@ -88,7 +93,7 @@
 
             <div *ngIf="isCredito == true ;" class="col-3">
                 <label class="form-label" for="">Cantidad de credito</label>
-                <input class="form-control" type="number" name="credito" #credito="ngModel" [(ngModel)]="clienteEditado.credito">
+                <input class="form-control" type="number" name="credito" #credito="ngModel" [(ngModel)]="clienteEditado.credito" pattern="^[0-9]{1,10}" >
             </div>
             
         </div>
@@ -133,48 +138,81 @@
             
                 <div  class="row align-items-start">
                   <div class="col-3">
-                      <label class="form-label" for="">Pais</label>
-                      <input class="form-control" type="text" value="Mexico" name="pais" #pais="ngModel" [(ngModel)]="dirEditada.pais" readonly>
+                      <label class="form-label" for="">Pais *</label>
+                      <input class="form-control" oninput="this.value = this.value.toUpperCase()" type="text" 
+                              value="Mexico" name="pais" #pais="ngModel" [(ngModel)]="dirEditada.pais" maxlength="50" readonly>
                     </div>
                   <div class="col-3">
-                    <label class="form-label" for="">Estado</label>
-                    <input class="form-control" type="text" value="Puebla" name="estado" #estado="ngModel" [(ngModel)]="dirEditada.estado" readonly>
+                    <label class="form-label" for="">Estado *</label>
+                    <input class="form-control" oninput="this.value = this.value.toUpperCase()" type="text" 
+                            value="Puebla" name="estado" #estado="ngModel" [(ngModel)]="dirEditada.estado" maxlength="50" readonly>
                   </div>
                   <div class="col-3">
-                    <label class="form-label" for="">Ciudad</label>
-                    <input class="form-control" type="text" name="ciudad" #ciudad="ngModel" [(ngModel)]="dirEditada.ciudad" >
+                    <label class="form-label" for="">Ciudad *</label>
+                    <input class="form-control" oninput="this.value = this.value.toUpperCase()" type="text"
+                             name="ciudad" #ciudad="ngModel" [(ngModel)]="dirEditada.ciudad" maxlength="50" required>
+                    <div [hidden]="ciudad.valid || ciudad.pristine" class="alert alert-danger">
+                     CAMPO REQUERIDO
+                    </div>
                   </div>
                   <div class="col-3">
-                    <label class="form-label" for="">Colonia</label>
-                    <input class="form-control" type="text" name="colonia" #colonia="ngModel" [(ngModel)]="dirEditada.colonia">
+                    <label class="form-label" for="">Colonia *</label>
+                    <input class="form-control" oninput="this.value = this.value.toUpperCase()" type="text"
+                            name="colonia" #colonia="ngModel" [(ngModel)]="dirEditada.colonia" maxlength="50" required>
+                    <div [hidden]="colonia.valid || colonia.pristine" class="alert alert-danger">
+                      CAMPO REQUERIDO
+                    </div>
                   </div>
                   <div class="col-3">
-                    <label class="form-label" for="">Calle</label>
-                    <input class="form-control" type="text" name="calle" #calle="ngModel" [(ngModel)]="dirEditada.calle" >
+                    <label class="form-label" for="">Calle *</label>
+                    <input class="form-control" oninput="this.value = this.value.toUpperCase()" type="text"
+                            name="calle" #calle="ngModel" [(ngModel)]="dirEditada.calle" maxlength="50" required >
+                    <div [hidden]="calle.valid || calle.pristine" class="alert alert-danger">
+                      CAMPO REQUERIDO
+                    </div>
                   </div>
                   <div class="col-3">
-                    <label class="form-label" for="">Numero exterior</label>
-                    <input class="form-control" type="text" name="numExt" #numExt="ngModel" [(ngModel)]="dirEditada.numExt">
+                    <label class="form-label" for="">Numero exterior *</label>
+                    <input class="form-control" oninput="this.value = this.value.toUpperCase()" type="text"
+                            name="numExt" #numExt="ngModel" [(ngModel)]="dirEditada.numExt" maxlength="10" required>
+                    <div [hidden]="numExt.valid || numExt.pristine" class="alert alert-danger">
+                      CAMPO REQUERIDO
+                    </div> 
                   </div>
                   <div class="col-3">
                     <label class="form-label" for="">Numero interior</label>
-                    <input class="form-control" type="text" name="numInt" #numInt="ngModel" [(ngModel)]="dirEditada.numInt" >
+                    <input class="form-control" oninput="this.value = this.value.toUpperCase()" type="text"
+                            name="numInt" #numInt="ngModel" [(ngModel)]="dirEditada.numInt" maxlength="10" >
                   </div>
                   <div class="col-3">
                     <label class="form-label" for="">Entre calles</label>
-                    <input class="form-control" type="text" name="entreCalles" #entreCalles="ngModel" [(ngModel)]="dirEditada.entreCalles" >
+                    <input class="form-control" oninput="this.value = this.value.toUpperCase()" type="text"
+                            name="entreCalles" #entreCalles="ngModel" [(ngModel)]="dirEditada.entreCalles" maxlength="50" >
                   </div>
                   <div class="col-3">
-                    <label class="form-label" for="">Codigo postal</label>
-                    <input class="form-control" type="text" name="cp" #cp="ngModel" [(ngModel)]="dirEditada.cp" >
+                    <label class="form-label" for="">Codigo postal *</label>
+                    <input class="form-control" type="number" pattern="^[0-9]{1,5}" min="0"
+                            name="cp" #cp="ngModel" [(ngModel)]="dirEditada.cp" required>
+                    <div [hidden]="cp.valid || cp.pristine" class="alert alert-danger">
+                      SOLO INGRESAR DE 1 HASTA 5 NUMEROS
+                    </div> 
                   </div>
                   <div class="col-3">
-                    <label class="form-label" for="">Telefono</label>
-                    <input class="form-control" type="text" name="telefono" #telefono="ngModel" [(ngModel)]="dirEditada.telefono" >
+                    <label class="form-label" for="">Telefono *</label>
+                    <input class="form-control" type="number" min="0" pattern="^[0-9]{1,10}"
+                            name="telefono" #telefono="ngModel" [(ngModel)]="dirEditada.telefono" required >
+                    <div [hidden]="telefono.valid || telefono.pristine" class="alert alert-danger">
+                      CAMPO REQUERIDO
+                      SOLO INGRESAR HASTA 10 NUMEROS
+                    </div> 
                   </div>
                   <div class="col">
-                    <label class="form-label" for="">Referencia</label>
-                    <textarea class="form-control" name="" id="" cols="30" rows="2" name="referencia" #referencia="ngModel" [(ngModel)]="dirEditada.referencia"></textarea>
+                    <label class="form-label" for="">Referencia *</label>
+                    <textarea class="form-control" oninput="this.value = this.value.toUpperCase()" maxlength="254"
+                               name="referencia" cols="30" rows="2" #referencia="ngModel" [(ngModel)]="dirEditada.referencia"></textarea>
+                    <div [hidden]="referencia.valid || referencia.pristine" class="alert alert-danger">
+                      CAMPO REQUERIDO
+                    </div> 
                   </div>
                 </div>
             

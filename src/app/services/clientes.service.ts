@@ -26,14 +26,28 @@ export class ClientesService {
   return this._http.get(this.url+'clientes/indexTipocliente', {headers:this.headers} );
  }
 
- postCliente(cliente:any):Observable<any>{
-  let json = JSON.stringify(cliente);
+ /**
+  * Registra un nuevo cliente
+  * @param cliente 
+  * @param empleado 
+  * @returns 
+  */
+ postCliente(cliente:any,empleado:any):Observable<any>{
+  let combinado = {...cliente, sub: empleado.sub};
+  let json = JSON.stringify(combinado);
   let params = 'json='+json;
   return this._http.post(this.url+'clientes/register',params, {headers:this.headers} );
  }
 
- postCdireccion(cdireccion:any):Observable<any>{
-  let json = JSON.stringify(cdireccion);
+ /**
+  * Registra la direcion al registrar un nuevo cliente
+  * @param cdireccion 
+  * @param empleado 
+  * @returns 
+  */
+ postCdireccion(cdireccion:any,empleado:any):Observable<any>{
+  let combinado = {...cdireccion,...empleado};
+  let json = JSON.stringify(combinado);
   let params = 'json='+json;
   return this._http.post(this.url+'clientes/registerCdireccion',params, {headers:this.headers} );
  }
@@ -52,8 +66,9 @@ export class ClientesService {
   return this._http.get(this.url+'clientes/getDireccionCliente/'+idCliente,{headers:this.headers} );
  }
 
- updateCliente(cliente:any, idCliente:any):Observable<any>{
-  let json = JSON.stringify(cliente);
+ updateCliente(cliente:any, idCliente:any,empleado:any):Observable<any>{
+  let combinado = {...cliente, sub: empleado.sub};
+  let json = JSON.stringify(combinado);
   let params = 'json='+json;
   return this._http.put(this.url + 'clientes/updateCliente/'+idCliente,params,{headers:this.headers});
  }

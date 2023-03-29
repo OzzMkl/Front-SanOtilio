@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 //servicio
 import { ClientesService } from 'src/app/services/clientes.service';
+import { EmpleadoService } from 'src/app/services/empleado.service';
 //modelo
 import { Cliente } from 'src/app/models/cliente';
 import { Cdireccion} from 'src/app/models/cdireccion'
@@ -32,6 +33,7 @@ export class ClienteAgregarComponent implements OnInit {
   // hoy : Date= new Date();
 
   constructor( private _clienteService: ClientesService,
+               private _empleadoService: EmpleadoService,
                private modalService:NgbModal,
                private messageService: MessageService) { 
     this.cliente = new Cliente (0,'','','','','',0,1,1);
@@ -53,6 +55,8 @@ export class ClienteAgregarComponent implements OnInit {
   }
 
   guardarCliente(form:any){//guardamos la informacion capturada del cliente
+
+    var identity = this._empleadoService.getIdentity();
     
     if(this.isCompany == true ){
       this.cliente.aMaterno ='';
@@ -62,17 +66,17 @@ export class ClienteAgregarComponent implements OnInit {
       this.cliente.rfc ='XAXX010101000';
     }
     
-    this._clienteService.postCliente(this.cliente).subscribe( 
+    this._clienteService.postCliente(this.cliente,identity).subscribe( 
       response =>{
 
         //console.log(this.cliente)
         if(response.status == 'success'){
-          this.messageService.add({severity:'success', summary:'Registro exitoso', detail: 'El cliente se registrado correctamente', sticky: true});
+          this.messageService.add({severity:'success', summary:'Registro exitoso', detail: 'Cliente registrado correctamente', sticky: true});
 
           if(this.checkDireccion == true && this.cdireccion.ciudad != '' && this.cdireccion.colonia != '' && this.cdireccion.calle != ''
           && this.cdireccion.numExt != '' && this.cdireccion.cp != 0 && this.cdireccion.referencia != '' && this.cdireccion.telefono != 0){
 
-            this._clienteService.postCdireccion(this.cdireccion).subscribe( 
+            this._clienteService.postCdireccion(this.cdireccion,identity).subscribe( 
               response=>{
                 //console.log(response);
                 this.messageService.add({severity:'success', summary:'Registro exitoso', detail:'La direccion se registro correctamente', sticky: true});
@@ -81,7 +85,7 @@ export class ClienteAgregarComponent implements OnInit {
                 this.messageService.add({severity:'error', summary:'Algo salio mal', detail:error.error.message, sticky: true});
               });
           } else{
-            this.messageService.add({severity:'warn', summary:'Advertencia', detail:'Si agrego una direccion esta no se registro', sticky: true});
+            this.messageService.add({severity:'warn', summary:'Advertencia', detail:'No se registro ninguna direccion', sticky: true});
           }
             
         }else{

@@ -17,7 +17,7 @@
         <div class="row align-items-start">
             <div *ngIf="isCompany == false; else elseBlock" class="row">
                 <div class="col-4">
-                    <label class="form-label" for="">Nombre(s)</label>
+                    <label class="form-label" for="">Nombre(s) *</label>
                     <input class="form-control" oninput="this.value = this.value.toUpperCase()" type="text" maxlength="254"
                             name="nombre" #nombre="ngModel" [(ngModel)]="cliente.nombre" ngModel required>
                     <div [hidden]="nombre.valid || nombre.pristine" class="alert alert-danger">
@@ -37,7 +37,7 @@
             </div>
             <ng-template #elseBlock>
                 <div class="col-12">
-                    <label class="form-label" for="">Nombre de empresa</label>
+                    <label class="form-label" for="">Nombre de empresa *</label>
                     <input class="form-control" oninput="this.value = this.value.toUpperCase()" type="text" maxlength="254"
                             name="nombre" #nombre="ngModel" [(ngModel)]="cliente.nombre" ngModel required>
                     <div [hidden]="nombre.valid || nombre.pristine" class="alert alert-danger">
@@ -47,7 +47,7 @@
             </ng-template>
             
             <div class="col-3">
-                <label class="form-label" for="">Correo</label>
+                <label class="form-label" for="">Correo *</label>
                 <input class="form-control"  type="email" name="correo" #correo="ngModel" maxlength="80"
                         [(ngModel)]="cliente.correo" ngModel pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" required>
                 <div [hidden]="correo.valid || correo.pristine" class="alert alert-danger">
@@ -55,7 +55,7 @@
                 </div>
             </div>
             <div class="col-3">
-                <label class="form-label" for="">Tipo cliente</label>
+                <label class="form-label" for="">Tipo cliente *</label>
                 <select class="form-select" name="idTipo" #idTipo="ngModel" [(ngModel)]="cliente.idTipo"  required>
                     <!-- <option selected disabled>Abrir para seleccionar</option> -->
                     <option *ngFor="let tp of tipocliente" value="{{tp.idTipo}}">{{tp.nombre}}</option>
