@@ -84,7 +84,7 @@ export class CotizacionEditarComponent implements OnInit {
                  this.modeloCliente = new Cliente (0,'','','','','',0,1,0);
                  this.cdireccion = new Cdireccion (0,'Mexico','Puebla','','','','','','',0,'',0,1,'');
                  this.nuevaDir = new Cdireccion (0,'Mexico','Puebla','','','','','','',0,'',0,1,'');
-                 this.productoVentag = new Producto_ventasg(0,0,'',0,0,0,'','',0,0,true);
+                 this.productoVentag = new Producto_ventasg(0,0,'',0,0,0,0,0,'','',0,0,true);
                }
 
   ngOnInit(): void {
