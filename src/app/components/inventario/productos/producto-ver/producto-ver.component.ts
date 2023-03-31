@@ -103,7 +103,7 @@ export class ProductoVerComponent implements OnInit {
          //console.log(response);
 
          this.producto = response.producto;
-         //console.log(this.producto[0])
+         console.log(this.producto)
 
          this.prueba(response.producto[0]['statuss'])
          //para asi asignar el valor del codigo de barras a la variable value
@@ -211,6 +211,8 @@ export class ProductoVerComponent implements OnInit {
             this.medida5 = response.productos_medidas[i]['nombreMedida'];
           }
          }
+         //
+         this.calculaExistencia();
          //una vez terminado de cargar quitamos el spinner
           this.isLoading = false;
        }//fin if
@@ -221,6 +223,11 @@ export class ProductoVerComponent implements OnInit {
    );//finsubscribe getProdverdos
 
   });//finsubscribe params
+  }
+
+  calculaExistencia(){
+    this.producto[0]['existenciaG'];
+    console.log('esta es la existencia '+this.producto[0]['existenciaG']);
   }
 
   /**
