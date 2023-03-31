@@ -15,7 +15,7 @@ import { Subscription } from 'rxjs';
 })
 export class ProveedorAgregarComponent implements OnInit, OnDestroy {
 
-  public proveedor: Proveedor= new Proveedor(0,'','','','','','','','','','',0,0,1,'','','','','','','','','');//Modelo del proveedor
+  public proveedor: Proveedor= new Proveedor(0,'','','','','','','','','','',0,0,29,'','','','','','','','','');//Modelo del proveedor
   public banco: Array<Banco> = [];//Array de modelos del objeto banco
 
   //subscripciones

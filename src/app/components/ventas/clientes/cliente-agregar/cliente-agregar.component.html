@@ -60,9 +60,6 @@
                     <!-- <option selected disabled>Abrir para seleccionar</option> -->
                     <option *ngFor="let tp of tipocliente" value="{{tp.idTipo}}">{{tp.nombre}}</option>
                 </select>
-                <div [hidden]="idTipo.valid || idTipo .pristine" class="alert alert-danger">
-                  CAMPO REQUERIDO EN FORMATO : correo@domino.com
-                </div>
             </div>
             <!--  -->
             <div class="col-2 ">
@@ -84,7 +81,7 @@
                 </label>
               </div>
               <div *ngIf="isRFC == true; else RFCgenerico">
-                <input class="form-control" maxlength="13" oninput="this.value = this.value.toUpperCase()" type="text" maxlength="14"
+                <input class="form-control" maxlength="13" oninput="this.value = this.value.toUpperCase()" type="text"
                          name="rfc" #rfc="ngModel" [(ngModel)]="cliente.rfc">
                 <div [hidden]="rfc.valid || rfc.pristine" class="alert alert-danger">
                   CAMPO REQUERIDO
@@ -103,14 +100,14 @@
                     </div>
             </div>
 
-            <div *ngIf="isCredito == true;" class="col-3 ">
+            <div *ngIf="isCredito" class="col-3 ">
                 <label class="form-label" for="">Cantidad de credito</label>
                 <input class="form-control" type="number" name="credito" #credito="ngModel" pattern="^[0-9]{1,10}" [(ngModel)]="cliente.credito">
             </div>
             
         </div>
         <hr>
-        <div *ngIf="checkDireccion == true" >
+        <div *ngIf="checkDireccion" >
             <h5>Direccion</h5>
             <input type="text" class="form-control" value="{{cdireccion.pais}} {{cdireccion.estado}} {{cdireccion.colonia}} {{cdireccion.calle}} {{cdireccion.numExt}} {{cdireccion.numInt}} entre {{cdireccion.entreCalles}}" readonly>
         </div>
