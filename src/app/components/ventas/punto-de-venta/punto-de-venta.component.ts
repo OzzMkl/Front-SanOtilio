@@ -101,15 +101,13 @@ export class PuntoDeVentaComponent implements OnInit {
     this.modeloCliente = new Cliente (0,'','','','','',0,1,0);
     this.cdireccion = new Cdireccion (0,'Mexico','Puebla','','','','','','',0,'',0,1,'');
     this.nuevaDir = new Cdireccion (0,'Mexico','Puebla','','','','','','',0,'',0,1,'');
-    this.productoVentag = new Producto_ventasg(0,0,'',0,0,0,'','',0,0,true);
+    this.productoVentag = new Producto_ventasg(0,0,'',0,0,0,0,0,'','',0,0,true);
     this.lista_productoVentag = [];
    }
 
-  ngOnInit(): void {
-//    this.getProductos();
+  ngOnInit(): void { 
   this.loadUser();
   this.getDatosEmpresa();
-  //this.creaPDFcotizacion();
   }
 
   /**
@@ -657,6 +655,19 @@ export class PuntoDeVentaComponent implements OnInit {
     }, (reason) => {
       this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
     });
+  }
+  /**
+   * Abre modal de agregar direccion
+   * @param content 
+   */
+  openModalDirec(content:any){
+    if(this.checkDireccion == true){
+      this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title', size: 'xl'}).result.then((result) => {
+        this.closeResult = `Closed with: ${result}`;
+      }, (reason) => {
+        this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+      });
+    }
   }
 
   private getDismissReason(reason: any): string {//cerrarmodal

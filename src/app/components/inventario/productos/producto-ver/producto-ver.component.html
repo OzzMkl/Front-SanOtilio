@@ -62,7 +62,11 @@
                         <label class="form-label" for="">Stock Max</label>
                         <input class="form-control" type="text" value="{{p.stockMax}}" readonly>
                     </div>
-                    <div class="col-6 text-center">
+                    <div class="col-3">
+                        <label class="form-label" for="">Existencia en medida menor</label>
+                        <input class="form-control" type="text" value="{{p.existenciaG}}" readonly>
+                    </div>
+                    <div class="col-3 text-center">
                         <h6 class="text-center">Codigo de barras</h6>
                         <ngx-barcode [bc-value]="muestraCbarras" [bc-display-value]="true"></ngx-barcode>
                     </div>

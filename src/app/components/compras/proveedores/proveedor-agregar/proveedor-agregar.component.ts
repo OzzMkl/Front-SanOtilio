@@ -5,6 +5,7 @@ import { Router} from '@angular/router';
 import { Banco } from 'src/app/models/banco';
 import { BancoService } from 'src/app/services/banco.service';
 import { ToastService } from 'src/app/services/toast.service';
+import { EmpleadoService } from 'src/app/services/empleado.service';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -15,15 +16,21 @@ import { Subscription } from 'rxjs';
 })
 export class ProveedorAgregarComponent implements OnInit, OnDestroy {
 
-  public proveedor: Proveedor= new Proveedor(0,'','','','','','','','','','',0,0,1,'','','','','','','','','');//Modelo del proveedor
+  public proveedor: Proveedor= new Proveedor(0,'','','','','','','','','','',0,0,29,'','','','','','','','','');//Modelo del proveedor
   public banco: Array<Banco> = [];//Array de modelos del objeto banco
+  public checkContacto: boolean = false;
+  public checkNcp: boolean = false;
 
   //subscripciones
   private registraProveedor: Subscription = new Subscription;
   private getBancoSub: Subscription = new Subscription;
   
-  constructor(  private _proveedorService: ProveedorService, private _bancoService: BancoService,
-                private _router: Router, public toastService: ToastService ) { }
+  constructor(  private _proveedorService: ProveedorService,
+                private _bancoService: BancoService,
+                private _router: Router,
+                private _empleadoService: EmpleadoService,
+                public toastService: ToastService
+                ) { }
 
   ngOnInit(): void {
     this.getBanco(); 
@@ -36,8 +43,22 @@ export class ProveedorAgregarComponent implements OnInit, OnDestroy {
    * @param form 
    */
   onSubmit(form:any){
+    var identity = this._empleadoService.getIdentity();
     //console.log(this.proveedor);
-    this.registraProveedor =  this._proveedorService.register(this.proveedor).subscribe(
+    if(this.checkContacto){
+      this.proveedor.nombreCon = 'XXXXX';
+      this.proveedor.emailCon = 'XXXXX';
+      this.proveedor.telefonoCon = 'XXXXX';
+      this.proveedor.puestoCon = 'XXXXX';
+    }
+    if(this.checkNcp){
+      this.proveedor.ncuenta = '00000000';
+      this.proveedor.idBanco = '1';
+      this.proveedor.titular = 'xxxxx';
+      this.proveedor.clabe = '000000000000000000';
+    }
+
+    this.registraProveedor =  this._proveedorService.register(this.proveedor,identity).subscribe(
        response =>{ 
          //console.log(response);
          this.toastService.show('Proveedor guardado correctamente', { classname: 'bg-success text-light', delay: 5000 }); 
@@ -67,6 +88,10 @@ export class ProveedorAgregarComponent implements OnInit, OnDestroy {
         console.log(error);
       }
     );
+  }
+
+  checkedContacto(event:any){
+    console.log(event)
   }
 
   /**

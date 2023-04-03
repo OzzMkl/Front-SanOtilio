@@ -14,8 +14,9 @@ export class ProveedorService{
 
     constructor( public _http: HttpClient ){ }
 
-    register(proveedor:any): Observable<any>{
-        let json = JSON.stringify(proveedor);
+    register(proveedor:any, empleado:any): Observable<any>{
+        let combinado = {...proveedor, sub: empleado.sub};
+        let json = JSON.stringify(combinado);
         let params = 'json='+json;
         return this._http.post(this.url+'proveedor/register',params, {headers:this.headers} );
     }
