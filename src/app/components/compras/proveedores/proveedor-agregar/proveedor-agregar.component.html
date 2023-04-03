@@ -143,97 +143,179 @@
                 </p-accordionTab>
                 <p-accordionTab header="Datos del contacto">
                     <div class="row justify-content-center p-fluid ">
+                        
                         <div class="col-5">
+
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="checked" [(ngModel)]="checkContacto" id="flexCheckDefault3" (onChange)="checkedContacto($event)">
+                                <label class="form-check-label" for="flexCheckDefault3">
+                                  ¿No conozco los datos?
+                                </label>
+                              </div>
+
+                            <div *ngIf="checkContacto == false; else ContactoGenerico">
+                                <div class="p-field p-md-4">
+                                    <span class="p-float-label">
+                                        <input  pInputText type="text" name="nombreCon" id="nombreCon" oninput="this.value = this.value.toUpperCase()"
+                                                #nombreCon="ngModel" [(ngModel)]="proveedor.nombreCon" required pattern="[A-Z0-9 .]+"> 
+                                        <label for="nombreCon">Nombre</label>
+                                    </span>
+                                    <div [hidden]="nombreCon.valid || nombreCon.pristine" class="ng-invalid ng-dirty">
+                                        <small>Campo requerido</small>
+                                    </div>
+                                </div>
+        
+                                <div class="p-field p-md-4">
+                                    <span class="p-float-label">
+                                        <input  pInputText type="email" name="emailCon" id="emailCon"
+                                                #emailCon="ngModel" [(ngModel)]="proveedor.emailCon" required
+                                                pattern="^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$"> 
+                                        <label for="emailCon">Correo electrónico</label>
+                                    </span>
+                                    <div [hidden]="emailCon.valid || emailCon.pristine" class="ng-invalid ng-dirty">
+                                        <small>Campo requerido</small>
+                                    </div>
+                                </div>
+        
+                                <div class="p-field p-md-4">
+                                    <span class="p-float-label">
+                                        <input  pInputText type="phone" name="telefonoCon" id="telefonoCon"
+                                                #telefonoCon="ngModel" [(ngModel)]="proveedor.telefonoCon" required pattern="[0-9]{10}"> 
+                                        <label for="telefonoCon">Telefono</label>
+                                    </span>
+                                    <div [hidden]="telefonoCon.valid || telefonoCon.pristine" class="ng-invalid ng-dirty">
+                                        <small>Campo requerido</small>
+                                    </div>
+                                </div>
     
-                            <div class="p-field p-md-4">
-                                <span class="p-float-label">
-                                    <input  pInputText type="text" name="nombreCon" id="nombreCon" oninput="this.value = this.value.toUpperCase()"
-                                            #nombreCon="ngModel" [(ngModel)]="proveedor.nombreCon" required pattern="[A-Z0-9 .]+"> 
-                                    <label for="nombreCon">Nombre</label>
-                                </span>
-                                <div [hidden]="nombreCon.valid || nombreCon.pristine" class="ng-invalid ng-dirty">
-                                    <small>Campo requerido</small>
+                                <div class="p-field p-md-4">
+                                    <span class="p-float-label">
+                                        <input  pInputText type="text" name="puestoCon" id="puestoCon" oninput="this.value = this.value.toUpperCase()"
+                                                #puestoCon="ngModel" [(ngModel)]="proveedor.puestoCon" required pattern="[A-Z0-9 .-]+"> 
+                                        <label for="puestoCon">Puesto</label>
+                                    </span>
+                                    <div [hidden]="puestoCon.valid || puestoCon.pristine" class="ng-invalid ng-dirty">
+                                        <small>Campo requerido</small>
+                                    </div>
                                 </div>
                             </div>
+
+                            <ng-template #ContactoGenerico>
+                                <div class="p-field p-md-4">
+                                    <span class="p-float-label">
+                                        <input  pInputText type="text" name="nombreCon" id="nombreCon" value="XXXXX" readonly> 
+                                        <label for="nombreCon">Nombre</label>
+                                    </span>
+                                </div>
+        
+                                <div class="p-field p-md-4">
+                                    <span class="p-float-label">
+                                        <input  pInputText type="email" name="emailCon" id="emailCon" value="XXXXX" readonly> 
+                                        <label for="emailCon">Correo electrónico</label>
+                                    </span>
+                                </div>
+        
+                                <div class="p-field p-md-4">
+                                    <span class="p-float-label">
+                                        <input  pInputText type="phone" name="telefonoCon" id="telefonoCon" value="XXXXX" readonly> 
+                                        <label for="telefonoCon">Telefono</label>
+                                    </span>
+                                </div>
     
-                            <div class="p-field p-md-4">
-                                <span class="p-float-label">
-                                    <input  pInputText type="email" name="emailCon" id="emailCon"
-                                            #emailCon="ngModel" [(ngModel)]="proveedor.emailCon" required
-                                            pattern="^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$"> 
-                                    <label for="emailCon">Correo electrónico</label>
-                                </span>
-                                <div [hidden]="emailCon.valid || emailCon.pristine" class="ng-invalid ng-dirty">
-                                    <small>Campo requerido</small>
+                                <div class="p-field p-md-4">
+                                    <span class="p-float-label">
+                                        <input  pInputText type="text" name="puestoCon" id="puestoCon" value="XXXXX" readonly> 
+                                        <label for="puestoCon">Puesto</label>
+                                    </span>
+                                    
                                 </div>
-                            </div>
-    
-                            <div class="p-field p-md-4">
-                                <span class="p-float-label">
-                                    <input  pInputText type="phone" name="telefonoCon" id="telefonoCon"
-                                            #telefonoCon="ngModel" [(ngModel)]="proveedor.telefonoCon" required pattern="[0-9]{10}"> 
-                                    <label for="telefonoCon">Telefono</label>
-                                </span>
-                                <div [hidden]="telefonoCon.valid || telefonoCon.pristine" class="ng-invalid ng-dirty">
-                                    <small>Campo requerido</small>
-                                </div>
-                            </div>
-                            <div class="p-field p-md-4">
-                                <span class="p-float-label">
-                                    <input  pInputText type="text" name="puestoCon" id="puestoCon" oninput="this.value = this.value.toUpperCase()"
-                                            #puestoCon="ngModel" [(ngModel)]="proveedor.puestoCon" required pattern="[A-Z0-9 .-]+"> 
-                                    <label for="puestoCon">Puesto</label>
-                                </span>
-                                <div [hidden]="puestoCon.valid || puestoCon.pristine" class="ng-invalid ng-dirty">
-                                    <small>Campo requerido</small>
-                                </div>
-                            </div>
+                            </ng-template>
+
                         </div>
                     </div>
                 </p-accordionTab>
                 <p-accordionTab header="Datos de la cuenta">
                     <div class="row justify-content-center p-fluid ">
                         <div class="col-5">
-    
-                            <div class="p-field p-md-4">
-                                <span class="p-float-label">
-                                    <input  pInputText type="text" name="ncuenta" id="ncuenta"
-                                            #ncuenta="ngModel" [(ngModel)]="proveedor.ncuenta" required> 
-                                    <label for="ncuenta">Numero de cuenta</label>
-                                </span>
-                                <div [hidden]="ncuenta.valid || ncuenta.pristine" class="ng-invalid ng-dirty">
-                                    <small>Campo requerido</small>
+
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="checked" [(ngModel)]="checkNcp" id="flexCheckDefault3">
+                                <label class="form-check-label" for="flexCheckDefault3">
+                                  ¿No conozco los datos?
+                                </label>
+                            </div>
+
+                            <div *ngIf="checkNcp == false; else NcpGenerico">
+                                <div class="p-field p-md-4">
+                                    <span class="p-float-label">
+                                        <input  pInputText type="text" name="ncuenta" id="ncuenta"
+                                                #ncuenta="ngModel" [(ngModel)]="proveedor.ncuenta" required> 
+                                        <label for="ncuenta">Numero de cuenta</label>
+                                    </span>
+                                    <div [hidden]="ncuenta.valid || ncuenta.pristine" class="ng-invalid ng-dirty">
+                                        <small>Campo requerido</small>
+                                    </div>
+                                </div>
+                                <div class="p-field p-md-4">
+                                    <span class="p-float-label">
+                                        <!-- <input type="text" id="inputtext" pInputText >  -->
+                                        <p-dropdown [options]="banco" optionLabel="banco" [autoDisplayFirst]="false" optionValue="idBanco" name="idbanco"
+                                                    #idbanco="ngModel" [(ngModel)]="proveedor.idBanco">
+                                        </p-dropdown>
+                                        <label for="idbanco">Banco</label>
+                                    </span>
+                                </div>
+                                <div class="p-field p-md-4">
+                                    <span class="p-float-label">
+                                        <input  pInputText type="text" name="titular" id="titular" oninput="this.value = this.value.toUpperCase()"
+                                                #titular="ngModel" [(ngModel)]="proveedor.titular" required pattern="[A-Z0-9 ]+"> 
+                                        <label for="titular">Titular</label>
+                                    </span>
+                                    <div [hidden]="titular.valid || titular.pristine" class="ng-invalid ng-dirty">
+                                        <small>Campo requerido</small>
+                                    </div>
+                                </div>
+                                <div class="p-field p-md-4">
+                                    <span class="p-float-label">
+                                        <input  pInputText type="text" name="clabe" id="clabe" maxlength="19"
+                                        #clabe="ngModel" [(ngModel)]="proveedor.clabe" required pattern="[0-9]{18,19}"> 
+                                        <label for="clabe">CLABE</label>
+                                    </span>
+                                    <div [hidden]="clabe.valid || clabe.pristine" class="ng-invalid ng-dirty">
+                                        <small>Campo requerido</small>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="p-field p-md-4">
-                                <span class="p-float-label">
-                                    <!-- <input type="text" id="inputtext" pInputText >  -->
-                                    <p-dropdown [options]="banco" optionLabel="banco" [autoDisplayFirst]="false" optionValue="idBanco" name="idbanco"
-                                                #idbanco="ngModel" [(ngModel)]="proveedor.idBanco">
-                                    </p-dropdown>
-                                    <label for="idbanco">Banco</label>
-                                </span>
-                            </div>
-                            <div class="p-field p-md-4">
-                                <span class="p-float-label">
-                                    <input  pInputText type="text" name="titular" id="titular" oninput="this.value = this.value.toUpperCase()"
-                                            #titular="ngModel" [(ngModel)]="proveedor.titular" required pattern="[A-Z0-9 ]+"> 
-                                    <label for="titular">Titular</label>
-                                </span>
-                                <div [hidden]="titular.valid || titular.pristine" class="ng-invalid ng-dirty">
-                                    <small>Campo requerido</small>
+                            <ng-template #NcpGenerico>
+                                <div class="p-field p-md-4">
+                                    <span class="p-float-label">
+                                        <input  pInputText type="text" name="ncuenta" id="ncuenta" value="00000000" readonly> 
+                                        <label for="ncuenta">Numero de cuenta</label>
+                                    </span>
                                 </div>
-                            </div>
-                            <div class="p-field p-md-4">
-                                <span class="p-float-label">
-                                    <input  pInputText type="text" name="clabe" id="clabe" maxlength="19"
-                                    #clabe="ngModel" [(ngModel)]="proveedor.clabe" required pattern="[0-9]{18,19}"> 
-                                    <label for="clabe">CLABE</label>
-                                </span>
-                                <div [hidden]="clabe.valid || clabe.pristine" class="ng-invalid ng-dirty">
-                                    <small>Campo requerido</small>
+                                <div class="p-field p-md-4">
+                                    <span class="p-float-label">
+                                        <!-- <input type="text" id="inputtext" pInputText >  -->
+                                        <p-dropdown [options]="banco" optionLabel="banco" [autoDisplayFirst]="false" optionValue="idBanco" name="idbanco"
+                                                    #idbanco="ngModel" [(ngModel)]="proveedor.idBanco" [disabled]="true">
+                                        </p-dropdown>
+                                        <label for="idbanco">Banco</label>
+                                    </span>
                                 </div>
-                            </div>
+                                <div class="p-field p-md-4">
+                                    <span class="p-float-label">
+                                        <input  pInputText type="text" name="titular" id="titular" value="xxxxx" readonly> 
+                                        <label for="titular">Titular</label>
+                                    </span>
+                                    
+                                </div>
+                                <div class="p-field p-md-4">
+                                    <span class="p-float-label">
+                                        <input  pInputText type="text" name="clabe" id="clabe" value="000000000000000000" readonly>
+                                        <label for="clabe">CLABE</label>
+                                    </span>
+                                </div>
+                            </ng-template>
                         </div>
                     </div>  
                 </p-accordionTab>

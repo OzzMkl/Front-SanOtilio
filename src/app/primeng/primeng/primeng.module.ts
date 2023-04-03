@@ -21,6 +21,7 @@ import {ToggleButtonModule} from 'primeng/togglebutton';
 import {SelectButtonModule} from 'primeng/selectbutton';
 import {FieldsetModule} from 'primeng/fieldset';
 import { ToastModule } from 'primeng/toast';
+import { InputSwitchModule } from 'primeng/inputswitch';
 
 
 
@@ -45,7 +46,8 @@ import { ToastModule } from 'primeng/toast';
     ToggleButtonModule,
     SelectButtonModule,
     FieldsetModule,
-    ToastModule
+    ToastModule,
+    InputSwitchModule
   ],
   imports: [
     CommonModule,

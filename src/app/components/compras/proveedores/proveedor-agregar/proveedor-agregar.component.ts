@@ -17,6 +17,8 @@ export class ProveedorAgregarComponent implements OnInit, OnDestroy {
 
   public proveedor: Proveedor= new Proveedor(0,'','','','','','','','','','',0,0,29,'','','','','','','','','');//Modelo del proveedor
   public banco: Array<Banco> = [];//Array de modelos del objeto banco
+  public checkContacto: boolean = false;
+  public checkNcp: boolean = false;
 
   //subscripciones
   private registraProveedor: Subscription = new Subscription;
@@ -37,6 +39,19 @@ export class ProveedorAgregarComponent implements OnInit, OnDestroy {
    */
   onSubmit(form:any){
     //console.log(this.proveedor);
+    if(this.checkContacto){
+      this.proveedor.nombreCon = 'XXXXX';
+      this.proveedor.emailCon = 'XXXXX';
+      this.proveedor.telefonoCon = 'XXXXX';
+      this.proveedor.puestoCon = 'XXXXX';
+    }
+    if(this.checkNcp){
+      this.proveedor.ncuenta = '00000000';
+      this.proveedor.idBanco = '1';
+      this.proveedor.titular = 'xxxxx';
+      this.proveedor.clabe = '000000000000000000';
+    }
+
     this.registraProveedor =  this._proveedorService.register(this.proveedor).subscribe(
        response =>{ 
          //console.log(response);
@@ -67,6 +82,10 @@ export class ProveedorAgregarComponent implements OnInit, OnDestroy {
         console.log(error);
       }
     );
+  }
+
+  checkedContacto(event:any){
+    console.log(event)
   }
 
   /**
