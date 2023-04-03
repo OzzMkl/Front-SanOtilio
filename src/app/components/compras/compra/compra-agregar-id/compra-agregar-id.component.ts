@@ -589,6 +589,6 @@ export class CompraAgregarIdComponent implements OnInit {
     console.log('Total: ',this.compra.total);
 
     this.isSearch = false;
-  }
+  }  
 
 }
