@@ -7,6 +7,7 @@ import { global } from 'src/app/services/global';
 import { ToastService } from 'src/app/services/toast.service';
 import { OrdendecompraService } from 'src/app/services/ordendecompra.service';
 import { EmpleadoService } from 'src/app/services/empleado.service';
+import { HttpClient} from '@angular/common/http';
 //modelos
 import { Ordencompra } from 'src/app/models/orden_compra';
 import { Producto_orden } from 'src/app/models/producto_orden';
@@ -48,24 +49,35 @@ public isSearch: boolean = true;
 public test: boolean = false;
 //modelode bootstrap datapicker
   model!: NgbDateStruct;
-//paginador
-  public totalPages: any;
-  public page: any;
-  public next_page: any;
-  public prev_page: any;
-  pageActual: number = 1;
-  pageActual2: number = 1;
-  //cerrar modal
+//paginador Lista de productos
+public totalPages2: any;
+public path2: any;
+public next_page2: any;
+public prev_page2: any;
+public itemsPerPage2:number=0;
+pageActual2: number = 0;
+//cerrar modal
   closeResult = '';
-  //Modelos de pipes
+//Modelos de pipes
   seleccionado:number = 1;//para cambiar entre pipes
   buscarProducto = '';
   buscarProductoCE = '';
-  buscarProductoCbar = '';
+  buscarProductoCbar : number = 0;
+/**PAGINATOR modal*/
+  public totalPages: any;
+  public path: any;
+  public next_page: any;
+  public prev_page: any;
+  public itemsPerPage:number=0;
+  pageActual: number = 0;
+
+//spinner
+  public isLoading:boolean = false;
 
   constructor(
     //declaracion de servicios
     private _proveedorService: ProveedorService,
+    private _http: HttpClient,
     private _productoService: ProductoService,
     public toastService: ToastService,
     private _ordencompraService: OrdendecompraService,
@@ -229,10 +241,16 @@ public test: boolean = false;
     this._productoService.getProductos().subscribe(
       response =>{
         if(response.status == 'success'){
-          this.productos = response.productos;
-          //navegacion paginacion
+          this.productos = response.productos.data;
+          //navegacion de paginacion
           this.totalPages = response.productos.total;
-          //console.log(response.productos);
+          this.itemsPerPage = response.productos.per_page;
+          this.pageActual = response.productos.current_page;
+          this.next_page = response.productos.next_page_url;
+          this.path = response.productos.path;
+
+          //una vez terminado quitamos el spinner
+          this.isLoading=false;
         }
       },
       error =>{
@@ -325,6 +343,7 @@ public test: boolean = false;
   }
    // Modal
    open(content:any) {
+    this.getAllProducts();
     this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title', size: 'xl'}).result.then((result) => {
       this.closeResult = `Closed with: ${result}`;
     }, (reason) => {
@@ -343,7 +362,174 @@ public test: boolean = false;
   cambioSeleccionado(e:any){//limpiamos los inputs del modal
     this.buscarProducto = '';
     this.buscarProductoCE = '';
-    this.buscarProductoCbar = '';
+    this.buscarProductoCbar = 0;
   }
+
+  /**
+   * PAGINACION 
+   * @param page
+   * Es el numero de pagina a la cual se va acceder
+   * @description
+   * De acuerdo al numero de pagina recibido lo concatenamos a
+   * la direccion para "ir" a esa direccion y traer la informacion
+   * no retornamos ya que solo actualizamos las variables a mostrar
+   */
+  getPage(page:number) {
+    //iniciamos spinner
+    this.isLoading = true;
+
+    this._http.get(this.path+'?page='+page).subscribe(
+      (response:any) => {
+        
+        //asignamos datos a varibale para poder mostrarla en la tabla
+        this.productos = response.productos.data;
+        //navegacion de paginacion
+        this.totalPages = response.productos.total;
+        this.itemsPerPage = response.productos.per_page;
+        this.pageActual = response.productos.current_page;
+        this.next_page = response.productos.next_page_url;
+        this.path = response.productos.path;
+
+        //una vez terminado quitamos el spinner
+        this.isLoading=false;        
+    })
+  }
+
+  /**
+  * 
+  * @param descripcion 
+  * Recibimos el evento del input
+  * @description
+  * Recibe los valores del Keyup, luego buscamos y actualizamos
+  * los datos que se muestran en la tabla
+  */
+  getSearchDescripcion(descripcion:any){
+   
+    //mostramos el spinner
+    this.isLoading = true;
+
+    //si es vacio volvemos a llamar la primera funcion que trae todo
+    if(descripcion.target.value == ''){
+      this.getAllProducts();
+    }
+
+    //componemos el codigo a buscar
+    this.buscarProducto = descripcion.target.value;
+
+    //llamamos al servicio
+    this._productoService.searchDescripcion(this.buscarProducto).subscribe(
+      response =>{
+          if(response.status == 'success'){
+            //asignamos datos a varibale para poder mostrarla en la tabla
+            this.productos = response.productos.data;
+            //console.log(this.productos)
+
+            //navegacion paginacion
+            this.totalPages = response.productos.total;
+            this.itemsPerPage = response.productos.per_page;
+            this.pageActual = response.productos.current_page;
+            this.next_page = response.productos.next_page_url;
+            this.path = response.productos.path
+            
+            //una ves terminado de cargar quitamos el spinner
+            this.isLoading = false;
+          }
+      }, error => {
+        console.log(error)
+      }
+    )
+ }
+  
+   /**
+  * 
+  * @param codbar 
+  * Recibimos el evento del input
+  * @description
+  * Recibe los valores del evento keyup, luego busca y actualiza
+  * los datos que se muestran en la tabla
+  */
+ getSearchCodbar(codbar:any){
+
+   //mostramos el spinner
+   this.isLoading = true;
+
+   //si es vacio volvemos a llamar la primera funcion que trae todo
+   if(codbar.target.value == ''){
+     this.getAllProducts();
+   }
+
+   //componemos el codigo a buscar
+   this.buscarProductoCbar = codbar.target.value;
+
+   //llamamos al servicio
+   this._productoService.searchCodbar(this.buscarProductoCbar).subscribe(
+     response =>{
+         if(response.status == 'success'){
+           //asignamos datos a varibale para poder mostrarla en la tabla
+           this.productos = response.productos.data;
+           //console.log(this.productos)
+
+           //navegacion paginacion
+           this.totalPages = response.productos.total;
+           this.itemsPerPage = response.productos.per_page;
+           this.pageActual = response.productos.current_page;
+           this.next_page = response.productos.next_page_url;
+           this.path = response.productos.path
+           
+           //una ves terminado de cargar quitamos el spinner
+           this.isLoading = false;
+         }
+     }, error => {
+       console.log(error)
+     }
+   )
+ }
+
+ /**
+  * 
+  * @param claveExterna 
+  * Recibimos el evento del input
+  * @description
+  * Recibe los valores del evento keyUp, luego busca y actualiza
+  * los datos de la tabla
+  */
+ getSearch(claveExterna:any){
+
+   //mostramos el spinner 
+   this.isLoading = true;
+
+   //si es vacio volvemos a llamar la primera funcion
+   if(claveExterna.target.value == ''){
+     this.getAllProducts();
+   }
+   //componemos la palabra
+   this.buscarProducto = claveExterna.target.value;
+
+   //generamos consulta
+   this._productoService.searchClaveExterna(this.buscarProducto).subscribe(
+     response =>{
+         if(response.status == 'success'){
+
+           //asignamos datos a varibale para poder mostrarla en la tabla
+           this.productos = response.productos.data;
+           //console.log(this.productos)
+
+           //navegacion paginacion
+           this.totalPages = response.productos.total;
+           this.itemsPerPage = response.productos.per_page;
+           this.pageActual = response.productos.current_page;
+           this.next_page = response.productos.next_page_url;
+           this.path = response.productos.path
+           
+           //una ves terminado de cargar quitamos el spinner
+           this.isLoading = false;
+       }
+     }, error =>{
+         console.log(error)
+     }
+   )
+ }
+
+
 
 }

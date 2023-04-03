@@ -308,6 +308,7 @@ export class OrdencompraAgregarComponent implements OnInit {
 
   // Modal
   open(content:any) {
+    this.getAllProducts();
     this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title', size: 'xl'}).result.then((result) => {
       this.closeResult = `Closed with: ${result}`;
     }, (reason) => {
@@ -494,4 +495,17 @@ export class OrdencompraAgregarComponent implements OnInit {
      }
    )
  }
+
+ editarProductoO(p_d:any){//metodo para editar la lista de compras
+  console.log('p_d',p_d);
+  this.Lista_compras = this.Lista_compras.filter((item) => item.idProducto !== p_d.idProducto);//eliminamos el producto
+  //consultamos la informacion para motrar el producto nuevamente
+  this.getProd(p_d.idProducto);
+
+
+
+  this.isSearch = false;
+} 
+
+
 }
