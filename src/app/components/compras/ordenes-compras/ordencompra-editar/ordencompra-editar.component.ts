@@ -35,6 +35,8 @@ public detallesProveedor:any;
 public proveedoresLista:any;
 public productos: any;
 public productoVer: any;
+public productoVerM: any;
+public medidaActualizada:any;
 public identity: any;
 //variables de detalles de la orden
 public detailOrd: any;
@@ -89,46 +91,61 @@ public test: boolean = false;
     if(this.test == true){//revisamos si el usuario quiso cambiar de fecha
       this.orden_compra.fecha = this.model.year+'-'+this.model.month+'-'+this.model.day;//concatenamos la fecha del datepicke
     }
-    //console.log(this.orden_compra);
-    //console.log(this.lista_productosorden);
-    this._route.params.subscribe( params =>{
-      let id =+ params['idOrd'];
-      this._ordencompraService.updateOrdenCompra(id,this.orden_compra).subscribe( 
-        response =>{
-          if(response.status == 'success'){
-            //console.log(response);
-             this._ordencompraService.updateProductosOrderC(id,this.lista_productosorden).subscribe( 
-               response=>{
-                 if(response.status == 'success'){
-                  this.toastService.show('Orden editada correctamente',{classname: 'bg-success text-light', delay: 3000});
-                  this.getOrderModificada();
-                   //console.log(response);
-                 }else{
-                  this.toastService.show('Algo salio mal con la lista de productos',{classname: 'bg-danger text-light', delay: 6000});
-                   //console.log('Algo salio mal con la lista de productos');
-                 }
+    
+    if(this.lista_productosorden.length == 0){
+      this.toastService.show('La lista de productos está vacía ',{classname: 'bg-danger text-light', delay: 6000});
+    }else{
+      console.log(this.orden_compra);
+      console.log(this.lista_productosorden);
+      this._route.params.subscribe( params =>{
+        let id =+ params['idOrd'];
+        this._ordencompraService.updateOrdenCompra(id,this.orden_compra).subscribe( 
+          response =>{
+            if(response.status == 'success'){
+              //console.log(response);
+              this._ordencompraService.updateProductosOrderC(id,this.lista_productosorden).subscribe( 
+                response=>{
+                  if(response.status == 'success'){
+                    this.toastService.show('Orden editada correctamente',{classname: 'bg-success text-light', delay: 3000});
+                    this.getOrderModificada();
+                    //console.log(response);
+                  }else{
+                    this.toastService.show('Algo salio mal con la lista de productos',{classname: 'bg-danger text-light', delay: 6000});
+                    //console.log('Algo salio mal con la lista de productos');
+                  }
+              
+                },error=>{
+                  this.toastService.show('Algo salio mal',{classname: 'bg-danger text-light', delay: 6000})
+                console.log(error);
+              });
+            }else{
+              console.log('Algo salio mal con la orden');
+            }
             
-               },error=>{
-                this.toastService.show('Algo salio mal',{classname: 'bg-danger text-light', delay: 6000})
-               console.log(error);
-             });
-          }else{
-            console.log('Algo salio mal con la orden');
-          }
-          
-        },error =>{ 
-          console.log(error);
-        });
-    });
+          },error =>{ 
+            console.log(error);
+          });
+      });
+    }
+
+    
     
   }
-  editarProducto(dato:any){//metodo para editar la lista de compras
-    this.lista_productosorden = this.lista_productosorden.filter((item) => item.claveEx !== dato);//eliminamos el producto
+  editarProducto(lpo:any){//metodo para editar la lista de compras
+    console.log(lpo);
+    this.lista_productosorden = this.lista_productosorden.filter((item) => item.idProducto !== lpo.idProducto);//eliminamos el producto
     //consultamos la informacion para motrar el producto nuevamente
-    this.getProd(dato);
+    this.getProd(lpo);
     this.isSearch = false;
   }
   capturar(datos:any){//Agregar a lista de compras
+    console.log(datos);
+
+    //Asignar idProdMedida y nombreMedida antes de capturar
+    this.medidaActualizada = this.productoVerM.find( (x:any) => x.idProdMedida == datos.idProdMedida);
+    this.productosOrden.idProdMedida = parseInt(this.medidaActualizada.idProdMedida);
+    this.productosOrden.nombreMedida = this.medidaActualizada.nombreMedida;
+
     if(this.productosOrden.cantidad <= 0){
       this.toastService.show('No se pueden agregar productos con cantidad 0 ó menor a 0',{classname: 'bg-danger text-light', delay: 6000})
     }else if(this.productosOrden.idProducto == 0){
@@ -142,6 +159,17 @@ public test: boolean = false;
     }
     
     //console.log(this.Lista_compras);
+
+    //Reset variables 
+    this.productoVer=[];
+    this.productoVerM=[];
+    this.productosOrden.cantidad = 0;
+    this.productosOrden.claveEx = '';
+    this.productosOrden.descripcion = '';
+    this.productosOrden.idOrd = 0;
+    this.productosOrden.idProdMedida = 0;
+    this.productosOrden.idProducto = 0;
+    this.productosOrden.nombreMedida = '';
   } 
   getOrdencompra(){//traemos la informacion de la orden seleccionada
     //Nos suscribimos al url para extraer el id
@@ -173,9 +201,11 @@ public test: boolean = false;
     });
   }
   getAllProveedores(){//Rellenamos el select de proveedores
-    this._proveedorService.getProveedores().subscribe(
+    this._proveedorService.getProveedoresSelect().subscribe(
       response =>{
-        this.proveedoresLista = response.proveedores;
+        this.proveedoresLista = response.provedores;
+        //console.log(this.proveedoresLista);
+        //console.log(response.provedores);
       },error =>{
         console.log(error);
         
@@ -210,15 +240,25 @@ public test: boolean = false;
       }
     );
   }
-  getProd(id:any){//servicio para obtener detalles del producto a traves de su claveexterna
-    this._productoService.getProdclaveex(id).subscribe(
+  getProd(lpo:any){//servicio para obtener detalles del producto a traves de su id
+    this._productoService.getProdverDos(lpo.idProducto).subscribe(
       response =>{
         this.productoVer = response.producto;//informacion completa del producto para recorrerlo atraves del html
         this.productosOrden.descripcion = this.productoVer[0]['descripcion'];//asignamos variables
         this.productosOrden.claveEx = this.productoVer[0]['claveEx'];
         this.productosOrden.idProducto = this.productoVer[0]['idProducto'];
-        this.productosOrden.nombreMedida = this.productoVer[0]['nombreMedida'];
-        //console.log(this.productoVer);
+        this.productoVerM = response.productos_medidas;//informacion completa de productos_medidas para recorrerlo atraves del html
+        this.productosOrden.cantidad = lpo.cantidad;
+
+        //obtener idProdMedida actualizado y asignarlo
+        //buscar lpo.nombreMedida en productoVerM, regresar y asignar this.producto_compra.idProdMedida, this.producto_compra.nombreMedida
+        this.medidaActualizada = this.productoVerM.find( (x:any) => x.nombreMedida == lpo.nombreMedida);
+        console.log('medidaActualizada',this.medidaActualizada);
+        this.productosOrden.idProdMedida = parseInt(this.medidaActualizada.idProdMedida);
+        this.productosOrden.nombreMedida = this.medidaActualizada.nombreMedida;
+        
+        console.log('productoVer',this.productoVer);
+        console.log('productoVerM',this.productoVerM);
       },error => {
         console.log(error);
       }

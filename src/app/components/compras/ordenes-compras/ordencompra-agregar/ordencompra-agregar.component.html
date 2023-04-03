@@ -136,29 +136,34 @@
       <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
     </div>
     <div class="modal-body">
-      <form>
-        <!-- <label class="form-label" for="">Seleccione el metodo a buscar</label> -->
+        
         <div class="input-group mb-2">
             <div class="col-2">
-                <select name="" id="" class="form-select" name="seleccionado" [(ngModel)]="seleccionado" (ngModelChange)="cambioSeleccionado($event)">
+                <select name="" id="" class="form-select" name="seleccionado" [(ngModel)]="seleccionado">
                     <option value="1" selected>DESCRIPCION</option>
                     <option value="2">CLAVE EXTERNA</option>
                     <option value="3">CODIGO DE BARRAS</option>
                 </select>
             </div>
             <div class="col" *ngIf="seleccionado == 1; ">
-                <input type="text" class="form-control" name="buscarProducto" [(ngModel)]="buscarProducto">
+                <input type="search" class="form-control" name="buscarProducto" placeholder=" Buscar ..." (keyup)="getSearchDescripcion($event)">
             </div>
             <div class="col" *ngIf="seleccionado == 2; ">
-                <input type="text" class="form-control" name="buscarProductoCE" [(ngModel)]="buscarProductoCE"> 
+                <input type="text" class="form-control" name="buscarProductoCE" placeholder=" Buscar ..." (keyup)="getSearch($event)"> 
             </div>
             <div class="col" *ngIf="seleccionado == 3;  ">
-                <input type="text" class="form-control" name="buscarProductoCbar" [(ngModel)]="buscarProductoCbar">
+                <input type="text" class="form-control" name="buscarProductoCbar" placeholder=" Buscar ..." (keyup)="getSearchCodbar($event)">
             </div>
             
           </div>
           <br>
-          <table class="table table-dark table-hover">
+                <div class="text-center text-primary" *ngIf="isLoading">
+                    <div class="spinner-border" role="status" >
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+            <br>
+            <table *ngIf="!isLoading" class="table table-dark table-hover">
             <thead>
                 <tr>
                     <th>Clave externa</th>
@@ -167,7 +172,7 @@
                     <th>Marca</th>
                 </tr>
             </thead>
-            <tbody *ngFor="let pr of productos | filterProductsModalcbar: buscarProductoCbar| filterProductModal: buscarProducto | filterProductsModalce: buscarProductoCE| paginate:{id:'pcModal',itemsPerPage: itemsPerPage, currentPage: pageActual,totalItems:totalPages}">
+            <tbody *ngFor="let pr of productos | paginate:{id:'pcModal',itemsPerPage: itemsPerPage, currentPage: pageActual,totalItems:totalPages}">
                 <tr (click)="consultarProductoModal(pr.idProducto)" (click)="modal.dismiss('Cross click')">
                     <th scope="row">{{pr.claveEx}}</th>
                     <th scope="row">{{pr.cbarras}}</th>
@@ -182,7 +187,6 @@
                     previousLabel="Anterior"
                     nextLabel="Siguiente" >
             </pagination-controls>
-      </form>
     </div>
     <!-- <div class="modal-footer">
       <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Guardar</button>

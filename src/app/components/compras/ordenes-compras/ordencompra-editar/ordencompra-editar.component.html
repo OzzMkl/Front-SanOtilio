@@ -92,24 +92,21 @@
                         <label for="departamento" class="form-label">Departamento</label>
                         <input type="text" name="departamento" class="form-control" value="{{prod.nombreDep}}" readonly>
                     </div>
-                    <div class="col-2">
+                    <div class="col-4">
                         <label for="categoria" class="form-label">Categoria</label>
                         <input type="text" name="categoria" class="form-control" value="{{prod.nombreCat}}" readonly>
-                    </div>
-                    <div class="col-2">
-                        <label for="subcategoria" class="form-label">Subcategoria</label>
-                        <input type="text" name="subcategoria" class="form-control" value="{{prod.nombreSubCat}}" readonly>
                     </div>
                     <div class="col-2">
                         <label for="imagen" class="form-label">Imagen</label>
                         <br>
                         <img src="{{url + 'productos/getImageProduc/' + prod.imagen}}" width="100px" height="100px">
                     </div>
-                    <div class="col-2">
-                        <label class="form-label" for="medida">Medida</label>
-                        <input class="form-control" type="text" value="{{prod.nombreMedida}}" readonly>
-                        <input class="form-control" type="text" value="{{prod.idMedida}}" hidden>
-                        
+                    <div class="col-4">
+                        <label for="medida" class="form-label">Seleccionar Medida</label>
+                        <select name="idMedida" id="idMedida" class="form-select" [(ngModel)]="productosOrden.idProdMedida">
+                            <option selected disabled value="">Abrir para seleccionar</option>
+                            <option  *ngFor="let medida of productoVerM" value={{medida.idProdMedida}} >{{medida.nombreMedida}}</option>
+                        </select>
                     </div>
                 </div>
             </div>
@@ -128,7 +125,7 @@
                     </tr>
                 </thead>
                 <tbody *ngFor="let lpo of lista_productosorden | paginate:{ id: 'pcEdit', itemsPerPage: 5, currentPage: pageActual}">
-                    <tr (click)="editarProducto(lpo.claveEx)">
+                    <tr (click)="editarProducto(lpo)">
                         <th scope="row">{{lpo.claveEx}}</th>
                         <th scope="row">{{lpo.descripcion}}</th>
                         <th scope="row">{{lpo.nombreMedida}}</th>
