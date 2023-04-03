@@ -5,6 +5,7 @@ import { Router} from '@angular/router';
 import { Banco } from 'src/app/models/banco';
 import { BancoService } from 'src/app/services/banco.service';
 import { ToastService } from 'src/app/services/toast.service';
+import { EmpleadoService } from 'src/app/services/empleado.service';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -24,8 +25,12 @@ export class ProveedorAgregarComponent implements OnInit, OnDestroy {
   private registraProveedor: Subscription = new Subscription;
   private getBancoSub: Subscription = new Subscription;
   
-  constructor(  private _proveedorService: ProveedorService, private _bancoService: BancoService,
-                private _router: Router, public toastService: ToastService ) { }
+  constructor(  private _proveedorService: ProveedorService,
+                private _bancoService: BancoService,
+                private _router: Router,
+                private _empleadoService: EmpleadoService,
+                public toastService: ToastService
+                ) { }
 
   ngOnInit(): void {
     this.getBanco(); 
@@ -38,6 +43,7 @@ export class ProveedorAgregarComponent implements OnInit, OnDestroy {
    * @param form 
    */
   onSubmit(form:any){
+    var identity = this._empleadoService.getIdentity();
     //console.log(this.proveedor);
     if(this.checkContacto){
       this.proveedor.nombreCon = 'XXXXX';
@@ -52,7 +58,7 @@ export class ProveedorAgregarComponent implements OnInit, OnDestroy {
       this.proveedor.clabe = '000000000000000000';
     }
 
-    this.registraProveedor =  this._proveedorService.register(this.proveedor).subscribe(
+    this.registraProveedor =  this._proveedorService.register(this.proveedor,identity).subscribe(
        response =>{ 
          //console.log(response);
          this.toastService.show('Proveedor guardado correctamente', { classname: 'bg-success text-light', delay: 5000 }); 
