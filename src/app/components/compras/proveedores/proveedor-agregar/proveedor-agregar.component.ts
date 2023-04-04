@@ -53,7 +53,7 @@ export class ProveedorAgregarComponent implements OnInit, OnDestroy {
     }
     if(this.checkNcp){
       this.proveedor.ncuenta = '00000000';
-      this.proveedor.idBanco = '1';
+      this.proveedor.idBanco = '2';
       this.proveedor.titular = 'xxxxx';
       this.proveedor.clabe = '000000000000000000';
     }
