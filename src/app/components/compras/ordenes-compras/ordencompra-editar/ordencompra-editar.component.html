@@ -182,16 +182,14 @@
                     <th>Clave externa</th>
                     <th>Codigo de barras</th>
                     <th>Descripcion</th>
-                    <th>Medida</th>
                     <th>Marca</th>
                 </tr>
             </thead>
             <tbody *ngFor="let pr of productos | paginate:{id:'pcModal',itemsPerPage: itemsPerPage, currentPage: pageActual,totalItems:totalPages}">
-                <tr (click)="consultarProductoModal(pr.claveEx)" (click)="modal.dismiss('Cross click')">
+                <tr (click)="consultarProductoModal(pr)" (click)="modal.dismiss('Cross click')">
                     <th scope="row">{{pr.claveEx}}</th>
                     <th scope="row">{{pr.cbarras}}</th>
                     <th scope="row">{{pr.descripcion}}</th>
-                    <th scope="row">{{pr.nombreMedida}}</th>
                     <th scope="row">{{pr.nombreMarca}}</th>
                 </tr>
             </tbody>

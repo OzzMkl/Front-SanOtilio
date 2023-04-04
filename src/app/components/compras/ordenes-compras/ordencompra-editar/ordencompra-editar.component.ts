@@ -234,7 +234,9 @@ pageActual2: number = 0;
     });
   }
   consultarProductoModal(dato:any){//traemos la informacion del producto seleccionado y lo mostramos
-    this.getProd(dato);
+    let combinado = {...dato, nombreMedida: ''};
+    console.log(combinado);
+    this.getProd(combinado);
     this.isSearch = false;
   }
   getAllProducts(){//traemos la informacion de todos los productos para el modal
@@ -259,6 +261,7 @@ pageActual2: number = 0;
     );
   }
   getProd(lpo:any){//servicio para obtener detalles del producto a traves de su id
+    console.log(lpo);
     this._productoService.getProdverDos(lpo.idProducto).subscribe(
       response =>{
         this.productoVer = response.producto;//informacion completa del producto para recorrerlo atraves del html
@@ -267,16 +270,21 @@ pageActual2: number = 0;
         this.productosOrden.idProducto = this.productoVer[0]['idProducto'];
         this.productoVerM = response.productos_medidas;//informacion completa de productos_medidas para recorrerlo atraves del html
         this.productosOrden.cantidad = lpo.cantidad;
+        console.log('productoVer',this.productoVer);
+        console.log('productoVerM',this.productoVerM);
 
         //obtener idProdMedida actualizado y asignarlo
         //buscar lpo.nombreMedida en productoVerM, regresar y asignar this.producto_compra.idProdMedida, this.producto_compra.nombreMedida
         this.medidaActualizada = this.productoVerM.find( (x:any) => x.nombreMedida == lpo.nombreMedida);
-        console.log('medidaActualizada',this.medidaActualizada);
-        this.productosOrden.idProdMedida = parseInt(this.medidaActualizada.idProdMedida);
-        this.productosOrden.nombreMedida = this.medidaActualizada.nombreMedida;
+        if(this.medidaActualizada == undefined ){
+
+        }else{
+          console.log('medidaActualizada',this.medidaActualizada);
+          this.productosOrden.idProdMedida = parseInt(this.medidaActualizada.idProdMedida);
+          this.productosOrden.nombreMedida = this.medidaActualizada.nombreMedida;
+        }
         
-        console.log('productoVer',this.productoVer);
-        console.log('productoVerM',this.productoVerM);
+        
       },error => {
         console.log(error);
       }
