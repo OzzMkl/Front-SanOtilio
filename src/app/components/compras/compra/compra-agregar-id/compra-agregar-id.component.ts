@@ -371,7 +371,7 @@ export class CompraAgregarIdComponent implements OnInit {
 
     doc.setLineWidth(1).line(10,92,200,92);
     autoTable(doc,{html: '#table_productos',startY:95})
-    doc.save('a.pdf')
+    doc.save('compra.pdf')
   } 
 
   
