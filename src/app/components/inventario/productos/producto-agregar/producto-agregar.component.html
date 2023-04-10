@@ -172,7 +172,7 @@
         <label class="form-label" for="checkPrecioCompra">Precio compra *</label>
         <div class="input-group mb-3">
           <span class="input-group-text" id="basic-addon1">$</span>
-          <input type="number" class="form-control" name="precioCompra" #precioCompra="ngModel" [(ngModel)]="datosTab1.preciocompra"  min="1"
+          <input type="number" class="form-control" name="precioCompra" #precioCompra="ngModel" [(ngModel)]="datosTab1.preciocompra"  min="0.1"
            required>
           <div [hidden]="precioCompra.valid || precioCompra.pristine" class="alert alert-danger">
             CAMPO REQUERIDO | INGRESE SOLO NUMEROS MAYOR A 0 Y MAXIMO 9999999
