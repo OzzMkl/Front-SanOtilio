@@ -152,20 +152,20 @@ export class ProductoAgregarComponent implements OnInit {
     this.loadUser();
     this.insertaListaProdM();
 //    console.log(this.producto, this.listaProdMedida)
-      this._productoService.registerProducto(this.producto,this.listaProdMedida,this.identity).subscribe(
-        response =>{
-          //console.log('asdasdasd :',response);
-          if(response.status == 'success'){
-            
-            this._router.navigate(['./producto-modulo/producto-buscar']);
-            this.toastService.show('Producto guardado correctamente', { classname: 'bg-success text-light', delay: 5000 });
-          }
-        },
-        error =>{
-          //console.log(this.producto);
-          //console.log('error ',error);
-          this.toastService.show(error, { classname: 'bg-danger text-light', delay: 15000 });
-        });
+       this._productoService.registerProducto(this.producto,this.listaProdMedida,this.identity).subscribe(
+         response =>{
+           //console.log('asdasdasd :',response);
+           if(response.status == 'success'){
+        
+             this._router.navigate(['./producto-modulo/producto-buscar']);
+             this.toastService.show('Producto guardado correctamente', { classname: 'bg-success text-light', delay: 5000 });
+           }
+         },
+         error =>{
+           //console.log(this.producto);
+           //console.log('error ',error);
+           this.toastService.show(error, { classname: 'bg-danger text-light', delay: 15000 });
+         });
   }
 
   /**
