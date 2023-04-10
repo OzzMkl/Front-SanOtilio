@@ -59,13 +59,23 @@ export class CompraAgregarIdComponent implements OnInit {
 //modelo de bootstrap datapicker
   model!: NgbDateStruct;
   modelP!: NgbDateStruct;
-//paginador
+
+//paginador Lista de productos
+  public totalPages2: any;
+  public path2: any;
+  public next_page2: any;
+  public prev_page2: any;
+  public itemsPerPage2:number=0;
+  pageActual2: number = 0;   
+
+/**PAGINATOR modal*/
   public totalPages: any;
-  public page: any;
+  public path: any;
   public next_page: any;
   public prev_page: any;
-  pageActual: number = 1;
-  pageActual2: number = 1;          
+  public itemsPerPage:number=0;
+  pageActual: number = 0;
+
   //cerrar modal
   closeResult = '';
   //Modelos de pipes
@@ -269,7 +279,7 @@ export class CompraAgregarIdComponent implements OnInit {
     this.producto_compra.nombreMedida = this.medidaActualizada.nombreMedida;
 
     
-    if(this.producto_compra.cantidad <= 0 || this.producto_compra.precio <= 0 || this.producto_compra.subtotal <= 0){
+    if(this.producto_compra.cantidad < 0 || this.producto_compra.precio < 0 || this.producto_compra.subtotal < 0){
       this.toastService.show('No se pueden agregar productos con cantidad, precio o importe menor o igual a 0',{classname: 'bg-danger text-light', delay: 6000})
     }else if(this.producto_compra.idProducto == 0){
       this.toastService.show('Ese producto no existe',{classname: 'bg-danger text-light', delay: 6000})

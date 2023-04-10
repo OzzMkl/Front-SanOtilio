@@ -33,6 +33,13 @@
                   <button class="btn btn-outline-secondary" (click)="d.toggle()" type="button"><i class="bi bi-calendar-date-fill"> </i> </button>
                 </div>
             </div>
+
+            <!-- <div class="col-2"> 
+                <label class="form-label" for="facturableCheck">¿Es facturable?</label>
+                <br>
+                <input class="form-check-input" type="checkbox" value="false"  name="facturable"  id="facturableCheck">
+
+            </div> -->
            
             <div *ngFor="let p of proveedorVer" class="row align-items-start">
                 <div class="col-2">
@@ -61,7 +68,7 @@
                         <th scope="col">CANTIDAD</th>
                     </tr>
                 </thead>
-                <tbody *ngFor="let lpo of lista_productosorden | paginate:{ id: 'pcEdit', itemsPerPage: 5, currentPage: pageActual}">
+                <tbody *ngFor="let lpo of lista_productosorden | paginate:{ id: 'pcEdit', itemsPerPage: 5, currentPage: pageActual2}">
                     <tr (click)="editarProducto(lpo)">
                         <th scope="row">{{lpo.claveEx}}</th>
                         <th scope="row">{{lpo.descripcion}}</th>
@@ -70,7 +77,7 @@
                     </tr>
                 </tbody>
             </table>
-            <pagination-controls id="pcEdit" (pageChange)="pageActual = $event"></pagination-controls>
+            <pagination-controls id="pcEdit" (pageChange)="pageActual2 = $event"></pagination-controls>
         </div>
         <hr>
         <div>

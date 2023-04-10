@@ -1,1 +1,262 @@
-<p>compra-editar works!</p>
+<div class="container">
+    <form class="form-group" #FormCom="ngForm" (ngSubmit)="agregarCompra(FormCom)">
+        <div class="row align-items-start">
+
+            <h4 class="text-center">DATOS DEL PROVEEDOR</h4>
+            <div class="col-2">
+                <label for="idOrd" class="form-label"># Orden</label>
+                <input type="text" class="form-control" id="idOrd" name="idOrd" #idOrd="ngModel" [(ngModel)]="compra.idOrd" readonly>
+            </div>
+            <div class="col-3">
+                <label for="folioProveedor" class="form-label"> Folio del proveedor</label>
+                <input type="text" class="form-control" id="folioProveedor" name="folioProveedor" #folioProveedor="ngModel" [(ngModel)]="compra.folioProveedor">
+                <br>
+            </div>
+            <div class="col-5">
+                <label for="idProveedor" class="form-label">Seleccionar proveedor</label>
+                <select class="form-select" name="idProveedor" #idProveedor="ngModel" id="idProveedor"   [(ngModel)]="compra.idProveedor" (ngModelChange)="onChange($event)">
+                    <option selected disabled>Abrir para seleccionar</option>
+                    <option  *ngFor="let proveedor of proveedoresLista" value="{{proveedor.idProveedor}}">{{proveedor.nombre}}</option>
+                </select>
+            </div>
+
+            <div class="col-4">
+                <label class="form-label" for="">Fecha de recepción</label>
+                <div class="input-group">
+                  <input class="form-control" placeholder="aaaa-mm-dd"
+                         name="dp" [(ngModel)]="model" ngbDatepicker [footerTemplate]="footerTemplate" #d="ngbDatepicker">
+                  <button class="btn btn-outline-secondary" (click)="d.toggle()" type="button"><i class="bi bi-calendar-date-fill"> </i> </button>
+                </div>
+            </div>
+           
+            <div *ngFor="let p of proveedorVer" class="row align-items-start">
+                <div class="col-2">
+                    <label for="rfc" class="form-label">RFC</label>
+                    <input type="text" name="rfc" class="form-control" value="{{p.rfc}}" readonly>
+                </div>
+                <div class="col-7">
+                    <label for="direccion" class="form-label">Direccion</label>
+                    <input type="text" name="direccion" class="form-control" value="{{p.estado}} {{p.ciudad}} {{p.colonia}} {{p.calle}} {{p.numero}}" readonly>
+                </div>                    
+                <div class="col-2">
+                    <label for="telefono" class="form-label">Telefono</label>
+                    <input type="text" name="telefono" class="form-control" value="{{p.telefono}}" readonly>
+                </div>    
+            </div>
+        </div>
+        <hr>
+        <div>
+            <h4 class="text-center">PRODUCTOS</h4>
+            <div class="row align-items-start">
+                <div class="col-4">
+                    <label class="form-label" for="">Buscar producto</label>
+                    <div class="input-group">
+                        <span class="input-group-addon" id="sizing-addon2"><i class="bi-search" style="font-size: 1.5rem; color: black; left: 0;" (click)="open(content)"></i> </span>
+                        <input class="form-control" type="text" ngbTooltip="Solo busca por clave externa" name="claveEx" #claveEx="ngModel" [(ngModel)]="producto_compra.claveEx" (keydown)="consultarProducto($event)">
+                    </div>
+                </div>
+                <div class="col-4">
+                    <label class="form-label" for="cantidadProducto">Cantidad</label>
+                    <input class="form-control" min="0" type="number" name="cantidadProducto" id="cantidadProducto"  #cantidadProducto="ngModel" [(ngModel)]="producto_compra.cantidad" (ngModelChange)="onChangeT($event)">
+                </div>
+                <div class="col-2">
+                    <label class="form-label" for="cantidadProducto">.</label>
+                    <button class="btn btn-success form-control" type="button" (click)="capturar(producto_compra)" [disabled]="isSearch"><i class="bi bi-check-circle-fill"> Agregar</i>     </button>
+                  </div>
+            </div>
+            <div class="row align-items-start" *ngFor="let prod of productoVer">
+                <div>
+                    <label for="descipcion" class="form-label">Descripcion</label>
+                    <input type="text" name="descipcion" class="form-control" value="{{prod.descripcion}}" readonly>
+                </div>
+                <div class="col-3">
+                    <label for="marca" class="form-label">Marca</label>
+                    <input type="text" name="marca" class="form-control" value="{{prod.nombreMarca}}" readonly>
+                </div>
+                <div class="col-3">
+                    <label for="departamento" class="form-label">Departamento</label>
+                    <input type="text" name="departamento" class="form-control" value="{{prod.nombreDep}}" readonly>
+                </div>
+                <div class="col-4">
+                    <label for="categoria" class="form-label">Categoria</label>
+                    <input type="text" name="categoria" class="form-control" value="{{prod.nombreCat}}" readonly>
+                </div>
+                <div class="col-2">
+                    <label for="imagen" class="form-label">Imagen</label>
+                    <br>
+                    <img src="{{url + 'productos/getImageProduc/' + prod.imagen}}" width="100px" height="100px">
+                </div>
+                <div class="col-4">
+                    <label for="medida" class="form-label">Seleccionar Medida</label>
+                    <select name="idMedida" id="idMedida" class="form-select" [(ngModel)]="producto_compra.idProdMedida">
+                        <option selected disabled value="">Abrir para seleccionar</option>
+                        <option  *ngFor="let medida of productoVerM" value={{medida.idProdMedida}} >{{medida.nombreMedida}}</option>
+                    </select>
+                </div>
+                <!-- <div class="col-2">
+                    <label class="form-label" for="medida">Medida</label>
+                    <input class="form-control" type="text" value="{{prod.nombreMedida}}" readonly>
+                </div> -->
+                <div class="col-2">
+                    <label for="precio" class="form-label"> Precio</label>
+                    <input type="number" min="0" name="precioProducto" class="form-control" id="precioProducto" #precioProducto="ngModel" [(ngModel)]="producto_compra.precio" (ngModelChange)="onChangeT($event)" >
+                    <br>
+                </div>
+                <div class="col-2">
+                    <label for="" class="form-label">Seleccionar impuesto</label>
+                    <select name="idImpuesto" id="idImpuesto" class="form-select" #idImpuesto="ngModel" [(ngModel)]="prod.idImpuesto" [(ngModel)]="producto_compra.NombreImpuesto"  (ngModelChange)="onChangeI($event)" >
+                        <option selected disabled value=0 >Abrir para seleccionar</option> 
+                        <option  *ngFor="let imp of impuestos" value={{imp.idImpuesto}}>{{imp.nombre}}</option>
+                    </select>
+                </div>
+                <div *ngFor="let impu of impuestoVer" class="col-2">
+                    <label for="impuestoV" class="form-label"> % Impuesto</label>
+                    <input class="form-control" type="text" value="{{impu.valor}}" name="valorImpuesto" #valorImpuesto="ngModel" [(ngModel)]="producto_compra.valorImpuesto"  readonly>
+                </div>
+                <div class="col-2">
+                    <label for="subtotalP" class="form-label"> Importe</label>
+                    <input class="form-control" type="number" min="0" name="subtotalP" value="{{producto_compra.cantidad * producto_compra.precio }}" id="subtotalP" #subtotalP="ngModel" 
+                        [(ngModel)]="producto_compra.subtotal" readonly> 
+                    <br>
+                </div>
+                <div class="col-2"> 
+                    <label class="form-label" for="flexCheckDefault">¿Caduca?</label>
+                    <br>
+                    <input class="form-check-input" type="checkbox" value="false"  name="test" [(ngModel)]="test" id="flexCheckDefault">
+                </div>
+
+                <div *ngIf="test == true;">
+                    <div class="col-4">
+                        <label class="form-label" for="">Selecciona la fecha de caducidad</label>
+                        <div class="input-group">
+                          <input class="form-control" placeholder="aaaa-mm-dd"
+                                name="dp2" [(ngModel)]="modelP" ngbDatepicker  #d="ngbDatepicker">
+                          <button class="btn btn-outline-secondary" (click)="d.toggle()" type="button"><i class="bi bi-calendar-date-fill"> </i> </button>
+                        </div>
+                    </div>
+                </div>
+                
+            </div> 
+        </div>
+        <hr>
+        <div class="row align-items-start"> 
+
+            <h4 class="text-center">LISTA DE COMPRAS</h4>
+            <table class="table table-dark table-hover" id="table_productos">
+                <thead>
+                    <tr>
+                        <th scope="col">CLAVE EXTERNA</th>
+                        <th scope="col">DESCRIPCION</th>
+                        <th scope="col">MEDIDA</th>
+                        <th scope="col">CANTIDAD</th>
+                        <th scope="col">PRECIO COMPRA</th>
+                        <th scope="col">IMPUESTO</th>
+                        <th scope="col">IMPORTE</th>
+                        <th scope="col">CADUCIDAD</th>
+                    </tr>
+                </thead>
+                <tbody *ngFor="let p_d of Lista_compras | paginate:{itemsPerPage: 5, currentPage: pageActual}">
+                    <tr (click)="editarProductoC(p_d)">
+                     <th scope="row">{{p_d.claveEx}}</th>
+                     <th scope="row">{{p_d.descripcion}}</th>
+                     <th scope="row">{{p_d.nombreMedida}}</th>
+                     <th scope="row">{{p_d.cantidad}}</th>
+                     <th scope="row">{{p_d.precio}}</th>
+                     <th scope="row">{{p_d.NombreImpuesto}}</th>
+                     <th scope="row">{{p_d.subtotal}}</th>
+                     <th scope="row">{{p_d.caducidad}}</th>
+
+                    </tr>
+                </tbody>
+            </table>
+            <pagination-controls (pageChange)="pageActual = $event"></pagination-controls>
+        </div>
+        <hr>
+        <div class="row justify-content-end">
+            <div class="col-3">
+                <label for="subtotal" class="form-label">Subtotal</label>
+                <input type="text" class="form-control" id="subtotal" name="subtotal" #subtotal="ngModel" [(ngModel)]="compra.subtotal" readonly>
+            </div>
+            <br>
+            <div class="col-3">
+                <label for="subtotal" class="form-label">Total</label>
+                <input type="text" class="form-control" id="total" name="total" #total="ngModel" [(ngModel)]="compra.total" readonly>
+            </div>
+        </div>
+
+        <hr>
+        <div class="row row-cols-lg-auto g-3 align-items-center">
+            <div class="col-12">
+                <label for="observaciones">Observaciones</label>
+                <textarea class="form-control" name="observaciones" id="observaciones" cols="30" rows="2" #observaciones="ngModel" [(ngModel)]="compra.observaciones"></textarea>
+                
+            </div>
+            <br>
+            <div class="col-12">
+                <button  class="btn btn-primary" type="submit">Guardar</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- Modal -->
+<ng-template #content let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Buscar producto</h4>
+      <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+      <form>
+        <!-- <label class="form-label" for="">Seleccione el metodo a buscar</label> -->
+            <div class="input-group mb-2">
+                <div class="col-2">
+                    <select name="" id="" class="form-select" name="seleccionado" [(ngModel)]="seleccionado" (ngModelChange)="cambioSeleccionado($event)">
+                        <option value="1" selected>DESCRIPCION</option>
+                        <option value="2">CLAVE EXTERNA</option>
+                        <option value="3">CODIGO DE BARRAS</option>
+                    </select>
+                </div>
+                <div class="col" *ngIf="seleccionado == 1; ">
+                    <input type="text" class="form-control" name="buscarProducto" [(ngModel)]="buscarProducto">
+                </div>
+                <div class="col" *ngIf="seleccionado == 2; ">
+                    <input type="text" class="form-control" name="buscarProductoCE" [(ngModel)]="buscarProductoCE"> 
+                </div>
+                <div class="col" *ngIf="seleccionado == 3;  ">
+                    <input type="text" class="form-control" name="buscarProductoCbar" [(ngModel)]="buscarProductoCbar">
+                </div>
+            
+            </div>
+            <br>
+            <table class="table table-dark table-hover">
+            <thead>
+                <tr>
+                    <th>Clave externa</th>
+                    <th>Codigo de barras</th>
+                    <th>Descripcion</th>
+                    <th>Medida</th>
+                    <th>Marca</th>
+                </tr>
+            </thead>
+            <tbody *ngFor="let pr of productos | filterProductsModalcbar: buscarProductoCbar| filterProductModal: buscarProducto | filterProductsModalce: buscarProductoCE| paginate:{itemsPerPage: 5, currentPage: pageActual}">
+                <tr (click)="consultarProductoModal(pr.claveEx)" (click)="modal.dismiss('Cross click')">
+                    <th scope="row">{{pr.claveEx}}</th>
+                    <th scope="row">{{pr.cbarras}}</th>
+                    <th scope="row">{{pr.descripcion}}</th>
+                    <th scope="row">{{pr.nombreMedida}}</th>
+                    <th scope="row">{{pr.nombreMarca}}</th>
+                </tr>
+            </tbody>
+          </table>
+          <pagination-controls (pageChange)="pageActual = $event"></pagination-controls>
+      </form>
+    </div>
+    <!-- <div class="modal-footer">
+      <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Guardar</button>
+    </div> -->
+</ng-template>
+
+<ng-template #footerTemplate>
+    <hr class="my-0">
+    <button class="btn btn-primary btn-sm m-2 float-start" (click)="model = today; d.close()">Hoy</button>
+</ng-template>
