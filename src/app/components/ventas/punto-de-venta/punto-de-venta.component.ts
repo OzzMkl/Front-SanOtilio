@@ -40,6 +40,8 @@ export class PuntoDeVentaComponent implements OnInit {
   public tipocliente :any;//tipocliente
   public productos:any;//getProductos
   public producto:any;
+  public productos_medidas: Array<any> = [];
+  public preciosArray: Array<any> = [];
   public identity: any;//loadUser
   public UltimaCotizacion: any;//obtenerultimacotiza
   public detallesCotiza:any;//ontederultimacotiza
@@ -386,21 +388,33 @@ export class PuntoDeVentaComponent implements OnInit {
     this._productoService.getProdverDos(idProducto).subscribe( response => {
       //console.log(response);
       if(response.status == 'success'){
+        this.limpiaProducto();
+
         this.producto = response.producto;
         this.productoVentag.claveEx = this.producto[0]['claveEx'];
         this.productoVentag.idProducto = this.producto[0]['idProducto'];
-        this.productoVentag.nombreMedida = this.producto[0]['nombreMedida'];
-        this.productoVentag.precio = this.producto[0]['precioS'];
         this.productoVentag.descripcion = this.producto[0]['descripcion'];
-        this.productoVentag.precioMinimo = this.producto[0]['precioR'];
-        //this.productoVentag.tieneStock = this.producto[0]['existenciaG']
         this.productoVentag.cantidad = 0;
+        
+        this.productos_medidas = response.productos_medidas;
+        //console.log(this.productos_medidas)
+
         this.calculaSubtotalPP();
         this.isSearch=false;
       }
     },error =>{
       console.log(error);
     });
+  }
+
+  /**
+   * @description
+   * Muestra los precios deacuerdo a la medida seleccionada
+   */
+  muestraPrecios(){
+    var med = this.productos_medidas.find(x => x.idProdMedida == this.productoVentag.idProdMedida);
+    this.productoVentag.nombreMedida = med.nombreMedida;
+    this.preciosArray.push(med.precio1, med.precio2, med.precio3, med.precio4, med.precio5);
   }
 
   //calculamos el subtotal por producto
@@ -417,39 +431,51 @@ export class PuntoDeVentaComponent implements OnInit {
     }
   }
 
-  //agregar producto a lista de ventas
+  /**
+   * @description
+   * Agrega el producto a la lista de ventas
+   */
   agregarProductoLista(){
     if( this.productoVentag.cantidad <= 0){
       this.toastService.show('No se pueden agregar productos con cantidad 0 ó menor a 0',{classname: 'bg-danger text-light', delay: 6000})
+
     }else if( this.productoVentag.idProducto == 0){
       this.toastService.show('Ese producto no existe',{classname: 'bg-danger text-light', delay: 6000});
+
     }else if (this.lista_productoVentag.find(x => x.idProducto == this.productoVentag.idProducto)){
       //verificamos si la lista de compras ya contiene el producto buscandolo por idProducto
       this.toastService.show('Ese producto ya esta en la lista',{classname: 'bg-danger text-light', delay: 6000});
+
     }else if(this.productoVentag.descuento < 0){
       this.toastService.show('No puedes agregar descuento negativo',{classname: 'bg-danger text-light', delay: 6000});
+
     }else{
-      
+      //revisamos la existencia del producto
       this._productoService.getExistenciaG(this.productoVentag.idProducto).subscribe(
         response =>{
+
           this.productoEG = response.producto;
+          //si la respuesta es positiva continuamos
+          if(response.status == 'success'){
+            //verificamos la existencia
+            //si esta es menor a la cantidad solicitada mandamos toast/alerta
+            if(this.productoEG[0]['existenciaG']< this.productoVentag.cantidad){
+              this.toastService.show('Stock insuficiente',{classname: 'bg-warning', delay: 6000});
+              this.productoVentag.tieneStock = false;
+            }
+              //asignamos los valores del producto 
+              this.ventag.subtotal = this.ventag.subtotal + (this.productoVentag.precio * this.productoVentag.cantidad);
+              this.ventag.descuento = this.ventag.descuento + this.productoVentag.descuento;
+              this.ventag.total = this.ventag.total + this.productoVentag.subtotal;
+              this.lista_productoVentag.push({...this.productoVentag});
+              this.isSearch = true;
+            
+          }
         }, error =>{
           console.log(error);
         }
       );
 
-      if(this.productoEG[0]['existenciaG']< this.productoVentag.cantidad){
-        this.toastService.show('Stock insuficiente',{classname: 'bg-warning', delay: 6000});
-        this.productoVentag.tieneStock = false;
-      }
-
-      this.ventag.subtotal = this.ventag.subtotal + (this.productoVentag.precio * this.productoVentag.cantidad);
-      //this.subtotalVenta = this.subtotalVenta + this.productoVentag.subtotal;
-      this.ventag.descuento = this.ventag.descuento + this.productoVentag.descuento;
-      //this.descuentoVenta = this.descuentoVenta + this.productoVentag.descuento;
-      this.ventag.total = this.ventag.total + this.productoVentag.subtotal;
-      this.lista_productoVentag.push({...this.productoVentag});
-      this.isSearch = true;
     }
 
   }
@@ -514,8 +540,12 @@ export class PuntoDeVentaComponent implements OnInit {
       this.toastService.show('No puedes generar una venta/cotizacion sin cliente!',{classname: 'bg-danger text-light', delay: 6000})
     }else{
       this._ventasService.postCotizaciones(this.ventag).subscribe( response=>{
+          //console.log("response cotizacion");
+          //console.log(response);
         if(response.status == 'success'){
           this._ventasService.postProductosCotiza(this.lista_productoVentag).subscribe( response =>{
+              //console.log("response productos cotizacion");
+              //console.log(response);
             if(response.status == 'success'){
               this.toastService.show(' ⚠ Cotizacion creada exitosamente!', { classname: 'bg-success  text-light', delay: 5000 });
               this.obtenerUltimaCotiza();
@@ -536,8 +566,10 @@ export class PuntoDeVentaComponent implements OnInit {
 
   //Obtener detalles de cotizacion registrada
   obtenerUltimaCotiza(){
-    this._ventasService.getLastCotiza().subscribe( 
+    this._ventasService.getLastCotiza().subscribe(
       response =>{
+        console.log("consulta de cotizacion");
+        console.log(response);
         if(response.status == 'success'){
           this.UltimaCotizacion = response.Cotizacion;
           this._ventasService.getDetallesCotiza(this.UltimaCotizacion['idCotiza']).subscribe( 
@@ -868,6 +900,33 @@ export class PuntoDeVentaComponent implements OnInit {
           console.log(error)
       }
     )
+  }
+
+  /**
+   * @description
+   * Pone a default las propiedades de los ojetos
+   * productoVentag, productos_medidas y arrayPrecios
+   */
+  limpiaProducto(){
+    //limipiamos productoVentasg
+    this.productoVentag.idVenta = 0;
+    this.productoVentag.idProducto = 0;
+    this.productoVentag.descripcion = "";
+    this.productoVentag.idProdMedida = 0;
+    this.productoVentag.cantidad = 0;
+    this.productoVentag.precio = 0;
+    this.productoVentag.descuento = 0;
+    this.productoVentag.total = 0;
+    this.productoVentag.claveEx = "";
+    this.productoVentag.nombreMedida = "";
+    this.productoVentag.precioMinimo = 0;
+    this.productoVentag.subtotal = 0;
+    this.productoVentag.tieneStock = false;
+    //limpia medidas
+    this.productos_medidas=[];
+    //limpia array
+    this.preciosArray=[];
+
   }
 
 }
