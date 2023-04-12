@@ -44,7 +44,7 @@
               "ngx-barcode"
             ],
             "assets": [
-              "src/favicon.ico",
+              "src/otilio.ico",
               "src/assets"
             ],
             "styles": [
