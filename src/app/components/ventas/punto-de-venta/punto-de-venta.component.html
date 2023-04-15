@@ -483,7 +483,7 @@
     <div class="modal-header">
         <h4 class="modal-title" id="modal-basic-title">Buscar producto</h4>
         <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
-      </div>
+    </div>
       <div class="modal-body">
         
         <div >
@@ -505,8 +505,8 @@
                     <input type="text" class="form-control" name="buscarProductoCbar" placeholder=" Buscar ..." (keyup)="getSearchCodbar($event)">
                 </div>
                 
-              </div>
-              <br>
+            </div>
+                <br>
                 <div class="text-center text-primary" *ngIf="isLoadingProductos">
                     <div class="spinner-border" role="status" >
                         <span class="visually-hidden">Loading...</span>
@@ -525,7 +525,7 @@
                     </tr>
                 </thead>
                 <tbody *ngFor="let pr of productos | paginate:{id:'pcModal',itemsPerPage: itemsPerPage, currentPage: pageActual2, totalItems:totalPages}">
-                    <tr (click)="seleccionarProducto(pr.idProducto)"  (click)="modal.dismiss('Cross click')">
+                    <tr (click)="modalMuestraMedidas(mProdMedidas,pr.idProducto,pr.claveEx)">
                         <th scope="row">{{pr.claveEx}}</th>
                         <th scope="row">{{pr.cbarras}}</th>
                         <th scope="row">{{pr.descripcion}}</th>
@@ -542,7 +542,57 @@
                                     nextLabel="Siguiente" >
               </pagination-controls>
         </div>
-      </div>
+    </div>
+</ng-template>
+<!-- Modal medidas | precio de productos -->
+<ng-template #mProdMedidas let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">Medidas del producto</h4>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+        <div class=" row justify-content-center">
+            <div class="col-auto">
+                <img src="{{url + 'productos/getImageProduc/' + this.imagenPM}}" width="150px">
+            </div>
+            <div class="col-auto text-center">
+                <table class="table table-secondary table-sm">
+                    <thead>
+                        <tr>
+                            <th colspan="6"><h6 class="fw-bold">{{claveExt}}</h6></th>
+                        </tr>
+                        <tr>
+                            <th scope="col">MEDIDA</th>
+                            <th scope="col">PRECIO 1</th>
+                            <th scope="col">PRECIO 2</th>
+                            <th scope="col">PRECIO 3</th>
+                            <th scope="col">PRECIO 4</th>
+                            <th scope="col">PRECIO 5</th>
+                        </tr>
+                    </thead>
+                    <tbody *ngFor="let pm of prod_med">
+                        <tr>
+                            <th>{{pm.nombreMedida}}</th>
+                            <th>{{pm.precio1 | currency}}</th>
+                            <th>{{pm.precio2 | currency}}</th>
+                            <th>{{pm.precio3 | currency}}</th>
+                            <th>{{pm.precio4 | currency}}</th>
+                            <th>{{pm.precio5 | currency}}</th>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <div class="col">
+
+            <button class="btn btn-danger form-control" (click)="modal.dismiss('Cross click')">Cancelar</button>
+        </div>
+        <div class="col">
+            <button class="btn btn-success form-control" (click)="seleccionarProducto(idp)">Agregar</button>
+        </div>
+    </div> 
 </ng-template>
 <!-- Modal alerta de existencia -->
 <ng-template #mAlertaExistencia let-modal>

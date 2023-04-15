@@ -53,14 +53,6 @@
                     <th scope="row">{{pr.nombreMarca}}</th>
                     <th scope="row">{{pr.nombreDep}}</th> 
                     <th scope="row">{{pr.nombreCat}}</th>
-                    <!-- <th scope="row"  *ngIf="pr.imagen != null && isShow == true || pr.imagen == '' && isShow == true || pr.imagen == 'null' && isShow == true ">
-                        <img src="{{url + 'productos/getImageProduc/' + pr.imagen}}" width="75px" height="75px">
-                    </th>
-                     <ng-template *ngIf="isShow == false" #elseBlock>
-                        <th scope="row">
-                            <img src="{{url + 'productos/getImageProduc/1650558444no-image.png'}}" width="65px" height="65px">
-                        </th>
-                    </ng-template> -->
                     <th scope="row"> 
                         <i class="pi pi-eye p-1" pTooltip="Ver" tooltipPosition="top" 
                             [routerLink]="['../producto-ver',pr.idProducto]">

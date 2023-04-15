@@ -7,6 +7,7 @@ import { ProductoService } from 'src/app/services/producto.service';
 import { VentasService } from 'src/app/services/ventas.service';
 import { EmpleadoService } from 'src/app/services/empleado.service';
 import { EmpresaService } from 'src/app/services/empresa.service';
+import { global } from 'src/app/services/global';
 //modelos
 import { Ventag } from 'src/app/models/ventag';
 import { Cliente } from 'src/app/models/cliente';
@@ -49,6 +50,12 @@ export class PuntoDeVentaComponent implements OnInit {
   public empresa:any;//getDetallesEmpresa
   public productoEG:any;
   public userPermisos:any//loaduser
+  public claveExt : string = '';//mostrarPrecios
+  public prod_med: Array<any> = [];//mostrarPrecios
+  public imagenPM: string = '';//mostrarPrecios
+  public isImage: boolean = false;//mostrarPrecios
+  public idp: number = 0;//mostrarPrecios
+  public url:string = global.url;//mostrarPrecios
   /**PAGINATOR */
   public itemsPerPage: number = 0;
   public totalPages: any;
@@ -384,6 +391,9 @@ export class PuntoDeVentaComponent implements OnInit {
 
   //cargamos la informacion al modelo del producto que se selecciono con el click
   seleccionarProducto(idProducto:any){
+    //cerramos los modales abiertos
+    this.modalService.dismissAll();
+
     //console.log(idProducto);
     this._productoService.getProdverDos(idProducto).subscribe( response => {
       //console.log(response);
@@ -761,6 +771,15 @@ export class PuntoDeVentaComponent implements OnInit {
     
   }
 
+  modalMuestraMedidas(content:any,idProducto:number,claveEx:string){
+    this.mostrarPrecios(idProducto,claveEx);
+    this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title', size: 'lg'}).result.then((result) => {
+      this.closeResult = `Closed with: ${result}`;
+    }, (reason) => {
+      this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+    });
+  }
+
   cambioSeleccionado(e:any){//limpiamos los inputs del modal
     this.buscarProducto = '';
     this.buscarProductoCE = '';
@@ -927,6 +946,28 @@ export class PuntoDeVentaComponent implements OnInit {
     //limpia array
     this.preciosArray=[];
 
+  }
+
+  /**
+   * Recibimos el id y lo buscamos en el servicio
+   * @param idProducto
+   * 
+   * retornamos la consulta con las medias e imagen del producto
+   */
+  mostrarPrecios(idProducto:number,claveEx:string){
+    this.claveExt = claveEx;
+    this._productoService.searchProductoMedida(idProducto).subscribe(
+      response =>{
+        console.log(response)
+        this.prod_med = response.productoMedida;
+        this.imagenPM = response.imagen;
+        if(this.imagenPM == "" || this.imagenPM == null){
+          this.imagenPM = "1650558444no-image.png";
+        }
+        this.idp = idProducto;
+    }, error =>{
+      console.log(error);
+    });
   }
 
 }
