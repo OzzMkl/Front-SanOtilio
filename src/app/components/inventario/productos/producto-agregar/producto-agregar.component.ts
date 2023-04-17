@@ -120,11 +120,11 @@ export class ProductoAgregarComponent implements OnInit {
    * Omite el salto de linea del textarea de descripcion
    * cuenta el numero de caracteres insertados
    * @param event 
-   * omitimos los eventes de "enter" y "shift + enter"
+   * omitimos los eventes de "enter""
    */
   omitirEnter(event:any){
     this.conta = event.target.value.length;
-    if(event.which === 13 || event.shiftKey){
+    if(event.which === 13){
       event.preventDefault();
       //console.log('prevented');
     }
@@ -134,11 +134,11 @@ export class ProductoAgregarComponent implements OnInit {
    * Omite el salto de linea del textarea de ubicacion
    * cuenta el numero de caracteres insertados
    * @param event 
-   * omitimos los eventes de "enter" y "shift + enter"
+   * omitimos los eventes de "enter""
    */
   omitirEnterUbicacion(event:any){
     this.contaUbi = event.target.value.length;
-    if(event.which === 13 || event.shiftKey){
+    if(event.which === 13){
       event.preventDefault();
       //console.log('prevented');  
     }
