@@ -120,7 +120,7 @@ export class CotizacionBuscarComponent implements OnInit {
     ///
     //doc.setFont('Helvetica','normal').setFontSize(9).text('TELEFONO: 0000000000', 10,70);
     doc.setFont('Helvetica','normal').setFontSize(9).text('EMAIL: '+this.detallesCotiza[0]['clienteCorreo'], 10,70);
-    doc.setFont('Helvetica','normal').setFontSize(9).text('TIPO CLIENTE: '+this.detallesCotiza[0]['tipocliente'], 60,70);
+    doc.setFont('Helvetica','normal').setFontSize(9).text('TIPO CLIENTE: '+this.detallesCotiza[0]['tipocliente'], 100,70);
     doc.setLineWidth(2.5).line(10,75,200,75);//colocacion de linea
     //recorremos los productos
     this.productosdCotiza.forEach((element:any) =>{

@@ -110,10 +110,10 @@
                         <th scope="row">{{pc.claveEx}}</th>
                         <th scope="row">{{pc.descripcion}}</th>
                         <th scope="row">{{pc.nombreMedida}}</th>
-                        <th scope="row">{{pc.precio}}</th>
+                        <th scope="row">{{pc.precio | currency}}</th>
                         <th scope="row">{{pc.cantidad}}</th>
-                        <th scope="row">{{pc.descuento}}</th>
-                        <th scope="row">{{pc.subtotal}}</th>
+                        <th scope="row">{{pc.descuento | currency}}</th>
+                        <th scope="row">{{pc.subtotal | currency}}</th>
                     </tr>
                 </tbody>
             </table>
