@@ -135,7 +135,7 @@ export class CompraAgregarIdComponent implements OnInit {
     this.lista_productosorden = [];
 
     this.compra = new Compra(0,null,0,0,0,0,0,0,null,'',false,null);
-    this.producto_compra = new Producto_compra(0,0,0,0,0,0,null,null,null,null,null,null,0,null);
+    this.producto_compra = new Producto_compra(0,0,0,0,0,0,0,null,null,null,null,null,0,null);
     this.Lista_compras = [];
     this.url = global.url;
 
@@ -490,9 +490,14 @@ export class CompraAgregarIdComponent implements OnInit {
         //obtener idProdMedida actualizado y asignarlo
         //buscar lpo.nombreMedida en productoVerM, regresar y asignar this.producto_compra.idProdMedida, this.producto_compra.nombreMedida
         this.medidaActualizada = this.productoVerM.find( (x:any) => x.nombreMedida == lpo.nombreMedida);
-        console.log('medidaActualizada',this.medidaActualizada);
-        this.producto_compra.idProdMedida = parseInt(this.medidaActualizada.idProdMedida);
-        this.producto_compra.nombreMedida = this.medidaActualizada.nombreMedida;
+        if(this.medidaActualizada == undefined ){
+
+        }else{
+          console.log('medidaActualizada',this.medidaActualizada);
+          this.producto_compra.idProdMedida = parseInt(this.medidaActualizada.idProdMedida);
+          this.producto_compra.nombreMedida = this.medidaActualizada.nombreMedida;
+        }
+        
         console.log('producto_compra',this.producto_compra)
         
       },error => {
