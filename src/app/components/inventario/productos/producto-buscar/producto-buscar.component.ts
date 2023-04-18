@@ -105,7 +105,9 @@ export class ProductoBuscarComponent implements OnInit {
       response =>{
         this.productosMedida = response.productoMedida;
         this.imagenPM = response.imagen;
-        this.isShow = true;
+        if(this.imagenPM == "" || this.imagenPM == null){
+          this.imagenPM = "1650558444no-image.png";
+        }
     }, error =>{
       console.log(error);
     });

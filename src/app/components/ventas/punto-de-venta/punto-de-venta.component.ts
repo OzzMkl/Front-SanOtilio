@@ -7,6 +7,7 @@ import { ProductoService } from 'src/app/services/producto.service';
 import { VentasService } from 'src/app/services/ventas.service';
 import { EmpleadoService } from 'src/app/services/empleado.service';
 import { EmpresaService } from 'src/app/services/empresa.service';
+import { global } from 'src/app/services/global';
 //modelos
 import { Ventag } from 'src/app/models/ventag';
 import { Cliente } from 'src/app/models/cliente';
@@ -14,6 +15,8 @@ import { Cdireccion } from 'src/app/models/cdireccion';
 import { Producto_ventasg } from 'src/app/models/productoVentag';
 //NGBOOTSTRAP-modal
 import { NgbModal, ModalDismissReasons, NgbDateStruct} from '@ng-bootstrap/ng-bootstrap';
+//primeng
+import { MessageService } from 'primeng/api';
 //pdf
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
@@ -28,7 +31,7 @@ import { HttpClient } from '@angular/common/http';
   selector: 'app-punto-de-venta',
   templateUrl: './punto-de-venta.component.html',
   styleUrls: ['./punto-de-venta.component.css'],
-  providers:[ProductoService]
+  providers:[ProductoService, MessageService]
 })
 export class PuntoDeVentaComponent implements OnInit {
   //cerrar modal
@@ -40,6 +43,8 @@ export class PuntoDeVentaComponent implements OnInit {
   public tipocliente :any;//tipocliente
   public productos:any;//getProductos
   public producto:any;
+  public productos_medidas: Array<any> = [];
+  public preciosArray: Array<any> = [];
   public identity: any;//loadUser
   public UltimaCotizacion: any;//obtenerultimacotiza
   public detallesCotiza:any;//ontederultimacotiza
@@ -47,6 +52,12 @@ export class PuntoDeVentaComponent implements OnInit {
   public empresa:any;//getDetallesEmpresa
   public productoEG:any;
   public userPermisos:any//loaduser
+  public claveExt : string = '';//mostrarPrecios
+  public prod_med: Array<any> = [];//mostrarPrecios
+  public imagenPM: string = '';//mostrarPrecios
+  public isImage: boolean = false;//mostrarPrecios
+  public idp: number = 0;//mostrarPrecios
+  public url:string = global.url;//mostrarPrecios
   /**PAGINATOR */
   public itemsPerPage: number = 0;
   public totalPages: any;
@@ -95,7 +106,8 @@ export class PuntoDeVentaComponent implements OnInit {
     private _empleadoService : EmpleadoService,
     private _empresaService: EmpresaService,
     private _router:Router,
-    private _http: HttpClient) {
+    private _http: HttpClient,
+    private messageService: MessageService ) {
     //declaramos modelos
     this.ventag = new Ventag(0,0,2,'',1,null,0,0,0,0,'','',0);
     this.modeloCliente = new Cliente (0,'','','','','',0,1,0);
@@ -290,21 +302,26 @@ export class PuntoDeVentaComponent implements OnInit {
       this._clienteService.postCliente(this.modeloCliente,identity).subscribe( 
         response =>{
           if(response.status == 'success'){
-            if(this.checkDireccion == true){
+            this.messageService.add({severity:'success', summary:'Registro exitoso', detail: 'Cliente registrado correctamente'});
+
+            if(this.checkDireccion == true && this.cdireccion.ciudad != '' && this.cdireccion.colonia != '' && this.cdireccion.calle != ''
+            && this.cdireccion.numExt != '' && this.cdireccion.cp != 0 && this.cdireccion.referencia != '' && this.cdireccion.telefono != 0){
+
               this._clienteService.postCdireccion(this.cdireccion,identity).subscribe( 
                 response=>{
-                  this.toastService.show('Cliente registrado correctamente',{classname: 'bg-success text-light', delay: 3000});
+                  this.messageService.add({severity:'success', summary:'Registro exitoso', detail:'La direccion se registro correctamente'});
                   //console.log(response);
                 },error=>{
-                  this.toastService.show('Algo salio mal al guardar la direccion',{classname: 'bg-danger text-light', delay: 6000})
                   console.log(error);
+                  this.messageService.add({severity:'error', summary:'Algo salio mal', detail:error.error.message, sticky: true});
                 });
             }else{
-              this.toastService.show('Cliente registrado, pero sin direccion',{classname: 'bg-success text-light', delay: 3000});
+              this.messageService.add({severity:'warn', summary:'Advertencia', detail:'No se registro ninguna direccion'});
             }
-          }else{
-            this.toastService.show('Algo salio mal',{classname: 'bg-danger text-light', delay: 6000})
-            //console.log('Algo salio mal');
+          } else{
+            //this.toastService.show('Algo salio mal',{classname: 'bg-danger text-light', delay: 6000})
+            console.log('Algo salio mal');
+            console.log(response);
           }
         },error=>{
           console.log(error);
@@ -319,14 +336,15 @@ export class PuntoDeVentaComponent implements OnInit {
     this._clienteService.postNuevaDireccion(this.nuevaDir).subscribe( 
       response=>{
         if(response.status == 'success'){
-          this.toastService.show('Direccion registrada correctamente',{classname: 'bg-success text-light', delay: 3000});
+          this.messageService.add({severity:'success', summary:'Registro exitoso', detail: 'Direccion registrada correctamente'});
           this.getDireccionCliente(this.nuevaDir.idCliente);
+        } else{
+          this.messageService.add({severity:'error', summary:'Error', detail: 'Fallo al guardar la direccion',sticky:true});
+          console.log(response)
         }
-        //console.log(response)
        }, error =>{
       console.log(error);
     });
-    //this.getDireccionCliente(this.ventag.idCliente);
   }
 
   //obtenemos todos los productos
@@ -382,25 +400,40 @@ export class PuntoDeVentaComponent implements OnInit {
 
   //cargamos la informacion al modelo del producto que se selecciono con el click
   seleccionarProducto(idProducto:any){
+    //cerramos los modales abiertos
+    this.modalService.dismissAll();
+
     //console.log(idProducto);
     this._productoService.getProdverDos(idProducto).subscribe( response => {
       //console.log(response);
       if(response.status == 'success'){
+        this.limpiaProducto();
+
         this.producto = response.producto;
         this.productoVentag.claveEx = this.producto[0]['claveEx'];
         this.productoVentag.idProducto = this.producto[0]['idProducto'];
-        this.productoVentag.nombreMedida = this.producto[0]['nombreMedida'];
-        this.productoVentag.precio = this.producto[0]['precioS'];
         this.productoVentag.descripcion = this.producto[0]['descripcion'];
-        this.productoVentag.precioMinimo = this.producto[0]['precioR'];
-        //this.productoVentag.tieneStock = this.producto[0]['existenciaG']
         this.productoVentag.cantidad = 0;
+        
+        this.productos_medidas = response.productos_medidas;
+        //console.log(this.productos_medidas)
+
         this.calculaSubtotalPP();
         this.isSearch=false;
       }
     },error =>{
       console.log(error);
     });
+  }
+
+  /**
+   * @description
+   * Muestra los precios deacuerdo a la medida seleccionada
+   */
+  muestraPrecios(){
+    var med = this.productos_medidas.find(x => x.idProdMedida == this.productoVentag.idProdMedida);
+    this.productoVentag.nombreMedida = med.nombreMedida;
+    this.preciosArray.push(med.precio1, med.precio2, med.precio3, med.precio4, med.precio5);
   }
 
   //calculamos el subtotal por producto
@@ -417,39 +450,51 @@ export class PuntoDeVentaComponent implements OnInit {
     }
   }
 
-  //agregar producto a lista de ventas
+  /**
+   * @description
+   * Agrega el producto a la lista de ventas
+   */
   agregarProductoLista(){
     if( this.productoVentag.cantidad <= 0){
       this.toastService.show('No se pueden agregar productos con cantidad 0 ó menor a 0',{classname: 'bg-danger text-light', delay: 6000})
+
     }else if( this.productoVentag.idProducto == 0){
       this.toastService.show('Ese producto no existe',{classname: 'bg-danger text-light', delay: 6000});
+
     }else if (this.lista_productoVentag.find(x => x.idProducto == this.productoVentag.idProducto)){
       //verificamos si la lista de compras ya contiene el producto buscandolo por idProducto
       this.toastService.show('Ese producto ya esta en la lista',{classname: 'bg-danger text-light', delay: 6000});
+
     }else if(this.productoVentag.descuento < 0){
       this.toastService.show('No puedes agregar descuento negativo',{classname: 'bg-danger text-light', delay: 6000});
+
     }else{
-      
+      //revisamos la existencia del producto
       this._productoService.getExistenciaG(this.productoVentag.idProducto).subscribe(
         response =>{
+
           this.productoEG = response.producto;
+          //si la respuesta es positiva continuamos
+          if(response.status == 'success'){
+            //verificamos la existencia
+            //si esta es menor a la cantidad solicitada mandamos toast/alerta
+            if(this.productoEG[0]['existenciaG']< this.productoVentag.cantidad){
+              this.toastService.show('Stock insuficiente',{classname: 'bg-warning', delay: 6000});
+              this.productoVentag.tieneStock = false;
+            }
+              //asignamos los valores del producto 
+              this.ventag.subtotal = this.ventag.subtotal + (this.productoVentag.precio * this.productoVentag.cantidad);
+              this.ventag.descuento = this.ventag.descuento + this.productoVentag.descuento;
+              this.ventag.total = this.ventag.total + this.productoVentag.subtotal;
+              this.lista_productoVentag.push({...this.productoVentag});
+              this.isSearch = true;
+            
+          }
         }, error =>{
           console.log(error);
         }
       );
 
-      if(this.productoEG[0]['existenciaG']< this.productoVentag.cantidad){
-        this.toastService.show('Stock insuficiente',{classname: 'bg-warning', delay: 6000});
-        this.productoVentag.tieneStock = false;
-      }
-
-      this.ventag.subtotal = this.ventag.subtotal + (this.productoVentag.precio * this.productoVentag.cantidad);
-      //this.subtotalVenta = this.subtotalVenta + this.productoVentag.subtotal;
-      this.ventag.descuento = this.ventag.descuento + this.productoVentag.descuento;
-      //this.descuentoVenta = this.descuentoVenta + this.productoVentag.descuento;
-      this.ventag.total = this.ventag.total + this.productoVentag.subtotal;
-      this.lista_productoVentag.push({...this.productoVentag});
-      this.isSearch = true;
     }
 
   }
@@ -467,7 +512,7 @@ export class PuntoDeVentaComponent implements OnInit {
 
   //evitamod que den enter en el textarea de observaciones
   omitirEnter(event:any){
-    if(event.which === 13 && !event.shiftKey){
+    if(event.which === 13){
       event.preventDefault();
       console.log('prevented');
       
@@ -514,8 +559,12 @@ export class PuntoDeVentaComponent implements OnInit {
       this.toastService.show('No puedes generar una venta/cotizacion sin cliente!',{classname: 'bg-danger text-light', delay: 6000})
     }else{
       this._ventasService.postCotizaciones(this.ventag).subscribe( response=>{
+          //console.log("response cotizacion");
+          //console.log(response);
         if(response.status == 'success'){
           this._ventasService.postProductosCotiza(this.lista_productoVentag).subscribe( response =>{
+              //console.log("response productos cotizacion");
+              //console.log(response);
             if(response.status == 'success'){
               this.toastService.show(' ⚠ Cotizacion creada exitosamente!', { classname: 'bg-success  text-light', delay: 5000 });
               this.obtenerUltimaCotiza();
@@ -536,8 +585,10 @@ export class PuntoDeVentaComponent implements OnInit {
 
   //Obtener detalles de cotizacion registrada
   obtenerUltimaCotiza(){
-    this._ventasService.getLastCotiza().subscribe( 
+    this._ventasService.getLastCotiza().subscribe(
       response =>{
+        console.log("consulta de cotizacion");
+        console.log(response);
         if(response.status == 'success'){
           this.UltimaCotizacion = response.Cotizacion;
           this._ventasService.getDetallesCotiza(this.UltimaCotizacion['idCotiza']).subscribe( 
@@ -729,6 +780,15 @@ export class PuntoDeVentaComponent implements OnInit {
     
   }
 
+  modalMuestraMedidas(content:any,idProducto:number,claveEx:string){
+    this.mostrarPrecios(idProducto,claveEx);
+    this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title', size: 'lg'}).result.then((result) => {
+      this.closeResult = `Closed with: ${result}`;
+    }, (reason) => {
+      this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+    });
+  }
+
   cambioSeleccionado(e:any){//limpiamos los inputs del modal
     this.buscarProducto = '';
     this.buscarProductoCE = '';
@@ -868,6 +928,55 @@ export class PuntoDeVentaComponent implements OnInit {
           console.log(error)
       }
     )
+  }
+
+  /**
+   * @description
+   * Pone a default las propiedades de los ojetos
+   * productoVentag, productos_medidas y arrayPrecios
+   */
+  limpiaProducto(){
+    //limipiamos productoVentasg
+    this.productoVentag.idVenta = 0;
+    this.productoVentag.idProducto = 0;
+    this.productoVentag.descripcion = "";
+    this.productoVentag.idProdMedida = 0;
+    this.productoVentag.cantidad = 0;
+    this.productoVentag.precio = 0;
+    this.productoVentag.descuento = 0;
+    this.productoVentag.total = 0;
+    this.productoVentag.claveEx = "";
+    this.productoVentag.nombreMedida = "";
+    this.productoVentag.precioMinimo = 0;
+    this.productoVentag.subtotal = 0;
+    this.productoVentag.tieneStock = false;
+    //limpia medidas
+    this.productos_medidas=[];
+    //limpia array
+    this.preciosArray=[];
+
+  }
+
+  /**
+   * Recibimos el id y lo buscamos en el servicio
+   * @param idProducto
+   * 
+   * retornamos la consulta con las medias e imagen del producto
+   */
+  mostrarPrecios(idProducto:number,claveEx:string){
+    this.claveExt = claveEx;
+    this._productoService.searchProductoMedida(idProducto).subscribe(
+      response =>{
+        console.log(response)
+        this.prod_med = response.productoMedida;
+        this.imagenPM = response.imagen;
+        if(this.imagenPM == "" || this.imagenPM == null){
+          this.imagenPM = "1650558444no-image.png";
+        }
+        this.idp = idProducto;
+    }, error =>{
+      console.log(error);
+    });
   }
 
 }
