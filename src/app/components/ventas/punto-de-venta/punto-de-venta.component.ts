@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 //servicio
 import { ClientesService } from 'src/app/services/clientes.service';
-import { ToastService } from 'src/app/services/toast.service';
 import { ProductoService } from 'src/app/services/producto.service';
 import { VentasService } from 'src/app/services/ventas.service';
 import { EmpleadoService } from 'src/app/services/empleado.service';
@@ -14,16 +13,13 @@ import { Cliente } from 'src/app/models/cliente';
 import { Cdireccion } from 'src/app/models/cdireccion';
 import { Producto_ventasg } from 'src/app/models/productoVentag';
 //NGBOOTSTRAP-modal
-import { NgbModal, ModalDismissReasons, NgbDateStruct} from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 //primeng
 import { MessageService } from 'primeng/api';
 //pdf
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { HttpClient } from '@angular/common/http';
-//import jsPDF from 'jspdf/dist/jspdf.node.debug'
-// import { applyPlugin } from 'jspdf-autotable'
-// applyPlugin(jsPDF)
 
 
 
@@ -100,7 +96,6 @@ export class PuntoDeVentaComponent implements OnInit {
     //declaramos servicios
     private modalService: NgbModal,
     private _clienteService: ClientesService,
-    public toastService: ToastService,
     private _productoService:ProductoService,
     private _ventasService: VentasService,
     private _empleadoService : EmpleadoService,
@@ -290,12 +285,14 @@ export class PuntoDeVentaComponent implements OnInit {
 
   //accion de guardar el nuevo cliente del modal
   guardarCliente(){
+    //asignamos variables de usuario
     var identity = this._empleadoService.getIdentity();
-    //this.modalService.
+    //Revisamo si fue marcada el checkbox
       if(this.isCompany == true ){
         this.modeloCliente.aMaterno ='';
         this.modeloCliente.aPaterno='';
       }
+      //revimos el check de rfc
       if(this.isRFC == false){
         this.modeloCliente.rfc = 'XAXX010101000';
       }
@@ -303,9 +300,9 @@ export class PuntoDeVentaComponent implements OnInit {
         response =>{
           if(response.status == 'success'){
             this.messageService.add({severity:'success', summary:'Registro exitoso', detail: 'Cliente registrado correctamente'});
-
+            //revisamos que los campos de la direccion vengan completos
             if(this.checkDireccion == true && this.cdireccion.ciudad != '' && this.cdireccion.colonia != '' && this.cdireccion.calle != ''
-            && this.cdireccion.numExt != '' && this.cdireccion.cp != 0 && this.cdireccion.referencia != '' && this.cdireccion.telefono != 0){
+                && this.cdireccion.numExt != '' && this.cdireccion.cp != 0 && this.cdireccion.referencia != '' && this.cdireccion.telefono != 0){
 
               this._clienteService.postCdireccion(this.cdireccion,identity).subscribe( 
                 response=>{
@@ -316,10 +313,9 @@ export class PuntoDeVentaComponent implements OnInit {
                   this.messageService.add({severity:'error', summary:'Algo salio mal', detail:error.error.message, sticky: true});
                 });
             }else{
-              this.messageService.add({severity:'warn', summary:'Advertencia', detail:'No se registro ninguna direccion'});
+              this.messageService.add({severity:'warn', summary:'Advertencia', detail:'No se registro ninguna direccion, faltan rellenar campos'});
             }
           } else{
-            //this.toastService.show('Algo salio mal',{classname: 'bg-danger text-light', delay: 6000})
             console.log('Algo salio mal');
             console.log(response);
           }
@@ -393,8 +389,7 @@ export class PuntoDeVentaComponent implements OnInit {
         this.itemsPerPage = response.productos.per_page;
         this.pageActual = response.productos.current_page;
         this.next_page = response.productos.next_page_url;
-        this.path = response.productos.path
-        
+        this.path = response.productos.path    
     })
   }
 
@@ -431,18 +426,25 @@ export class PuntoDeVentaComponent implements OnInit {
    * Muestra los precios deacuerdo a la medida seleccionada
    */
   muestraPrecios(){
+    //limpiamos array
+    this.preciosArray = [];
+    //buscamos la medida seleccionada
     var med = this.productos_medidas.find(x => x.idProdMedida == this.productoVentag.idProdMedida);
+    //asignamos nombre de medida
     this.productoVentag.nombreMedida = med.nombreMedida;
+    //cargamos los precios a mostrar en el select
     this.preciosArray.push(med.precio1, med.precio2, med.precio3, med.precio4, med.precio5);
   }
 
-  //calculamos el subtotal por producto
+  /***
+   * REVISAR METODO SI AUN SE OCUPA
+   */
   calculaSubtotalPP(){
     if(this.productoVentag.precio < this.producto[0]['precioR']){
-      this.toastService.show('El precio minimo permitido es de: $'+this.producto[0]['precioR'],{classname: 'bg-danger text-light', delay: 6000});
+      this.messageService.add({severity:'warn', summary:'Alerta', detail: 'El precio minimo permitido es de: $'+this.producto[0]['precioR']});
       this.isSearch=true;
     }else if(this.productoVentag.descuento < 0){
-      this.toastService.show('No puedes agregar descuento negativo',{classname: 'bg-danger text-light', delay: 6000});
+      this.messageService.add({severity:'warn', summary:'Alerta', detail: 'No puedes agregar descuento negativo'});
       this.isSearch=true;
     }else{
       this.productoVentag.subtotal = (this.productoVentag.cantidad * this.productoVentag.precio)- this.productoVentag.descuento;
@@ -456,17 +458,18 @@ export class PuntoDeVentaComponent implements OnInit {
    */
   agregarProductoLista(){
     if( this.productoVentag.cantidad <= 0){
-      this.toastService.show('No se pueden agregar productos con cantidad 0 ó menor a 0',{classname: 'bg-danger text-light', delay: 6000})
+      this.messageService.add({severity:'warn', summary:'Alerta', detail: 'No se pueden agregar productos con cantidad 0 ó menor a 0'});
 
     }else if( this.productoVentag.idProducto == 0){
-      this.toastService.show('Ese producto no existe',{classname: 'bg-danger text-light', delay: 6000});
+      this.messageService.add({severity:'error', summary:'Error', detail: 'Ese producto no existe'});
 
-    }else if (this.lista_productoVentag.find(x => x.idProducto == this.productoVentag.idProducto)){
+    }else if (this.lista_productoVentag.find(x => x.idProducto == this.productoVentag.idProducto) &&
+              this.lista_productoVentag.find(x => x.idProdMedida == this.productoVentag.idProdMedida) ){
       //verificamos si la lista de compras ya contiene el producto buscandolo por idProducto
-      this.toastService.show('Ese producto ya esta en la lista',{classname: 'bg-danger text-light', delay: 6000});
+      this.messageService.add({severity:'warn', summary:'Alerta', detail: 'El producto ya se encuentra en la lista'});
 
     }else if(this.productoVentag.descuento < 0){
-      this.toastService.show('No puedes agregar descuento negativo',{classname: 'bg-danger text-light', delay: 6000});
+      this.messageService.add({severity:'warn', summary:'Alerta', detail: 'No puedes agregar descuento negativo'});
 
     }else{
       //revisamos la existencia del producto
@@ -477,9 +480,9 @@ export class PuntoDeVentaComponent implements OnInit {
           //si la respuesta es positiva continuamos
           if(response.status == 'success'){
             //verificamos la existencia
-            //si esta es menor a la cantidad solicitada mandamos toast/alerta
+            //si esta es menor a la cantidad solicitada mandamos alerta
             if(this.productoEG[0]['existenciaG']< this.productoVentag.cantidad){
-              this.toastService.show('Stock insuficiente',{classname: 'bg-warning', delay: 6000});
+              this.messageService.add({severity:'warn', summary:'Alerta', detail:'El producto no cuenta con suficiente stock'});
               this.productoVentag.tieneStock = false;
             }
               //asignamos los valores del producto 
@@ -488,7 +491,6 @@ export class PuntoDeVentaComponent implements OnInit {
               this.ventag.total = this.ventag.total + this.productoVentag.subtotal;
               this.lista_productoVentag.push({...this.productoVentag});
               this.isSearch = true;
-            
           }
         }, error =>{
           console.log(error);
@@ -502,11 +504,11 @@ export class PuntoDeVentaComponent implements OnInit {
   //traemos la informacion del usuario logeado
   loadUser(){
     this.identity = this._empleadoService.getIdentity();
-     this.userPermisos = this._empleadoService.getPermisosModulo()
+     this.userPermisos = this._empleadoService.getPermisosModulo();
     if(this.userPermisos[0]['agregar'] != 1){
-      this._router.navigate(['./ventas-modulo/ventas-realizadas-buscar'])
-      
-      this.toastService.show('Acceso denegado', { classname: 'bg-danger  text-light', delay: 5000 });
+      this._router.navigate(['./ventas-modulo/ventas-realizadas-buscar']);
+
+      this.messageService.add({severity:'error', summary:'Acceso denegado', detail:'El usuario no tiene los permisos'});
     }
   }
 
@@ -520,32 +522,17 @@ export class PuntoDeVentaComponent implements OnInit {
   }
 
   //editar/eliminar producto de la lista de compras
-  editarProductoLista(dato:any){
+  editarProductoLista(idPM:number){
     //buscamos el producto a eliminar para traer sus propiedades
-    this.productoVentag = this.lista_productoVentag.find(x => x.idProducto == dato)!;
-    //re calculamos los importes de la venta 
+    this.productoVentag = this.lista_productoVentag.find(x => x.idProdMedida == idPM)!;
+    ////re calculamos los importes de la venta 
     this.ventag.subtotal = this.ventag.subtotal - (this.productoVentag.precio * this.productoVentag.cantidad);
     this.ventag.descuento = this.ventag.descuento - this.productoVentag.descuento;
     this.ventag.total = this.ventag.total - this.productoVentag.subtotal;
-    //cremos nuevo array eliminando el producto que se selecciono
-    this.lista_productoVentag = this.lista_productoVentag.filter((item) => item.idProducto !== dato);
-    //consultamos el producto a editar
-    this._productoService.getProdverDos(dato).subscribe( 
-      response =>{
-        this.producto = response.producto;
-        this.productoVentag.claveEx = this.producto[0]['claveEx'];
-        this.productoVentag.idProducto = this.producto[0]['idProducto']
-        this.productoVentag.nombreMedida = this.producto[0]['nombreMedida'];
-        this.productoVentag.precio = this.producto[0]['precioS'];
-        this.productoVentag.descripcion = this.producto[0]['descripcion'];
-        this.productoVentag.precioMinimo = this.producto[0]['precioR']
-        this.productoVentag.cantidad = 0;
-        this.productoVentag.descuento = 0;
-        this.calculaSubtotalPP();
-        this.isSearch=false;
-      },error =>{
-        console.log(error);
-      });
+    ////cremos nuevo array eliminando el producto que se selecciono
+    this.lista_productoVentag = this.lista_productoVentag.filter((item) => item.idProdMedida !== this.productoVentag.idProdMedida);
+    ////consultamos el producto a editar
+    this.seleccionarProducto(this.productoVentag.idProducto);
   }
 
   //guardamos cotizacion en DB
@@ -554,9 +541,11 @@ export class PuntoDeVentaComponent implements OnInit {
     //asignamos id del empleado
     this.ventag.idEmpleado = this.identity['sub'];
     if(this.lista_productoVentag.length == 0){
-      this.toastService.show('No puedes generar una venta/cotizacion sin productos!',{classname: 'bg-danger text-light', delay: 6000})
+      this.messageService.add({severity:'warn', summary:'Alerta', detail:'No puedes generar una cotizacion sin productos!'});
+
     }else if(this.ventag.idCliente == 0){
-      this.toastService.show('No puedes generar una venta/cotizacion sin cliente!',{classname: 'bg-danger text-light', delay: 6000})
+      this.messageService.add({severity:'warn', summary:'Alerta', detail:'No puedes generar una cotizacion sin cliente!'});
+
     }else{
       this._ventasService.postCotizaciones(this.ventag).subscribe( response=>{
           //console.log("response cotizacion");
@@ -566,7 +555,7 @@ export class PuntoDeVentaComponent implements OnInit {
               //console.log("response productos cotizacion");
               //console.log(response);
             if(response.status == 'success'){
-              this.toastService.show(' ⚠ Cotizacion creada exitosamente!', { classname: 'bg-success  text-light', delay: 5000 });
+              this.messageService.add({severity:'success', summary:'Registro exitoso', detail:'Cotizacion creada exitosamente!'});
               this.obtenerUltimaCotiza();
               //console.log(response);
             }
@@ -669,31 +658,34 @@ export class PuntoDeVentaComponent implements OnInit {
     //asignamos id del empleado
     this.ventag.idEmpleado = this.identity['sub'];
     if(this.lista_productoVentag.length == 0){
-      this.toastService.show('No puedes generar una venta/cotizacion sin productos!',{classname: 'bg-danger text-light', delay: 6000})
+      this.messageService.add({severity:'warn', summary:'Alerta', detail:'No puedes generar una venta sin productos!'});
+
     }else if(this.ventag.idCliente == 0){
-      this.toastService.show('No puedes generar una venta/cotizacion sin cliente!',{classname: 'bg-danger text-light', delay: 6000})
+      this.messageService.add({severity:'warn', summary:'Alerta', detail:'No puedes generar una venta sin cliente!'});
+
     }else{
-      //console.log(this.ventag)
-      this._ventasService.postVentas(this.ventag).subscribe(
-        response => {
-          if(response.status == 'success'){
-            this.toastService.show(' ⚠ Venta creada exitosamente!', { classname: 'bg-success  text-light', delay: 5000 });
-            this._ventasService.postProductosVentas(this.lista_productoVentag).subscribe(
-              response => {
-                if(response.status == 'success'){
-                  this.toastService.show('productos cargados exitosamente',{ classname: 'bg-success text-light', delay: 5000});
-                }
-                //console.log(response);
-              }, error =>{
-                console.log(error);
-              }
-            )
-          }
-          //console.log(response);
-        }, error => {
-          console.log(error);
-        }
-      );
+      console.log(this.ventag)
+      console.log(this.lista_productoVentag)
+      //this._ventasService.postVentas(this.ventag).subscribe(
+      //  response => {
+      //    if(response.status == 'success'){
+      //        this.messageService.add({severity:'success', summary:'Registro exitoso', detail:'Venta creada correctamente!'});
+      //      this._ventasService.postProductosVentas(this.lista_productoVentag).subscribe(
+      //        response => {
+      //          if(response.status == 'success'){
+      //            this.messageService.add({severity:'success', summary:'Registro exitoso', detail:'productos cargados exitosamente'});
+      //          }
+      //          //console.log(response);
+      //        }, error =>{
+      //          console.log(error);
+      //        }
+      //      )
+      //    }
+      //    //console.log(response);
+      //  }, error => {
+      //    console.log(error);
+      //  }
+      //);
     }
   }
 
@@ -967,7 +959,7 @@ export class PuntoDeVentaComponent implements OnInit {
     this.claveExt = claveEx;
     this._productoService.searchProductoMedida(idProducto).subscribe(
       response =>{
-        console.log(response)
+        //console.log(response)
         this.prod_med = response.productoMedida;
         this.imagenPM = response.imagen;
         if(this.imagenPM == "" || this.imagenPM == null){
@@ -978,5 +970,4 @@ export class PuntoDeVentaComponent implements OnInit {
       console.log(error);
     });
   }
-
 }
