@@ -15,6 +15,8 @@ import { Cdireccion } from 'src/app/models/cdireccion';
 import { Producto_ventasg } from 'src/app/models/productoVentag';
 //NGBOOTSTRAP-modal
 import { NgbModal, ModalDismissReasons, NgbDateStruct} from '@ng-bootstrap/ng-bootstrap';
+//primeng
+import { MessageService } from 'primeng/api';
 //pdf
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
@@ -29,7 +31,7 @@ import { HttpClient } from '@angular/common/http';
   selector: 'app-punto-de-venta',
   templateUrl: './punto-de-venta.component.html',
   styleUrls: ['./punto-de-venta.component.css'],
-  providers:[ProductoService]
+  providers:[ProductoService, MessageService]
 })
 export class PuntoDeVentaComponent implements OnInit {
   //cerrar modal
@@ -104,7 +106,8 @@ export class PuntoDeVentaComponent implements OnInit {
     private _empleadoService : EmpleadoService,
     private _empresaService: EmpresaService,
     private _router:Router,
-    private _http: HttpClient) {
+    private _http: HttpClient,
+    private messageService: MessageService ) {
     //declaramos modelos
     this.ventag = new Ventag(0,0,2,'',1,null,0,0,0,0,'','',0);
     this.modeloCliente = new Cliente (0,'','','','','',0,1,0);
@@ -299,21 +302,26 @@ export class PuntoDeVentaComponent implements OnInit {
       this._clienteService.postCliente(this.modeloCliente,identity).subscribe( 
         response =>{
           if(response.status == 'success'){
-            if(this.checkDireccion == true){
+            this.messageService.add({severity:'success', summary:'Registro exitoso', detail: 'Cliente registrado correctamente'});
+
+            if(this.checkDireccion == true && this.cdireccion.ciudad != '' && this.cdireccion.colonia != '' && this.cdireccion.calle != ''
+            && this.cdireccion.numExt != '' && this.cdireccion.cp != 0 && this.cdireccion.referencia != '' && this.cdireccion.telefono != 0){
+
               this._clienteService.postCdireccion(this.cdireccion,identity).subscribe( 
                 response=>{
-                  this.toastService.show('Cliente registrado correctamente',{classname: 'bg-success text-light', delay: 3000});
+                  this.messageService.add({severity:'success', summary:'Registro exitoso', detail:'La direccion se registro correctamente'});
                   //console.log(response);
                 },error=>{
-                  this.toastService.show('Algo salio mal al guardar la direccion',{classname: 'bg-danger text-light', delay: 6000})
                   console.log(error);
+                  this.messageService.add({severity:'error', summary:'Algo salio mal', detail:error.error.message, sticky: true});
                 });
             }else{
-              this.toastService.show('Cliente registrado, pero sin direccion',{classname: 'bg-success text-light', delay: 3000});
+              this.messageService.add({severity:'warn', summary:'Advertencia', detail:'No se registro ninguna direccion'});
             }
-          }else{
-            this.toastService.show('Algo salio mal',{classname: 'bg-danger text-light', delay: 6000})
-            //console.log('Algo salio mal');
+          } else{
+            //this.toastService.show('Algo salio mal',{classname: 'bg-danger text-light', delay: 6000})
+            console.log('Algo salio mal');
+            console.log(response);
           }
         },error=>{
           console.log(error);
@@ -328,14 +336,15 @@ export class PuntoDeVentaComponent implements OnInit {
     this._clienteService.postNuevaDireccion(this.nuevaDir).subscribe( 
       response=>{
         if(response.status == 'success'){
-          this.toastService.show('Direccion registrada correctamente',{classname: 'bg-success text-light', delay: 3000});
+          this.messageService.add({severity:'success', summary:'Registro exitoso', detail: 'Direccion registrada correctamente'});
           this.getDireccionCliente(this.nuevaDir.idCliente);
+        } else{
+          this.messageService.add({severity:'error', summary:'Error', detail: 'Fallo al guardar la direccion',sticky:true});
+          console.log(response)
         }
-        //console.log(response)
        }, error =>{
       console.log(error);
     });
-    //this.getDireccionCliente(this.ventag.idCliente);
   }
 
   //obtenemos todos los productos
@@ -503,7 +512,7 @@ export class PuntoDeVentaComponent implements OnInit {
 
   //evitamod que den enter en el textarea de observaciones
   omitirEnter(event:any){
-    if(event.which === 13 && !event.shiftKey){
+    if(event.which === 13){
       event.preventDefault();
       console.log('prevented');
       

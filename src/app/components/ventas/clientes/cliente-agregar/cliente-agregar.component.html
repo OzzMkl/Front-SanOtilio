@@ -214,11 +214,11 @@
                   <div class="col">
                     <label class="form-label" for="">Referencia *</label>
                     <textarea class="form-control" oninput="this.value = this.value.toUpperCase()" maxlength="254"
-                                cols="30" rows="2" name="referencia" #referencia="ngModel" [(ngModel)]="cdireccion.referencia"></textarea>
-                  </div>
-                  <div [hidden]="referencia.valid || referencia.pristine" class="alert alert-danger">
-                    CAMPO REQUERIDO
-                  </div> 
+                                cols="30" rows="2" name="referencia" #referencia="ngModel" [(ngModel)]="cdireccion.referencia" required></textarea>
+                    <div [hidden]="referencia.valid || referencia.pristine" class="alert alert-danger">
+                      CAMPO REQUERIDO
+                    </div> 
+                  </div>                  
                 </div>
             
           </div>
