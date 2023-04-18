@@ -34,12 +34,11 @@
                 </div>
             </div>
 
-            <!-- <div class="col-2"> 
+            <div class="col-2"> 
                 <label class="form-label" for="facturableCheck">¿Es facturable?</label>
                 <br>
-                <input class="form-check-input" type="checkbox" value="false"  name="facturable"  id="facturableCheck">
-
-            </div> -->
+                <input class="form-check-input" type="checkbox" value="false"  name="facturable" [(ngModel)]="facturableCheck" id="facturableCheck">
+            </div>
            
             <div *ngFor="let p of proveedorVer" class="row align-items-start">
                 <div class="col-2">
@@ -190,7 +189,7 @@
                         <th scope="col">CADUCIDAD</th>
                     </tr>
                 </thead>
-                <tbody *ngFor="let p_d of Lista_compras | paginate:{itemsPerPage: 5, currentPage: pageActual}">
+                <tbody *ngFor="let p_d of Lista_compras | paginate:{ id: 'pcEdit', itemsPerPage: 5, currentPage: pageActual2}">
                     <tr (click)="editarProductoC(p_d)">
                      <th scope="row">{{p_d.claveEx}}</th>
                      <th scope="row">{{p_d.descripcion}}</th>
@@ -204,7 +203,7 @@
                     </tr>
                 </tbody>
             </table>
-            <pagination-controls (pageChange)="pageActual = $event"></pagination-controls>
+            <pagination-controls id="pcEdit" (pageChange)="pageActual2 = $event"></pagination-controls>
         </div>
         <hr>
         <div class="row justify-content-end">
@@ -252,13 +251,13 @@
                     </select>
                 </div>
                 <div class="col" *ngIf="seleccionado == 1; ">
-                    <input type="text" class="form-control" name="buscarProducto" [(ngModel)]="buscarProducto">
+                    <input type="text" class="form-control" name="buscarProducto" (keyup)="getSearchDescripcion($event)">
                 </div>
                 <div class="col" *ngIf="seleccionado == 2; ">
-                    <input type="text" class="form-control" name="buscarProductoCE" [(ngModel)]="buscarProductoCE"> 
+                    <input type="text" class="form-control" name="buscarProductoCE" (keyup)="getSearch($event)"> 
                 </div>
                 <div class="col" *ngIf="seleccionado == 3;  ">
-                    <input type="text" class="form-control" name="buscarProductoCbar" [(ngModel)]="buscarProductoCbar">
+                    <input type="text" class="form-control" name="buscarProductoCbar" (keyup)="getSearchCodbar($event)">
                 </div>
             
             </div>
@@ -273,7 +272,7 @@
                     <th>Marca</th>
                 </tr>
             </thead>
-            <tbody *ngFor="let pr of productos | filterProductsModalcbar: buscarProductoCbar| filterProductModal: buscarProducto | filterProductsModalce: buscarProductoCE| paginate:{itemsPerPage: 5, currentPage: pageActual}">
+            <tbody *ngFor="let pr of productos | paginate:{id:'pcModal',itemsPerPage: itemsPerPage, currentPage: pageActual,totalItems:totalPages}">
                 <tr (click)="consultarProductoModal(pr.claveEx)" (click)="modal.dismiss('Cross click')">
                     <th scope="row">{{pr.claveEx}}</th>
                     <th scope="row">{{pr.cbarras}}</th>
@@ -283,7 +282,12 @@
                 </tr>
             </tbody>
           </table>
-          <pagination-controls (pageChange)="pageActual = $event"></pagination-controls>
+          <pagination-controls 
+                    id="pcModal" 
+                    (pageChange)="getPage(pageActual = $event)"
+                    previousLabel="Anterior"
+                    nextLabel="Siguiente" >
+            </pagination-controls>
       </form>
     </div>
     <!-- <div class="modal-footer">

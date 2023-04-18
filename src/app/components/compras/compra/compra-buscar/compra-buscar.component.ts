@@ -351,13 +351,19 @@ export class CompraBuscarComponent implements OnInit {
     doc.setLineWidth(2.5).line(10,53,70,53);
     //           tipografia,negrita        tamaño          texto              x1,y1
     doc.setFont('Helvetica','bold').setFontSize(10).text('NO. COMPRA: '+this.detallesCompra[0]['idCompra'], 10,60);
-    doc.setFont('Helvetica','bold').setFontSize(10).text('FOLIO DEL PROVEEDOR: '+this.detallesCompra[0]['folioProveedor'], 10,65);
+
+    if(this.detallesCompra[0]['facturable'] == true){
+      doc.setFont('Helvetica','bold').setFontSize(10).text('FOLIO DEL PROVEEDOR: '+this.detallesCompra[0]['folioProveedor']+', FACTURADA', 10,65);
+    }else{
+      doc.setFont('Helvetica','bold').setFontSize(10).text('FOLIO DEL PROVEEDOR: '+this.detallesCompra[0]['folioProveedor'], 10,65);
+    }
+    
     doc.setFont('Helvetica','normal').setFontSize(10).text('FECHA IMPRESION: '+this.fecha.toLocaleDateString('es-ES', this.dateOptions), 115,60);
     doc.setFont('Helvetica','normal').setFontSize(10).text('FECHA DE RECEPCION: '+this.detallesCompra[0]['fecha_format'].substring(0,10), 115,65);
 
     doc.setLineWidth(1).line(10,70,200,70);
-    doc.setFont('Helvetica','normal').setFontSize(10).text('REALIZO: '+ nombreE.toUpperCase(), 10,75);
-    doc.setFont('Helvetica','normal').setFontSize(10).text('PROVEEDOR: '+this.detallesCompra[0]['nombreProveedor'], 10,80);
+    doc.setFont('Helvetica','normal').setFontSize(10).text('REALIZO: '+ this.detallesCompra[0]['nombreEmpleado'], 10,75);
+    doc.setFont('Helvetica','normal').setFontSize(10).text('PROVEEDOR: '+this.detallesCompra[0]['nombre'], 10,80);
     doc.setFont('Helvetica','normal').setFontSize(10).text('OBSERVACIONES: '+this.detallesCompra[0]['observaciones'], 10,85);
 
 

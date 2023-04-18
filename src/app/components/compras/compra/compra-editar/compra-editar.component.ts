@@ -111,7 +111,7 @@ export class CompraEditarComponent implements OnInit {
     public _compraService : CompraService,
     private calendar: NgbCalendar
   ) {
-      this.compra = new Compra(0,null,0,0,0,0,0,0,null,'',null); 
+      this.compra = new Compra(0,null,0,0,0,0,0,0,null,'',false,null); 
       this.producto_compra = new Producto_compra(0,0,0,0,0,0,null,null,null,null,null,null,0,null);
       this.Lista_compras = [];
       this.url = global.url;
