@@ -39,6 +39,12 @@ export class CompraService {
     return this._http.post(this.url+'compra/updateExistencia',params, {headers:this.headers} );
   }
 
+  updateExistenciaFacturable(ProductosCompra:any):Observable<any>{
+    let json = JSON.stringify(ProductosCompra);
+    let params = 'json='+json;
+    return this._http.post(this.url+'compra/updateExistenciaFacturable',params, {headers:this.headers} );
+  }
+
   registerLote():Observable<any>{
     return this._http.post(this.url+'compra/registerLote', {headers:this.headers} );
   }
