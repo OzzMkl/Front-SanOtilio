@@ -104,7 +104,7 @@
                 </tr>
             </thead>
             <tbody *ngFor="let producto of lista_productoVentag | paginate:{id:'tablePV', itemsPerPage: 5, currentPage:pageActual3}">
-                <tr (click)="editarProductoLista(producto.idProducto)" >
+                <tr (click)="editarProductoLista(producto.idProdMedida)" >
                     <th scope="row">{{producto.claveEx}}</th>
                     <th scope="row">{{producto.descripcion}}</th>
                     <th scope="row">{{producto.nombreMedida}}</th>
