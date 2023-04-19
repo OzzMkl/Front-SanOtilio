@@ -97,6 +97,7 @@ export class CompraAgregarIdComponent implements OnInit {
   public dato:any;
   public ultimaCompra: any;
   public detailComp: any;
+  public detailProdComp: any;
 
 
   //modelo de bootstrap
@@ -384,15 +385,12 @@ export class CompraAgregarIdComponent implements OnInit {
   public createPDF():void{//Crear PDF
     //this.getLastCompra();
     const doc = new jsPDF;
-
-    //Formateamos la fecha
-    // console.log(this.detailComp[0]['fechaRecibo']);
     
-    
+    var cabeceras = ["CLAVE EXTERNA","DESCRIPCION","MEDIDA","CANTIDAD","PRECIO COMPRA","IMPUESTO","IMPORTE"];
+    var rows:any = [];
 
     var logo = new Image();//CREAMOS VARIABLE
     logo.src = 'assets/images/logo-solo.png'//ASIGNAMOS LA UBICACION DE LA IMAGEN
-    var nombreE = this.identity['nombre']+' '+this.identity['apellido']+' '+this.identity['amaterno']//concatenamos el nombre completo 
     
     doc.setDrawColor(255, 145, 0);//AGREGAMOS COLOR NARANJA A LAS LINEAS
 
@@ -419,14 +417,29 @@ export class CompraAgregarIdComponent implements OnInit {
     doc.setFont('Helvetica','normal').setFontSize(10).text('FECHA DE RECEPCION: '+this.detailComp[0]['fecha_format'].substring(0,10), 115,65);
 
     doc.setLineWidth(1).line(10,70,200,70);
-    doc.setFont('Helvetica','normal').setFontSize(10).text('REALIZO: '+ nombreE.toUpperCase(), 10,75);
-    doc.setFont('Helvetica','normal').setFontSize(10).text('PROVEEDOR: '+this.detailComp[0]['nombreProveedor'], 10,80);
+    doc.setFont('Helvetica','normal').setFontSize(10).text('REALIZO: '+ this.detailComp[0]['nombreEmpleado'], 10,75);
+    doc.setFont('Helvetica','normal').setFontSize(10).text('PROVEEDOR: '+this.detailComp[0]['nombre'], 10,80);
     doc.setFont('Helvetica','normal').setFontSize(10).text('OBSERVACIONES: '+this.detailComp[0]['observaciones'], 10,85);
 
 
     doc.setLineWidth(1).line(10,92,200,92);
-    autoTable(doc,{html: '#table_productos',startY:95})
-    doc.save('compra.pdf')
+    //autoTable(doc,{html: '#table_productos',startY:95})
+    //recorremos los productos
+    this.detailProdComp.forEach((element:any) =>{
+      var temp = [element.claveexterna,element.descripcion,element.nombreMedida,element.cantidad,element.precio,element.nombreImpuesto,element.subtotal];
+      rows.push(temp);
+    });
+    //generamos la tabla
+    autoTable(doc,{ head:[cabeceras],body:rows, startY:95 });
+
+    //OBTEMOS DONDE FINALIZA LA TABLA CREADA
+    let posY = (doc as any).lastAutoTable.finalY;
+    //         TIPOLETRA  NEGRITA O NORMAL     TAMAÑO                                                               X1, POSICION FINAL DE LA TABLA + 10
+    doc.setFont('Helvetica','normal').setFontSize(9).text('SUBTOTAL:          $'+this.detailComp[0]['subtotal'], 145,posY+10);
+    doc.setFont('Helvetica','normal').setFontSize(9).text('TOTAL:                 $'+this.detailComp[0]['total'], 145,posY+20);
+    
+    //GUARDAMOS PDF
+    doc.save("compra-"+this.detailProdComp[0]['idCompra']+".pdf");
   } 
 
   
@@ -515,7 +528,9 @@ export class CompraAgregarIdComponent implements OnInit {
           this._compraService.getDetailsCompra(this.ultimaCompra['idCompra']).subscribe(
             response => {
               this.detailComp = response.compra;
-              console.log(this.detailComp);
+              this.detailProdComp = response.productos;
+              console.log('detailComp',this.detailComp);
+              console.log('detailProdComp',this.detailProdComp);
               this.createPDF();
             },error =>{
               console.log(error);

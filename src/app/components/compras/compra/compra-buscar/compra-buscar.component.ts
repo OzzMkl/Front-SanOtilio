@@ -20,6 +20,7 @@ export class CompraBuscarComponent implements OnInit {
 
   //public proveedores: Array<Proveedor>;
   public compras: Array<any> = [];
+  public facturableCheck: boolean = false;
 
   public totalPages: any;
   public path: any;
@@ -284,6 +285,10 @@ export class CompraBuscarComponent implements OnInit {
 
           console.log(this.detallesCompra);
           console.log(this.productosDC);
+
+          if(this.detallesCompra[0]['facturable'] == 1){
+            this.facturableCheck = true;
+          }
         }else{ console.log('Algo salio mal');}
         
       },error => {
@@ -327,15 +332,12 @@ export class CompraBuscarComponent implements OnInit {
   public createPDF():void{//Crear PDF
     //this.getLastCompra();
     const doc = new jsPDF;
-
-    //Formateamos la fecha
-    // console.log(this.detailComp[0]['fechaRecibo']);
     
-    
+    var cabeceras = ["CLAVE EXTERNA","DESCRIPCION","MEDIDA","CANTIDAD","PRECIO COMPRA","IMPUESTO","IMPORTE"];
+    var rows:any = [];
 
     var logo = new Image();//CREAMOS VARIABLE
     logo.src = 'assets/images/logo-solo.png'//ASIGNAMOS LA UBICACION DE LA IMAGEN
-    var nombreE = this.userPermisos['nombre']+' '+this.userPermisos['apellido']+' '+this.userPermisos['amaterno']//concatenamos el nombre completo 
     
     doc.setDrawColor(255, 145, 0);//AGREGAMOS COLOR NARANJA A LAS LINEAS
 
@@ -357,7 +359,7 @@ export class CompraBuscarComponent implements OnInit {
     }else{
       doc.setFont('Helvetica','bold').setFontSize(10).text('FOLIO DEL PROVEEDOR: '+this.detallesCompra[0]['folioProveedor'], 10,65);
     }
-    
+
     doc.setFont('Helvetica','normal').setFontSize(10).text('FECHA IMPRESION: '+this.fecha.toLocaleDateString('es-ES', this.dateOptions), 115,60);
     doc.setFont('Helvetica','normal').setFontSize(10).text('FECHA DE RECEPCION: '+this.detallesCompra[0]['fecha_format'].substring(0,10), 115,65);
 
@@ -368,8 +370,23 @@ export class CompraBuscarComponent implements OnInit {
 
 
     doc.setLineWidth(1).line(10,92,200,92);
-    autoTable(doc,{html: '#table_productos',startY:95})
-    doc.save('compra.pdf')
+    //autoTable(doc,{html: '#table_productos',startY:95})
+    //recorremos los productos
+    this.productosDC.forEach((element:any) =>{
+      var temp = [element.claveexterna,element.descripcion,element.nombreMedida,element.cantidad,element.precio,element.nombreImpuesto,element.subtotal];
+      rows.push(temp);
+    });
+    //generamos la tabla
+    autoTable(doc,{ head:[cabeceras],body:rows, startY:95 });
+
+    //OBTEMOS DONDE FINALIZA LA TABLA CREADA
+    let posY = (doc as any).lastAutoTable.finalY;
+    //         TIPOLETRA  NEGRITA O NORMAL     TAMAÑO                                                               X1, POSICION FINAL DE LA TABLA + 10
+    doc.setFont('Helvetica','normal').setFontSize(9).text('SUBTOTAL:          $'+this.detallesCompra[0]['subtotal'], 145,posY+10);
+    doc.setFont('Helvetica','normal').setFontSize(9).text('TOTAL:                 $'+this.detallesCompra[0]['total'], 145,posY+20);
+    
+    //GUARDAMOS PDF
+    doc.save("compra-"+this.detallesCompra[0]['idCompra']+".pdf");
   } 
 
 }
