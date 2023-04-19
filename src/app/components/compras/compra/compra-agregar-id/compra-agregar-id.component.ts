@@ -600,6 +600,22 @@ export class CompraAgregarIdComponent implements OnInit {
                 this.toastService.show('Ups... Fallo al agregar los productos', { classname: 'bg-danger text-light', delay: 15000 });
               });
 
+            if(this.facturableCheck==true){
+              this._compraService.updateExistenciaFacturable(this.Lista_compras).subscribe(
+                res =>{
+                    console.log(res);
+                    this.toastService.show(' ⚠ Existencia Facturable actualizada exitosamente!', { classname: 'bg-success  text-light', delay: 5000 });
+                    //this.getLastCompra();
+                    //this.createPDF();
+                },error =>{
+                  console.log(<any>error);
+                  this.toastService.show('Ups... Fallo al agregar los productos a la existencia facturable', { classname: 'bg-danger text-light', delay: 15000 });
+                });
+            }else{
+
+            }
+
+
         }
       },error =>{
         console.log(<any>error);
