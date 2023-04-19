@@ -134,6 +134,11 @@
                           <label for="fechaEstimada" class="form-label">Fecha de recepción</label>
                           <input id="fechaEstimada" type="text" class="form-control" value="{{datosCompra.fechaRecibo | date}}" readonly>
                         </div>
+                        <div class="col-2"> 
+                            <label class="form-label" for="facturableCheck">Facturada</label>
+                            <br>
+                            <input class="form-check-input" type="checkbox" value="false"  name="facturable" [(ngModel)]="facturableCheck" id="facturableCheck">
+                        </div>
                         <div class="col-3">
                             <label for="fechaEstimada" class="form-label">Subtotal</label>
                             <input id="fechaEstimada" type="text" class="form-control" value="{{datosCompra.subtotal}}" readonly>
