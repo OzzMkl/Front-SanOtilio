@@ -7,6 +7,7 @@ export class Producto_compra{//Modelo de la compra
         public precio: number,
         public idImpuesto: number,
         public subtotal: any,
+        public igualMedidaMenor: any,
         public updated_at: any,
         /**Se agregan campos extras para mostrar 
          * en la vista de la lista de compras */

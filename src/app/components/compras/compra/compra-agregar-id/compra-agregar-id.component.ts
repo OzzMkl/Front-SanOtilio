@@ -62,13 +62,21 @@ export class CompraAgregarIdComponent implements OnInit {
   model!: NgbDateStruct;
   modelP!: NgbDateStruct;
 
-//paginador Lista de productos
+//paginador Lista de productos orden
   public totalPages2: any;
   public path2: any;
   public next_page2: any;
   public prev_page2: any;
   public itemsPerPage2:number=0;
   pageActual2: number = 0;   
+
+//paginador Lista de productos orden
+  public totalPages3: any;
+  public path3: any;
+  public next_page3: any;
+  public prev_page3: any;
+  public itemsPerPage3:number=0;
+  pageActual3: number = 0; 
 
 /**PAGINATOR modal*/
   public totalPages: any;
@@ -136,7 +144,7 @@ export class CompraAgregarIdComponent implements OnInit {
     this.lista_productosorden = [];
 
     this.compra = new Compra(0,null,0,0,0,0,0,0,null,'',false,null);
-    this.producto_compra = new Producto_compra(0,0,0,0,0,0,0,null,null,null,null,null,0,null);
+    this.producto_compra = new Producto_compra(0,0,0,0,0,0,0,null,0,null,null,null,null,0,null);
     this.Lista_compras = [];
     this.url = global.url;
 

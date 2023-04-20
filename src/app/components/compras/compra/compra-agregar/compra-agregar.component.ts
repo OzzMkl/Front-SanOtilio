@@ -85,7 +85,7 @@ export class CompraAgregarComponent implements OnInit {
     ) {
       this.orden_compra = new Ordencompra(0,null,0,'',null,0,1,null);
       this.compra = new Compra(0,null,0,0,0,0,0,0,null,'',false,null);
-      this.producto_compra = new Producto_compra(0,0,0,0,0,1,null,null,null,null,null,null,0,null);
+      this.producto_compra = new Producto_compra(0,0,0,0,0,1,null,0,null,null,null,null,null,0,null);
       this.Lista_compras = [];
       this.url = global.url;
      }

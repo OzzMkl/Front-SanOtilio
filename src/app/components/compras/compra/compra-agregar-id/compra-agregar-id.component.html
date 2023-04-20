@@ -189,7 +189,7 @@
                         <th scope="col">CADUCIDAD</th>
                     </tr>
                 </thead>
-                <tbody *ngFor="let p_d of Lista_compras | paginate:{ id: 'pcEdit', itemsPerPage: 5, currentPage: pageActual2}">
+                <tbody *ngFor="let p_d of Lista_compras | paginate:{ id: 'pcEdit3', itemsPerPage: 5, currentPage: pageActual3}">
                     <tr (click)="editarProductoC(p_d)">
                      <th scope="row">{{p_d.claveEx}}</th>
                      <th scope="row">{{p_d.descripcion}}</th>
@@ -203,7 +203,7 @@
                     </tr>
                 </tbody>
             </table>
-            <pagination-controls id="pcEdit" (pageChange)="pageActual2 = $event"></pagination-controls>
+            <pagination-controls id="pcEdit2" (pageChange)="pageActual3 = $event"></pagination-controls>
         </div>
         <hr>
         <div class="row justify-content-end">
