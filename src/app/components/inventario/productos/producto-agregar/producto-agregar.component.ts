@@ -32,6 +32,7 @@ import { Productos_medidas } from 'src/app/models/productos_medidas';
 import { Router } from '@angular/router';
 
 
+
 @Component({
   selector: 'app-producto-agregar',
   templateUrl: './producto-agregar.component.html',
@@ -122,12 +123,13 @@ export class ProductoAgregarComponent implements OnInit {
    * @param event 
    * omitimos los eventes de "enter""
    */
-  omitirEnter(event:any){
-    this.conta = event.target.value.length;
-    if(event.which === 13){
-      event.preventDefault();
-      //console.log('prevented');
-    }
+  omitirEnter(event:Event){
+    //console.log(event)
+    this.conta = ((event.target as HTMLInputElement).value).length;
+    //if(event.which == 13){
+    //  event.preventDefault();
+    //  //console.log('prevented');
+    //}
   }
 
   /**
@@ -136,12 +138,12 @@ export class ProductoAgregarComponent implements OnInit {
    * @param event 
    * omitimos los eventes de "enter""
    */
-  omitirEnterUbicacion(event:any){
-    this.contaUbi = event.target.value.length;
-    if(event.which === 13){
-      event.preventDefault();
-      //console.log('prevented');  
-    }
+  omitirEnterUbicacion(event:Event){
+    this.contaUbi = ((event.target as HTMLInputElement).value).length;
+    // if(event.which === 13){
+    //   event.preventDefault();
+    //   //console.log('prevented');  
+    // }
   }
 
   /**
@@ -2645,5 +2647,7 @@ export class ProductoAgregarComponent implements OnInit {
     }//fin else
   }
 }
+
+/*********************************************************************************************************** */
 
 

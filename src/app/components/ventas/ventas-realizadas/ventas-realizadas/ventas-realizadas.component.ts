@@ -44,6 +44,7 @@ export class VentasRealizadasComponent implements OnInit {
     this.isLoading = true;
     this._ventasService.getIndexVentas().subscribe(
       response =>{
+        console.log(response);
         if(response.status == 'success'){
           this.ventas = response.Ventas
           this.isLoading = false;

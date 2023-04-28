@@ -476,11 +476,7 @@ export class ProductoEditarComponent implements OnInit {
    * omitimos los eventes de "enter" y "shift + enter"
    */
     omitirEnter(event:any){
-      this.conta = event.target.value.length;
-      if(event.which === 13 || event.shiftKey){
-        event.preventDefault();
-        //console.log('prevented');
-      }
+      this.conta = ((event.target as HTMLInputElement).value).length;
     }
   
     /**
@@ -490,11 +486,7 @@ export class ProductoEditarComponent implements OnInit {
      * omitimos los eventes de "enter" y "shift + enter"
      */
     omitirEnterUbicacion(event:any){
-      this.contaUbi = event.target.value.length;
-      if(event.which === 13 || event.shiftKey){
-        event.preventDefault();
-        //console.log('prevented');  
-      }
+      this.contaUbi = ((event.target as HTMLInputElement).value).length;
     }
   
     /**

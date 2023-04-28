@@ -51,7 +51,7 @@
         <label for="descripcion" class="form-label">Descripcion *</label>
         <textarea class="form-control" id="descripcion" rows="2" maxlength="254" 
                   name="descripcion" #descripcion="ngModel" [(ngModel)]="producto.descripcion"
-                  (keydown)="omitirEnter($event)" required >
+                  (input)="omitirEnter($event)" required >
         </textarea>
         <span class="justify-content-md-end">{{conta}}/254</span>
         <div [hidden]="descripcion.valid || descripcion.pristine" class="alert alert-danger">
@@ -62,7 +62,7 @@
         <label for="ubicacion" class="form-label">Ubicacion *</label>
         <textarea class="form-control" id="ubicacion" rows="2" maxlength="150" 
                   name="ubicacion" #ubicacion="ngModel" [(ngModel)]="producto.ubicacion"
-                  (keydown)="omitirEnterUbicacion($event)" required >
+                  (input)="omitirEnterUbicacion($event)" required >
         </textarea>
         <span> {{contaUbi}}/150</span>
         <div [hidden]="ubicacion.valid || ubicacion.pristine" class="alert alert-danger">
