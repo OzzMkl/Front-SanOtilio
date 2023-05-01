@@ -79,7 +79,10 @@ export class ProductoVerComponent implements OnInit {
           },
           {
               label: 'Editar',
-              icon: 'pi pi-file-edit'
+              icon: 'pi pi-file-edit',
+              command: () => {
+                this.redireccionaEdit();
+              }
           }
       ]}
     ];
@@ -101,10 +104,10 @@ export class ProductoVerComponent implements OnInit {
    this._productoService.getProdverDos(id).subscribe(//traemos el servicio
      response =>{//asignamos la respuesta
       if(response.status == 'success'){
-         console.log(response);
+         //console.log(response);
 
          this.producto = response.producto;
-         //console.log(this.producto)
+         console.log(this.producto)
 
          this.prueba(response.producto[0]['statuss'])
          //para asi asignar el valor del codigo de barras a la variable value
@@ -324,6 +327,10 @@ export class ProductoVerComponent implements OnInit {
           console.log(error);
         });
     });
+  }
+
+  redireccionaEdit(){
+    this._router.navigate(['./producto-modulo/producto-editar/'+this.producto[0].idProducto ]);
   }
 
   ngOnDestroy():void{
