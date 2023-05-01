@@ -46,7 +46,7 @@
                 </tr>
             </thead>
             <tbody *ngFor="let pr of productos | paginate: { itemsPerPage:itemsPerPage, currentPage: pageActual, totalItems:totalPages }">
-                <tr (click)="mostrarPrecios(pr.idProducto,pr.claveEx)" >
+                <tr (click)="mostrarPrecios(pr.idProducto)" >
                     <th scope="row" >{{pr.claveEx}}</th>
                     <th scope="row">{{pr.cbarras}}</th>
                     <th scope="row">{{pr.descripcion}}</th>
@@ -79,6 +79,7 @@
             <div class="col-2">
                 <img src="{{url + 'productos/getImageProduc/' + this.imagenPM}}" width="150px">
             </div>
+            <!-- TABLA DE PRECIOS -->
             <div class="col-5 text-center">
                 <table class="table table-sm table-secondary">
                     <thead>
@@ -94,7 +95,7 @@
                             <th scope="col">PRECIO 5</th>
                         </tr>
                     </thead>
-                    <tbody *ngFor="let pm of productosMedida">
+                    <tbody *ngFor="let pm of productosMedida" >
                         <tr>
                             <th>{{pm.nombreMedida}}</th>
                             <th>{{pm.precio1 | currency}}</th>
@@ -102,6 +103,26 @@
                             <th>{{pm.precio3 | currency}}</th>
                             <th>{{pm.precio4 | currency}}</th>
                             <th>{{pm.precio5 | currency}}</th>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <!-- TABLA EXISTENCIA -->
+            <div class="col-auto text-center">
+                <table class="table table-sm table-secondary">
+                    <thead>
+                        <tr>
+                            <th colspan="2"><h5 class="fw-bold">{{claveExt}}</h5></th>
+                        </tr>
+                        <tr>
+                            <th>EXISTENCIA</th>
+                            <th>MEDIDA</th>
+                        </tr>
+                    </thead>
+                    <tbody *ngFor="let e of existenciasPorMed">
+                        <tr>
+                            <th scope="col">{{e.exisCal}}</th>
+                            <th scope="col">{{e.nombreMedida}}</th>
                         </tr>
                     </tbody>
                 </table>

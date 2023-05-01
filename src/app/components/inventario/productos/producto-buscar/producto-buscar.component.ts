@@ -30,6 +30,7 @@ export class ProductoBuscarComponent implements OnInit {
   public url:string = global.url;
   public productos: Array<any> = [];
   public productosMedida: Array<any> = [];
+  public existenciasPorMed: Array<any> = [];
   public imagenPM: string = '';
   public claveExt: string ='';
   public isShow: boolean = false;
@@ -99,15 +100,22 @@ export class ProductoBuscarComponent implements OnInit {
    * 
    * retornamos la consulta con las medias e imagen del producto
    */
-  mostrarPrecios(idProducto:number,claveEx:string){
-    this.claveExt = claveEx;
+  mostrarPrecios(idProducto:number){
+    
     this._productoService.searchProductoMedida(idProducto).subscribe(
       response =>{
-        this.productosMedida = response.productoMedida;
-        this.imagenPM = response.imagen;
-        if(this.imagenPM == "" || this.imagenPM == null){
-          this.imagenPM = "1650558444no-image.png";
+        if(response.status == 'success'){
+          this.claveExt = response.Producto_cl;
+          this.productosMedida = response.productoMedida;
+          this.existenciasPorMed = response.existencia_por_med;
+          this.imagenPM = response.imagen;
+          if(this.imagenPM == "" || this.imagenPM == null){
+            this.imagenPM = "1650558444no-image.png";
+          }
+        } else{
+
         }
+        
     }, error =>{
       console.log(error);
     });
