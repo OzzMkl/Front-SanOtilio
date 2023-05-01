@@ -15,7 +15,7 @@
         </div>
         <div *ngIf="!isLoading" >
             <div *ngFor="let p of producto">
-    
+                <!-- DATOS PRODUCTO -->
                 <div class="row align-items-start">
                     <!-- DATOS PRINCIPALES -->
                     <h4 class="text-center">PRODUCTO: {{p.claveEx}}</h4>
@@ -62,9 +62,22 @@
                         <label class="form-label" for="">Stock Max</label>
                         <input class="form-control" type="text" value="{{p.stockMax}}" readonly>
                     </div>
-                    <div class="col-3">
-                        <label class="form-label" for="">Existencia en medida menor</label>
-                        <input class="form-control" type="text" value="{{p.existenciaG}}" readonly>
+                    <div class="col-3 text-center">
+                        <label class="form-label">Existencia del producto</label>
+                        <table class="table table-sm table-secondary">
+                            <thead>
+                                <tr>
+                                    <th>EXISTENCIA</th>
+                                    <th>MEDIDA</th>
+                                </tr>
+                            </thead>
+                            <tbody *ngFor="let e of existenciasPorMed">
+                                <tr>
+                                    <th scope="col">{{e.exisCal}}</th>
+                                    <th scope="col">{{e.nombreMedida}}</th>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                     <div class="col-3 text-center">
                         <h6 class="text-center">Codigo de barras</h6>
@@ -74,7 +87,7 @@
                     <!-- FIN DATOS PRINCIPALES -->
                 </div>
                 <hr>
-    
+                <!-- PRECIOS -->
                 <div class="row justify-content-between">
                     <h4 class="text-center">PRECIOS</h4>
                     <div class="col-4">

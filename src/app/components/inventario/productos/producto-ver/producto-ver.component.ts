@@ -24,6 +24,7 @@ export class ProductoVerComponent implements OnInit {
   public muestraCbarras: any;
   //spinner
   public isLoading: boolean = false;
+  public existenciasPorMed: Array<any> = [];
   //Para recoger la informacion de las tablas de precios
   public listaProdMedida: Array<Productos_medidas> = [];
   public datosTab1: Productos_medidas;
@@ -100,10 +101,10 @@ export class ProductoVerComponent implements OnInit {
    this._productoService.getProdverDos(id).subscribe(//traemos el servicio
      response =>{//asignamos la respuesta
       if(response.status == 'success'){
-         //console.log(response);
+         console.log(response);
 
          this.producto = response.producto;
-         console.log(this.producto)
+         //console.log(this.producto)
 
          this.prueba(response.producto[0]['statuss'])
          //para asi asignar el valor del codigo de barras a la variable value
@@ -115,6 +116,8 @@ export class ProductoVerComponent implements OnInit {
          this.noMedida = this.listaProdMedida.length;
 
          this.seleccionanoMedidas(this.noMedida.toString());
+         
+         this.existenciasPorMed = response.existencia_por_med;
 
          //recorremos array de acuerdo a la longitud  de listaProdMedida
          for(let i= 0; i < this.listaProdMedida.length; i++){
@@ -211,8 +214,6 @@ export class ProductoVerComponent implements OnInit {
             this.medida5 = response.productos_medidas[i]['nombreMedida'];
           }
          }
-         //
-         this.calculaExistencia();
          //una vez terminado de cargar quitamos el spinner
           this.isLoading = false;
        }//fin if
@@ -223,11 +224,6 @@ export class ProductoVerComponent implements OnInit {
    );//finsubscribe getProdverdos
 
   });//finsubscribe params
-  }
-
-  calculaExistencia(){
-    this.producto[0]['existenciaG'];
-    console.log('esta es la existencia '+this.producto[0]['existenciaG']);
   }
 
   /**
