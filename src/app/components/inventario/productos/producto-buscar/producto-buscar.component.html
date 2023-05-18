@@ -4,20 +4,14 @@
     <!--CUADRO DE BUSQUEDA-->
     <div class="input-group mb-2">
         <div class="col-2">
-            <select class="form-select" name="tipoBusqueda" [(ngModel)]="tipoBusqueda">
-                <option value="1">Clave externa</option>
-                <option value="2">Codigo de barras</option>
-                <option value="3">Descripcion</option>
+            <select class="form-select" name="tipoBusqueda" [(ngModel)]="tipoBusqueda" (ngModelChange)="selectBusqueda()" >
+                <option value="uno">Clave externa</option>
+                <option value="dos">Codigo de barras</option>
+                <option value="tres">Descripcion</option>
             </select>
         </div>
-        <div class="col" *ngIf="tipoBusqueda == 1">
-            <input type="search" class="form-control" name="searchProducto" placeholder="Buscar ..." (keyup)="getSearch($event)">
-        </div>
-        <div class="col" *ngIf="tipoBusqueda == 2">
-            <input type="search" class="form-control" name="searchProductoCodBar" placeholder="Buscar ..." (keyup)="getSearchCodbar($event)">
-        </div>
-        <div class="col" *ngIf="tipoBusqueda == 3">
-            <input type="search" class="form-control" name="searchProductoDescripcion" placeholder="Buscar ..." (keyup)="getSearchDescripcion($event)">
+        <div class="col">
+            <input type="search" class="form-control" name="search" placeholder="Buscar ..." [(ngModel)]="search" (ngModelChange)="selectBusqueda()">
         </div>
     </div>
     <!--FIN CUADRO DE BUSQUEDA-->

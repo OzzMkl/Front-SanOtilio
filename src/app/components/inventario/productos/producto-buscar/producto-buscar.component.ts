@@ -42,10 +42,8 @@ export class ProductoBuscarComponent implements OnInit {
   public itemsPerPage:number=0;
   pageActual: number = 0;
   //
-  searchProducto='';
-  searchProductoCodbar=0;
-  searchProductoDescrip='';
-  public tipoBusqueda: number = 1;
+  search='';
+  public tipoBusqueda: string = "uno";
   //spinner
   public isLoading:boolean = false;
 
@@ -158,20 +156,12 @@ export class ProductoBuscarComponent implements OnInit {
    * Recibe los valores del evento keyUp, luego busca y actualiza
    * los datos de la tabla
    */
-  getSearch(claveExterna:any){
-
+  getSearch(claveExterna:string){
     //mostramos el spinner 
     this.isLoading = true;
 
-    //si es vacio volvemos a llamar la primera funcion
-    if(claveExterna.target.value == ''){
-      this.getProd();
-    }
-    //componemos la palabra
-    this.searchProducto = claveExterna.target.value;
-
     //generamos consulta
-    this._productoService.searchClaveExterna(this.searchProducto).subscribe(
+    this._productoService.searchClaveExterna(claveExterna).subscribe(
       response =>{
           if(response.status == 'success'){
 
@@ -203,21 +193,12 @@ export class ProductoBuscarComponent implements OnInit {
    * Recibe los valores del evento keyup, luego busca y actualiza
    * los datos que se muestran en la tabla
    */
-  getSearchCodbar(codbar:any){
-
+  getSearchCodbar(codbar:number){
     //mostramos el spinner
     this.isLoading = true;
 
-    //si es vacio volvemos a llamar la primera funcion que trae todo
-    if(codbar.target.value == ''){
-      this.getProd();
-    }
-
-    //componemos el codigo a buscar
-    this.searchProductoCodbar = codbar.target.value;
-
     //llamamos al servicio
-    this._productoService.searchCodbar(this.searchProductoCodbar).subscribe(
+    this._productoService.searchCodbar(codbar).subscribe(
       response =>{
           if(response.status == 'success'){
             //asignamos datos a varibale para poder mostrarla en la tabla
@@ -248,21 +229,12 @@ export class ProductoBuscarComponent implements OnInit {
    * Recibe los valores del Keyup, luego buscamos y actualizamos
    * los datos que se muestran en la tabla
    */
-  getSearchDescripcion(descripcion:any){
-    
+  getSearchDescripcion(descripcion:string){
     //mostramos el spinner
     this.isLoading = true;
 
-    //si es vacio volvemos a llamar la primera funcion que trae todo
-    if(descripcion.target.value == ''){
-      this.getProd();
-    }
-
-    //componemos el codigo a buscar
-    this.searchProductoDescrip = descripcion.target.value;
-
     //llamamos al servicio
-    this._productoService.searchDescripcion(this.searchProductoDescrip).subscribe(
+    this._productoService.searchDescripcion(descripcion).subscribe(
       response =>{
           if(response.status == 'success'){
             //asignamos datos a varibale para poder mostrarla en la tabla
@@ -284,4 +256,29 @@ export class ProductoBuscarComponent implements OnInit {
       }
     )
   }
+
+  selectBusqueda(){
+    console.log(this.search )
+    
+     if(this.search == "" || null){
+      
+       this.getProd();
+    } else{
+      
+      switch(this.tipoBusqueda){
+        case "uno":
+            this.getSearch(this.search);
+          break;
+        case "dos":
+            this.getSearchCodbar(parseInt(this.search));
+          break;
+        case "tres":
+            this.getSearchDescripcion(this.search);
+          break;
+        default:
+          console.log('default tp'+this.tipoBusqueda)
+           break;
+       }
+     }//finelse
+  }//finFunction
 }
