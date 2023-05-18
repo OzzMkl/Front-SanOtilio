@@ -232,7 +232,6 @@ export class ProductoBuscarComponent implements OnInit {
   getSearchDescripcion(descripcion:string){
     //mostramos el spinner
     this.isLoading = true;
-
     //llamamos al servicio
     this._productoService.searchDescripcion(descripcion).subscribe(
       response =>{
