@@ -556,22 +556,15 @@
         <div >
             <div class="input-group mb-2">
                 <div class="col-2">
-                    <select name="" id="" class="form-select" name="seleccionado" [(ngModel)]="seleccionado">
-                        <option value="1" selected>DESCRIPCION</option>
-                        <option value="2">CLAVE EXTERNA</option>
-                        <option value="3">CODIGO DE BARRAS</option>
+                    <select name="" id="" class="form-select" name="seleccionado" [(ngModel)]="seleccionado" (ngModelChange)="selectBusqueda()">
+                        <option value="uno">DESCRIPCION</option>
+                        <option value="dos">CLAVE EXTERNA</option>
+                        <option value="tres">CODIGO DE BARRAS</option>
                     </select>
                 </div>
-                 <div class="col" *ngIf="seleccionado == 1; ">
-                    <input type="search" class="form-control" name="buscarProducto" placeholder=" Buscar ..." (keyup)="getSearchDescripcion($event)">
+                 <div class="col">
+                    <input type="search" class="form-control" name="buscar" placeholder=" Buscar ..." [(ngModel)]="buscar" (ngModelChange)="selectBusqueda()">
                 </div>
-                <div class="col" *ngIf="seleccionado == 2; ">
-                    <input type="text" class="form-control" name="buscarProductoCE" placeholder=" Buscar ..." (keyup)="getSearch($event)"> 
-                </div>
-                <div class="col" *ngIf="seleccionado == 3;  ">
-                    <input type="text" class="form-control" name="buscarProductoCbar" placeholder=" Buscar ..." (keyup)="getSearchCodbar($event)">
-                </div>
-                
             </div>
                 <br>
                 <div class="text-center text-primary" *ngIf="isLoadingProductos">
@@ -586,9 +579,8 @@
                         <th>CODIGO DE BARRAS</th>
                         <th>DESCRIPCION</th>
                         <th>MARCA</th>
-                        <th>PRECIOS</th>
-                        <th>MEDIDA</th>
-                        <th>EXISTENCIA</th>
+                        <th>DEPARTAMENTO</th>
+                        <!-- <th>CATEGORIA</th> -->
                     </tr>
                 </thead>
                 <tbody *ngFor="let pr of productos | paginate:{id:'pcModal',itemsPerPage: itemsPerPage, currentPage: pageActual2, totalItems:totalPages}">
@@ -597,9 +589,8 @@
                         <th scope="row">{{pr.cbarras}}</th>
                         <th scope="row">{{pr.descripcion}}</th>
                         <th scope="row">{{pr.nombreMarca}}</th>
-                        <th scope="row">PRECIO$$</th>
-                        <th scope="row">{{pr.nombreMedida}}</th>
-                        <th scope="row">{{pr.existenciaG}}</th>
+                        <th scope="row">{{pr.nombreDep}}</th>
+                        <!-- <th scope="row">{{pr.nombreCat}}</th> -->
                     </tr>
                 </tbody>
               </table>

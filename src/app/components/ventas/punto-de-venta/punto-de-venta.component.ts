@@ -67,10 +67,8 @@ export class PuntoDeVentaComponent implements OnInit {
   pageActual3: number = 1;
   //pipes de busqueda en modal
   buscarCliente ='';//modal cliente
-  seleccionado:number = 1;//para cambiar entre pipes de buscarProducto
-  buscarProducto = '';//modal de buscar producto
-  buscarProductoCE = '';//modal de buscar producto
-  buscarProductoCbar : number = 0;//modal de buscar producto
+  seleccionado:string = 'uno';//para cambiar entre pipes de buscarProducto
+  buscar = '';//modal de buscar producto
   //modelos
   public ventag: Ventag;
   public modeloCliente: Cliente;
@@ -780,13 +778,7 @@ export class PuntoDeVentaComponent implements OnInit {
       this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
     });
   }
-
-  cambioSeleccionado(e:any){//limpiamos los inputs del modal
-    this.buscarProducto = '';
-    this.buscarProductoCE = '';
-    this.buscarProductoCbar = 0;
-  }
-
+  
   /**
   * 
   * @param descripcion 
@@ -795,21 +787,13 @@ export class PuntoDeVentaComponent implements OnInit {
   * Recibe los valores del Keyup, luego buscamos y actualizamos
   * los datos que se muestran en la tabla
   */
-  getSearchDescripcion(descripcion:any){
+  getSearchDescripcion(descripcion:string){
    
      //mostramos el spinner
      this.isLoadingProductos = true;
 
-     //si es vacio volvemos a llamar la primera funcion que trae todo
-     if(descripcion.target.value == ''){
-       this.getProductos();
-     }
-
-     //componemos el codigo a buscar
-     this.buscarProducto = descripcion.target.value;
-
      //llamamos al servicio
-     this._productoService.searchDescripcion(this.buscarProducto).subscribe(
+     this._productoService.searchDescripcion(descripcion).subscribe(
        response =>{
            if(response.status == 'success'){
              //asignamos datos a varibale para poder mostrarla en la tabla
@@ -840,21 +824,13 @@ export class PuntoDeVentaComponent implements OnInit {
    * Recibe los valores del evento keyup, luego busca y actualiza
    * los datos que se muestran en la tabla
    */
-  getSearchCodbar(codbar:any){
+  getSearchCodbar(codbar:number){
 
     //mostramos el spinner
     this.isLoadingProductos = true;
 
-    //si es vacio volvemos a llamar la primera funcion que trae todo
-    if(codbar.target.value == ''){
-      this.getProductos();
-    }
-
-    //componemos el codigo a buscar
-    this.buscarProductoCbar = codbar.target.value;
-
     //llamamos al servicio
-    this._productoService.searchCodbar(this.buscarProductoCbar).subscribe(
+    this._productoService.searchCodbar(codbar).subscribe(
       response =>{
           if(response.status == 'success'){
             //asignamos datos a varibale para poder mostrarla en la tabla
@@ -885,20 +861,13 @@ export class PuntoDeVentaComponent implements OnInit {
    * Recibe los valores del evento keyUp, luego busca y actualiza
    * los datos de la tabla
    */
-  getSearch(claveExterna:any){
+  getSearch(claveExterna:string){
 
     //mostramos el spinner 
     this.isLoadingProductos = true;
 
-    //si es vacio volvemos a llamar la primera funcion
-    if(claveExterna.target.value == ''){
-      this.getProductos();
-    }
-    //componemos la palabra
-    this.buscarProducto = claveExterna.target.value;
-
     //generamos consulta
-    this._productoService.searchClaveExterna(this.buscarProducto).subscribe(
+    this._productoService.searchClaveExterna(claveExterna).subscribe(
       response =>{
           if(response.status == 'success'){
 
@@ -921,6 +890,34 @@ export class PuntoDeVentaComponent implements OnInit {
       }
     )
   }
+/**
+ * @description
+ * Obtiene la informacion del input y busca
+ */
+  selectBusqueda(){
+  
+    if(this.buscar == "" || null){
+     
+      this.getProductos();
+   } else{
+     
+     switch(this.seleccionado){
+       case "uno":
+            this.getSearchDescripcion(this.buscar);
+         break;
+       case "dos":
+            this.getSearch(this.buscar);
+         break;
+       case "tres":
+            this.getSearchCodbar(parseInt(this.buscar));
+         break;
+       default:
+         console.log('default tp'+this.seleccionado)
+          break;
+      }
+    }//finelse
+    
+ }//finFunction
 
   /**
    * @description

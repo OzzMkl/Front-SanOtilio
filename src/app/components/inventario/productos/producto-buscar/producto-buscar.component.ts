@@ -256,8 +256,11 @@ export class ProductoBuscarComponent implements OnInit {
     )
   }
 
+  /**
+   * @description
+   * Obtiene la informacion del input y busca
+   */
   selectBusqueda(){
-    console.log(this.search )
     
      if(this.search == "" || null){
       
@@ -279,5 +282,6 @@ export class ProductoBuscarComponent implements OnInit {
            break;
        }
      }//finelse
+     
   }//finFunction
 }
