@@ -302,7 +302,7 @@ export class NotasPorCobrarComponent implements OnInit {
       },error => {console.log(error)});
   }
   getTipoPago(){
-    this._ventasService.getTipoventa().subscribe(
+    this._ventasService.getTipoPago().subscribe(
       response =>{
         this.tipo_pago = response.tipo_pago
       }
