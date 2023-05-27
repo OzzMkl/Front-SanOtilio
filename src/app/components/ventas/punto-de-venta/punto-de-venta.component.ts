@@ -46,6 +46,7 @@ export class PuntoDeVentaComponent implements OnInit {
   public detallesCotiza:any;//ontederultimacotiza
   public productosdCotiza:any;
   public empresa:any;//getDetallesEmpresa
+  public tipo_venta: Array<any> = []; //getTiposVentas
   public productoEG:any;
   public userPermisos:any//loaduser
   public claveExt : string = '';//mostrarPrecios
@@ -102,7 +103,7 @@ export class PuntoDeVentaComponent implements OnInit {
     private _http: HttpClient,
     private messageService: MessageService ) {
     //declaramos modelos
-    this.ventag = new Ventag(0,0,2,'',1,null,0,0,0,0,'','',0);
+    this.ventag = new Ventag(0,0,1,'',1,null,0,0,0,0,'','',0);
     this.modeloCliente = new Cliente (0,'','','','','',0,1,0);
     this.cdireccion = new Cdireccion (0,'Mexico','Puebla','','','','','','',0,'',0,1,'');
     this.nuevaDir = new Cdireccion (0,'Mexico','Puebla','','','','','','',0,'',0,1,'');
@@ -113,6 +114,7 @@ export class PuntoDeVentaComponent implements OnInit {
   ngOnInit(): void { 
   this.loadUser();
   this.getDatosEmpresa();
+  this.getTiposVentas();
   }
 
   /**
@@ -126,6 +128,18 @@ export class PuntoDeVentaComponent implements OnInit {
             //console.log(this.empresa)
         }
       },error => {console.log(error);});
+  }
+
+  getTiposVentas(){
+    this._ventasService.getTipoVenta().subscribe(
+      response =>{
+        if(response.status == 'success'){
+          this.tipo_venta = response.tipo_venta;
+        }
+      }, error =>{
+        console.log(error);
+      }
+    );
   }
 
   /**
@@ -677,7 +691,7 @@ export class PuntoDeVentaComponent implements OnInit {
               }, error =>{
                 console.log(error);
               }
-            )
+            );
           }
           //console.log(response);
         }, error => {

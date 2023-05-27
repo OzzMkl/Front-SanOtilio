@@ -136,6 +136,12 @@
                     <label for="">TOTAL</label>
                     <input class="form-control" type="text" value="{{ventag.total | currency}}" readonly>
                 </div>
+                <div class="col-3">
+                    <label for="">TIPO VENTA</label>
+                    <select class="form-select" name="tipoventa" id="tipoventa" #tipoventa="ngModel" [(ngModel)]="ventag.idTipoVenta" ngModel required>
+                        <option *ngFor="let tipoV of tipo_venta" value="{{tipoV.idTipoVenta}}">{{tipoV.nombre}}</option>
+                    </select>
+                </div>
             </div>
         </div>
         <div class="col-2">
