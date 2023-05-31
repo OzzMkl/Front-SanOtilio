@@ -51,6 +51,7 @@ export class PuntoDeVentaComponent implements OnInit {
   public userPermisos:any//loaduser
   public claveExt : string = '';//mostrarPrecios
   public prod_med: Array<any> = [];//mostrarPrecios
+  public existenciasPorMed: Array<any> = [];//mostrarPrecios
   public imagenPM: string = '';//mostrarPrecios
   public isImage: boolean = false;//mostrarPrecios
   public idp: number = 0;//mostrarPrecios
@@ -972,6 +973,7 @@ export class PuntoDeVentaComponent implements OnInit {
       response =>{
         //console.log(response)
         this.prod_med = response.productoMedida;
+        this.existenciasPorMed = response.existencia_por_med;
         this.imagenPM = response.imagen;
         if(this.imagenPM == "" || this.imagenPM == null){
           this.imagenPM = "1650558444no-image.png";

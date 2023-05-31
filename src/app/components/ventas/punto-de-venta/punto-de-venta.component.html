@@ -1,5 +1,6 @@
 <p-toast></p-toast>
 <div class="container">
+    <!-- DATOS CLIENTE -->
     <div>
         <h4 class="text-center">DATOS DEL CLIENTE</h4>
         <div class="row align-items-start" >
@@ -611,37 +612,62 @@
 <!-- Modal medidas | precio de productos -->
 <ng-template #mProdMedidas let-modal>
     <div class="modal-header">
-        <h4 class="modal-title">Medidas del producto</h4>
+        <h4 class="modal-title">Medidas del producto: {{claveExt}}</h4>
         <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
     </div>
     <div class="modal-body">
         <div class=" row justify-content-center">
-            <div class="col-auto">
-                <img src="{{url + 'productos/getImageProduc/' + this.imagenPM}}" width="150px">
+            <div class="col-2">
+                <img src="{{url + 'productos/getImageProduc/' + this.imagenPM}}" width="100px">
             </div>
-            <div class="col-auto text-center">
+            <div class="col-5 text-center">
                 <table class="table table-secondary table-sm">
-                    <thead>
-                        <tr>
+                    <thead  >
+                        <!-- <tr>
                             <th colspan="6"><h6 class="fw-bold">{{claveExt}}</h6></th>
-                        </tr>
+                        </tr> -->
                         <tr>
-                            <th scope="col">MEDIDA</th>
-                            <th scope="col">PRECIO 1</th>
-                            <th scope="col">PRECIO 2</th>
-                            <th scope="col">PRECIO 3</th>
-                            <th scope="col">PRECIO 4</th>
-                            <th scope="col">PRECIO 5</th>
+                            <th scope="col">PREC.</th>
+                            <th *ngFor="let pm of prod_med" scope="row">{{pm.nombreMedida}}</th>
                         </tr>
                     </thead>
-                    <tbody *ngFor="let pm of prod_med">
+                    <tbody >
                         <tr>
-                            <th>{{pm.nombreMedida}}</th>
-                            <th>{{pm.precio1 | currency}}</th>
-                            <th>{{pm.precio2 | currency}}</th>
-                            <th>{{pm.precio3 | currency}}</th>
-                            <th>{{pm.precio4 | currency}}</th>
-                            <th>{{pm.precio5 | currency}}</th>
+                            <th scope="row">P1</th>
+                            <th *ngFor="let pm of prod_med" scope="row">{{pm.precio1 | currency}}</th>
+                        </tr>
+                        <tr>
+                            <th scope="row">P2</th>
+                            <th *ngFor="let pm of prod_med" scope="row">{{pm.precio2 | currency}}</th>
+                        </tr>
+                        <tr>
+                            <th scope="row">P3</th>
+                            <th *ngFor="let pm of prod_med" scope="row">{{pm.precio3 | currency}}</th>
+                        </tr>
+                        <tr>
+                            <th scope="row">P4</th>
+                            <th *ngFor="let pm of prod_med" scope="row">{{pm.precio4 | currency}}</th>
+                        </tr>
+                        <tr>
+                            <th scope="row">P5</th>
+                            <th *ngFor="let pm of prod_med" scope="row">{{pm.precio5 | currency}}</th>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <!-- TABLA EXISTENCIA -->
+            <div class="col-auto text-center">
+                <table class="table table-sm table-secondary">
+                    <thead>
+                        <tr>
+                            <th>EXISTENCIA</th>
+                            <th>MEDIDA</th>
+                        </tr>
+                    </thead>
+                    <tbody *ngFor="let e of existenciasPorMed">
+                        <tr>
+                            <th scope="col">{{e.exisCal}}</th>
+                            <th scope="col">{{e.nombreMedida}}</th>
                         </tr>
                     </tbody>
                 </table>
