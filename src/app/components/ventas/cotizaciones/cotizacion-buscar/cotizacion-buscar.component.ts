@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 //Servicios
 import { VentasService } from 'src/app/services/ventas.service';
 import { EmpresaService } from 'src/app/services/empresa.service';
 import { EmpleadoService } from 'src/app/services/empleado.service';
+import { global } from 'src/app/services/global';
 //NGBOOTSTRAP-modal
 import { NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
 //pdf
@@ -16,19 +18,20 @@ import autoTable from 'jspdf-autotable';
 })
 export class CotizacionBuscarComponent implements OnInit {
 
-  //cerrar modal
-  closeResult = '';
+ 
   //variable servicios
-  public cotizaciones:any;//getCotizaciones
+  public url:string = global.url; //globla import
+  public cotizaciones:Array<any> = [];//getCotizaciones
   public detallesCotiza:any;//getDetallesCotiza
   public productosdCotiza:any;//getDetallesCotiza
   public empresa:any;//getDetallesEmpresa
   public userPermisos:any//loadUser
   //paginador
   public totalPages:any;
-  public page:any;
+  public path: any;
   public next_page:any;
   public prev_page:any;
+  public itemsPerPage:any;
   public pageActual:any;
   public mpageActual:any;
   //pipe
@@ -38,8 +41,13 @@ export class CotizacionBuscarComponent implements OnInit {
   //spinner
   public isLoading: boolean = false;
   
-  constructor( private _ventasService: VentasService,private modalService: NgbModal,
-    private _empresaService: EmpresaService, private _empleadoService: EmpleadoService) { }
+  constructor(  private _ventasService: VentasService,
+                private modalService: NgbModal,
+                private _empresaService: EmpresaService,
+                private _empleadoService: EmpleadoService,
+                private _http: HttpClient) {
+
+                 }
 
   ngOnInit(): void {
     this.getCotizaciones();
@@ -50,20 +58,34 @@ export class CotizacionBuscarComponent implements OnInit {
   loadUser(){
     this.userPermisos = this._empleadoService.getPermisosModulo()
   }
+
   //obtenemos array con todas las cotizaciones
   getCotizaciones(){
+    //mostramos spinner
     this.isLoading = true;
+    //ejecutamos servicio
     this._ventasService.getIndexCotiza().subscribe( 
       response =>{
         if(response.status == 'success'){
-          this.cotizaciones = response.Cotizaciones;
+          //asignamos respuesta de datos
+          this.cotizaciones = response.Cotizaciones.data;
           //console.log(this.cotizaciones);
+
+          //navegacion de paginacion
+          this.totalPages = response.Cotizaciones.total;
+          this.itemsPerPage = response.Cotizaciones.per_page;
+          this.pageActual = response.Cotizaciones.current_page;
+          this.next_page = response.Cotizaciones.next_page_url;
+          this.path = response.Cotizaciones.path;
+
+          //Un vez terminado de cargar quitamos el spinner
           this.isLoading = false;
         }
       },error=>{
         console.log(error)
       });
   }
+  
   getDatosEmpresa(){
     this._empresaService.getDatosEmpresa().subscribe( 
       response => {
@@ -73,6 +95,7 @@ export class CotizacionBuscarComponent implements OnInit {
         }
       },error => {console.log(error)});
   }
+
   getDetallesCotiza(idCotiza:any){
     this._ventasService.getDetallesCotiza(idCotiza).subscribe( 
       response =>{
@@ -84,11 +107,44 @@ export class CotizacionBuscarComponent implements OnInit {
         console.log(error);
       });
   }
+
+   /**
+   * 
+   * @param page
+   * Es el numero de pagina a la cual se va acceder
+   * @description
+   * De acuerdo al numero de pagina recibido lo concatenamos a
+   * la direccion para "ir" a esa direccion y traer la informacion
+   * no retornamos ya que solo actualizamos las variables a mostrar
+   */
+   getPage(page:number) {
+    //mostramos el spinner
+    this.isLoading = true;
+
+    this._http.get(this.path+'?page='+page).subscribe(
+      (response:any) => {
+        this.cotizaciones = response.Cotizaciones.data;
+          //console.log(this.cotizaciones);
+
+          //navegacion de paginacion
+          this.totalPages = response.Cotizaciones.total;
+          this.itemsPerPage = response.Cotizaciones.per_page;
+          this.pageActual = response.Cotizaciones.current_page;
+          this.next_page = response.Cotizaciones.next_page_url;
+          this.path = response.Cotizaciones.path;
+
+        
+        //una vez terminado de cargar quitamos el spinner
+        this.isLoading = false;
+    })
+  }
+
   //ponemos vacio al cambiar entre tipo de busqueda
   seleccionTipoBusqueda(e:any){
     this.buscarFolio='';
     this.buscarNomC='';
   }
+
   generaPDF(){
     const doc = new jsPDF;
     //PARA LA TABAL DE PRODUCTOS
@@ -146,14 +202,16 @@ export class CotizacionBuscarComponent implements OnInit {
     //GUARDAMOS PDF
     doc.save("cotizacion-"+this.detallesCotiza[0]['idCotiza']+".pdf");
   }
+
   // Metodos del  modal
   open(content:any) {//abrir modal
     this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title', size: 'xl'}).result.then((result) => {
-      this.closeResult = `Closed with: ${result}`;
+      // this.closeResult = `Closed with: ${result}`;
     }, (reason) => {
-      this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+      // this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
     });
   }
+
   private getDismissReason(reason: any): string {//cerrarmodal
     if (reason === ModalDismissReasons.ESC) {
       return 'by pressing ESC';
