@@ -60,6 +60,10 @@ export class VentasService {
     return this._http.put(this.url+'cotizaciones/actualizaProductosCotizacion/'+idCotiza,params, {headers:this.headers} );
   }
 
+  getPDF(idCotiza:number):Observable<Blob>{
+    return this._http.get(this.url+'cotizaciones/generatePDF/'+ idCotiza, {responseType:'blob'});
+  }
+
   //VENTAS
   getIndexVentas():Observable<any>{
     return this._http.get(this.url+'ventas/indexVentas', {headers:this.headers} );
