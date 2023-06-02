@@ -202,16 +202,4 @@ export class ClienteBuscarComponent implements OnInit {
   ngOnDestroy(): void {
     this.getClienteSub.unsubscribe();
   }
-
-  /***EJEMPLO PDF */
-  // pdf(){
-  //   this._clienteService.getPDF().subscribe(
-  //     (pdf: Blob) =>{
-  //       const blob = new Blob([pdf], {type: 'application/pdf'});
-  //       const url = window.URL.createObjectURL(blob);
-  //       window.open(url)
-  //     }
-  //   )
-  // }
-  /***EJEMPLO PDF */
 }
