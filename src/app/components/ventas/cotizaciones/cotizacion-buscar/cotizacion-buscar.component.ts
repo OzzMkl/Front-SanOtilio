@@ -36,8 +36,6 @@ export class CotizacionBuscarComponent implements OnInit {
   public mpageActual:any;
   //pipe
   tipoBusqueda: number = 1;
-  buscarNomC ='';
-  buscarFolio='';
   //spinner
   public isLoading: boolean = false;
   
@@ -139,12 +137,6 @@ export class CotizacionBuscarComponent implements OnInit {
     })
   }
 
-  //ponemos vacio al cambiar entre tipo de busqueda
-  seleccionTipoBusqueda(e:any){
-    this.buscarFolio='';
-    this.buscarNomC='';
-  }
-
   generaPDF(){
     const doc = new jsPDF;
     //PARA LA TABAL DE PRODUCTOS
@@ -201,6 +193,16 @@ export class CotizacionBuscarComponent implements OnInit {
     //doc.autoPrint();
     //GUARDAMOS PDF
     doc.save("cotizacion-"+this.detallesCotiza[0]['idCotiza']+".pdf");
+  }
+
+  gettPDF(idCotiza:number){
+    this._ventasService.getPDF(idCotiza).subscribe(
+      (pdf: Blob) => {
+        const blob = new Blob([pdf], {type: 'application/pdf'});
+        const url = window.URL.createObjectURL(blob);
+        window.open(url);
+      }
+    );
   }
 
   // Metodos del  modal

@@ -4,16 +4,16 @@
 <div class="container-fluid">
     <div class="input-group mb-2">
         <div class="col-2">
-            <select class="form-select" name="tipoBusqueda" [(ngModel)]="tipoBusqueda" (ngModelChange)="seleccionTipoBusqueda($event)">
+            <select class="form-select" name="tipoBusqueda" [(ngModel)]="tipoBusqueda">
                 <option value="1" selected>Cliente</option>
                 <option value="2"># Folio</option>
             </select>
         </div>
         <div class="col" *ngIf="tipoBusqueda==1;">
-            <input type="text" class="form-control" name="buscarNomC" placeholder="Buscar . . ." [(ngModel)]="buscarNomC">
+            <input type="search" class="form-control" name="buscarNomC" placeholder="Buscar . . ." >
         </div>
         <div class="col" *ngIf="tipoBusqueda==2;">
-            <input type="text" class="form-control" name="bucarFolio" placeholder="Buscar . . ." [(ngModel)]="buscarFolio" pattern="[0-9]+">
+            <input type="search" class="form-control" name="bucarFolio" placeholder="Buscar . . ." pattern="[0-9]+">
         </div>
     </div>
     <br>
@@ -68,7 +68,7 @@
                     <input class="form-control" type="text" value="{{dc.created_at | date}}" readonly>
                 </div>
                 <div class="col" *ngFor="let permiso of userPermisos">
-                    <button *ngIf="permiso.pdf == 1" type="button" class="btn btn-secondary me-md-2" style="box-sizing: border-box;" (click)="generaPDF()"><i class="bi bi-file-earmark-pdf" ngbTooltip="PDF"></i><br></button>
+                    <button *ngIf="permiso.pdf == 1" type="button" class="btn btn-secondary me-md-2" style="box-sizing: border-box;" (click)="gettPDF(dc.idCotiza)"><i class="bi bi-file-earmark-pdf" ngbTooltip="PDF"></i><br></button>
                     <button *ngIf="permiso.editar == 1" type="button" class="btn btn-warning me-md-2" [routerLink]="['../cotizacion-editar',dc.idCotiza]" (click)="modal.dismiss('Cross click')" ngbTooltip="EDITAR"><i class="bi bi-pencil-square" ></i><br></button>
                 </div>
             </div>
