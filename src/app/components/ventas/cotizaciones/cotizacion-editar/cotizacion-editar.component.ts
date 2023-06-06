@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
 //servicios
 import { ClientesService } from 'src/app/services/clientes.service';
 import { ToastService } from 'src/app/services/toast.service';
@@ -14,6 +15,8 @@ import { Cliente } from 'src/app/models/cliente';
 import { Cdireccion } from 'src/app/models/cdireccion';
 //NGBOOTSTRAP-modal
 import { NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
+//primeng
+import { MessageService } from 'primeng/api';
 //pdf
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
@@ -23,7 +26,7 @@ import autoTable from 'jspdf-autotable';
   selector: 'app-cotizacion-editar',
   templateUrl: './cotizacion-editar.component.html',
   styleUrls: ['./cotizacion-editar.component.css'],
-  providers:[ProductoService]
+  providers:[ProductoService, MessageService]
 })
 export class CotizacionEditarComponent implements OnInit {
   
@@ -36,7 +39,7 @@ export class CotizacionEditarComponent implements OnInit {
   public productoVentag: Producto_ventasg;
   //variables servicios
   public empresa:any;//getDatosempresa
-  public clientes:any;
+  public clientes: Array<any> = [];
   public cliente:any;//getDetallesCliente
   public listaDireccionesC:any;
   public tipocliente :any;//gettipocliente
@@ -59,7 +62,10 @@ export class CotizacionEditarComponent implements OnInit {
   public isLoadingDatos: boolean = false;
   public isLoadingProductos: boolean = false;
   /**PAGINATOR */
+  public itemsPerPage: number = 0;
   public totalPages: any;
+  public totalPagesClientes: any;
+  public path: any;
   public page: any;
   public next_page: any;
   public prev_page: any;
@@ -69,7 +75,6 @@ export class CotizacionEditarComponent implements OnInit {
   //cerrar modal
   closeResult ='';
   //pipes
-  buscarCliente ='';
   seleccionado:number = 1;//para cambiar entre pipes de buscarProducto
   buscarProducto = '';//modal de buscar producto
   buscarProductoCE = '';//modal de buscar producto
@@ -78,7 +83,9 @@ export class CotizacionEditarComponent implements OnInit {
   constructor( private _clienteService: ClientesService, public toastService: ToastService,
                private _productoService: ProductoService, private _ventasService: VentasService,
                private _empleadoService: EmpleadoService, private _empresaService: EmpresaService,
-               private _route: ActivatedRoute, private modalService: NgbModal ) {
+               private _route: ActivatedRoute, private modalService: NgbModal,
+               private _http: HttpClient, 
+               private messageService: MessageService) {
                  this.cotizacion_editada = new Ventag(0,0,2,'',1,null,0,0,0,0,'','',0);
                  this.productos_cotizacion_e = [];
                  this.modeloCliente = new Cliente (0,'','','','','',0,1,0);
@@ -92,6 +99,7 @@ export class CotizacionEditarComponent implements OnInit {
     this.getDetallesCotiza();
     this.loadUser();
   }
+
   //TRAEMOS LOS DATOS DE LA COTIZACION
   getDetallesCotiza(){
     this.isLoadingDatos=true;
@@ -124,6 +132,7 @@ export class CotizacionEditarComponent implements OnInit {
       )
     });
   }
+
   //TRAEMOS LA INFORMACION DE LA EMPRESA / SUCURSAL
   getDatosEmpresa(){
     this._empresaService.getDatosEmpresa().subscribe( 
@@ -134,19 +143,32 @@ export class CotizacionEditarComponent implements OnInit {
         }
       },error => {console.log(error)});
   }
+
   //traemos informacion de todos los clientes
   getClientes(){
+    //Iniciamos spinner
     this.isLoadingClientes = true;
+    //ejecutamos servicio
     this._clienteService.getAllClientes().subscribe( 
       response =>{
         if(response.status == 'success'){
-          this.clientes = response.clientes;
+
+          this.clientes = response.clientes.data;
+
+          //navegacion de paginacion
+          this.totalPagesClientes = response.clientes.total;
+          this.itemsPerPage = response.clientes.per_page;
+          this.pageActual = response.clientes.current_page;
+          this.next_page = response.clientes.next_page_url;
+          this.path = response.clientes.path;
+
           this.isLoadingClientes = false;
         }
       }, error =>{
         console.log(error);
       });
   }
+
   //obtenemos los tipos de clientes para el select del modal para agregar nuevos clientes
   getTipocliente(){
     this._clienteService.getTipocliente().subscribe(
@@ -156,6 +178,7 @@ export class CotizacionEditarComponent implements OnInit {
         console.log(error);
       });
   }
+
    //cargamos la informacion selccionada a la propiedad de venta.dirCliente direccion del cliente
    seleccionarDireccion(direccion:any){
     this.cotizacion_editada.cdireccion=direccion;
@@ -186,6 +209,69 @@ export class CotizacionEditarComponent implements OnInit {
       console.log(error);
     });
   }
+
+  /**
+     * 
+     * @param page
+     * Es el numero de pagina a la cual se va acceder
+     * @description
+     * De acuerdo al numero de pagina recibido lo concatenamos a
+     * la direccion para "ir" a esa direccion y traer la informacion
+     * no retornamos ya que solo actualizamos las variables a mostrar
+     */
+  getPageClientes(page:number){
+    //iniciamos spinner
+    this.isLoadingClientes = true;
+
+    this._http.get(this.path+'?page='+page).subscribe(
+      (response:any) => {
+        //console.log(response);
+        this.clientes = response.clientes.data;
+        //navegacion paginacion
+        this.totalPagesClientes = response.clientes.total;
+        this.itemsPerPage = response.clientes.per_page;
+        this.pageActual = response.clientes.current_page;
+        this.next_page = response.clientes.next_page_url;
+        this.path = response.clientes.path
+
+        //una vez terminado quitamos el spinner
+        this.isLoadingClientes=false;
+      })
+  }
+
+  /**
+   * Buscar clientes por nombre
+   * @param nombreCliente 
+   */
+  searchNombreClienteS(nombreCliente: any){
+    //iniciamos spinner
+    this.isLoadingClientes = true;
+    if(nombreCliente.target.value == ''){
+      this.getClientes();
+    } else {
+      //declaramos la palabra
+      let nomCliente = nombreCliente.target.value;
+
+      //generamos conulta
+      this._clienteService.searchNombreCliente(nomCliente).subscribe(
+        response => {
+          if(response.status == 'success'){
+            this.clientes = response.clientes.data;
+            
+            //navegacion de paginacion
+            this.totalPagesClientes = response.clientes.total;
+            this.itemsPerPage = response.clientes.per_page;
+            this.pageActual = response.clientes.current_page;
+            this.next_page = response.clientes.next_page_url;
+            this.path = response.clientes.path;
+
+            //una vez terminado de cargar quitamos el spinner
+            this.isLoadingClientes = false;
+          }
+        } );
+    }
+  }
+
   //cargamos la informacion al modelo del producto que se selecciono con el click
   seleccionarProducto(idProducto:any){
     //console.log(idProducto);
@@ -270,6 +356,7 @@ export class CotizacionEditarComponent implements OnInit {
   
   
 }
+
 //guarda una nueva direccion
 guardarNuevaDireccion(){
   this.nuevaDir.idCliente = this.cotizacion_editada.idCliente;
@@ -284,6 +371,7 @@ guardarNuevaDireccion(){
   });
   //this.getDireccionCliente(this.ventag.idCliente);
 }
+
 calculaSubtotalPP(){
   if(this.productoVentag.precio < this.producto[0]['precioR']){
     this.toastService.show('El precio minimo permitido es de: $'+this.producto[0]['precioR'],{classname: 'bg-danger text-light', delay: 6000});
@@ -296,6 +384,7 @@ calculaSubtotalPP(){
     this.isSearch=false;
   }
 }
+
 //agregar producto a lista de ventas
 agregarProductoLista(){
   if( this.productoVentag.cantidad <= 0){
@@ -332,6 +421,7 @@ agregarProductoLista(){
   }
 
 }
+
 //editar/eliminar producto de la lista de compras
 editarProductoLista(dato:any){
   //buscamos el producto a eliminar para traer sus propiedades
@@ -360,10 +450,12 @@ editarProductoLista(dato:any){
       console.log(error);
     });
 }
+
 //traemos la informacion del usuario logeado
 loadUser(){
   this.identity = this._empleadoService.getIdentity();
 }
+
 //actualizamos la cotizacion
 actualizaCotizacion(){
   //asignamos el id del Empleado que realiza la operacion
@@ -397,6 +489,7 @@ actualizaCotizacion(){
   }
   console.log(this.cotizacion_editada)
 }
+
 generaPDF(){
 
   this._ventasService.getDetallesCotiza(this.cotizacion_editada.idCotiza).subscribe(
@@ -466,6 +559,7 @@ generaPDF(){
     }
   );
 }
+
   //modales
   open(content:any) {//abrir modal
     this.getClientes();
@@ -476,6 +570,7 @@ generaPDF(){
       this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
     });
   }
+
   modalSeEnvia(content:any){//abre modal para seleccionaar direccion del cliente
     //si el chek de se envia es true abrimos modal
     if(this.seEnvia == true){
@@ -487,6 +582,7 @@ generaPDF(){
       });
     }
   }
+
   modalAgregarDireccion(content:any){
     this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title', size: 'xl'}).result.then((result) => {
       this.closeResult = `Closed with: ${result}`;
@@ -494,6 +590,7 @@ generaPDF(){
       this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
     });
   }
+
   modalBuscarProducto(content:any){
     this.getProductos();
     this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title', size: 'xl'}).result.then((result) => {
@@ -502,6 +599,7 @@ generaPDF(){
       this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
     });
   }
+
    modalAlertaExistencia(content:any){
      let encontrado = this.productos_cotizacion_e.find(x => x.tieneStock == false);
      if(typeof(encontrado) == 'object' ){
@@ -515,6 +613,7 @@ generaPDF(){
        
      }
    }
+
   private getDismissReason(reason: any): string {//cerrarmodal
     if (reason === ModalDismissReasons.ESC) {
       return 'by pressing ESC';
@@ -524,6 +623,7 @@ generaPDF(){
       return `with: ${reason}`;
     }
   }
+
   cambioSeleccionado(e:any){//limpiamos los inputs del modal
     this.buscarProducto = '';
     this.buscarProductoCE = '';
