@@ -42,7 +42,7 @@ export class PuntoDeVentaComponent implements OnInit {
   public productos_medidas: Array<any> = [];
   public preciosArray: Array<any> = [];
   public identity: any;//loadUser
-  public UltimaCotizacion: any;//obtenerultimacotiza
+  public UltimaCotizacion: number = 0;//obtenerultimacotiza
   public detallesCotiza:any;//ontederultimacotiza
   public productosdCotiza:any;
   public empresa:any;//getDetallesEmpresa
@@ -589,23 +589,24 @@ export class PuntoDeVentaComponent implements OnInit {
   obtenerUltimaCotiza(){
     this._ventasService.getLastCotiza().subscribe(
       response =>{
-        console.log("consulta de cotizacion");
-        console.log(response);
+        
         if(response.status == 'success'){
           this.UltimaCotizacion = response.Cotizacion;
-          this._ventasService.getDetallesCotiza(this.UltimaCotizacion['idCotiza']).subscribe( 
-            response => {
-            this.detallesCotiza = response.Cotizacion;
-            this.productosdCotiza = response.productos_cotiza;
-            //console.log(this.productosdCotiza)
-            this.creaPDFcotizacion();
-          },error =>{
-            console.log(error)
-          });
+          this.generaPDF(this.UltimaCotizacion);
         }
       },error =>{
         console.log(error);
       });
+  }
+
+  generaPDF(idCotiza:number){
+    this._ventasService.getPDF(idCotiza).subscribe(
+      (pdf: Blob) => {
+        const blob = new Blob([pdf], {type: 'application/pdf'});
+        const url = window.URL.createObjectURL(blob);
+        window.open(url);
+      }
+    );
   }
 
   //CREACION DE PDF PARA COTIZACIONES
