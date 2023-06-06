@@ -5,7 +5,6 @@ import { ClientesService } from 'src/app/services/clientes.service';
 import { ProductoService } from 'src/app/services/producto.service';
 import { VentasService } from 'src/app/services/ventas.service';
 import { EmpleadoService } from 'src/app/services/empleado.service';
-import { EmpresaService } from 'src/app/services/empresa.service';
 import { global } from 'src/app/services/global';
 //modelos
 import { Ventag } from 'src/app/models/ventag';
@@ -16,9 +15,7 @@ import { Producto_ventasg } from 'src/app/models/productoVentag';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 //primeng
 import { MessageService } from 'primeng/api';
-//pdf
-import jsPDF from 'jspdf';
-import autoTable from 'jspdf-autotable';
+
 import { HttpClient } from '@angular/common/http';
 
 
@@ -43,9 +40,6 @@ export class PuntoDeVentaComponent implements OnInit {
   public preciosArray: Array<any> = [];
   public identity: any;//loadUser
   public UltimaCotizacion: number = 0;//obtenerultimacotiza
-  public detallesCotiza:any;//ontederultimacotiza
-  public productosdCotiza:any;
-  public empresa:any;//getDetallesEmpresa
   public tipo_venta: Array<any> = []; //getTiposVentas
   public productoEG:any;
   public userPermisos:any//loaduser
@@ -99,7 +93,6 @@ export class PuntoDeVentaComponent implements OnInit {
     private _productoService:ProductoService,
     private _ventasService: VentasService,
     private _empleadoService : EmpleadoService,
-    private _empresaService: EmpresaService,
     private _router:Router,
     private _http: HttpClient,
     private messageService: MessageService ) {
@@ -114,22 +107,10 @@ export class PuntoDeVentaComponent implements OnInit {
 
   ngOnInit(): void { 
   this.loadUser();
-  this.getDatosEmpresa();
   this.getTiposVentas();
   }
 
-  /**
-   * Trae la informacion de la empresa
-   */
-  getDatosEmpresa(){
-    this._empresaService.getDatosEmpresa().subscribe( 
-      response => {
-        if(response.status == 'success'){
-            this.empresa = response.empresa;
-            //console.log(this.empresa)
-        }
-      },error => {console.log(error);});
-  }
+  
 
   getTiposVentas(){
     this._ventasService.getTipoVenta().subscribe(
