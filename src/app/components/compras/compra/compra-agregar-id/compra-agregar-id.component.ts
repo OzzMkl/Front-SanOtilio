@@ -121,6 +121,9 @@ export class CompraAgregarIdComponent implements OnInit {
   //spinner
   public isLoading:boolean = false;
 
+  //contadores para los text area
+  conta: number =0;
+
   constructor(
     //declaracion de servicios
     private _proveedorService: ProveedorService,
@@ -327,7 +330,7 @@ export class CompraAgregarIdComponent implements OnInit {
     this.producto_compra.nombreMedida = this.medidaActualizada.nombreMedida;
 
     
-    if(this.producto_compra.cantidad < 0 || this.producto_compra.precio < 0 || this.producto_compra.subtotal < 0){
+    if(this.producto_compra.cantidad <= 0 || this.producto_compra.precio < 0 || this.producto_compra.subtotal < 0){
       this.toastService.show('No se pueden agregar productos con cantidad, precio o importe menor o igual a 0',{classname: 'bg-danger text-light', delay: 6000})
     }else if(this.producto_compra.idProducto == 0){
       this.toastService.show('Ese producto no existe',{classname: 'bg-danger text-light', delay: 6000})
@@ -584,11 +587,18 @@ export class CompraAgregarIdComponent implements OnInit {
     else if(this.compra.folioProveedor == 0){
       this.toastService.show('Falta ingresar el folio del proveedor',{classname: 'bg-danger text-light', delay: 6000});
     }
+    else if(this.Lista_compras.length == 0){
+      this.toastService.show('La lista de compras está vacía',{classname: 'bg-danger text-light', delay: 6000});
+    }
     else 
     {
       this.compra.fechaRecibo = this.model.year+'-'+this.model.month+'-'+this.model.day;//concatenamos la fecha del datepicker
       this.compra.idStatus = 1;
-      this.compra.facturable = this.facturableCheck;
+      if(this.facturableCheck == true){
+        this.compra.facturable = 1;
+      }else{
+        this.compra.facturable = 0;
+      }
       console.log(this.compra);
       this._compraService.registrerCompra(this.compra).subscribe(
       response =>{
@@ -818,5 +828,19 @@ export class CompraAgregarIdComponent implements OnInit {
      }
    )
  }
+
+   /**
+   * Omite el salto de linea del textarea de descripcion
+   * cuenta el numero de caracteres insertados
+   * @param event 
+   * omitimos los eventes de "enter""
+   */
+   omitirEnter(event:any){
+    this.conta = event.target.value.length;
+    if(event.which === 13){
+      event.preventDefault();
+      //console.log('prevented');
+    }
+  }
 
 }
