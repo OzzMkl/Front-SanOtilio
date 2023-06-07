@@ -8,71 +8,81 @@ import { global } from "./global";
 })
 export class VentasService {
 
-  public url: string;
+  public url: string = global.url;
+  public headers:any = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');
 
-  constructor( public _http: HttpClient) { this.url = global.url; }
+  constructor( public _http: HttpClient) {
 
-  getTipoventa():Observable<any>{
-    let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');
-    return this._http.get(this.url+'ventas/indexTP', {headers:headers} );
   }
+
+  getTipoPago():Observable<any>{
+    return this._http.get(this.url+'ventas/indexTP', {headers:this.headers} );
+  }
+
+  getTipoVenta():Observable<any>{
+    return this._http.get(this.url+'ventas/indexTipoVenta',{headers:this.headers});
+  }
+
   //COTIZACIONES
   getIndexCotiza():Observable<any>{
-    let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');
-    return this._http.get(this.url+'cotizaciones/indexCotizaciones', {headers:headers} );
+    return this._http.get(this.url+'cotizaciones/indexCotizaciones', {headers:this.headers} );
   }
+
   postCotizaciones(cotizacion:any):Observable<any>{
     let json = JSON.stringify(cotizacion);
-    let params = 'json='+json;
-    let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');//mandamos el json con las cabeceras para que obtengamos el token
-    return this._http.post(this.url+'cotizaciones/guardarCotizacion',params, {headers:headers} );
+    let params = 'json='+json;    
+    return this._http.post(this.url+'cotizaciones/guardarCotizacion',params, {headers:this.headers} );
   }
+
   postProductosCotiza(productosCotiza:any):Observable<any>{
     let json = JSON.stringify(productosCotiza);
     let params = 'json='+json;
-    let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');//mandamos el json con las cabeceras para que obtengamos el token
-    return this._http.post(this.url+'cotizaciones/guardarProductosCotiza',params, {headers:headers} );
+    return this._http.post(this.url+'cotizaciones/guardarProductosCotiza',params, {headers:this.headers} );
   }
+
   getLastCotiza():Observable<any>{
-    let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');
-    return this._http.get(this.url+'cotizaciones/consultaUltimaCotiza', {headers:headers} );
+    return this._http.get(this.url+'cotizaciones/consultaUltimaCotiza', {headers:this.headers} );
   }
+
   getDetallesCotiza(idCotiza:any):Observable<any>{
-    let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');
-    return this._http.get(this.url+'cotizaciones/detallesCotizacion/'+idCotiza, {headers:headers} );
+    return this._http.get(this.url+'cotizaciones/detallesCotizacion/'+idCotiza, {headers:this.headers} );
   }
+
   putCotizacion(idCotiza:any, cotizacion:any):Observable<any>{
     let json = JSON.stringify(cotizacion);
     let params = 'json='+json;
-    let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');//mandamos el json con las cabeceras para que obtengamos el token
-    return this._http.put(this.url+'cotizaciones/actualizaCotizacion/'+idCotiza,params, {headers:headers} );
+    return this._http.put(this.url+'cotizaciones/actualizaCotizacion/'+idCotiza,params, {headers:this.headers} );
   }
+
   putProductosCotiza(idCotiza:any, productosCotiza:any):Observable<any>{
     let json = JSON.stringify(productosCotiza);
     let params = 'json='+json;
-    let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');//mandamos el json con las cabeceras para que obtengamos el token
-    return this._http.put(this.url+'cotizaciones/actualizaProductosCotizacion/'+idCotiza,params, {headers:headers} );
+    return this._http.put(this.url+'cotizaciones/actualizaProductosCotizacion/'+idCotiza,params, {headers:this.headers} );
   }
+
+  getPDF(idCotiza:number):Observable<Blob>{
+    return this._http.get(this.url+'cotizaciones/generatePDF/'+ idCotiza, {responseType:'blob'});
+  }
+
   //VENTAS
   getIndexVentas():Observable<any>{
-    let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');
-    return this._http.get(this.url+'ventas/indexVentas', {headers:headers} );
+    return this._http.get(this.url+'ventas/indexVentas', {headers:this.headers} );
   }
+
   getDetallesVenta(idVenta:any):Observable<any>{
-    let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');
-    return this._http.get(this.url+'ventas/getDetallesVenta/'+idVenta, {headers:headers} );
+    return this._http.get(this.url+'ventas/getDetallesVenta/'+idVenta, {headers:this.headers} );
   }
+
   postVentas(ventasg:any):Observable<any>{
     let json = JSON.stringify(ventasg);
     let params = 'json='+json;
-    let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');
-    return this._http.post(this.url+'ventas/guardarVenta',params, {headers:headers});
+    return this._http.post(this.url+'ventas/guardarVenta',params, {headers:this.headers});
   }
+
   postProductosVentas(productosVenta:any):Observable<any>{
     let json = JSON.stringify(productosVenta);
     let params = 'json='+json;
-    let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');//mandamos el json con las cabeceras para que obtengamos el token
-    return this._http.post(this.url+'ventas/guardarProductosVenta',params, {headers:headers} );
+    return this._http.post(this.url+'ventas/guardarProductosVenta',params, {headers:this.headers} );
   }
 }
 

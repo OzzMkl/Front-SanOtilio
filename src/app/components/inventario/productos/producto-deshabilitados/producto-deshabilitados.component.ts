@@ -28,6 +28,7 @@ export class ProductoDeshabilitadosComponent implements OnInit {
   public url:string = global.url;
   public productos: Array<any> = [];
   public productosMedida: Array<any> = [];
+  public existenciasPorMed: Array<any> = [];
   public imagenPM: string = '';
   public claveExt: string ='';
   public isShow: boolean = false;
@@ -90,24 +91,30 @@ export class ProductoDeshabilitadosComponent implements OnInit {
     );
   }
 
-    /**
-   * Recinimos el id y lo buscamos en el sewrvicio
-   * @param idProducto
-   * 
-   * retornamos la consulta con las medias e imagen del producto
-   */
-    mostrarPrecios(idProducto:number,claveEx:string){
-      this.claveExt = claveEx;
-      this._productoService.searchProductoMedidaI(idProducto).subscribe(
-        response =>{
-          //console.log(response);
+  /**
+  * Recinimos el id y lo buscamos en el sewrvicio
+  * @param idProducto
+  * 
+  * retornamos la consulta con las medias e imagen del producto
+  */
+   mostrarPrecios(idProducto:number,claveEx:string){
+     this._productoService.searchProductoMedidaI(idProducto).subscribe(
+       response =>{
+         //console.log(response)
+         if(response.status == 'success'){
+          this.claveExt = response.Producto_cl;
           this.productosMedida = response.productoMedida;
+          this.existenciasPorMed = response.existencia_por_med;
           this.imagenPM = response.imagen;
-          this.isShow = true;
-      }, error =>{
-        console.log(error);
-      });
-    }
+          if(this.imagenPM == "" || this.imagenPM == null){
+            this.imagenPM = "1650558444no-image.png";
+          }
+         }
+         
+     }, error =>{
+       console.log(error);
+     });
+   }
 
   /**
    * 

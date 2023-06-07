@@ -1,5 +1,6 @@
 <p-toast></p-toast>
 <div class="container">
+    <!-- DATOS CLIENTE -->
     <div>
         <h4 class="text-center">DATOS DEL CLIENTE</h4>
         <div class="row align-items-start" >
@@ -135,6 +136,12 @@
                 <div class="col-3">
                     <label for="">TOTAL</label>
                     <input class="form-control" type="text" value="{{ventag.total | currency}}" readonly>
+                </div>
+                <div class="col-3">
+                    <label for="">TIPO VENTA</label>
+                    <select class="form-select" name="tipoventa" id="tipoventa" #tipoventa="ngModel" [(ngModel)]="ventag.idTipoVenta" ngModel required>
+                        <option *ngFor="let tipoV of tipo_venta" value="{{tipoV.idTipoVenta}}">{{tipoV.nombre}}</option>
+                    </select>
                 </div>
             </div>
         </div>
@@ -556,22 +563,15 @@
         <div >
             <div class="input-group mb-2">
                 <div class="col-2">
-                    <select name="" id="" class="form-select" name="seleccionado" [(ngModel)]="seleccionado">
-                        <option value="1" selected>DESCRIPCION</option>
-                        <option value="2">CLAVE EXTERNA</option>
-                        <option value="3">CODIGO DE BARRAS</option>
+                    <select name="" id="" class="form-select" name="seleccionado" [(ngModel)]="seleccionado" (ngModelChange)="selectBusqueda()">
+                        <option value="uno">DESCRIPCION</option>
+                        <option value="dos">CLAVE EXTERNA</option>
+                        <option value="tres">CODIGO DE BARRAS</option>
                     </select>
                 </div>
-                 <div class="col" *ngIf="seleccionado == 1; ">
-                    <input type="search" class="form-control" name="buscarProducto" placeholder=" Buscar ..." (keyup)="getSearchDescripcion($event)">
+                 <div class="col">
+                    <input type="search" class="form-control" name="buscar" placeholder=" Buscar ..." [(ngModel)]="buscar" (ngModelChange)="selectBusqueda()">
                 </div>
-                <div class="col" *ngIf="seleccionado == 2; ">
-                    <input type="text" class="form-control" name="buscarProductoCE" placeholder=" Buscar ..." (keyup)="getSearch($event)"> 
-                </div>
-                <div class="col" *ngIf="seleccionado == 3;  ">
-                    <input type="text" class="form-control" name="buscarProductoCbar" placeholder=" Buscar ..." (keyup)="getSearchCodbar($event)">
-                </div>
-                
             </div>
                 <br>
                 <div class="text-center text-primary" *ngIf="isLoadingProductos">
@@ -586,9 +586,8 @@
                         <th>CODIGO DE BARRAS</th>
                         <th>DESCRIPCION</th>
                         <th>MARCA</th>
-                        <th>PRECIOS</th>
-                        <th>MEDIDA</th>
-                        <th>EXISTENCIA</th>
+                        <th>DEPARTAMENTO</th>
+                        <!-- <th>CATEGORIA</th> -->
                     </tr>
                 </thead>
                 <tbody *ngFor="let pr of productos | paginate:{id:'pcModal',itemsPerPage: itemsPerPage, currentPage: pageActual2, totalItems:totalPages}">
@@ -597,9 +596,8 @@
                         <th scope="row">{{pr.cbarras}}</th>
                         <th scope="row">{{pr.descripcion}}</th>
                         <th scope="row">{{pr.nombreMarca}}</th>
-                        <th scope="row">PRECIO$$</th>
-                        <th scope="row">{{pr.nombreMedida}}</th>
-                        <th scope="row">{{pr.existenciaG}}</th>
+                        <th scope="row">{{pr.nombreDep}}</th>
+                        <!-- <th scope="row">{{pr.nombreCat}}</th> -->
                     </tr>
                 </tbody>
               </table>
@@ -614,37 +612,62 @@
 <!-- Modal medidas | precio de productos -->
 <ng-template #mProdMedidas let-modal>
     <div class="modal-header">
-        <h4 class="modal-title">Medidas del producto</h4>
+        <h4 class="modal-title">Medidas del producto: {{claveExt}}</h4>
         <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
     </div>
     <div class="modal-body">
         <div class=" row justify-content-center">
-            <div class="col-auto">
-                <img src="{{url + 'productos/getImageProduc/' + this.imagenPM}}" width="150px">
+            <div class="col-2">
+                <img src="{{url + 'productos/getImageProduc/' + this.imagenPM}}" width="100px">
             </div>
-            <div class="col-auto text-center">
+            <div class="col-5 text-center">
                 <table class="table table-secondary table-sm">
-                    <thead>
-                        <tr>
+                    <thead  >
+                        <!-- <tr>
                             <th colspan="6"><h6 class="fw-bold">{{claveExt}}</h6></th>
-                        </tr>
+                        </tr> -->
                         <tr>
-                            <th scope="col">MEDIDA</th>
-                            <th scope="col">PRECIO 1</th>
-                            <th scope="col">PRECIO 2</th>
-                            <th scope="col">PRECIO 3</th>
-                            <th scope="col">PRECIO 4</th>
-                            <th scope="col">PRECIO 5</th>
+                            <th scope="col">PREC.</th>
+                            <th *ngFor="let pm of prod_med" scope="row">{{pm.nombreMedida}}</th>
                         </tr>
                     </thead>
-                    <tbody *ngFor="let pm of prod_med">
+                    <tbody >
                         <tr>
-                            <th>{{pm.nombreMedida}}</th>
-                            <th>{{pm.precio1 | currency}}</th>
-                            <th>{{pm.precio2 | currency}}</th>
-                            <th>{{pm.precio3 | currency}}</th>
-                            <th>{{pm.precio4 | currency}}</th>
-                            <th>{{pm.precio5 | currency}}</th>
+                            <th scope="row">P1</th>
+                            <th *ngFor="let pm of prod_med" scope="row">{{pm.precio1 | currency}}</th>
+                        </tr>
+                        <tr>
+                            <th scope="row">P2</th>
+                            <th *ngFor="let pm of prod_med" scope="row">{{pm.precio2 | currency}}</th>
+                        </tr>
+                        <tr>
+                            <th scope="row">P3</th>
+                            <th *ngFor="let pm of prod_med" scope="row">{{pm.precio3 | currency}}</th>
+                        </tr>
+                        <tr>
+                            <th scope="row">P4</th>
+                            <th *ngFor="let pm of prod_med" scope="row">{{pm.precio4 | currency}}</th>
+                        </tr>
+                        <tr>
+                            <th scope="row">P5</th>
+                            <th *ngFor="let pm of prod_med" scope="row">{{pm.precio5 | currency}}</th>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <!-- TABLA EXISTENCIA -->
+            <div class="col-auto text-center">
+                <table class="table table-sm table-secondary">
+                    <thead>
+                        <tr>
+                            <th>EXISTENCIA</th>
+                            <th>MEDIDA</th>
+                        </tr>
+                    </thead>
+                    <tbody *ngFor="let e of existenciasPorMed">
+                        <tr>
+                            <th scope="col">{{e.exisCal}}</th>
+                            <th scope="col">{{e.nombreMedida}}</th>
                         </tr>
                     </tbody>
                 </table>

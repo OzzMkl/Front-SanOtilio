@@ -160,6 +160,10 @@ export class ProductoService{
     getExistenciaG(idProducto:any):Observable<any>{
         return this._http.get(this.url+'productos/getExistenciaG/'+idProducto, {headers:this.headers} );
     }
+
+    getExistenciaPorMed(idProducto:Number){
+        return this._http.get(this.url+'productos/existencia/'+idProducto,{headers:this.headers});
+    }
     
     /**
      * Busca los productos apartir de su clave externa

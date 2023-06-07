@@ -5,7 +5,6 @@ import { ClientesService } from 'src/app/services/clientes.service';
 import { ProductoService } from 'src/app/services/producto.service';
 import { VentasService } from 'src/app/services/ventas.service';
 import { EmpleadoService } from 'src/app/services/empleado.service';
-import { EmpresaService } from 'src/app/services/empresa.service';
 import { global } from 'src/app/services/global';
 //modelos
 import { Ventag } from 'src/app/models/ventag';
@@ -16,9 +15,7 @@ import { Producto_ventasg } from 'src/app/models/productoVentag';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 //primeng
 import { MessageService } from 'primeng/api';
-//pdf
-import jsPDF from 'jspdf';
-import autoTable from 'jspdf-autotable';
+
 import { HttpClient } from '@angular/common/http';
 
 
@@ -42,14 +39,13 @@ export class PuntoDeVentaComponent implements OnInit {
   public productos_medidas: Array<any> = [];
   public preciosArray: Array<any> = [];
   public identity: any;//loadUser
-  public UltimaCotizacion: any;//obtenerultimacotiza
-  public detallesCotiza:any;//ontederultimacotiza
-  public productosdCotiza:any;
-  public empresa:any;//getDetallesEmpresa
+  public UltimaCotizacion: number = 0;//obtenerultimacotiza
+  public tipo_venta: Array<any> = []; //getTiposVentas
   public productoEG:any;
   public userPermisos:any//loaduser
   public claveExt : string = '';//mostrarPrecios
   public prod_med: Array<any> = [];//mostrarPrecios
+  public existenciasPorMed: Array<any> = [];//mostrarPrecios
   public imagenPM: string = '';//mostrarPrecios
   public isImage: boolean = false;//mostrarPrecios
   public idp: number = 0;//mostrarPrecios
@@ -67,10 +63,8 @@ export class PuntoDeVentaComponent implements OnInit {
   pageActual3: number = 1;
   //pipes de busqueda en modal
   buscarCliente ='';//modal cliente
-  seleccionado:number = 1;//para cambiar entre pipes de buscarProducto
-  buscarProducto = '';//modal de buscar producto
-  buscarProductoCE = '';//modal de buscar producto
-  buscarProductoCbar : number = 0;//modal de buscar producto
+  seleccionado:string = 'uno';//para cambiar entre pipes de buscarProducto
+  buscar = '';//modal de buscar producto
   //modelos
   public ventag: Ventag;
   public modeloCliente: Cliente;
@@ -99,12 +93,11 @@ export class PuntoDeVentaComponent implements OnInit {
     private _productoService:ProductoService,
     private _ventasService: VentasService,
     private _empleadoService : EmpleadoService,
-    private _empresaService: EmpresaService,
     private _router:Router,
     private _http: HttpClient,
     private messageService: MessageService ) {
     //declaramos modelos
-    this.ventag = new Ventag(0,0,2,'',1,null,0,0,0,0,'','',0);
+    this.ventag = new Ventag(0,0,1,'',1,null,0,0,0,0,'','',0);
     this.modeloCliente = new Cliente (0,'','','','','',0,1,0);
     this.cdireccion = new Cdireccion (0,'Mexico','Puebla','','','','','','',0,'',0,1,'');
     this.nuevaDir = new Cdireccion (0,'Mexico','Puebla','','','','','','',0,'',0,1,'');
@@ -114,20 +107,21 @@ export class PuntoDeVentaComponent implements OnInit {
 
   ngOnInit(): void { 
   this.loadUser();
-  this.getDatosEmpresa();
+  this.getTiposVentas();
   }
 
-  /**
-   * Trae la informacion de la empresa
-   */
-  getDatosEmpresa(){
-    this._empresaService.getDatosEmpresa().subscribe( 
-      response => {
+  
+
+  getTiposVentas(){
+    this._ventasService.getTipoVenta().subscribe(
+      response =>{
         if(response.status == 'success'){
-            this.empresa = response.empresa;
-            //console.log(this.empresa)
+          this.tipo_venta = response.tipo_venta;
         }
-      },error => {console.log(error);});
+      }, error =>{
+        console.log(error);
+      }
+    );
   }
 
   /**
@@ -576,82 +570,24 @@ export class PuntoDeVentaComponent implements OnInit {
   obtenerUltimaCotiza(){
     this._ventasService.getLastCotiza().subscribe(
       response =>{
-        console.log("consulta de cotizacion");
-        console.log(response);
+        
         if(response.status == 'success'){
           this.UltimaCotizacion = response.Cotizacion;
-          this._ventasService.getDetallesCotiza(this.UltimaCotizacion['idCotiza']).subscribe( 
-            response => {
-            this.detallesCotiza = response.Cotizacion;
-            this.productosdCotiza = response.productos_cotiza;
-            //console.log(this.productosdCotiza)
-            this.creaPDFcotizacion();
-          },error =>{
-            console.log(error)
-          });
+          this.generaPDF(this.UltimaCotizacion);
         }
       },error =>{
         console.log(error);
       });
   }
 
-  //CREACION DE PDF PARA COTIZACIONES
-  creaPDFcotizacion(){
-    const doc = new jsPDF;
-    //PARA LA TABAL DE PRODUCTOS
-    var cabeceras = ["CLAVE EXTERNA","DESCRIPCION","MEDIDA","PRECIO","CANTIDAD","DESCUENTO","SUBTOTAL"];
-    var rows:any = [];
-    var logo = new Image();//CREAMOS VARIABLE DONDE ASIGNAREMOS LA IMAGEN
-    logo.src = 'assets/images/logo-solo.png';//ASIGNAMOS LA UBICACION DE LA IMAGEN
-
-    // variable con logo, tipo x1,y1, ancho, largo
-    doc.addImage(logo,'PNG',10,9,25,25);
-    doc.setDrawColor(255, 145, 0);//AGREGAMOS COLOR NARANJA A LAS LINEAS
-    //          tipografia       tamaño letra       texto                                        x1,y1
-    doc.setFont('Helvetica').setFontSize(18).text('MATERIALES PARA CONSTRUCCION \"SAN OTILIO\"', 40,15);
-    doc.setFont('Helvetica').setFontSize(9).text(this.empresa[0]['nombreCorto']+': COLONIA '+this.empresa[0]['colonia']+', CALLE '+ this.empresa[0]['calle']+' #'+this.empresa[0]['numero']+', '+this.empresa[0]['ciudad']+', '+this.empresa[0]['estado'], 45,20);
-    doc.setFont('Helvetica').setFontSize(9).text('CORREOS: '+this.empresa[0]['correo1']+', '+this.empresa[0]['correo2'],60,25);
-    doc.setFont('Helvetica').setFontSize(9).text('TELEFONOS: '+this.empresa[0]['telefono']+' ó '+this.empresa[0]['telefono2']+'   RFC: '+this.empresa[0]['rfc'],68,30);
-    //           ancho linea   x1,y1  x2,y2
-    doc.setLineWidth(2.5).line(10,37,200,37);//colocacion de linea
-    doc.setLineWidth(5).line(10,43,55,43);//colocacion de linea
-    //          TIPOGRAFIA  NEGRITA O NORMAL  TAMAÑO        TEXTO      CONCATENAMOS                          X1,Y1     
-    doc.setFont('Helvetica','bold').setFontSize(12).text('COTIZACION #'+this.detallesCotiza[0]['idCotiza'], 12,45);
-    doc.setFont('Helvetica','normal').setFontSize(9).text('VENDEDOR: '+this.detallesCotiza[0]['nombreEmpleado'].toUpperCase(), 60,45);
-    doc.setFont('Helvetica','normal').setFontSize(9).text('FECHA: '+this.detallesCotiza[0]['created_at'].substring(0,10), 170,45);
-    doc.setLineWidth(2.5).line(10,50,200,50);//colocacion de linea
-    doc.setFont('Helvetica','normal').setFontSize(9).text('CLIENTE: '+this.detallesCotiza[0]['nombreCliente'], 10,55);
-    doc.setFont('Helvetica','normal').setFontSize(9).text('RFC: '+this.detallesCotiza[0]['clienteRFC'], 165,55);
-    //          TIPOGRAFIA  NEGRITA O NORMAL  TAMAÑO        TEXTO      CONCATENAMOS                          X1,Y1   PONEMOS TEXTO JUSTIFICADO    ENTRE        ANCHO MAXIMO
-    doc.setFont('Helvetica','normal').setFontSize(9).text('DIRECCION: '+this.detallesCotiza[0]['cdireccion'], 10,60,{align: 'justify',lineHeightFactor: 1.5,maxWidth:190});
-    ///
-    //doc.setFont('Helvetica','normal').setFontSize(9).text('TELEFONO: 0000000000', 10,70);
-    doc.setFont('Helvetica','normal').setFontSize(9).text('EMAIL: '+this.detallesCotiza[0]['clienteCorreo'], 10,70);
-    doc.setFont('Helvetica','normal').setFontSize(9).text('TIPO CLIENTE: '+this.detallesCotiza[0]['tipocliente'], 100,70);
-    doc.setLineWidth(2.5).line(10,75,200,75);//colocacion de linea
-    //recorremos los productos
-    this.productosdCotiza.forEach((element:any) =>{
-      var temp = [element.claveEx,element.descripcion,element.nombreMedida,element.precio,element.cantidad,element.descuento,element.subtotal];
-      rows.push(temp);
-    });
-    //generamos la tabla
-    autoTable(doc,{ head:[cabeceras],
-      body:rows, startY:80 });
-      //OBTEMOS DONDE FINALIZA LA TABLA CREADA
-      let posY = (doc as any).lastAutoTable.finalY;
-      //         TIPOLETRA  NEGRITA O NORMAL     TAMAÑO                                                               X1, POSICION FINAL DE LA TABLA + 10
-      doc.setFont('Helvetica','normal').setFontSize(9).text('SUBTOTAL:          $'+this.detallesCotiza[0]['subtotal'], 145,posY+10);
-      doc.setFont('Helvetica','normal').setFontSize(9).text('DESCUENTO:      $'+this.detallesCotiza[0]['descuento'], 145,posY+15);
-      doc.setFont('Helvetica','normal').setFontSize(9).text('TOTAL:                 $'+this.detallesCotiza[0]['total'], 145,posY+20);
-      doc.setFont('Helvetica','bold').setFontSize(9).text('*** TODOS LOS PRECIOS SON NETOS ***', 140,posY+25);
-
-      doc.setFont('Helvetica','normal').setFontSize(9).text('OBSERVACIONES: '+this.detallesCotiza[0]['observaciones'], 10,posY+32,{align: 'left',lineHeightFactor: 1.5,maxWidth:180});
-      doc.setDrawColor(255, 145, 0);//AGREGAMOS COLOR NARANJA A LAS LINEAS
-      doc.setLineWidth(5).line(10,posY+47,200,posY+47);//colocacion de linea
-      doc.setFont('Helvetica','bold').setFontSize(9).text('*** PRECIOS SUJETOS A CAMBIOS SIN PREVIO AVISO ***', 60,posY+48);
-    //doc.autoPrint();
-    //GUARDAMOS PDF
-    doc.save("cotizacion-"+this.detallesCotiza[0]['idCotiza']+".pdf");
+  generaPDF(idCotiza:number){
+    this._ventasService.getPDF(idCotiza).subscribe(
+      (pdf: Blob) => {
+        const blob = new Blob([pdf], {type: 'application/pdf'});
+        const url = window.URL.createObjectURL(blob);
+        window.open(url);
+      }
+    );
   }
 
   creaVenta(){
@@ -679,7 +615,7 @@ export class PuntoDeVentaComponent implements OnInit {
               }, error =>{
                 console.log(error);
               }
-            )
+            );
           }
           //console.log(response);
         }, error => {
@@ -780,13 +716,7 @@ export class PuntoDeVentaComponent implements OnInit {
       this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
     });
   }
-
-  cambioSeleccionado(e:any){//limpiamos los inputs del modal
-    this.buscarProducto = '';
-    this.buscarProductoCE = '';
-    this.buscarProductoCbar = 0;
-  }
-
+  
   /**
   * 
   * @param descripcion 
@@ -795,21 +725,13 @@ export class PuntoDeVentaComponent implements OnInit {
   * Recibe los valores del Keyup, luego buscamos y actualizamos
   * los datos que se muestran en la tabla
   */
-  getSearchDescripcion(descripcion:any){
+  getSearchDescripcion(descripcion:string){
    
      //mostramos el spinner
      this.isLoadingProductos = true;
 
-     //si es vacio volvemos a llamar la primera funcion que trae todo
-     if(descripcion.target.value == ''){
-       this.getProductos();
-     }
-
-     //componemos el codigo a buscar
-     this.buscarProducto = descripcion.target.value;
-
      //llamamos al servicio
-     this._productoService.searchDescripcion(this.buscarProducto).subscribe(
+     this._productoService.searchDescripcion(descripcion).subscribe(
        response =>{
            if(response.status == 'success'){
              //asignamos datos a varibale para poder mostrarla en la tabla
@@ -840,21 +762,13 @@ export class PuntoDeVentaComponent implements OnInit {
    * Recibe los valores del evento keyup, luego busca y actualiza
    * los datos que se muestran en la tabla
    */
-  getSearchCodbar(codbar:any){
+  getSearchCodbar(codbar:number){
 
     //mostramos el spinner
     this.isLoadingProductos = true;
 
-    //si es vacio volvemos a llamar la primera funcion que trae todo
-    if(codbar.target.value == ''){
-      this.getProductos();
-    }
-
-    //componemos el codigo a buscar
-    this.buscarProductoCbar = codbar.target.value;
-
     //llamamos al servicio
-    this._productoService.searchCodbar(this.buscarProductoCbar).subscribe(
+    this._productoService.searchCodbar(codbar).subscribe(
       response =>{
           if(response.status == 'success'){
             //asignamos datos a varibale para poder mostrarla en la tabla
@@ -885,20 +799,13 @@ export class PuntoDeVentaComponent implements OnInit {
    * Recibe los valores del evento keyUp, luego busca y actualiza
    * los datos de la tabla
    */
-  getSearch(claveExterna:any){
+  getSearch(claveExterna:string){
 
     //mostramos el spinner 
     this.isLoadingProductos = true;
 
-    //si es vacio volvemos a llamar la primera funcion
-    if(claveExterna.target.value == ''){
-      this.getProductos();
-    }
-    //componemos la palabra
-    this.buscarProducto = claveExterna.target.value;
-
     //generamos consulta
-    this._productoService.searchClaveExterna(this.buscarProducto).subscribe(
+    this._productoService.searchClaveExterna(claveExterna).subscribe(
       response =>{
           if(response.status == 'success'){
 
@@ -921,6 +828,34 @@ export class PuntoDeVentaComponent implements OnInit {
       }
     )
   }
+/**
+ * @description
+ * Obtiene la informacion del input y busca
+ */
+  selectBusqueda(){
+  
+    if(this.buscar == "" || null){
+     
+      this.getProductos();
+   } else{
+     
+     switch(this.seleccionado){
+       case "uno":
+            this.getSearchDescripcion(this.buscar);
+         break;
+       case "dos":
+            this.getSearch(this.buscar);
+         break;
+       case "tres":
+            this.getSearchCodbar(parseInt(this.buscar));
+         break;
+       default:
+         console.log('default tp'+this.seleccionado)
+          break;
+      }
+    }//finelse
+    
+ }//finFunction
 
   /**
    * @description
@@ -961,6 +896,7 @@ export class PuntoDeVentaComponent implements OnInit {
       response =>{
         //console.log(response)
         this.prod_med = response.productoMedida;
+        this.existenciasPorMed = response.existencia_por_med;
         this.imagenPM = response.imagen;
         if(this.imagenPM == "" || this.imagenPM == null){
           this.imagenPM = "1650558444no-image.png";

@@ -1,3 +1,4 @@
+<p-toast></p-toast>
 <div class="container">
   <form class="form-group" #aProd="ngForm" (ngSubmit)="submit(aProd)">
     
@@ -51,7 +52,7 @@
         <label for="descripcion" class="form-label">Descripcion *</label>
         <textarea class="form-control" id="descripcion" rows="2" maxlength="254" 
                   name="descripcion" #descripcion="ngModel" [(ngModel)]="producto.descripcion"
-                  (keydown)="omitirEnter($event)" required >
+                  (input)="omitirEnter($event)" required >
         </textarea>
         <span class="justify-content-md-end">{{conta}}/254</span>
         <div [hidden]="descripcion.valid || descripcion.pristine" class="alert alert-danger">
@@ -62,7 +63,7 @@
         <label for="ubicacion" class="form-label">Ubicacion *</label>
         <textarea class="form-control" id="ubicacion" rows="2" maxlength="150" 
                   name="ubicacion" #ubicacion="ngModel" [(ngModel)]="producto.ubicacion"
-                  (keydown)="omitirEnterUbicacion($event)" required >
+                  (input)="omitirEnter($event)" required >
         </textarea>
         <span> {{contaUbi}}/150</span>
         <div [hidden]="ubicacion.valid || ubicacion.pristine" class="alert alert-danger">
@@ -186,7 +187,7 @@
         <label for="clavesat" class="form-label">Clave sat</label>
         <div class="input-group mb-3">
           <button class="btn btn-outline-secondary" type="button" id="button-addonSeaarch" (click)="open(buscarClaveSat)"><i class="bi bi-search"></i></button>
-          <input type="number" class="form-control" id="clavesat" name="claveSat" #claveSat="ngModel" [(ngModel)]="producto.claveSat"pattern="^[0-9]+" min="1"disabled>
+          <input type="number" class="form-control" id="clavesat" name="claveSat" #claveSat="ngModel" [(ngModel)]="producto.claveSat" pattern="^[0-9]+" min="1" disabled>
         </div>
       </div>
 
@@ -253,12 +254,12 @@
               <th>5</th>
               <th>
                 <input class="form-control" type="number" name="porcentaje5" id="porcentaje5" 
-                        #porcentaje5="ngModel" [(ngModel)]="datosTab1.porcentaje5" min="1"
+                        #porcentaje5="ngModel" [(ngModel)]="datosTab1.porcentaje5" min="0.1"
                         (change)="calculaMonto($event)" required>
               </th>
               <th>
                 <input class="form-control" type="number" name="precio5" id="precio5"
-                        #precio5="ngModel" [(ngModel)]="datosTab1.precio5" min="1"
+                        #precio5="ngModel" [(ngModel)]="datosTab1.precio5" min="0.1"
                          (change)="calculaPorcentaje($event)" required>
               </th>
             </tr>
@@ -266,12 +267,12 @@
               <th>4</th>
               <th>
                 <input class="form-control" type="number" name="porcentaje4" id="porcentaje4" 
-                        #porcentaje4="ngModel" [(ngModel)]="datosTab1.porcentaje4" min="1"
+                        #porcentaje4="ngModel" [(ngModel)]="datosTab1.porcentaje4" min="0.1"
                         (change)="calculaMonto($event)" required>
               </th>
               <th>
                 <input class="form-control" type="number" name="precio4" id="precio4"
-                        #precio4="ngModel" [(ngModel)]="datosTab1.precio4" min="1"
+                        #precio4="ngModel" [(ngModel)]="datosTab1.precio4" min="0.1"
                          (change)="calculaPorcentaje($event)" required>
               </th>
             </tr>
@@ -279,12 +280,12 @@
               <th>3</th>
               <th>
                 <input class="form-control" type="number" name="porcentaje3" id="porcentaje3" 
-                        #porcentaje3="ngModel" [(ngModel)]="datosTab1.porcentaje3" min="1"
+                        #porcentaje3="ngModel" [(ngModel)]="datosTab1.porcentaje3" min="0.1"
                         (change)="calculaMonto($event)" required>
               </th>
               <th>
                 <input class="form-control" type="number" name="precio3" id="precio3"
-                        #precio3="ngModel" [(ngModel)]="datosTab1.precio3" min="1"
+                        #precio3="ngModel" [(ngModel)]="datosTab1.precio3" min="0.1"
                          (change)="calculaPorcentaje($event)" required>
               </th>
             </tr>
@@ -292,12 +293,12 @@
               <th>2</th>
               <th>
                 <input class="form-control" type="number" name="porcentaje2" id="porcentaje2" 
-                        #porcentaje2="ngModel" [(ngModel)]="datosTab1.porcentaje2" min="1"
+                        #porcentaje2="ngModel" [(ngModel)]="datosTab1.porcentaje2" min="0.1"
                         (change)="calculaMonto($event)" required>
               </th>
               <th>
                 <input class="form-control" type="number" name="precio2" id="precio2"
-                        #precio2="ngModel" [(ngModel)]="datosTab1.precio2" min="1"
+                        #precio2="ngModel" [(ngModel)]="datosTab1.precio2" min="0.1"
                          (change)="calculaPorcentaje($event)" required>
               </th>
             </tr>
@@ -305,12 +306,12 @@
               <th>1</th>
               <th>
                 <input  class="form-control" type="number" name="porcentaje1" id="porcentaje1" 
-                        #porcentaje1="ngModel" [(ngModel)]="datosTab1.porcentaje1" min="1" 
+                        #porcentaje1="ngModel" [(ngModel)]="datosTab1.porcentaje1" min="0.1" 
                         (change)="calculaMonto($event)" required>
               </th>
               <th><!--[ngClass]="{'is-invalid':ksks}"-->
                 <input  class="form-control"  type="number" name="precio1" id="precio1"
-                        #precio1="ngModel" [(ngModel)]="datosTab1.precio1" min="1"
+                        #precio1="ngModel" [(ngModel)]="datosTab1.precio1" min="0.1"
                          (change)="calculaPorcentaje($event)" required>
               </th>
               
