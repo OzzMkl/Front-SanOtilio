@@ -72,6 +72,8 @@ export class OrdencompraAgregarComponent implements OnInit {
   model!: NgbDateStruct;
   //variable para el pdf
   public fecha : Date = new Date();
+  //contadores para los text area
+  conta: number =0;
 
   constructor( private _proveedorService: ProveedorService,
       private _http: HttpClient,
@@ -506,6 +508,20 @@ export class OrdencompraAgregarComponent implements OnInit {
 
   this.isSearch = false;
 } 
+
+  /**
+   * Omite el salto de linea del textarea de descripcion
+   * cuenta el numero de caracteres insertados
+   * @param event 
+   * omitimos los eventes de "enter""
+   */
+  omitirEnter(event:any){
+    this.conta = event.target.value.length;
+    if(event.which === 13){
+      event.preventDefault();
+      //console.log('prevented');
+    }
+  }
 
 
 }

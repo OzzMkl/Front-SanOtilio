@@ -74,6 +74,9 @@ pageActual2: number = 0;
 //spinner
   public isLoading:boolean = false;
 
+//contadores para los text area
+  conta: number =0;
+
   constructor(
     //declaracion de servicios
     private _proveedorService: ProveedorService,
@@ -538,6 +541,18 @@ pageActual2: number = 0;
    )
  }
 
-
+ /**
+   * Omite el salto de linea del textarea de descripcion
+   * cuenta el numero de caracteres insertados
+   * @param event 
+   * omitimos los eventes de "enter""
+   */
+ omitirEnter(event:any){
+  this.conta = event.target.value.length;
+  if(event.which === 13){
+    event.preventDefault();
+    //console.log('prevented');
+  }
+}
 
 }
