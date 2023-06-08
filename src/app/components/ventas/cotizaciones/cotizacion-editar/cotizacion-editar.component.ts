@@ -71,14 +71,12 @@ export class CotizacionEditarComponent implements OnInit {
   public prev_page: any;
   pagePV: number = 1;
   pageActual: number =1;//modal clientes
-  pageActual2: number =1;//modal clientes
+  pageActual2: number =1;//modal productos
   //cerrar modal
   closeResult ='';
   //pipes
-  seleccionado:number = 1;//para cambiar entre pipes de buscarProducto
-  buscarProducto = '';//modal de buscar producto
-  buscarProductoCE = '';//modal de buscar producto
-  buscarProductoCbar = '';//modal de buscar producto
+  seleccionado:string = 'uno';//para cambiar entre pipes de buscarProducto
+  buscarProducto:any;//modal de buscar producto
 
   constructor( private _clienteService: ClientesService, public toastService: ToastService,
                private _productoService: ProductoService, private _ventasService: VentasService,
@@ -183,6 +181,7 @@ export class CotizacionEditarComponent implements OnInit {
    seleccionarDireccion(direccion:any){
     this.cotizacion_editada.cdireccion=direccion;
   }
+
    //obtener direcciones del cliente si es que se envia la venta
    getDireccionCliente(idCliente:any){
     this._clienteService.getDireccionCliente(idCliente).subscribe( 
@@ -195,19 +194,48 @@ export class CotizacionEditarComponent implements OnInit {
         console.log(error);
       });
     }
+
     //obtenemos todos los productos
   getProductos(){
+    //mostramos spinner de carga
     this.isLoadingProductos=true;
+    //ejecutamos el servicio
     this._productoService.getProductosPV().subscribe( 
       response => {
         if(response.status == 'success'){
-          this.productos = response.productos;
+          this.productos = response.productos.data;
           //console.log(response);
+
+          //navegacion de paginacion
+          this.totalPages = response.productos.total;
+          this.itemsPerPage = response.productos.per_page;
+          this.pageActual2 = response.productos.current_page;
+          this.path = response.productos.path;
+
           this.isLoadingProductos = false;
         }
       }, error =>{
       console.log(error);
     });
+  }
+
+  getPageProductos(page:number){
+    //cargamos spinner
+    this.isLoadingProductos = true;
+    //ejecutamos servicio
+    this._http.get(this.path+ '?page='+ page).subscribe(
+      (response:any) =>{
+        this.productos = response.productos.data;
+        this.totalPages = response.productos.total;
+        this.itemsPerPage = response.productos.per_page;
+        this.pageActual2 = response.productos.current_page;
+        this.next_page = response.productos.next_page_url;
+        this.path = response.productos.path;
+
+        //quitamos spinner
+        this.isLoadingProductos = false;
+      }
+    );
   }
 
   /**
@@ -271,6 +299,118 @@ export class CotizacionEditarComponent implements OnInit {
         } );
     }
   }
+
+  /**
+  * 
+  * @param descripcion 
+  * Recibimos el evento del input
+  * @description
+  * Recibe los valores del Keyup, luego buscamos y actualizamos
+  * los datos que se muestran en la tabla
+  */
+  getSearchDescripcion(descripcion:string){
+   
+    //mostramos el spinner
+    this.isLoadingProductos = true;
+
+    //llamamos al servicio
+    this._productoService.searchDescripcion(descripcion).subscribe(
+      response =>{
+          if(response.status == 'success'){
+            //asignamos datos a varibale para poder mostrarla en la tabla
+            this.productos = response.productos.data;
+            //console.log(this.productos)
+
+            //navegacion paginacion
+            this.totalPages = response.productos.total;
+            this.itemsPerPage = response.productos.per_page;
+            this.pageActual = response.productos.current_page;
+            this.next_page = response.productos.next_page_url;
+            this.path = response.productos.path
+            
+            //una ves terminado de cargar quitamos el spinner
+            this.isLoadingProductos = false;
+          }
+      }, error => {
+        console.log(error)
+      }
+    )
+ }
+
+ /**
+   * 
+   * @param codbar 
+   * Recibimos el evento del input
+   * @description
+   * Recibe los valores del evento keyup, luego busca y actualiza
+   * los datos que se muestran en la tabla
+   */
+ getSearchCodbar(codbar:number){
+
+  //mostramos el spinner
+  this.isLoadingProductos = true;
+
+  //llamamos al servicio
+  this._productoService.searchCodbar(codbar).subscribe(
+    response =>{
+        if(response.status == 'success'){
+          //asignamos datos a varibale para poder mostrarla en la tabla
+          this.productos = response.productos.data;
+          //console.log(this.productos)
+
+          //navegacion paginacion
+          this.totalPages = response.productos.total;
+          this.itemsPerPage = response.productos.per_page;
+          this.pageActual = response.productos.current_page;
+          this.next_page = response.productos.next_page_url;
+          this.path = response.productos.path
+          
+          //una ves terminado de cargar quitamos el spinner
+          this.isLoadingProductos = false;
+        }
+    }, error => {
+      console.log(error)
+    }
+  )
+}
+
+/**
+ * 
+ * @param claveExterna 
+ * Recibimos el evento del input
+ * @description
+ * Recibe los valores del evento keyUp, luego busca y actualiza
+ * los datos de la tabla
+ */
+getSearch(claveExterna:string){
+
+  //mostramos el spinner 
+  this.isLoadingProductos = true;
+
+  //generamos consulta
+  this._productoService.searchClaveExterna(claveExterna).subscribe(
+    response =>{
+        if(response.status == 'success'){
+
+          //asignamos datos a varibale para poder mostrarla en la tabla
+          this.productos = response.productos.data;
+          //console.log(this.productos)
+
+          //navegacion paginacion
+          this.totalPages = response.productos.total;
+          this.itemsPerPage = response.productos.per_page;
+          this.pageActual = response.productos.current_page;
+          this.next_page = response.productos.next_page_url;
+          this.path = response.productos.path
+          
+          //una ves terminado de cargar quitamos el spinner
+          this.isLoadingProductos = false;
+      }
+    }, error =>{
+        console.log(error)
+    }
+  )
+}
 
   //cargamos la informacion al modelo del producto que se selecciono con el click
   seleccionarProducto(idProducto:any){
@@ -571,6 +711,12 @@ generaPDF(){
     });
   }
 
+  openModalDirec(content:any){
+    if(this.checkDireccion){
+      this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title', size: 'xl'});
+    }
+  }
+
   modalSeEnvia(content:any){//abre modal para seleccionaar direccion del cliente
     //si el chek de se envia es true abrimos modal
     if(this.seEnvia == true){
@@ -624,9 +770,28 @@ generaPDF(){
     }
   }
 
-  cambioSeleccionado(e:any){//limpiamos los inputs del modal
-    this.buscarProducto = '';
-    this.buscarProductoCE = '';
-    this.buscarProductoCbar = '';
+  /**
+   * 
+   */
+  selectBusqueda(){
+    if(this.buscarProducto == '' || null){
+      this.getProductos();
+    } else{
+
+      switch(this.seleccionado){
+        case 'uno':
+              this.getSearchDescripcion(this.buscarProducto);
+            break;
+        case 'dos':
+              this.getSearch(this.buscarProducto);
+            break;
+        case 'tres':
+              this.getSearchCodbar(this.buscarProducto);
+            break;
+        default:
+            console.log('Valor fuera de rango'+ this.seleccionado);
+            break;
+      }
+    }
   }
 }
