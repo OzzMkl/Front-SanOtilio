@@ -44,10 +44,14 @@ export class CompraEditarComponent implements OnInit {
   public medidas: any;
   public impuestoVer: any;
   public idUser:any;
+  public EmpleadoR:any;
   public fecha : Date = new Date();
-  public test: boolean = false;
-  public facturableCheck: boolean = false;  
-
+  //Variable para la caducidad de un producto
+  public test: boolean = false; 
+  //Variable para saber si la compra es facturada
+  public facturableCheck: boolean = false;
+  //Variable para verificar si se desea haecer un cambio en la fecha
+  public fechaCheck: boolean = false; 
 
   //Paginacion Lista de compras
   public totalPages2: any;
@@ -95,6 +99,9 @@ export class CompraEditarComponent implements OnInit {
     day: '2-digit'
   };
 
+  //contadores para los text area
+  conta: number =0;
+
 
 
   constructor(
@@ -135,10 +142,10 @@ export class CompraEditarComponent implements OnInit {
         this._compraService.getDetailsCompra(id).subscribe(
           response =>{
             if(response.status  == 'success' && response.compra.length > 0 && response.productos.length > 0){
-              // console.log('---INFORMACION DE COMPRA---');
-              // console.log('response.compra',response.compra);
-              // console.log('response.productos',response.productos);
-              // console.log('---------------------------------');
+              console.log('---INFORMACION DE COMPRA---');
+              console.log('response.compra',response.compra);
+              console.log('response.productos',response.productos);
+              console.log('---------------------------------');
               //Asignacion en variables para poder editar
               //asignamos de uno en uno las propiedades de la compra
               this.Lista_compras = response.productos;
@@ -153,6 +160,14 @@ export class CompraEditarComponent implements OnInit {
               this.compra.idStatus = response.compra[0]['idStatus'];
               this.compra.fechaRecibo = response.compra[0]['fechaRecibo'];
               this.compra.observaciones = response.compra[0]['observaciones'];
+              this.EmpleadoR = response.compra[0]['nombreEmpleado'];
+
+              if(response.compra[0]['facturable'] == 0){
+                this.facturableCheck = false;                
+              }else{
+                this.facturableCheck = true;                
+              }
+
 
             }
             
@@ -192,6 +207,7 @@ export class CompraEditarComponent implements OnInit {
 
     loadUser(){//traemos la informacion del usuario
       this.identity = this._empleadoService.getIdentity();
+      console.log(this.identity);
     }
 
     getImpuesto(){//traemos los impuestos
@@ -199,7 +215,7 @@ export class CompraEditarComponent implements OnInit {
         response =>{
           if(response.status == 'success'){
             this.impuestos = response.impuestos
-            console.log(this.impuestos);
+            //console.log(this.impuestos);
           }
         },
         error => {
@@ -341,51 +357,57 @@ export class CompraEditarComponent implements OnInit {
     agregarCompra(form:any){//Enviar Form insertar en DB
       this.compra.idEmpleadoR = this.identity['sub'];//asginamos id de Empleado
 
-      if(this.model == undefined){
+      if(this.fechaCheck == true && this.model == undefined){
         this.toastService.show('Falta ingresar la fecha de recepción',{classname: 'bg-danger text-light', delay: 6000});
       }
       else if(this.compra.folioProveedor == 0){
         this.toastService.show('Falta ingresar el folio del proveedor',{classname: 'bg-danger text-light', delay: 6000});
       }
+      else if(this.Lista_compras.length == 0){
+        this.toastService.show('La lista de compras está vacía',{classname: 'bg-danger text-light', delay: 6000});
+      }
       else 
       {
-        this.compra.fechaRecibo = this.model.year+'-'+this.model.month+'-'+this.model.day;//concatenamos la fecha del datepicker
-        this.compra.idStatus = 1;
-        //console.log(this.compra);
-        this._compraService.registrerCompra(this.compra).subscribe(
+        if(this.fechaCheck == true){
+          this.compra.fechaRecibo = this.model.year+'-'+this.model.month+'-'+this.model.day;//concatenamos la fecha del datepicker
+        } 
+
+        if(this.facturableCheck == true){
+          this.compra.facturable = 1;
+        }else{
+          this.compra.facturable = 0;
+        }
+
+        this.compra.idStatus = 33;
+        console.log(this.compra);
+        this._compraService.updateCompra(this.compra,this.Lista_compras,this.identity).subscribe(
         response =>{
           console.log('response',response)
           console.log('response.status',response.status)
-          if(response.status == 'success'){
-            console.log(response)       
-            //   this.toastService.show(' ⚠ Orden creada', { classname: 'bg-warning  text-bold', delay: 5000 });
-              this._compraService.registerProductoscompra(this.Lista_compras).subscribe(
-                res =>{
-                    console.log(res);
-                    this.toastService.show(' ⚠ Compra creada exitosamente!', { classname: 'bg-success  text-light', delay: 5000 });
-                    this.getLastCompra();
-                    //this.createPDF();
-                },error =>{
-                  console.log(<any>error);
-                  this.toastService.show('Ups... Fallo al agregar los productos a la compra', { classname: 'bg-danger text-light', delay: 15000 });
-                });
-            //Registro de lote
-            // this._compraService.registerLote().subscribe( res =>{
-            //   console.log(res)
-            // });
-            //SUMAR EXISTENCIAG
-              this._compraService.updateExistencia(this.Lista_compras).subscribe(
-                res =>{
-                    console.log(res);
-                    this.toastService.show(' ⚠ Existencia actualizada exitosamente!', { classname: 'bg-success  text-light', delay: 5000 });
-                    //this.getLastCompra();
-                    //this.createPDF();
-                },error =>{
-                  console.log(<any>error);
-                  this.toastService.show('Ups... Fallo al agregar los productos', { classname: 'bg-danger text-light', delay: 15000 });
-                });
+          // if(response.status == 'success'){
+          //   //console.log(response)       
+          //   //   this.toastService.show(' ⚠ Orden creada', { classname: 'bg-warning  text-bold', delay: 5000 });
+          //     // this._compraService.updateProductosCompra(this.Lista_compras).subscribe(
+          //     //   res =>{
+          //     //       console.log(res);
+          //     //       this.toastService.show(' ⚠ Compra creada exitosamente!', { classname: 'bg-success  text-light', delay: 5000 });
+          //     //       this.getLastCompra();
+          //     //       //this.createPDF();
+          //     //   },error =>{
+          //     //     console.log(<any>error);
+          //     //     this.toastService.show('Ups... Fallo al agregar los productos a la compra', { classname: 'bg-danger text-light', delay: 15000 });
+          //     //   });
+          //   //SUMAR EXISTENCIAG
+          //     // this._compraService.alterExistencia(this.Lista_compras).subscribe(
+          //     //   res =>{
+          //     //       console.log(res);
+          //     //       this.toastService.show(' ⚠ Existencia actualizada exitosamente!', { classname: 'bg-success  text-light', delay: 5000 });
+          //     //   },error =>{
+          //     //     console.log(<any>error);
+          //     //     this.toastService.show('Ups... Fallo al agregar los productos', { classname: 'bg-danger text-light', delay: 15000 });
+          //     //   });
 
-          }
+          // }
         },error =>{
           console.log(<any>error);
           this.toastService.show('Ups... Fallo al crear la compra', { classname: 'bg-danger text-light', delay: 15000 });
@@ -408,7 +430,7 @@ export class CompraEditarComponent implements OnInit {
       this.producto_compra.nombreMedida = this.medidaActualizada.nombreMedida;
   
       
-      if(this.producto_compra.cantidad <= 0 || this.producto_compra.precio <= 0 || this.producto_compra.subtotal <= 0){
+      if(this.producto_compra.cantidad <= 0 || this.producto_compra.precio < 0 || this.producto_compra.subtotal < 0){
         this.toastService.show('No se pueden agregar productos con cantidad, precio o importe menor o igual a 0',{classname: 'bg-danger text-light', delay: 6000})
       }else if(this.producto_compra.idProducto == 0){
         this.toastService.show('Ese producto no existe',{classname: 'bg-danger text-light', delay: 6000})
@@ -558,5 +580,19 @@ export class CompraEditarComponent implements OnInit {
     autoTable(doc,{html: '#table_productos',startY:95})
     doc.save('compra.pdf')
   } 
+
+  /**
+   * Omite el salto de linea del textarea de descripcion
+   * cuenta el numero de caracteres insertados
+   * @param event 
+   * omitimos los eventes de "enter""
+   */
+  omitirEnter(event:any){
+    this.conta = event.target.value.length;
+    if(event.which === 13){
+      event.preventDefault();
+      //console.log('prevented');
+    }
+  }
 
 }

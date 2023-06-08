@@ -282,12 +282,15 @@ export class CompraBuscarComponent implements OnInit {
         if(response.status == 'success'){
           this.detallesCompra = response.compra; 
           this.productosDC = response.productos;
-
-          console.log(this.detallesCompra);
-          console.log(this.productosDC);
+          console.log('response',response);
+          console.log('compra',this.detallesCompra);
+          console.log('productos',this.productosDC);
 
           if(this.detallesCompra[0]['facturable'] == 1){
             this.facturableCheck = true;
+          }
+          else{
+            this.facturableCheck = false;
           }
         }else{ console.log('Algo salio mal');}
         

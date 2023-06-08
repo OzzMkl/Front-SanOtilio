@@ -13,20 +13,47 @@
                 <br>
             </div>
             <div class="col-5">
-                <label for="idProveedor" class="form-label">Seleccionar proveedor</label>
+                <label for="idProveedor" class="form-label">Proveedor</label>
                 <select class="form-select" name="idProveedor" #idProveedor="ngModel" id="idProveedor"   [(ngModel)]="compra.idProveedor" (ngModelChange)="onChange($event)">
                     <option selected disabled>Abrir para seleccionar</option>
                     <option  *ngFor="let proveedor of proveedoresLista" value="{{proveedor.idProveedor}}">{{proveedor.nombre}}</option>
                 </select>
             </div>
+            <div class="w-100"></div>
+            
+            <div class="col-2">
+                <label class="form-label" for="flexCheckDefault">Cambiar fecha</label>
+                <br>
+                <input class="form-check-input" type="checkbox" value="false"  name="fechaCheck" [(ngModel)]="fechaCheck" id="fechaCheck">   
+            </div>
 
-            <div class="col-4">
-                <label class="form-label" for="">Fecha de recepción</label>
-                <div class="input-group">
-                  <input class="form-control" placeholder="aaaa-mm-dd"
-                         name="dp" [(ngModel)]="model" ngbDatepicker [footerTemplate]="footerTemplate" #d="ngbDatepicker">
-                  <button class="btn btn-outline-secondary" (click)="d.toggle()" type="button"><i class="bi bi-calendar-date-fill"> </i> </button>
+            <div *ngIf="fechaCheck == false; else elseBlock" class="col-2">
+                <label for="" class="form-label">Fecha de recepción</label>
+                <input type="text" class="form-control" value="{{compra.fechaRecibo | date: 'dd/MM/yyyy'}}" readonly>
+                
+            </div>
+
+            <ng-template #elseBlock>
+                <div class="col-3">
+                    <label class="form-label" for="">Selecciona la fecha de recepción</label>
+                    <div class="input-group">
+                        <input class="form-control" placeholder="aaaa-mm-dd"
+                                name="dp" [(ngModel)]="model" ngbDatepicker #d="ngbDatepicker">
+                        <button class="btn btn-outline-secondary" (click)="d.toggle()" type="button"><i class="bi bi-calendar-date-fill"> </i> </button>
+                    </div>
                 </div>
+            </ng-template>
+
+            <div class="col-3">
+                <label for="EmpleadoR" class="form-label">Recibida por:</label>
+                <input type="text" class="form-control" id="EmpleadoR" name="EmpleadoR"  [(ngModel)]="EmpleadoR">
+                <br>
+            </div>  
+            
+            <div class="col-2"> 
+                <label class="form-label" for="facturableCheck">¿Es facturable?</label>
+                <br>
+                <input class="form-check-input" type="checkbox" value="false"  name="facturable" [(ngModel)]="facturableCheck" id="facturableCheck">
             </div>
            
             <div *ngFor="let p of proveedorVer" class="row align-items-start">
@@ -188,8 +215,8 @@
         <div class="row row-cols-lg-auto g-3 align-items-center">
             <div class="col-12">
                 <label for="observaciones">Observaciones</label>
-                <textarea class="form-control" name="observaciones" id="observaciones" cols="30" rows="2" #observaciones="ngModel" [(ngModel)]="compra.observaciones"></textarea>
-                
+                <textarea class="form-control" name="observaciones" id="observaciones" rows="2" maxlength="254" (keydown)="omitirEnter($event)" #observaciones="ngModel" [(ngModel)]="compra.observaciones"></textarea>
+                <span class="justify-content-md-end">{{conta}}/254</span>
             </div>
             <br>
             <div class="col-12">
@@ -256,7 +283,7 @@
     </div> -->
 </ng-template>
 
-<ng-template #footerTemplate>
+<!-- <ng-template #footerTemplate>
     <hr class="my-0">
     <button class="btn btn-primary btn-sm m-2 float-start" (click)="model = today; d.close()">Hoy</button>
-</ng-template>
+</ng-template> -->

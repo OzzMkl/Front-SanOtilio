@@ -139,7 +139,8 @@
         <div class="row row-cols-lg-auto g-3 align-items-center">
             <div class="col-12">
                 <label for="observaciones">Observaciones</label>
-                <textarea class="form-control" name="observaciones" id="observaciones" cols="30" rows="2" #observaciones="ngModel" [(ngModel)]="orden_compra.observaciones"></textarea>
+                <textarea class="form-control" name="observaciones" id="observaciones" rows="2" maxlength="254" (keydown)="omitirEnter($event)" #observaciones="ngModel" [(ngModel)]="orden_compra.observaciones"></textarea>
+                <span class="justify-content-md-end">{{conta}}/254</span>
             </div>
         </div>
         <br>
