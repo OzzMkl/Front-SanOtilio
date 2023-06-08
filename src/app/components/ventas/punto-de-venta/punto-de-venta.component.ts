@@ -374,6 +374,9 @@ export class PuntoDeVentaComponent implements OnInit {
    * no retornamos ya que solo actualizamos las variables a mostrar
    */
   getPage(page:number) {
+    //mostramos spinner
+    this.isLoadingProductos = true;
+
     this._http.get(this.path+'?page='+page).subscribe(
       (response:any) => {
         //console.log(response);
@@ -383,7 +386,9 @@ export class PuntoDeVentaComponent implements OnInit {
         this.itemsPerPage = response.productos.per_page;
         this.pageActual = response.productos.current_page;
         this.next_page = response.productos.next_page_url;
-        this.path = response.productos.path    
+        this.path = response.productos.path  
+        
+        this.isLoadingProductos = false;
     })
   }
 
@@ -635,6 +640,7 @@ export class PuntoDeVentaComponent implements OnInit {
       this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
     });
   }
+  
   /**
    * Abre modal de agregar direccion
    * @param content 
@@ -828,6 +834,7 @@ export class PuntoDeVentaComponent implements OnInit {
       }
     )
   }
+  
 /**
  * @description
  * Obtiene la informacion del input y busca

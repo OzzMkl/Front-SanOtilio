@@ -160,6 +160,7 @@
         </div>
     </div>
 </div>
+
 <!-- Modal buscar clientes-->
 <ng-template #content let-modal>
     <div class="modal-header">
@@ -207,6 +208,7 @@
       <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Guardar</button>
     </div> -->
 </ng-template>
+
 <!-- Modal agregar cliente-->
 <ng-template #content2 let-modal>
     <div class="modal-header">
@@ -316,7 +318,7 @@
             <hr>
             <div *ngIf="checkDireccion">
                 <h5>Direccion</h5>
-                <input type="text" class="form-control" value="{{cdireccion.pais}} {{cdireccion.estado}}. {{cdireccion.ciudad}}, {{cdireccion.colonia}} {{cdireccion.calle}} {{cdireccion.numExt}} {{cdireccion.numInt}} entre {{cdireccion.entreCalles}}" readonly>
+                <input type="text" class="form-control" value="{{cdireccion.estado}}. {{cdireccion.ciudad}}, {{cdireccion.colonia}} {{cdireccion.calle}} {{cdireccion.numExt}} {{cdireccion.numInt}} entre {{cdireccion.entreCalles}}" readonly>
             </div>
             <br>
             <div>
@@ -330,6 +332,7 @@
       <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Guardar</button>
     </div> -->
 </ng-template>
+
 <!-- 2do modal de agregar cliente (direccion)-->
 <ng-template #agregarDireccion let-modal>
     <form #FormCdir="ngForm">
@@ -427,11 +430,14 @@
         </div>  
         </form>
 </ng-template>
+
 <!-- Modal para elegir direccion del cliente -->
 <ng-template #buscarDireccion let-modal>
     <div class="modal-header">
         <h4 class="modal-title" id="modal-basic-title">Seleccionar direccion</h4>
-        <button class="btn btn-success col-auto offset-md-8" ngbTooltip="Agregar direccion" (click)="modalAgregarDireccion(nuevaDireccion)"><i class="bi bi-plus-circle-dotted" style="font-size: 1.3rem; color: rgb(255, 249, 249); left: 0;"></i></button>
+        <button class="btn btn-success col-auto offset-md-8" ngbTooltip="Agregar direccion" (click)="modalAgregarDireccion(nuevaDireccion)">
+            <i class="bi bi-plus-circle-dotted" style="font-size: 1.3rem; color: rgb(255, 249, 249); left: 0;"></i>
+        </button>
         <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
       </div>
       <div class="modal-body">
@@ -455,6 +461,7 @@
         </table>
       </div>
 </ng-template>
+
 <!-- Agregar nueva direccion  -->
 <ng-template #nuevaDireccion let-modal>
     <form>
@@ -552,6 +559,7 @@
             </div>  
         </form>
 </ng-template>
+
 <!-- Modal productos -->
  <ng-template #mBuscarProducto let-modal>
     <div class="modal-header">
@@ -563,7 +571,7 @@
         <div >
             <div class="input-group mb-2">
                 <div class="col-2">
-                    <select name="" id="" class="form-select" name="seleccionado" [(ngModel)]="seleccionado" (ngModelChange)="selectBusqueda()">
+                    <select class="form-select" name="seleccionado" [(ngModel)]="seleccionado" (ngModelChange)="selectBusqueda()">
                         <option value="uno">DESCRIPCION</option>
                         <option value="dos">CLAVE EXTERNA</option>
                         <option value="tres">CODIGO DE BARRAS</option>
@@ -609,6 +617,7 @@
         </div>
     </div>
 </ng-template>
+
 <!-- Modal medidas | precio de productos -->
 <ng-template #mProdMedidas let-modal>
     <div class="modal-header">
