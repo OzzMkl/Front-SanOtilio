@@ -55,11 +55,15 @@
         </div>
         <div class="col-2">
             <label class="form-label">Medida</label>
-            <input class="form-control" type="text" name="nombreMedida" #nombreMedida="ngModel" [(ngModel)]="productoVentag.nombreMedida" readonly>
+            <select class="form-select" name="nombreMedida" id="nombreMedida" #nombreMedida="ngModel" [(ngModel)]="productoVentag.idProdMedida" ngModel (change)="muestraPrecios()" required>
+                <option *ngFor="let pm of productos_medidas" value="{{pm.idProdMedida}}" >{{pm.nombreMedida}}</option>
+            </select>
         </div>
         <div class="col-2">
             <label class="form-label">Precio</label>
-            <input class="form-control" type="number" min="{{productoVentag.precioMinimo}}" name="precio" #precio="ngModel" [(ngModel)]="productoVentag.precio" (change)="calculaSubtotalPP()" >
+            <select class="form-select" name="precio" id="precio" #precio="ngModel" [(ngModel)]="productoVentag.precio" (change)="calculaSubtotalPP()">
+                <option *ngFor="let precio of preciosArray" value="{{precio}}">{{precio}}</option>
+            </select>
         </div>
         <div class="col-2">
             <label class="form-label">Cantidad</label>
@@ -100,7 +104,7 @@
                 </tr>
             </thead>
             <tbody *ngFor="let pce of productos_cotizacion_e    | paginate: { id:'tablePV', itemsPerPage: 5, currentPage: pagePV }">
-                <tr (click)="editarProductoLista(pce.idProducto)">
+                <tr (click)="editarProductoLista(pce.idProdMedida)">
                     <th scope="row">{{pce.claveEx}}</th>
                     <th scope="row">{{pce.descripcion}}</th>
                     <th scope="row">{{pce.nombreMedida}}</th>
@@ -585,7 +589,7 @@
                     </tr>
                 </thead>
                 <tbody *ngFor="let pr of productos | paginate:{id:'pcModal',itemsPerPage: itemsPerPage, currentPage: pageActual2, totalItems: totalPages}">
-                    <tr (click)="seleccionarProducto(pr.idProducto)">
+                    <tr (click)="modalMuestraMedidas(mProdMedidas, pr.idProducto, pr.claveEx)">
                         <th scope="row">{{pr.claveEx}}</th>
                         <th scope="row">{{pr.cbarras}}</th>
                         <th scope="row">{{pr.descripcion}}</th>
@@ -601,6 +605,82 @@
               </pagination-controls>
         </div>
       </div>
+</ng-template>
+
+<!-- Modal medidas | precio de productos -->
+<ng-template #mProdMedidas let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">Medidas del producto: {{claveExt}}</h4>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+        <div class=" row justify-content-center">
+            <div class="col-2">
+                <img src="{{url + 'productos/getImageProduc/' + this.imagenPM}}" width="100px">
+            </div>
+            <div class="col-5 text-center">
+                <table class="table table-secondary table-sm">
+                    <thead  >
+                        <!-- <tr>
+                            <th colspan="6"><h6 class="fw-bold">{{claveExt}}</h6></th>
+                        </tr> -->
+                        <tr>
+                            <th scope="col">PREC.</th>
+                            <th *ngFor="let pm of prod_med" scope="row">{{pm.nombreMedida}}</th>
+                        </tr>
+                    </thead>
+                    <tbody >
+                        <tr>
+                            <th scope="row">P1</th>
+                            <th *ngFor="let pm of prod_med" scope="row">{{pm.precio1 | currency}}</th>
+                        </tr>
+                        <tr>
+                            <th scope="row">P2</th>
+                            <th *ngFor="let pm of prod_med" scope="row">{{pm.precio2 | currency}}</th>
+                        </tr>
+                        <tr>
+                            <th scope="row">P3</th>
+                            <th *ngFor="let pm of prod_med" scope="row">{{pm.precio3 | currency}}</th>
+                        </tr>
+                        <tr>
+                            <th scope="row">P4</th>
+                            <th *ngFor="let pm of prod_med" scope="row">{{pm.precio4 | currency}}</th>
+                        </tr>
+                        <tr>
+                            <th scope="row">P5</th>
+                            <th *ngFor="let pm of prod_med" scope="row">{{pm.precio5 | currency}}</th>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <!-- TABLA EXISTENCIA -->
+            <div class="col-auto text-center">
+                <table class="table table-sm table-secondary">
+                    <thead>
+                        <tr>
+                            <th>EXISTENCIA</th>
+                            <th>MEDIDA</th>
+                        </tr>
+                    </thead>
+                    <tbody *ngFor="let e of existenciasPorMed">
+                        <tr>
+                            <th scope="col">{{e.exisCal}}</th>
+                            <th scope="col">{{e.nombreMedida}}</th>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <div class="col">
+
+            <button class="btn btn-danger form-control" (click)="modal.dismiss('Cross click')">Cancelar</button>
+        </div>
+        <div class="col">
+            <button class="btn btn-success form-control" (click)="seleccionarProducto(idp)">Agregar</button>
+        </div>
+    </div> 
 </ng-template>
 
 <!-- Modal alerta de existencia -->
