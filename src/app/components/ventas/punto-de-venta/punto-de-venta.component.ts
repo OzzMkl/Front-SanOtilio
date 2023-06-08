@@ -36,8 +36,8 @@ export class PuntoDeVentaComponent implements OnInit {
   public tipocliente :any;//tipocliente
   public productos:any;//getProductos
   public producto:any;
-  public productos_medidas: Array<any> = [];
-  public preciosArray: Array<any> = [];
+  public productos_medidas: Array<any> = [];//seleccionarProducto
+  public preciosArray: Array<any> = [];//muestraPrecios
   public identity: any;//loadUser
   public UltimaCotizacion: number = 0;//obtenerultimacotiza
   public tipo_venta: Array<any> = []; //getTiposVentas
@@ -393,7 +393,7 @@ export class PuntoDeVentaComponent implements OnInit {
   }
 
   //cargamos la informacion al modelo del producto que se selecciono con el click
-  seleccionarProducto(idProducto:any){
+  seleccionarProducto(idProducto:number){
     //cerramos los modales abiertos
     this.modalService.dismissAll();
 
@@ -481,17 +481,20 @@ export class PuntoDeVentaComponent implements OnInit {
             //verificamos la existencia
             //si esta es menor a la cantidad solicitada mandamos alerta
             if(this.productoEG[0]['existenciaG']< this.productoVentag.cantidad){
-              this.messageService.add({severity:'warn', summary:'Alerta', detail:'El producto no cuenta con suficiente stock'});
+              //this.messageService.add({severity:'warn', summary:'Alerta', detail:'El producto no cuenta con suficiente stock'});
               this.productoVentag.tieneStock = false;
-            }
+            } else{
               //asignamos los valores del producto 
               this.ventag.subtotal = this.ventag.subtotal + (this.productoVentag.precio * this.productoVentag.cantidad);
               this.ventag.descuento = this.ventag.descuento + this.productoVentag.descuento;
               this.ventag.total = this.ventag.total + this.productoVentag.subtotal;
               this.lista_productoVentag.push({...this.productoVentag});
               this.isSearch = true;
+            }
+              
           }
         }, error =>{
+          this.messageService.add({severity:'error', summary:'Error!', detail:'Ocurrio un error al verificar la existencia'});
           console.log(error);
         }
       );
