@@ -8,6 +8,7 @@ import { ProductoService } from 'src/app/services/producto.service';
 import { VentasService } from 'src/app/services/ventas.service';
 import { EmpleadoService } from 'src/app/services/empleado.service';
 import { EmpresaService } from 'src/app/services/empresa.service';
+import { global } from 'src/app/services/global';
 //modelos
 import { Ventag } from 'src/app/models/ventag';
 import { Producto_ventasg } from 'src/app/models/productoVentag';
@@ -47,6 +48,15 @@ export class CotizacionEditarComponent implements OnInit {
   public producto:any;//seleccionar producto
   public productoEG:any;//agregarProductoLista
   public identity: any;//loadUser
+  public claveExt:string = '';//mostrar precios
+  public prod_med:Array<any> = [];//mostrar precios
+  public existenciasPorMed: Array<any> = [];//mostrarPrecios
+  public imagenPM: string = '';//mostrarPrecios
+  public isImage: boolean = false;//mostrarPrecios
+  public idp: number = 0;//mostrarPrecios
+  public url:string = global.url;//mostrarPrecios
+  public productos_medidas: Array<any> = [];//seleccionarProducto
+  public preciosArray: Array<any> = [];//muestraPrecios
 
   public detallesCotiza:any;
   public productosdCotiza:any;
@@ -413,21 +423,24 @@ getSearch(claveExterna:string){
 }
 
   //cargamos la informacion al modelo del producto que se selecciono con el click
-  seleccionarProducto(idProducto:any){
+  seleccionarProducto(idProducto:number){
+    //cerramos modales
+    this.modalService.dismissAll();
     //console.log(idProducto);
     this._productoService.getProdverDos(idProducto).subscribe( response => {
       //console.log(response);
       if(response.status == 'success'){
+        this.limpiaProducto();
+
         this.producto = response.producto;
         this.productoVentag.claveEx = this.producto[0]['claveEx'];
         this.productoVentag.idProducto = this.producto[0]['idProducto'];
-        this.productoVentag.nombreMedida = this.producto[0]['nombreMedida'];
-        this.productoVentag.precio = this.producto[0]['precioS'];
         this.productoVentag.descripcion = this.producto[0]['descripcion'];
-        this.productoVentag.precioMinimo = this.producto[0]['precioR'];
-        //this.productoVentag.tieneStock = this.producto[0]['existenciaG']
         this.productoVentag.cantidad = 0;
-        //this.calculaSubtotalPP();
+
+        this.productos_medidas = response.productos_medidas;
+        
+        this.calculaSubtotalPP();
         this.isSearch=false;
       }
     },error =>{
@@ -512,6 +525,21 @@ guardarNuevaDireccion(){
   //this.getDireccionCliente(this.ventag.idCliente);
 }
 
+/**
+   * @description
+   * Muestra los precios deacuerdo a la medida seleccionada
+   */
+muestraPrecios(){
+  //limpiamos array
+  this.preciosArray = [];
+  //buscamos la medida seleccionada
+  var med = this.productos_medidas.find(x => x.idProdMedida == this.productoVentag.idProdMedida);
+  //asignamos nombre de medida
+  this.productoVentag.nombreMedida = med.nombreMedida;
+  //cargamos los precios a mostrar en el select
+  this.preciosArray.push(med.precio1, med.precio2, med.precio3, med.precio4, med.precio5);
+}
+
 calculaSubtotalPP(){
   if(this.productoVentag.precio < this.producto[0]['precioR']){
     this.toastService.show('El precio minimo permitido es de: $'+this.producto[0]['precioR'],{classname: 'bg-danger text-light', delay: 6000});
@@ -528,36 +556,46 @@ calculaSubtotalPP(){
 //agregar producto a lista de ventas
 agregarProductoLista(){
   if( this.productoVentag.cantidad <= 0){
-    this.toastService.show('No se pueden agregar productos con cantidad 0 ó menor a 0',{classname: 'bg-danger text-light', delay: 6000})
+    this.messageService.add({severity:'warn', summary:'Alerta', detail: 'No se pueden agregar productos con cantidad 0 ó menor a 0'});
+
   }else if( this.productoVentag.idProducto == 0){
-    this.toastService.show('Ese producto no existe',{classname: 'bg-danger text-light', delay: 6000});
-  }else if (this.productos_cotizacion_e.find(x => x.idProducto == this.productoVentag.idProducto)){
+    this.messageService.add({severity:'error', summary:'Error', detail: 'Ese producto no existe'});
+
+  }else if (this.productos_cotizacion_e.find(x => x.idProducto == this.productoVentag.idProducto) &&
+            this.productos_cotizacion_e.find(x=> x.idProdMedida == this.productoVentag.idProdMedida ) ){
     //verificamos si la lista de compras ya contiene el producto buscandolo por idProducto
-    this.toastService.show('Ese producto ya esta en la lista',{classname: 'bg-danger text-light', delay: 6000});
+    this.messageService.add({severity:'warn', summary:'Alerta', detail: 'El producto ya se encuentra en la lista'});
+
   }else if(this.productoVentag.descuento < 0){
-    this.toastService.show('No puedes agregar descuento negativo',{classname: 'bg-danger text-light', delay: 6000});
+    this.messageService.add({severity:'warn', summary:'Alerta', detail: 'No puedes agregar descuento negativo'});
+
   }else{
-    
+    //revisamos la existencia del producto
     this._productoService.getExistenciaG(this.productoVentag.idProducto).subscribe(
       response =>{
         this.productoEG = response.producto;
+        if(response.status == 'success'){
+            //verificamos la existencia
+            //si esta es menor a la cantidad solicitada mandamos alerta
+            if(this.productoEG[0]['existenciaG']< this.productoVentag.cantidad){
+              //this.messageService.add({severity:'warn', summary:'Alerta', detail:'El producto no cuenta con suficiente stock'});
+              this.productoVentag.tieneStock = false;
+            } else {
+              //asignamos los valores de producto
+              this.cotizacion_editada.subtotal = this.cotizacion_editada.subtotal + (this.productoVentag.precio * this.productoVentag.cantidad);
+              this.cotizacion_editada.descuento = this.cotizacion_editada.descuento + this.productoVentag.descuento;
+              this.cotizacion_editada.total = this.cotizacion_editada.total + this.productoVentag.subtotal;
+              this.productos_cotizacion_e.push({...this.productoVentag});
+              this.isSearch = true;
+
+            }
+        }
       }, error =>{
+        this.messageService.add({severity:'error', summary:'Error!', detail:'Ocurrio un error al verificar la existencia'});
         console.log(error);
       }
     );
 
-    if(this.productoEG[0]['existenciaG']< this.productoVentag.cantidad){
-      this.toastService.show('Stock insuficiente',{classname: 'bg-warning', delay: 6000});
-      this.productoVentag.tieneStock = false;
-    }
-
-    this.cotizacion_editada.subtotal = this.cotizacion_editada.subtotal + (this.productoVentag.precio * this.productoVentag.cantidad);
-    //this.subtotalVenta = this.subtotalVenta + this.productoVentag.subtotal;
-    this.cotizacion_editada.descuento = this.cotizacion_editada.descuento + this.productoVentag.descuento;
-    //this.descuentoVenta = this.descuentoVenta + this.productoVentag.descuento;
-    this.cotizacion_editada.total = this.cotizacion_editada.total + this.productoVentag.subtotal;
-    this.productos_cotizacion_e.push({...this.productoVentag});
-    this.isSearch = true;
   }
 
 }
@@ -565,30 +603,15 @@ agregarProductoLista(){
 //editar/eliminar producto de la lista de compras
 editarProductoLista(dato:any){
   //buscamos el producto a eliminar para traer sus propiedades
-  this.productoVentag = this.productos_cotizacion_e.find(x => x.idProducto == dato)!;
+  this.productoVentag = this.productos_cotizacion_e.find(x => x.idProdMedida == dato)!;
   //re calculamos los importes de la venta 
   this.cotizacion_editada.subtotal = this.cotizacion_editada.subtotal - (this.productoVentag.precio * this.productoVentag.cantidad);
   this.cotizacion_editada.descuento = this.cotizacion_editada.descuento - this.productoVentag.descuento;
   this.cotizacion_editada.total = this.cotizacion_editada.total - this.productoVentag.subtotal;
   //cremos nuevo array eliminando el producto que se selecciono
-  this.productos_cotizacion_e = this.productos_cotizacion_e.filter((item) => item.idProducto !== dato);
+  this.productos_cotizacion_e = this.productos_cotizacion_e.filter((item) => item.idProdMedida !== this.productoVentag.idProdMedida);
   //consultamos el producto a editar
-  this._productoService.getProdverDos(dato).subscribe( 
-    response =>{
-      this.producto = response.producto;
-      this.productoVentag.claveEx = this.producto[0]['claveEx'];
-      this.productoVentag.idProducto = this.producto[0]['idProducto']
-      this.productoVentag.nombreMedida = this.producto[0]['nombreMedida'];
-      this.productoVentag.precio = this.producto[0]['precioS'];
-      this.productoVentag.descripcion = this.producto[0]['descripcion'];
-      this.productoVentag.precioMinimo = this.producto[0]['precioR']
-      this.productoVentag.cantidad = 0;
-      this.productoVentag.descuento = 0;
-      this.calculaSubtotalPP();
-      this.isSearch=false;
-    },error =>{
-      console.log(error);
-    });
+  this.seleccionarProducto(this.productoVentag.idProducto);
 }
 
 //traemos la informacion del usuario logeado
@@ -760,6 +783,11 @@ generaPDF(){
      }
    }
 
+   modalMuestraMedidas(content:any, idProducto:number, claveEx:string){
+    this.mostrarPrecios(idProducto,claveEx);
+    this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title', size:'lg'});
+   }
+
   private getDismissReason(reason: any): string {//cerrarmodal
     if (reason === ModalDismissReasons.ESC) {
       return 'by pressing ESC';
@@ -793,5 +821,54 @@ generaPDF(){
             break;
       }
     }
+  }
+
+  /**
+   * @description
+   * Pone a default las propiedades de los ojetos
+   * productoVentag, productos_medidas y arrayPrecios
+   */
+  limpiaProducto(){
+    //limipiamos productoVentasg
+    this.productoVentag.idVenta = 0;
+    this.productoVentag.idProducto = 0;
+    this.productoVentag.descripcion = "";
+    this.productoVentag.idProdMedida = 0;
+    this.productoVentag.cantidad = 0;
+    this.productoVentag.precio = 0;
+    this.productoVentag.descuento = 0;
+    this.productoVentag.total = 0;
+    this.productoVentag.claveEx = "";
+    this.productoVentag.nombreMedida = "";
+    this.productoVentag.precioMinimo = 0;
+    this.productoVentag.subtotal = 0;
+    this.productoVentag.tieneStock = false;
+    //limpia medidas
+    this.productos_medidas=[];
+    //limpia array
+    this.preciosArray=[];
+
+  }
+
+  /**
+   * Recibimos el id del producto y lo busca
+   * @param idProducto
+   * Returna consulta con las medidas e imagen del producto
+   */
+  mostrarPrecios(idProducto:number, claveEx:string){
+    this.claveExt = claveEx;
+    this._productoService.searchProductoMedida(idProducto).subscribe(
+      response =>{
+        this.prod_med = response.productoMedida;
+        this.existenciasPorMed = response.existencia_por_med;
+        this.imagenPM = response.imagen;
+        if(this.imagenPM == "" || this.imagenPM == null){
+          this.imagenPM = "1650558444no-image.png";
+        }
+        this.idp = idProducto;
+      }, error =>{
+        console.log(error);
+      }
+    );
   }
 }
