@@ -84,7 +84,9 @@
         <div class="col-2">
             <!-- <label class="form-label">.</label> -->
             <br>
-            <button class="btn btn-success form-control" type="button" [disabled]="isSearch" (click)="agregarProductoLista()"><i class="bi bi-check-circle-fill" > Agregar</i>     </button>
+            <button class="btn btn-success form-control" type="button" [disabled]="isSearch" (click)="agregarProductoLista()">
+                <i class="bi bi-check-circle-fill" > Agregar</i>
+            </button>
         </div>
     </div>
     <hr>
@@ -122,7 +124,12 @@
     <div class="row">
         <div class="col-10">
             <label class="form-label">Observaciones</label>
-            <textarea class="form-control" rows="2" maxlength="254" name="observaciones" #observaciones="ngModel" [(ngModel)]="cotizacion_editada.observaciones" (keydown)="omitirEnter($event)"></textarea>
+            <textarea class="form-control" rows="2" maxlength="250" 
+                        name="observaciones" #observaciones="ngModel" 
+                        [(ngModel)]="cotizacion_editada.observaciones" 
+                        (input)="contadorCaracteres($event)">
+            </textarea>
+            <span> {{contador}}/250</span>
             <div class="row">
                 <div class="col-3">
                     <label for="">Subtotal</label>
@@ -698,7 +705,7 @@
             <button class="btn btn-danger form-control" (click)="modal.dismiss('Cross click')">Cancelar</button>
         </div>
         <div class="col">
-            <button class="btn btn-success form-control" (click)="modal.dismiss('Cross click')" (click)="actualizaCotizacion()">Si</button>
+            <button class="btn btn-success form-control" (click)="actualizaCotizacion()" (click)="modal.dismiss()">Si</button>
         </div>
     </div>
 </ng-template>

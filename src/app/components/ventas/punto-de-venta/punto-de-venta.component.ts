@@ -84,6 +84,8 @@ export class PuntoDeVentaComponent implements OnInit {
   public isSearch: boolean = true;
   public isLoadingProductos: boolean = false;
   public isLoadingClientes: boolean = false;
+  //contadores para los text area
+  contador: number =0;
 
 
   constructor( 
@@ -436,13 +438,10 @@ export class PuntoDeVentaComponent implements OnInit {
   }
 
   /***
-   * REVISAR METODO SI AUN SE OCUPA
+   * Calcula el subtotal por producto
    */
   calculaSubtotalPP(){
-    if(this.productoVentag.precio < this.producto[0]['precioR']){
-      this.messageService.add({severity:'warn', summary:'Alerta', detail: 'El precio minimo permitido es de: $'+this.producto[0]['precioR']});
-      this.isSearch=true;
-    }else if(this.productoVentag.descuento < 0){
+    if(this.productoVentag.descuento < 0){
       this.messageService.add({severity:'warn', summary:'Alerta', detail: 'No puedes agregar descuento negativo'});
       this.isSearch=true;
     }else{
@@ -456,6 +455,7 @@ export class PuntoDeVentaComponent implements OnInit {
    * Agrega el producto a la lista de ventas
    */
   agregarProductoLista(){
+    console.log('agregar producto')
     if( this.productoVentag.cantidad <= 0){
       this.messageService.add({severity:'warn', summary:'Alerta', detail: 'No se pueden agregar productos con cantidad 0 ó menor a 0'});
 
@@ -481,16 +481,16 @@ export class PuntoDeVentaComponent implements OnInit {
             //verificamos la existencia
             //si esta es menor a la cantidad solicitada mandamos alerta
             if(this.productoEG[0]['existenciaG']< this.productoVentag.cantidad){
-              //this.messageService.add({severity:'warn', summary:'Alerta', detail:'El producto no cuenta con suficiente stock'});
+              this.messageService.add({severity:'warn', summary:'Alerta', detail:'El producto no cuenta con suficiente stock'});
               this.productoVentag.tieneStock = false;
-            } else{
+            } 
               //asignamos los valores del producto 
               this.ventag.subtotal = this.ventag.subtotal + (this.productoVentag.precio * this.productoVentag.cantidad);
               this.ventag.descuento = this.ventag.descuento + this.productoVentag.descuento;
               this.ventag.total = this.ventag.total + this.productoVentag.subtotal;
               this.lista_productoVentag.push({...this.productoVentag});
               this.isSearch = true;
-            }
+            
               
           }
         }, error =>{
@@ -515,12 +515,8 @@ export class PuntoDeVentaComponent implements OnInit {
   }
 
   //evitamod que den enter en el textarea de observaciones
-  omitirEnter(event:any){
-    if(event.which === 13){
-      event.preventDefault();
-      console.log('prevented');
-      
-    }
+  contadorCaracteres(event:Event){
+    this.contador = ((event.target as HTMLInputElement).value).length;
   }
 
   //editar/eliminar producto de la lista de compras
@@ -719,11 +715,7 @@ export class PuntoDeVentaComponent implements OnInit {
 
   modalMuestraMedidas(content:any,idProducto:number,claveEx:string){
     this.mostrarPrecios(idProducto,claveEx);
-    this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title', size: 'lg'}).result.then((result) => {
-      this.closeResult = `Closed with: ${result}`;
-    }, (reason) => {
-      this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-    });
+    this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title', size: 'lg'});
   }
   
   /**

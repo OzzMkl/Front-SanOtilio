@@ -3,7 +3,6 @@ import { ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 //servicios
 import { ClientesService } from 'src/app/services/clientes.service';
-import { ToastService } from 'src/app/services/toast.service';
 import { ProductoService } from 'src/app/services/producto.service';
 import { VentasService } from 'src/app/services/ventas.service';
 import { EmpleadoService } from 'src/app/services/empleado.service';
@@ -18,10 +17,6 @@ import { Cdireccion } from 'src/app/models/cdireccion';
 import { NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
 //primeng
 import { MessageService } from 'primeng/api';
-//pdf
-import jsPDF from 'jspdf';
-import autoTable from 'jspdf-autotable';
-
 
 @Component({
   selector: 'app-cotizacion-editar',
@@ -87,13 +82,14 @@ export class CotizacionEditarComponent implements OnInit {
   //pipes
   seleccionado:string = 'uno';//para cambiar entre pipes de buscarProducto
   buscarProducto:any;//modal de buscar producto
+  //contadores para los text area
+  contador: number =0;
 
-  constructor( private _clienteService: ClientesService, public toastService: ToastService,
-               private _productoService: ProductoService, private _ventasService: VentasService,
-               private _empleadoService: EmpleadoService, private _empresaService: EmpresaService,
-               private _route: ActivatedRoute, private modalService: NgbModal,
-               private _http: HttpClient, 
-               private messageService: MessageService) {
+  constructor( private _clienteService: ClientesService,private _productoService: ProductoService,
+                private _ventasService: VentasService, private _empleadoService: EmpleadoService,
+                private _empresaService: EmpresaService, private _route: ActivatedRoute,
+                private modalService: NgbModal, private _http: HttpClient, 
+                private messageService: MessageService ) {
                  this.cotizacion_editada = new Ventag(0,0,2,'',1,null,0,0,0,0,'','',0);
                  this.productos_cotizacion_e = [];
                  this.modeloCliente = new Cliente (0,'','','','','',0,1,0);
@@ -428,7 +424,7 @@ getSearch(claveExterna:string){
     this.modalService.dismissAll();
     //console.log(idProducto);
     this._productoService.getProdverDos(idProducto).subscribe( response => {
-      //console.log(response);
+
       if(response.status == 'success'){
         this.limpiaProducto();
 
@@ -466,12 +462,8 @@ getSearch(claveExterna:string){
       });
   }
   //evitamod que den enter en el textarea de observaciones
-  omitirEnter(event:any){
-    if(event.which === 13 && !event.shiftKey){
-      event.preventDefault();
-      console.log('prevented');
-      
-    }
+  contadorCaracteres(event:Event){
+    this.contador = ((event.target as HTMLInputElement).value).length;
   }
   //accion de guardar el nuevo cliente del modal
   guardarCliente(){
@@ -487,21 +479,25 @@ getSearch(claveExterna:string){
     this._clienteService.postCliente(this.modeloCliente,identity).subscribe( 
       response =>{
         if(response.status == 'success'){
-          if(this.checkDireccion == true){
+          this.messageService.add({severity:'success', summary:'Registro exitoso', detail: 'Cliente registrado correctamente'});
+          //revisamos que los campos de la direccion vengan completos
+          if(this.checkDireccion == true && this.cdireccion.ciudad != '' && this.cdireccion.colonia != '' && this.cdireccion.calle != ''
+              && this.cdireccion.numExt != '' && this.cdireccion.cp != 0 && this.cdireccion.referencia != '' && this.cdireccion.telefono != 0){
+
             this._clienteService.postCdireccion(this.cdireccion,identity).subscribe( 
               response=>{
-                this.toastService.show('Cliente registrado correctamente',{classname: 'bg-success text-light', delay: 3000});
+                this.messageService.add({severity:'success', summary:'Registro exitoso', detail:'La direccion se registro correctamente'});
                 //console.log(response);
               },error=>{
-                this.toastService.show('Cliente registrado, pero sin direccion',{classname: 'bg-danger text-light', delay: 6000})
+                this.messageService.add({severity:'error', summary:'Algo salio mal', detail:error.error.message, sticky: true});
                 console.log(error);
               });
           }else{
-            this.toastService.show('Cliente registrado, pero sin direccion',{classname: 'bg-success text-light', delay: 3000});
+            this.messageService.add({severity:'warn', summary:'Advertencia', detail:'No se registro ninguna direccion, faltan rellenar campos'});
           }
         }else{
-          this.toastService.show('Algo salio mal',{classname: 'bg-danger text-light', delay: 6000})
-          //console.log('Algo salio mal');
+          console.log('Algo salio mal');
+          console.log(response);
         }
       },error=>{
         console.log(error);
@@ -516,9 +512,13 @@ guardarNuevaDireccion(){
   this._clienteService.postNuevaDireccion(this.nuevaDir).subscribe( 
     response=>{
       if(response.status == 'success'){
-        this.toastService.show('Direccion registrada correctamente',{classname: 'bg-success text-light', delay: 3000});
+        this.messageService.add({severity:'success', summary:'Registro exitoso', detail: 'Direccion registrada correctamente'});
+        this.getDireccionCliente(this.nuevaDir.idCliente);
+      } else{
+        this.messageService.add({severity:'error', summary:'Error', detail: 'Fallo al guardar la direccion',sticky:true});
+          console.log(response);
       }
-      //console.log(response)
+      
      }, error =>{
     console.log(error);
   });
@@ -541,11 +541,8 @@ muestraPrecios(){
 }
 
 calculaSubtotalPP(){
-  if(this.productoVentag.precio < this.producto[0]['precioR']){
-    this.toastService.show('El precio minimo permitido es de: $'+this.producto[0]['precioR'],{classname: 'bg-danger text-light', delay: 6000});
-    this.isSearch=true;
-  }else if(this.productoVentag.descuento < 0){
-    this.toastService.show('No puedes agregar descuento negativo',{classname: 'bg-danger text-light', delay: 6000});
+  if(this.productoVentag.descuento < 0){
+    this.messageService.add({severity:'warn', summary:'Alerta', detail: 'No puedes agregar descuento negativo'});
     this.isSearch=true;
   }else{
     this.productoVentag.subtotal = (this.productoVentag.cantidad * this.productoVentag.precio)- this.productoVentag.descuento;
@@ -555,6 +552,7 @@ calculaSubtotalPP(){
 
 //agregar producto a lista de ventas
 agregarProductoLista(){
+  console.log('hizo cluck')
   if( this.productoVentag.cantidad <= 0){
     this.messageService.add({severity:'warn', summary:'Alerta', detail: 'No se pueden agregar productos con cantidad 0 ó menor a 0'});
 
@@ -580,7 +578,7 @@ agregarProductoLista(){
             if(this.productoEG[0]['existenciaG']< this.productoVentag.cantidad){
               //this.messageService.add({severity:'warn', summary:'Alerta', detail:'El producto no cuenta con suficiente stock'});
               this.productoVentag.tieneStock = false;
-            } else {
+            }
               //asignamos los valores de producto
               this.cotizacion_editada.subtotal = this.cotizacion_editada.subtotal + (this.productoVentag.precio * this.productoVentag.cantidad);
               this.cotizacion_editada.descuento = this.cotizacion_editada.descuento + this.productoVentag.descuento;
@@ -588,7 +586,6 @@ agregarProductoLista(){
               this.productos_cotizacion_e.push({...this.productoVentag});
               this.isSearch = true;
 
-            }
         }
       }, error =>{
         this.messageService.add({severity:'error', summary:'Error!', detail:'Ocurrio un error al verificar la existencia'});
@@ -601,9 +598,9 @@ agregarProductoLista(){
 }
 
 //editar/eliminar producto de la lista de compras
-editarProductoLista(dato:any){
+editarProductoLista(idPM:number){
   //buscamos el producto a eliminar para traer sus propiedades
-  this.productoVentag = this.productos_cotizacion_e.find(x => x.idProdMedida == dato)!;
+  this.productoVentag = this.productos_cotizacion_e.find(x => x.idProdMedida == idPM)!;
   //re calculamos los importes de la venta 
   this.cotizacion_editada.subtotal = this.cotizacion_editada.subtotal - (this.productoVentag.precio * this.productoVentag.cantidad);
   this.cotizacion_editada.descuento = this.cotizacion_editada.descuento - this.productoVentag.descuento;
@@ -621,22 +618,26 @@ loadUser(){
 
 //actualizamos la cotizacion
 actualizaCotizacion(){
+
   //asignamos el id del Empleado que realiza la operacion
   this.cotizacion_editada.idEmpleado = this.identity['sub'];
   if(this.productos_cotizacion_e.length == 0){
-    this.toastService.show('No puedes generar una venta/cotizacion sin productos!',{classname: 'bg-danger text-light', delay: 6000})
+    this.messageService.add({severity:'warn', summary:'Alerta', detail:'No puedes generar una cotizacion sin productos!'});
+
   }else if(this.cotizacion_editada.idCliente == 0){
-    this.toastService.show('No puedes generar una venta/cotizacion sin cliente!',{classname: 'bg-danger text-light', delay: 6000})
+    this.messageService.add({severity:'warn', summary:'Alerta', detail:'No puedes generar una cotizacion sin cliente!'});
+
   } else{
     this._ventasService.putCotizacion(this.cotizacion_editada.idCotiza,this.cotizacion_editada).subscribe(
       response =>{
         if(response.status == 'success'){
-          this.toastService.show('Cotizacion actualzada',{classname: 'bg-success text-light', delay: 3000});
+
           this._ventasService.putProductosCotiza(this.cotizacion_editada.idCotiza, this.productos_cotizacion_e).subscribe(
             response => {
               if(response.status == 'success'){
-                this.toastService.show('Productos actualzados',{classname: 'bg-success text-light', delay: 3000});
-                this.generaPDF();
+                this.messageService.add({severity:'success', summary:'Registro exitoso', detail:'Cotizacion actualizada exitosamente!'});
+                
+                this.generaPDF(this.cotizacion_editada.idCotiza);
               }
               console.log(response)
             },error =>{
@@ -653,72 +654,14 @@ actualizaCotizacion(){
   console.log(this.cotizacion_editada)
 }
 
-generaPDF(){
-
-  this._ventasService.getDetallesCotiza(this.cotizacion_editada.idCotiza).subscribe(
-    response =>{
-      if(response.status == 'success'){
-        this.detallesCotiza = response.Cotizacion;
-        this.productosdCotiza = response.productos_cotiza;
-
-        const doc = new jsPDF;
-    //PARA LA TABAL DE PRODUCTOS
-    var cabeceras = ["CLAVE EXTERNA","DESCRIPCION","MEDIDA","PRECIO","CANTIDAD","DESCUENTO","SUBTOTAL"];
-    var rows:any = [];
-    var logo = new Image();//CREAMOS VARIABLE DONDE ASIGNAREMOS LA IMAGEN
-    logo.src = 'assets/images/logo-solo.png';//ASIGNAMOS LA UBICACION DE LA IMAGEN
-
-    // variable con logo, tipo x1,y1, ancho, largo
-    doc.addImage(logo,'PNG',10,9,25,25);
-    doc.setDrawColor(255, 145, 0);//AGREGAMOS COLOR NARANJA A LAS LINEAS
-    //          tipografia       tamaño letra       texto                                        x1,y1
-    doc.setFont('Helvetica').setFontSize(18).text('MATERIALES PARA CONSTRUCCION \"SAN OTILIO\"', 40,15);
-    doc.setFont('Helvetica').setFontSize(9).text(this.empresa[0]['nombreCorto']+': COLONIA '+this.empresa[0]['colonia']+', CALLE '+ this.empresa[0]['calle']+' #'+this.empresa[0]['numero']+', '+this.empresa[0]['ciudad']+', '+this.empresa[0]['estado'], 45,20);
-    doc.setFont('Helvetica').setFontSize(9).text('CORREOS: '+this.empresa[0]['correo1']+', '+this.empresa[0]['correo2'],60,25);
-    doc.setFont('Helvetica').setFontSize(9).text('TELEFONOS: '+this.empresa[0]['telefono']+' ó '+this.empresa[0]['telefono2']+'   RFC: '+this.empresa[0]['rfc'],68,30);
-    //           ancho linea   x1,y1  x2,y2
-    doc.setLineWidth(2.5).line(10,37,200,37);//colocacion de linea
-    doc.setLineWidth(5).line(10,43,55,43);//colocacion de linea
-    //          TIPOGRAFIA  NEGRITA O NORMAL  TAMAÑO        TEXTO      CONCATENAMOS                          X1,Y1     
-    doc.setFont('Helvetica','bold').setFontSize(12).text('COTIZACION #'+this.detallesCotiza[0]['idCotiza'], 12,45);
-    doc.setFont('Helvetica','normal').setFontSize(9).text('VENDEDOR: '+this.detallesCotiza[0]['nombreEmpleado'].toUpperCase(), 60,45);
-    doc.setFont('Helvetica','normal').setFontSize(9).text('FECHA: '+this.detallesCotiza[0]['created_at'].substring(0,10), 170,45);
-    doc.setLineWidth(2.5).line(10,50,200,50);//colocacion de linea
-    doc.setFont('Helvetica','normal').setFontSize(9).text('CLIENTE: '+this.detallesCotiza[0]['nombreCliente'], 10,55);
-    doc.setFont('Helvetica','normal').setFontSize(9).text('RFC: '+this.detallesCotiza[0]['clienteRFC'], 165,55);
-    //          TIPOGRAFIA  NEGRITA O NORMAL  TAMAÑO        TEXTO      CONCATENAMOS                          X1,Y1   PONEMOS TEXTO JUSTIFICADO    ENTRE        ANCHO MAXIMO
-    doc.setFont('Helvetica','normal').setFontSize(9).text('DIRECCION: '+this.detallesCotiza[0]['cdireccion'], 10,60,{align: 'justify',lineHeightFactor: 1.5,maxWidth:190});
-    ///
-    //doc.setFont('Helvetica','normal').setFontSize(9).text('TELEFONO: 0000000000', 10,70);
-    doc.setFont('Helvetica','normal').setFontSize(9).text('EMAIL: '+this.detallesCotiza[0]['clienteCorreo'], 10,70);
-    doc.setFont('Helvetica','normal').setFontSize(9).text('TIPO CLIENTE: '+this.detallesCotiza[0]['tipocliente'], 60,70);
-    doc.setLineWidth(2.5).line(10,75,200,75);//colocacion de linea
-    //recorremos los productos
-    this.productosdCotiza.forEach((element:any) =>{
-      var temp = [element.claveEx,element.descripcion,element.nombreMedida,element.precio,element.cantidad,element.descuento,element.subtotal];
-      rows.push(temp);
-    });
-    //generamos la tabla
-    autoTable(doc,{ head:[cabeceras],
-      body:rows, startY:80 });
-      //OBTEMOS DONDE FINALIZA LA TABLA CREADA
-      let posY = (doc as any).lastAutoTable.finalY;
-      //         TIPOLETRA  NEGRITA O NORMAL     TAMAÑO                                                               X1, POSICION FINAL DE LA TABLA + 10
-      doc.setFont('Helvetica','normal').setFontSize(9).text('SUBTOTAL:          $'+this.detallesCotiza[0]['subtotal'], 145,posY+10);
-      doc.setFont('Helvetica','normal').setFontSize(9).text('DESCUENTO:      $'+this.detallesCotiza[0]['descuento'], 145,posY+15);
-      doc.setFont('Helvetica','normal').setFontSize(9).text('TOTAL:                 $'+this.detallesCotiza[0]['total'], 145,posY+20);
-      doc.setFont('Helvetica','bold').setFontSize(9).text('*** TODOS LOS PRECIOS SON NETOS ***', 140,posY+25);
-
-      doc.setFont('Helvetica','normal').setFontSize(9).text('OBSERVACIONES: '+this.detallesCotiza[0]['observaciones'], 10,posY+32,{align: 'left',lineHeightFactor: 1.5,maxWidth:180});
-      doc.setDrawColor(255, 145, 0);//AGREGAMOS COLOR NARANJA A LAS LINEAS
-      doc.setLineWidth(5).line(10,posY+47,200,posY+47);//colocacion de linea
-      doc.setFont('Helvetica','bold').setFontSize(9).text('*** PRECIOS SUJETOS A CAMBIOS SIN PREVIO AVISO ***', 60,posY+48);
-    //doc.autoPrint();
-    //GUARDAMOS PDF
-    doc.save("cotizacion-"+this.detallesCotiza[0]['idCotiza']+".pdf");
-      }
-    },error =>{
-      console.log(error);
+generaPDF(idCotiza:number){
+  this.isLoadingDatos = true;
+  this._ventasService.getPDF(idCotiza).subscribe(
+    (pdf: Blob) => {
+      const blob = new Blob([pdf], {type: 'application/pdf'});
+      const url = window.URL.createObjectURL(blob);
+      window.open(url);
+      this.isLoadingDatos = false;
     }
   );
 }
@@ -734,6 +677,10 @@ generaPDF(){
     });
   }
 
+  /**
+   * Abre el modal de agregar direccion
+   * @param content nombre del modal
+   */
   openModalDirec(content:any){
     if(this.checkDireccion){
       this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title', size: 'xl'});
@@ -749,6 +696,8 @@ generaPDF(){
       }, (reason) => {
         this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
       });
+    } else{
+      this.cotizacion_editada.cdireccion = '';
     }
   }
 
