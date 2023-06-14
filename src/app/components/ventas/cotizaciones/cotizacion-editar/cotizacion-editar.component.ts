@@ -92,7 +92,7 @@ export class CotizacionEditarComponent implements OnInit {
                 private messageService: MessageService ) {
                  this.cotizacion_editada = new Ventag(0,0,2,'',1,null,0,0,0,0,'','',0);
                  this.productos_cotizacion_e = [];
-                 this.modeloCliente = new Cliente (0,'','','','','',0,1,0);
+                 this.modeloCliente = new Cliente (0,'','','','','',0,1,1);
                  this.cdireccion = new Cdireccion (0,'Mexico','Puebla','','','','','','',0,'',0,1,'');
                  this.nuevaDir = new Cdireccion (0,'Mexico','Puebla','','','','','','',0,'',0,1,'');
                  this.productoVentag = new Producto_ventasg(0,0,'',0,0,0,0,0,'','',0,0,true);
@@ -461,10 +461,12 @@ getSearch(claveExterna:string){
         console.log( error);
       });
   }
+
   //evitamod que den enter en el textarea de observaciones
   contadorCaracteres(event:Event){
     this.contador = ((event.target as HTMLInputElement).value).length;
   }
+
   //accion de guardar el nuevo cliente del modal
   guardarCliente(){
     var identity = this._empleadoService.getIdentity();
@@ -552,9 +554,9 @@ calculaSubtotalPP(){
 
 //agregar producto a lista de ventas
 agregarProductoLista(){
-  console.log('hizo cluck')
+  
   if( this.productoVentag.cantidad <= 0){
-    this.messageService.add({severity:'warn', summary:'Alerta', detail: 'No se pueden agregar productos con cantidad 0 ó menor a 0'});
+    this.messageService.add({severity:'warn', summary:'Alerta', detail: 'No se pueden agregar productos con cantidad 0 o menor a 0'});
 
   }else if( this.productoVentag.idProducto == 0){
     this.messageService.add({severity:'error', summary:'Error', detail: 'Ese producto no existe'});
@@ -569,14 +571,14 @@ agregarProductoLista(){
 
   }else{
     //revisamos la existencia del producto
-    this._productoService.getExistenciaG(this.productoVentag.idProducto).subscribe(
+    this._productoService.getExistenciaG(this.productoVentag.idProducto, this.productoVentag.idProdMedida, this.productoVentag.cantidad).subscribe(
       response =>{
-        this.productoEG = response.producto;
+
         if(response.status == 'success'){
             //verificamos la existencia
             //si esta es menor a la cantidad solicitada mandamos alerta
-            if(this.productoEG[0]['existenciaG']< this.productoVentag.cantidad){
-              //this.messageService.add({severity:'warn', summary:'Alerta', detail:'El producto no cuenta con suficiente stock'});
+            if(response.disponibilidad == false){
+              this.messageService.add({severity:'warn', summary:'Alerta', detail:'El producto no cuenta con suficiente stock'});
               this.productoVentag.tieneStock = false;
             }
               //asignamos los valores de producto
@@ -820,4 +822,5 @@ generaPDF(idCotiza:number){
       }
     );
   }
+
 }

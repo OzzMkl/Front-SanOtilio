@@ -3,7 +3,8 @@ import { Injectable } from "@angular/core";
 import { HttpClient, HttpHeaders} from '@angular/common/http';
 import { Observable, throwError } from "rxjs";
 import { catchError, concatMap} from "rxjs/operators";
-import { global } from "./global"; 
+import { global } from "./global";
+import { Producto_ventasg } from 'src/app/models/productoVentag';
 
 @Injectable()
 export class ProductoService{
@@ -157,12 +158,12 @@ export class ProductoService{
      * @param idProducto 
      * @returns 
      */
-    getExistenciaG(idProducto:any):Observable<any>{
-        return this._http.get(this.url+'productos/getExistenciaG/'+idProducto, {headers:this.headers} );
+    getExistenciaG(idProducto:number, idProdMedida:number, cantidad:number):Observable<any>{
+        return this._http.get(this.url+'productos/getExistenciaG/'+ idProducto+ '/'+ idProdMedida+ '/'+ cantidad,{headers:this.headers} );
     }
 
     getExistenciaPorMed(idProducto:Number){
-        return this._http.get(this.url+'productos/existencia/'+idProducto,{headers:this.headers});
+        return this._http.get(this.url+'productos/existencia/'+ idProducto,{headers:this.headers});
     }
     
     /**
