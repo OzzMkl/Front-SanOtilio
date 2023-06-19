@@ -723,11 +723,7 @@ generaPDF(idCotiza:number){
    modalAlertaExistencia(content:any){
      let encontrado = this.productos_cotizacion_e.find(x => x.tieneStock == false);
      if(typeof(encontrado) == 'object' ){
-       this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title', size: 'sm'}).result.then((result) => {
-         this.closeResult = `Closed with: ${result}`;
-       }, (reason) => {
-         this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-       });
+       this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title', size: 'sm', scrollable: true});
      }else{
        this.actualizaCotizacion();
        

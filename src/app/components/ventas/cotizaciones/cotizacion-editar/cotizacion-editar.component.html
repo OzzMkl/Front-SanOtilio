@@ -699,6 +699,22 @@
     </div>
     <div class="modal-body">
         <p class="text-center">Algunos productos no cuenta con stock suficiente o estan agotados. ¿Seguro que desea continuar?</p>
+        <table class="table table-sm table-dark">
+            <thead>
+                <tr>
+                    <th>Clav. Ext.</th>
+                    <th>Med.</th>
+                    <th>Cant.</th>
+                </tr>
+            </thead>
+            <tbody *ngFor="let pc of productos_cotizacion_e">
+                <tr *ngIf="pc.tieneStock == false">
+                    <th >{{pc.claveEx}}</th>
+                    <th >{{pc.nombreMedida}}</th>
+                    <th >{{pc.cantidad}}</th>
+                </tr>
+            </tbody>
+        </table>
     </div>
     <div class="modal-footer">
         <div class="col">
