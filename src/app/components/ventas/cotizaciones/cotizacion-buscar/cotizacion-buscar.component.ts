@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 //Servicios
 import { VentasService } from 'src/app/services/ventas.service';
-import { EmpresaService } from 'src/app/services/empresa.service';
 import { EmpleadoService } from 'src/app/services/empleado.service';
 import { global } from 'src/app/services/global';
 //NGBOOTSTRAP-modal
@@ -21,7 +20,6 @@ export class CotizacionBuscarComponent implements OnInit {
   public cotizaciones:Array<any> = [];//getCotizaciones
   public detallesCotiza:any;//getDetallesCotiza
   public productosdCotiza:any;//getDetallesCotiza
-  public empresa:any;//getDetallesEmpresa
   public userPermisos:any//loadUser
   //paginador
   public totalPages:any;
@@ -38,7 +36,6 @@ export class CotizacionBuscarComponent implements OnInit {
   
   constructor(  private _ventasService: VentasService,
                 private modalService: NgbModal,
-                private _empresaService: EmpresaService,
                 private _empleadoService: EmpleadoService,
                 private _http: HttpClient) {
 
@@ -46,7 +43,6 @@ export class CotizacionBuscarComponent implements OnInit {
 
   ngOnInit(): void {
     this.getCotizaciones();
-    this.getDatosEmpresa();
     this.loadUser()
   }
 
@@ -79,16 +75,6 @@ export class CotizacionBuscarComponent implements OnInit {
       },error=>{
         console.log(error)
       });
-  }
-  
-  getDatosEmpresa(){
-    this._empresaService.getDatosEmpresa().subscribe( 
-      response => {
-        if(response.status == 'success'){
-           this.empresa = response.empresa;
-           //console.log(this.empresa)
-        }
-      },error => {console.log(error)});
   }
 
   getDetallesCotiza(idCotiza:any){
