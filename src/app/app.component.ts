@@ -67,8 +67,13 @@ export class AppComponent implements OnInit, DoCheck{
             routerLink:'proveedor-modulo/proveedorDeshabilitado',
       }]},{
           label: 'Requisicion',
-          icon: 'pi pi-fw pi-book'
-        },{
+          icon: 'pi pi-fw pi-book',
+          routerLink: 'requisicion-modulo/requisicion-buscar',
+          items: [{
+            label: 'Agregar requisicion',
+            icon: 'pi pi-fw pi-plus-circle',
+            routerLink: 'requisicion-modulo/requisicion-agregar'
+      }]},{
           label: 'Orden de compra',
           icon: 'pi pi-fw pi-book',
           routerLink: 'ordencompra-modulo/ordencompra-buscar',

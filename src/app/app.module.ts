@@ -82,6 +82,10 @@ import { EntregasModuloComponent } from './components/entregas/entregas-modulo/e
 import { EntregasAgregarComponent } from './components/entregas/entregas-agregar/entregas-agregar.component';
 import { EntregasPendientesComponent } from './components/entregas/entregas-pendientes/entregas-pendientes.component';
 import { CompraEditarComponent } from './components/compras/compra/compra-editar/compra-editar.component';
+import { RequisicionModuloComponent } from './components/compras/requisiciones/requisicion-modulo/requisicion-modulo.component';
+import { RequisicionAgregarComponent } from './components/compras/requisiciones/requisicion-agregar/requisicion-agregar.component';
+import { RequisicionBuscarComponent } from './components/compras/requisiciones/requisicion-buscar/requisicion-buscar.component';
+import { RequisicionEditarComponent } from './components/compras/requisiciones/requisicion-editar/requisicion-editar.component';
 
 
 @NgModule({
@@ -149,7 +153,11 @@ import { CompraEditarComponent } from './components/compras/compra/compra-editar
     EntregasModuloComponent,
     EntregasAgregarComponent,
     EntregasPendientesComponent,
-    CompraEditarComponent
+    CompraEditarComponent,
+    RequisicionModuloComponent,
+    RequisicionAgregarComponent,
+    RequisicionBuscarComponent,
+    RequisicionEditarComponent
   ],
   imports: [
     BrowserModule,

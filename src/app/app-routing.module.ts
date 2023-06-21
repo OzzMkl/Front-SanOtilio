@@ -7,6 +7,11 @@ import { LoginComponent } from './components/login/login.component';
 import { ErrorComponent } from './components/error/error.component';
 import { EmpleadoEditarComponent } from './components/empleado-editar/empleado-editar.component';
 
+import {RequisicionModuloComponent} from './components/compras/requisiciones/requisicion-modulo/requisicion-modulo.component';
+import {RequisicionAgregarComponent} from './components/compras/requisiciones/requisicion-agregar/requisicion-agregar.component';
+import {RequisicionBuscarComponent} from './components/compras/requisiciones/requisicion-buscar/requisicion-buscar.component';
+import {RequisicionEditarComponent} from './components/compras/requisiciones/requisicion-editar/requisicion-editar.component';
+
 import { OrdencompraModuloComponent } from './components/compras/ordenes-compras/ordencompra-modulo/ordencompra-modulo.component';
 import { OrdencompraAgregarComponent } from './components/compras/ordenes-compras/ordencompra-agregar/ordencompra-agregar.component';
 import { OrdencompraBuscarComponent } from './components/compras/ordenes-compras/ordencompra-buscar/ordencompra-buscar.component';
@@ -72,6 +77,12 @@ const routes: Routes = [
   {path: 'login', component: LoginComponent},
   {path: 'logout/:sure', component: LoginComponent},
   {path: 'ajustes',component: EmpleadoEditarComponent, canActivate:[CheckTokenGuard]},
+  {path: 'requisicion-modulo', component: RequisicionModuloComponent,
+  children:[
+    {path: 'requisicion-agregar',component: RequisicionAgregarComponent},
+    {path: 'requisicion-buscar',component: RequisicionBuscarComponent},
+    {path: 'requisicion-editar/:idReq',component: RequisicionEditarComponent}
+  ]},
   {path: 'ordencompra-modulo', component: OrdencompraModuloComponent, canActivate:[OrdencompraGuardGuard],
     children:[
       {path: 'ordencompra-agregar',component: OrdencompraAgregarComponent},
