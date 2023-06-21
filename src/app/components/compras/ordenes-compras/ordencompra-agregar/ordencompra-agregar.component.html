@@ -140,7 +140,7 @@
         
         <div class="input-group mb-2">
             <div class="col-2">
-                <select name="" id="" class="form-select" name="seleccionado" [(ngModel)]="seleccionado">
+                <select name="" id="" class="form-select" name="seleccionado" [(ngModel)]="seleccionado" (ngModelChange)="cambioSeleccionado($event)">
                     <option value="1" selected>DESCRIPCION</option>
                     <option value="2">CLAVE EXTERNA</option>
                     <option value="3">CODIGO DE BARRAS</option>
