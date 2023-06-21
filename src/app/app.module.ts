@@ -10,6 +10,11 @@ import {NgxPaginationModule} from 'ngx-pagination'; // <-- import the module
 import { NgxBarcodeModule } from 'ngx-barcode';
 ///primeng
 import { PrimengModule } from './primeng/primeng/primeng.module';
+//Pertenecen a primeng y se declaran afuera para poder ocuparlos anivel raiz!!
+import { ToastModule } from 'primeng/toast';
+import { MessagesModule } from 'primeng/messages';
+import { MessageModule } from 'primeng/message';
+import { MessageService } from 'primeng/api';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -86,6 +91,7 @@ import { RequisicionModuloComponent } from './components/compras/requisiciones/r
 import { RequisicionAgregarComponent } from './components/compras/requisiciones/requisicion-agregar/requisicion-agregar.component';
 import { RequisicionBuscarComponent } from './components/compras/requisiciones/requisicion-buscar/requisicion-buscar.component';
 import { RequisicionEditarComponent } from './components/compras/requisiciones/requisicion-editar/requisicion-editar.component';
+
 
 
 @NgModule({
@@ -171,9 +177,12 @@ import { RequisicionEditarComponent } from './components/compras/requisiciones/r
     // AngularFileUploaderModule,
     NgxBarcodeModule,
     PrimengModule,
+    ToastModule,
+    MessageModule,
+    MessagesModule,
     
   ],
-  providers: [EmpleadoService],
+  providers: [EmpleadoService, MessageService],
   bootstrap: [AppComponent],
   exports: [
     CategoriaVerComponent    

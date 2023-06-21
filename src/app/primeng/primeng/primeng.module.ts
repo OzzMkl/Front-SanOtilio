@@ -14,13 +14,13 @@ import { MenubarModule } from 'primeng/menubar';
 import { AvatarModule } from 'primeng/avatar';
 import { AvatarGroupModule } from 'primeng/avatargroup';
 import { MenuModule } from 'primeng/menu';
-import { MessagesModule } from 'primeng/messages';
-import { MessageModule } from 'primeng/message';
+// import { MessagesModule } from 'primeng/messages';
+// import { MessageModule } from 'primeng/message';
 import { FileUploadModule } from 'primeng/fileupload';
 import {ToggleButtonModule} from 'primeng/togglebutton';
 import {SelectButtonModule} from 'primeng/selectbutton';
 import {FieldsetModule} from 'primeng/fieldset';
-import { ToastModule } from 'primeng/toast';
+//import { ToastModule } from 'primeng/toast';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { TableModule } from 'primeng/table';
 
@@ -41,13 +41,13 @@ import { TableModule } from 'primeng/table';
     AvatarModule,
     AvatarGroupModule,
     MenuModule,
-    MessageModule,
-    MessagesModule,
+    // MessageModule,
+    // MessagesModule,
     FileUploadModule,
     ToggleButtonModule,
     SelectButtonModule,
     FieldsetModule,
-    ToastModule,
+    //ToastModule,
     InputSwitchModule,
     TableModule
   ],
