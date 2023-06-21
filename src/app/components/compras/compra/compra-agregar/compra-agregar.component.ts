@@ -121,12 +121,12 @@ export class CompraAgregarComponent implements OnInit {
 
   capturar(datos:any){//Agregar a lista de compras
     if(this.producto_compra.cantidad <= 0 || this.producto_compra.precio <= 0 || this.producto_compra.subtotal <= 0){
-      this.toastService.show('No se pueden agregar productos con cantidad, precio o importe menor o igual a 0',{classname: 'bg-danger text-light', delay: 6000})
+      // this.toastService.show('No se pueden agregar productos con cantidad, precio o importe menor o igual a 0',{classname: 'bg-danger text-light', delay: 6000})
     }else if(this.producto_compra.idProducto == 0){
-      this.toastService.show('Ese producto no existe',{classname: 'bg-danger text-light', delay: 6000})
+      // this.toastService.show('Ese producto no existe',{classname: 'bg-danger text-light', delay: 6000})
     }else if( this.Lista_compras.find( x => x.idProducto == this.producto_compra.idProducto)){
       //verificamos si la lista de compras ya contiene el producto buscandolo por idProducto
-      this.toastService.show('Ese producto ya esta en la lista',{classname: 'bg-danger text-light', delay: 6000})
+      // this.toastService.show('Ese producto ya esta en la lista',{classname: 'bg-danger text-light', delay: 6000})
     }else{
       this.Lista_compras.push({...this.producto_compra});
       this.isSearch=true;
@@ -334,23 +334,23 @@ export class CompraAgregarComponent implements OnInit {
           this._compraService.registerProductoscompra(this.Lista_compras).subscribe(
             res =>{
                 console.log(res);
-                this.toastService.show(' ⚠ Compra creada exitosamente!', { classname: 'bg-success  text-light', delay: 5000 });
+                // this.toastService.show(' ⚠ Compra creada exitosamente!', { classname: 'bg-success  text-light', delay: 5000 });
                 this.getDetailsOrd();
                 //this.createPDF();
             },error =>{
               console.log(<any>error);
-              this.toastService.show('Ups... Fallo al agregar los productos a la compra', { classname: 'bg-danger text-light', delay: 15000 });
+              // this.toastService.show('Ups... Fallo al agregar los productos a la compra', { classname: 'bg-danger text-light', delay: 15000 });
             });
         //Agregar a PELOTE
           this._compraService.updateExistencia(this.Lista_compras).subscribe(
             res =>{
                 console.log(res);
-                this.toastService.show(' ⚠ Producto-Existencia-Lote agregado exitosamente!', { classname: 'bg-success  text-light', delay: 5000 });
+                // this.toastService.show(' ⚠ Producto-Existencia-Lote agregado exitosamente!', { classname: 'bg-success  text-light', delay: 5000 });
                 //this.getDetailsOrd();
                 //this.createPDF();
             },error =>{
               console.log(<any>error);
-              this.toastService.show('Ups... Fallo al agregar los productos a Producto-Existencia-Lote', { classname: 'bg-danger text-light', delay: 15000 });
+              // this.toastService.show('Ups... Fallo al agregar los productos a Producto-Existencia-Lote', { classname: 'bg-danger text-light', delay: 15000 });
             });
 
       }else{
@@ -359,7 +359,7 @@ export class CompraAgregarComponent implements OnInit {
       }
     },error =>{
       console.log(<any>error);
-      this.toastService.show('Ups... Fallo al crear la compra', { classname: 'bg-danger text-light', delay: 15000 });
+      // this.toastService.show('Ups... Fallo al crear la compra', { classname: 'bg-danger text-light', delay: 15000 });
     });
   }
   

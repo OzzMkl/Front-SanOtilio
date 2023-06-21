@@ -108,7 +108,7 @@ pageActual2: number = 0;
     }
     
     if(this.lista_productosorden.length == 0){
-      this.toastService.show('La lista de productos está vacía ',{classname: 'bg-danger text-light', delay: 6000});
+      // this.toastService.show('La lista de productos está vacía ',{classname: 'bg-danger text-light', delay: 6000});
     }else{
       console.log(this.orden_compra);
       console.log(this.lista_productosorden);
@@ -121,16 +121,16 @@ pageActual2: number = 0;
               this._ordencompraService.updateProductosOrderC(id,this.lista_productosorden).subscribe( 
                 response=>{
                   if(response.status == 'success'){
-                    this.toastService.show('Orden editada correctamente',{classname: 'bg-success text-light', delay: 3000});
+                    // this.toastService.show('Orden editada correctamente',{classname: 'bg-success text-light', delay: 3000});
                     this.getOrderModificada();
                     //console.log(response);
                   }else{
-                    this.toastService.show('Algo salio mal con la lista de productos',{classname: 'bg-danger text-light', delay: 6000});
+                    // this.toastService.show('Algo salio mal con la lista de productos',{classname: 'bg-danger text-light', delay: 6000});
                     //console.log('Algo salio mal con la lista de productos');
                   }
               
                 },error=>{
-                  this.toastService.show('Algo salio mal',{classname: 'bg-danger text-light', delay: 6000})
+                  // this.toastService.show('Algo salio mal',{classname: 'bg-danger text-light', delay: 6000})
                 console.log(error);
               });
             }else{
@@ -162,12 +162,12 @@ pageActual2: number = 0;
     this.productosOrden.nombreMedida = this.medidaActualizada.nombreMedida;
 
     if(this.productosOrden.cantidad <= 0){
-      this.toastService.show('No se pueden agregar productos con cantidad 0 ó menor a 0',{classname: 'bg-danger text-light', delay: 6000})
+      // this.toastService.show('No se pueden agregar productos con cantidad 0 ó menor a 0',{classname: 'bg-danger text-light', delay: 6000})
     }else if(this.productosOrden.idProducto == 0){
-      this.toastService.show('Ese producto no existe',{classname: 'bg-danger text-light', delay: 6000})
+      // this.toastService.show('Ese producto no existe',{classname: 'bg-danger text-light', delay: 6000})
     }else if( this.lista_productosorden.find( x => x.idProducto == this.productosOrden.idProducto)){
       //verificamos si la lista de compras ya contiene el producto buscandolo por idProducto
-      this.toastService.show('Ese producto ya esta en la lista',{classname: 'bg-danger text-light', delay: 6000})
+      // this.toastService.show('Ese producto ya esta en la lista',{classname: 'bg-danger text-light', delay: 6000})
     }else{
       this.lista_productosorden.push({...this.productosOrden});
       this.isSearch=true;

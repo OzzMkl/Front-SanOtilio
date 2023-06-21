@@ -11,9 +11,7 @@ import { Requisicion } from 'src/app/models/requisicion';
 import { Producto_requisicion } from 'src/app/models/producto_requisicion';
 //NGBOOTSTRAP-modal
 import { NgbModal, ModalDismissReasons, NgbDateStruct} from '@ng-bootstrap/ng-bootstrap';
-//pdf
-import jsPDF from 'jspdf';
-import autoTable from 'jspdf-autotable';
+//Router
 import { Router } from '@angular/router';
 
 
@@ -181,14 +179,14 @@ export class RequisicionAgregarComponent implements OnInit {
   */
   capturar(datos:any){ 
     if(this.producto_requisicion.cantidad <= 0){
-      this.toastService.show('No se pueden agregar productos con cantidad 0 ó menor a 0',{classname: 'bg-danger text-light', delay: 6000})
+      // this.toastService.show('No se pueden agregar productos con cantidad 0 ó menor a 0',{classname: 'bg-danger text-light', delay: 6000})
     }else if(this.producto_requisicion.idProducto == 0){
-      this.toastService.show('Ese producto no existe',{classname: 'bg-danger text-light', delay: 6000});
+      // this.toastService.show('Ese producto no existe',{classname: 'bg-danger text-light', delay: 6000});
     }else if( this.Lista_compras.find( x => x.idProducto == this.producto_requisicion.idProducto)){
       //verificamos si la lista de compras ya contiene el producto buscandolo por idProducto
-      this.toastService.show('Ese producto ya esta en la lista',{classname: 'bg-danger text-light', delay: 6000});
+      // this.toastService.show('Ese producto ya esta en la lista',{classname: 'bg-danger text-light', delay: 6000});
     }else if(this.producto_requisicion.idProdMedida <= 0){
-      this.toastService.show('Falta ingresar medida',{classname: 'bg-danger text-light', delay: 6000});
+      // this.toastService.show('Falta ingresar medida',{classname: 'bg-danger text-light', delay: 6000});
     }else{
       this.Lista_compras.push({...this.producto_requisicion});
       this.isSearch=true;
@@ -228,7 +226,7 @@ export class RequisicionAgregarComponent implements OnInit {
     this.requisicion.idEmpleado = this.identity['sub'];//asginamos id de Empleado
     console.log('Requisicion',this.requisicion);
     if(this.Lista_compras.length == 0){
-      this.toastService.show('No se puede crear Orden de compra si no tiene productos',{classname: 'bg-danger text-light', delay: 6000})
+      // this.toastService.show('No se puede crear Orden de compra si no tiene productos',{classname: 'bg-danger text-light', delay: 6000})
     }else{
       this._requisicionservice.registerRequisicion(this.requisicion).subscribe(
         response =>{
@@ -238,12 +236,12 @@ export class RequisicionAgregarComponent implements OnInit {
              this._requisicionservice.registerProductosRequisicion(this.Lista_compras).subscribe(
                res =>{
                    //console.log(res);
-                   this.toastService.show(' ⚠ Requisicion creada exitosamente!', { classname: 'bg-success  text-light', delay: 5000 });
+                  //  this.toastService.show(' ⚠ Requisicion creada exitosamente!', { classname: 'bg-success  text-light', delay: 5000 });
                    this.getDetailsReq();
                    //this.createPDF();
                },error =>{
                  console.log(<any>error);
-                 this.toastService.show('Ups... Fallo al agregar los productos a la requisicion', { classname: 'bg-danger text-light', delay: 15000 });
+                //  this.toastService.show('Ups... Fallo al agregar los productos a la requisicion', { classname: 'bg-danger text-light', delay: 15000 });
                });
           }else{
            console.log('fallo');  
@@ -251,7 +249,7 @@ export class RequisicionAgregarComponent implements OnInit {
           }
         },error =>{
          console.log(<any>error);
-         this.toastService.show('Ups... Fallo al crear la requisicion', { classname: 'bg-danger text-light', delay: 15000 });
+        //  this.toastService.show('Ups... Fallo al crear la requisicion', { classname: 'bg-danger text-light', delay: 15000 });
         });
     }
   }

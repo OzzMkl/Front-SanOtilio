@@ -331,12 +331,12 @@ export class CompraAgregarIdComponent implements OnInit {
 
     
     if(this.producto_compra.cantidad <= 0 || this.producto_compra.precio < 0 || this.producto_compra.subtotal < 0){
-      this.toastService.show('No se pueden agregar productos con cantidad, precio o importe menor o igual a 0',{classname: 'bg-danger text-light', delay: 6000})
+      // this.toastService.show('No se pueden agregar productos con cantidad, precio o importe menor o igual a 0',{classname: 'bg-danger text-light', delay: 6000})
     }else if(this.producto_compra.idProducto == 0){
-      this.toastService.show('Ese producto no existe',{classname: 'bg-danger text-light', delay: 6000})
+      // this.toastService.show('Ese producto no existe',{classname: 'bg-danger text-light', delay: 6000})
     }else if( this.Lista_compras.find( x => x.idProducto == this.producto_compra.idProducto)){
       //verificamos si la lista de compras ya contiene el producto buscandolo por idProducto
-      this.toastService.show('Ese producto ya esta en la lista',{classname: 'bg-danger text-light', delay: 6000})
+      // this.toastService.show('Ese producto ya esta en la lista',{classname: 'bg-danger text-light', delay: 6000})
     }else{
       this.Lista_compras.push({...this.producto_compra}); 
       this.isSearch=true;
@@ -582,13 +582,13 @@ export class CompraAgregarIdComponent implements OnInit {
     this.compra.idEmpleadoR = this.identity['sub'];//asginamos id de Empleado
 
     if(this.model == undefined){
-      this.toastService.show('Falta ingresar la fecha de recepción',{classname: 'bg-danger text-light', delay: 6000});
+      // this.toastService.show('Falta ingresar la fecha de recepción',{classname: 'bg-danger text-light', delay: 6000});
     }
     else if(this.compra.folioProveedor == 0){
-      this.toastService.show('Falta ingresar el folio del proveedor',{classname: 'bg-danger text-light', delay: 6000});
+      // this.toastService.show('Falta ingresar el folio del proveedor',{classname: 'bg-danger text-light', delay: 6000});
     }
     else if(this.Lista_compras.length == 0){
-      this.toastService.show('La lista de compras está vacía',{classname: 'bg-danger text-light', delay: 6000});
+      // this.toastService.show('La lista de compras está vacía',{classname: 'bg-danger text-light', delay: 6000});
     }
     else 
     {
@@ -610,12 +610,12 @@ export class CompraAgregarIdComponent implements OnInit {
             this._compraService.registerProductoscompra(this.Lista_compras).subscribe(
               res =>{
                   console.log(res);
-                  this.toastService.show(' ⚠ Compra creada exitosamente!', { classname: 'bg-success  text-light', delay: 5000 });
+                  // this.toastService.show(' ⚠ Compra creada exitosamente!', { classname: 'bg-success  text-light', delay: 5000 });
                   this.getLastCompra();
                   //this.createPDF();
               },error =>{
                 console.log(<any>error);
-                this.toastService.show('Ups... Fallo al agregar los productos a la compra', { classname: 'bg-danger text-light', delay: 15000 });
+                // this.toastService.show('Ups... Fallo al agregar los productos a la compra', { classname: 'bg-danger text-light', delay: 15000 });
               });
           //Registro de lote
           // this._compraService.registerLote().subscribe( res =>{
@@ -625,24 +625,24 @@ export class CompraAgregarIdComponent implements OnInit {
             this._compraService.updateExistencia(this.Lista_compras).subscribe(
               res =>{
                   console.log(res);
-                  this.toastService.show(' ⚠ Existencia actualizada exitosamente!', { classname: 'bg-success  text-light', delay: 5000 });
+                  // this.toastService.show(' ⚠ Existencia actualizada exitosamente!', { classname: 'bg-success  text-light', delay: 5000 });
                   //this.getLastCompra();
                   //this.createPDF();
               },error =>{
                 console.log(<any>error);
-                this.toastService.show('Ups... Fallo al agregar los productos', { classname: 'bg-danger text-light', delay: 15000 });
+                // this.toastService.show('Ups... Fallo al agregar los productos', { classname: 'bg-danger text-light', delay: 15000 });
               });
 
             if(this.facturableCheck==true){
               this._compraService.updateExistenciaFacturable(this.Lista_compras).subscribe(
                 res =>{
                     console.log(res);
-                    this.toastService.show(' ⚠ Existencia Facturable actualizada exitosamente!', { classname: 'bg-success  text-light', delay: 5000 });
+                    // this.toastService.show(' ⚠ Existencia Facturable actualizada exitosamente!', { classname: 'bg-success  text-light', delay: 5000 });
                     //this.getLastCompra();
                     //this.createPDF();
                 },error =>{
                   console.log(<any>error);
-                  this.toastService.show('Ups... Fallo al agregar los productos a la existencia facturable', { classname: 'bg-danger text-light', delay: 15000 });
+                  // this.toastService.show('Ups... Fallo al agregar los productos a la existencia facturable', { classname: 'bg-danger text-light', delay: 15000 });
                 });
             }else{
 
@@ -652,7 +652,7 @@ export class CompraAgregarIdComponent implements OnInit {
         }
       },error =>{
         console.log(<any>error);
-        this.toastService.show('Ups... Fallo al crear la compra', { classname: 'bg-danger text-light', delay: 15000 });
+        // this.toastService.show('Ups... Fallo al crear la compra', { classname: 'bg-danger text-light', delay: 15000 });
       });
 
     }

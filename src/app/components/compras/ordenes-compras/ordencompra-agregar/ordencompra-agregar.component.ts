@@ -109,14 +109,14 @@ export class OrdencompraAgregarComponent implements OnInit {
   }
   capturar(datos:any){//Agregar a lista de compras
     if(this.producto_orden.cantidad <= 0){
-      this.toastService.show('No se pueden agregar productos con cantidad 0 ó menor a 0',{classname: 'bg-danger text-light', delay: 6000})
+      // this.toastService.show('No se pueden agregar productos con cantidad 0 ó menor a 0',{classname: 'bg-danger text-light', delay: 6000})
     }else if(this.producto_orden.idProducto == 0){
-      this.toastService.show('Ese producto no existe',{classname: 'bg-danger text-light', delay: 6000});
+      // this.toastService.show('Ese producto no existe',{classname: 'bg-danger text-light', delay: 6000});
     }else if( this.Lista_compras.find( x => x.idProducto == this.producto_orden.idProducto)){
       //verificamos si la lista de compras ya contiene el producto buscandolo por idProducto
-      this.toastService.show('Ese producto ya esta en la lista',{classname: 'bg-danger text-light', delay: 6000});
+      // this.toastService.show('Ese producto ya esta en la lista',{classname: 'bg-danger text-light', delay: 6000});
     }else if(this.producto_orden.idProdMedida <= 0){
-      this.toastService.show('Falta ingresar medida',{classname: 'bg-danger text-light', delay: 6000});
+      // this.toastService.show('Falta ingresar medida',{classname: 'bg-danger text-light', delay: 6000});
     }else{
       this.Lista_compras.push({...this.producto_orden});
       this.isSearch=true;
@@ -142,7 +142,7 @@ export class OrdencompraAgregarComponent implements OnInit {
     this.orden_compra.fecha = this.model.year+'-'+this.model.month+'-'+this.model.day;//concatenamos la fecha del datepicker
     
     if(this.Lista_compras.length == 0){
-      this.toastService.show('No se puede crear Orden de compra si no tiene productos',{classname: 'bg-danger text-light', delay: 6000})
+      // this.toastService.show('No se puede crear Orden de compra si no tiene productos',{classname: 'bg-danger text-light', delay: 6000})
     }else{
       this._ordencompraService.registerOrdencompra(this.orden_compra).subscribe(
         response =>{
@@ -152,12 +152,12 @@ export class OrdencompraAgregarComponent implements OnInit {
              this._ordencompraService.registerProductosOrdenCompra(this.Lista_compras).subscribe(
                res =>{
                    //console.log(res);
-                   this.toastService.show(' ⚠ Orden creada exitosamente!', { classname: 'bg-success  text-light', delay: 5000 });
+                  //  this.toastService.show(' ⚠ Orden creada exitosamente!', { classname: 'bg-success  text-light', delay: 5000 });
                    this.getDetailsOrd();
                    //this.createPDF();
                },error =>{
                  console.log(<any>error);
-                 this.toastService.show('Ups... Fallo al agregar los productos a la orden de  compra', { classname: 'bg-danger text-light', delay: 15000 });
+                //  this.toastService.show('Ups... Fallo al agregar los productos a la orden de  compra', { classname: 'bg-danger text-light', delay: 15000 });
                });
           }else{
            console.log('fallo');  
@@ -165,7 +165,7 @@ export class OrdencompraAgregarComponent implements OnInit {
           }
         },error =>{
          console.log(<any>error);
-         this.toastService.show('Ups... Fallo al crear la Orden de compra', { classname: 'bg-danger text-light', delay: 15000 });
+        //  this.toastService.sshow('Ups... Fallo al crear la Orden de compra', { classname: 'bg-danger text-light', delay: 15000 });
         });
     }
   }

@@ -61,12 +61,12 @@ export class ProveedorAgregarComponent implements OnInit, OnDestroy {
     this.registraProveedor =  this._proveedorService.register(this.proveedor,identity).subscribe(
        response =>{ 
          //console.log(response);
-         this.toastService.show('Proveedor guardado correctamente', { classname: 'bg-success text-light', delay: 5000 }); 
+        //  this.toastService.show('Proveedor guardado correctamente', { classname: 'bg-success text-light', delay: 5000 }); 
          form.reset();
          this._router.navigate(['./proveedor-modulo/proveedorBuscar']);
         },
        error => {
-         this.toastService.show('Ups... Algo salio mal', { classname: 'bg-danger text-light', delay: 15000 });
+        //  this.toastService.show('Ups... Algo salio mal', { classname: 'bg-danger text-light', delay: 15000 });
          console.log(<any>error);
        }
      )
