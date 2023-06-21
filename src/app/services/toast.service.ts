@@ -1,14 +1,18 @@
-import { Injectable, TemplateRef } from '@angular/core';
+import { Injectable } from '@angular/core';
+import { MessageService } from 'primeng/api';
 
 @Injectable({ providedIn: 'root' })
+
 export class ToastService {
-  toasts: any[] = [];
 
-  show(textOrTpl: string | TemplateRef<any>, options: any = {}) {
-    this.toasts.push({ textOrTpl, ...options });
+  constructor( private messageService: MessageService){
   }
 
-  remove(toast:any) {
-    this.toasts = this.toasts.filter(t => t !== toast);
+  addToas( severity: string, summary: string, detail:string): void{
+    this.messageService.add({severity,summary,detail});
   }
+
+
+
+  
 }

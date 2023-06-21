@@ -96,7 +96,7 @@ export class ProveedorGuard implements CanActivate {
     var userPermi = this.user.permisos.find((x:any) => x.idModulo == this.idModulo && x.idSubModulo == this.idSubModulo);
     
     if( userPermi == undefined){
-      this.toastService.show('Acceso denegado', { classname: 'bg-danger  text-light', delay: 5000 });
+      //this.toastService.show('Acceso denegado', { classname: 'bg-danger  text-light', delay: 5000 });
       this.messageService.add({severity:'success', summary:'Registro exitoso', detail: 'Cliente registrado correctamente'});
       return false;
     } else{

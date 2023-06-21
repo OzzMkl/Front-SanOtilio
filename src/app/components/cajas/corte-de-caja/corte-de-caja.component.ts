@@ -140,10 +140,10 @@ export class CorteDeCajaComponent implements OnInit {
     this._cajaService.cierreCaja(this.movCaja[0]).subscribe(
       response =>{
         if(response.status == 'success'){
-          this.toastService.show('Corte generado exitosamente',{classname: 'bg-success text-light', delay: 3000});
+          //this.toastService.show('Corte generado exitosamente',{classname: 'bg-success text-light', delay: 3000});
           this.generaPDF();
         } else{
-          this.toastService.show('Algo salio mal',{classname: 'bg-danger text-light', delay: 3000});
+          //this.toastService.show('Algo salio mal',{classname: 'bg-danger text-light', delay: 3000});
         }
       }, error => {
         console.log( error)

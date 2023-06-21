@@ -79,7 +79,7 @@ export class NotasPorCobrarComponent implements OnInit {
       response =>{
         this.vCaja = response.caja;
         if(this.vCaja['horaF'] != null){
-          this.toastService.show('Caja no iniciada', { classname: 'bg-danger  text-light', delay: 5000 });
+          //this.toastService.show('Caja no iniciada', { classname: 'bg-danger  text-light', delay: 5000 });
           
         } else{
           this.sesionCaja = true;
@@ -125,7 +125,7 @@ export class NotasPorCobrarComponent implements OnInit {
           //si es verdadero el input puede ir en cero o menor
           if(this.tp1 <=0 || this.tp2 <= 0 ){
             //si alguno es verdadero mandamos advertencia de que no es posible hacer eso
-            this.toastService.show('No puedes ingresar 0',{classname: 'bg-danger text-light', delay: 6000});
+            //this.toastService.show('No puedes ingresar 0',{classname: 'bg-danger text-light', delay: 6000});
           } else{
             //Si todo esta bien realizamos la operacion
             this.cambio = this.detallesVenta[0]['total']- (this.tp1+this.tp2)
@@ -145,7 +145,7 @@ export class NotasPorCobrarComponent implements OnInit {
         break;
       case false:
           if(this.tp1 <= 0 ){
-            this.toastService.show('No puedes ingresar 0',{classname: 'bg-danger text-light', delay: 6000});
+            //this.toastService.show('No puedes ingresar 0',{classname: 'bg-danger text-light', delay: 6000});
             
           } else{
             //si no esta habilitado el check ponemos el segundo valor a cero
@@ -173,7 +173,7 @@ export class NotasPorCobrarComponent implements OnInit {
   cobroVenta(){
     if(this.isTipoPago2 == true){
       if(this.select1 == 0 || this.select2 == 0){
-        this.toastService.show('No puedes cobrar sin seleccionar metodo de pago',{classname: 'bg-danger text-light', delay: 6000});
+        //this.toastService.show('No puedes cobrar sin seleccionar metodo de pago',{classname: 'bg-danger text-light', delay: 6000});
       } else{
 
         //cremos arrary donde guardaremos los movimientos
@@ -210,12 +210,12 @@ export class NotasPorCobrarComponent implements OnInit {
               //cerramos los dos modales
               this.modalService.dismissAll()
               //mandamos mensaje de la nota fue cobrada correctamente
-              this.toastService.show('Nota #'+this.detallesVenta[0]['idVenta']+' cobrada correctamente',{classname: 'bg-success text-light', delay: 3000});
+              //this.toastService.show('Nota #'+this.detallesVenta[0]['idVenta']+' cobrada correctamente',{classname: 'bg-success text-light', delay: 3000});
             } else{
               //si devuelve otra coosa 
               console.log('algo salio mal');
               //mostramos mensaje de error
-              this.toastService.show('algo salio mal',{classname: 'bg-danger text-light', delay: 6000});
+              //this.toastService.show('algo salio mal',{classname: 'bg-danger text-light', delay: 6000});
             }
           }
         )
@@ -224,7 +224,7 @@ export class NotasPorCobrarComponent implements OnInit {
 
     } else{
       if(this.select1 == 0 ){
-        this.toastService.show('No puedes cobrar sin seleccionar metodo de pago',{classname: 'bg-danger text-light', delay: 6000});
+        //this.toastService.show('No puedes cobrar sin seleccionar metodo de pago',{classname: 'bg-danger text-light', delay: 6000});
       } else{
         //creamos variable donde almacenams los movimientos a guadar
         const caja_mov_array = []
@@ -252,12 +252,12 @@ export class NotasPorCobrarComponent implements OnInit {
               //cerramos los dos modales
               this.modalService.dismissAll()
               //mandamos mensaje de la nota fue cobrada correctamente
-              this.toastService.show('Nota #'+this.detallesVenta[0]['idVenta']+' cobrada correctamente',{classname: 'bg-success text-light', delay: 3000});
+              //this.toastService.show('Nota #'+this.detallesVenta[0]['idVenta']+' cobrada correctamente',{classname: 'bg-success text-light', delay: 3000});
             } else{
               //si devuelve otra coosa 
               console.log('algo salio mal');
               //mostramos mensaje de error
-              this.toastService.show('algo salio mal',{classname: 'bg-danger text-light', delay: 6000});
+              //this.toastService.show('algo salio mal',{classname: 'bg-danger text-light', delay: 6000});
             }
           }
         )

@@ -152,13 +152,13 @@ export class ProductoAgregarComponent implements OnInit {
            if(response.status == 'success'){
         
              this._router.navigate(['./producto-modulo/producto-buscar']);
-             this.toastService.show('Producto guardado correctamente', { classname: 'bg-success text-light', delay: 5000 });
+             //this.toastService.show('Producto guardado correctamente', { classname: 'bg-success text-light', delay: 5000 });
            }
          },
          error =>{
            //console.log(this.producto);
            //console.log('error ',error);
-           this.toastService.show(error, { classname: 'bg-danger text-light', delay: 15000 });
+           //this.toastService.show(error, { classname: 'bg-danger text-light', delay: 15000 });
          });
   }
 

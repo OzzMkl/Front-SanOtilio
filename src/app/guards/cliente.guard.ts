@@ -51,7 +51,7 @@ export class ClienteGuard implements CanActivate {
             return this.validatePermissions()
         }else{
           //si no lo encuentra no tiene permisos y retornamos un false
-          this.toastService.show('Acceso denegado', { classname: 'bg-danger  text-light', delay: 5000 });
+          //this.toastService.show('Acceso denegado', { classname: 'bg-danger  text-light', delay: 5000 });
             false
         }
         }
@@ -71,7 +71,7 @@ export class ClienteGuard implements CanActivate {
            return this.check=true;
         }else{
          
-         this.toastService.show('Acceso denegado', { classname: 'bg-danger  text-light', delay: 5000 });
+         //this.toastService.show('Acceso denegado', { classname: 'bg-danger  text-light', delay: 5000 });
          return false
         }
         

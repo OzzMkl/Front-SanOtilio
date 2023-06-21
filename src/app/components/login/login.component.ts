@@ -83,7 +83,7 @@ export class LoginComponent implements OnInit {
                   );
         }else{
           this.status = 'error';
-          this.toastService.show('Email y/o contraseña incorrectos',{classname: 'bg-danger text-light', delay: 5000});
+          //this.toastService.show('Email y/o contraseña incorrectos',{classname: 'bg-danger text-light', delay: 5000});
         }
       },
       error =>{
