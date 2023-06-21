@@ -1,44 +1,5 @@
 <div class="container">
-    <form class="form-group" #FormOrdCom="ngForm" (ngSubmit)="agregarOrdCompra(FormOrdCom)">
-        <div class="row align-items-start">
-            <h4 class="text-center">DATOS DEL PROVEEDOR</h4>
-            
-            <div class="col-2">
-                <label for="idRequisicion" class="form-label"># Requisicion</label>
-                <input type="text" class="form-control" id="idRequisicion"  readonly>
-            </div>
-            <div class="col-5">
-                <label for="idProveedor" class="form-label">Seleccionar proveedor</label>
-                <select name="idProveedor" id="idProveedor" class="form-select" #idProveedor="ngModel" [(ngModel)]="orden_compra.idProveedor" (ngModelChange)="onChange($event)">
-                    <option selected disabled value="">Abrir para seleccionar</option>
-                    <option  *ngFor="let proveedor of proveedoresLista" value={{proveedor.idProveedor}}>{{proveedor.nombre}}</option>
-                </select>
-            </div>
-            
-            <div class="col-4">
-                <label class="form-label" for="">Selecciona el dia de entrega aproximado</label>
-                <div class="input-group">
-                  <input class="form-control" placeholder="aaaa-mm-dd"
-                         name="dp" [(ngModel)]="model" ngbDatepicker #d="ngbDatepicker">
-                  <button class="btn btn-outline-secondary" (click)="d.toggle()" type="button"><i class="bi bi-calendar-date-fill"> </i> </button>
-                </div>
-              </div>
-           
-            <div *ngFor="let p of proveedorVer" class="row align-items-start">
-                <div class="col-2">
-                    <label for="rfc" class="form-label">RFC</label>
-                    <input type="text" name="rfc" class="form-control" value="{{p.rfc}}" readonly>
-                </div>
-                <div class="col-7">
-                    <label for="direccion" class="form-label">Direccion</label>
-                    <input type="text" name="direccion" class="form-control" value="{{p.estado}} {{p.ciudad}} {{p.colonia}} {{p.calle}} {{p.numero}}" readonly>
-                </div>                    
-                <div class="col-2">
-                    <label for="telefono" class="form-label">Telefono</label>
-                    <input type="text" name="telefono" class="form-control" value="{{p.telefono}}" readonly>
-                </div>    
-            </div>
-        </div>
+    <form class="form-group" #FormReq="ngForm" (ngSubmit)="agregarRequisicion(FormReq)">
         <hr>
         <div >
             <h4 class="text-center">PRODUCTO</h4>
@@ -47,17 +8,17 @@
                     <label class="form-label" for="">Buscar producto</label>
                     <div class="input-group">
                         <span class="input-group-addon" id="sizing-addon2"><i class="bi-search" style="font-size: 1.5rem; color: black; left: 0;" (click)="open(content)"></i> </span>
-                        <input class="form-control" type="text" ngbTooltip="Solo busca por clave externa" name="claveEx" #claveEx="ngModel" [(ngModel)]="producto_orden.claveEx" (keydown)="consultarProducto($event)">
+                        <input class="form-control" type="text" ngbTooltip="Solo busca por clave externa" name="claveEx" #claveEx="ngModel" [(ngModel)]="producto_requisicion.claveEx" (keydown)="consultarProducto($event)">
                         
                     </div>
                 </div>
                 <div class="col-4">
                     <label class="form-label" for="cantidadProducto">Cantidad</label>
-                    <input class="form-control" type="number" name="cantidadProducto" id="cantidadProducto"  #cantidadProducto="ngModel" [(ngModel)]="producto_orden.cantidad">
+                    <input class="form-control" type="number" name="cantidadProducto" id="cantidadProducto"  #cantidadProducto="ngModel" [(ngModel)]="producto_requisicion.cantidad">
                 </div>
                 <div class="col-2">
                     <label class="form-label" for="cantidadProducto">.</label>
-                    <button class="btn btn-success form-control" type="button" (click)="capturar(producto_orden)" [disabled]="isSearch"><i class="bi bi-check-circle-fill"> Agregar</i>     </button>
+                    <button class="btn btn-success form-control" type="button" (click)="capturar(producto_requisicion)" [disabled]="isSearch"><i class="bi bi-check-circle-fill"> Agregar</i>     </button>
                   </div>
             </div>
             <div class="row align-items-start" *ngFor="let prod of productoVer">
@@ -85,7 +46,7 @@
                 </div>
                 <div class="col-5">
                     <label for="medida" class="form-label">Seleccionar Medida</label>
-                    <select name="idMedida" id="idMedida" class="form-select" [(ngModel)]="producto_orden.idProdMedida" (ngModelChange)="capturaNombreMedida($event)">
+                    <select name="idMedida" id="idMedida" class="form-select" [(ngModel)]="producto_requisicion.idProdMedida" (ngModelChange)="capturaNombreMedida($event)">
                         <option selected disabled value="">Abrir para seleccionar</option>
                         <option  *ngFor="let medida of medidasLista" value={{medida.idProdMedida}} >{{medida.nombreMedida}}</option>
                     </select>
@@ -104,7 +65,7 @@
                         <th scope="col">CANTIDAD</th>
                     </tr>
                 </thead>
-                <tbody *ngFor="let p_d of Lista_compras | paginate:{id:'pcListaCompras',itemsPerPage: 5, currentPage: pageActual2}">
+                <tbody *ngFor="let p_d of Lista_compras | paginate:{id:'pcListaCompras',itemsPerPage: 5, currentPage: pageActual}">
                     <tr (click)="editarProductoO(p_d)"> 
                      <th scope="row">{{p_d.claveEx}}</th>
                      <th scope="row">{{p_d.descripcion}}</th>
@@ -113,14 +74,14 @@
                     </tr>
                 </tbody>
             </table>
-            <pagination-controls id="pcListaCompras" (pageChange)="pageActual2 = $event"></pagination-controls>
+            <pagination-controls id="pcListaCompras" (pageChange)="pageActual = $event"></pagination-controls>
         </div>
         <hr>
         <div class="row row-cols-lg-auto g-3 align-items-center">
             <div class="col-12">
                 <label for="observaciones">Observaciones</label>
                 <textarea class="form-control" name="observaciones" id="observaciones" rows="2" maxlength="254" #observaciones="ngModel" 
-                (keydown)="omitirEnter($event)" [(ngModel)]="orden_compra.observaciones"></textarea>
+                (keydown)="omitirEnter($event)" [(ngModel)]="requisicion.observaciones"></textarea>
                 <span class="justify-content-md-end">{{conta}}/254</span>
             </div>
             <br>
@@ -140,7 +101,7 @@
         
         <div class="input-group mb-2">
             <div class="col-2">
-                <select name="" id="" class="form-select" name="seleccionado" [(ngModel)]="seleccionado" (ngModelChange)="cambioSeleccionado($event)">
+                <select name="" id="" class="form-select" name="seleccionado" [(ngModel)]="seleccionado">
                     <option value="1" selected>DESCRIPCION</option>
                     <option value="2">CLAVE EXTERNA</option>
                     <option value="3">CODIGO DE BARRAS</option>

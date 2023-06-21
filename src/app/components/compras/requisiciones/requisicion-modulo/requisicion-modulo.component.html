@@ -1,0 +1,16 @@
+
+<div class="container">
+    <br>
+    <div class="row justify-content-between">
+        <div class="col-6">
+            <h1>{{page_title}}</h1>
+        </div>
+        <div class="col-auto">
+            <button type="button" value="Agregar" class="btn btn-success me-md-2" [routerLink]="['requisicion-agregar']" style="box-sizing: border-box;"><i class="bi bi-plus-circle"></i><br>Agregar</button>
+            <button type="button" value="Buscar" class="btn btn-primary me-md-2" [routerLink]="['requisicion-buscar']" style="box-sizing: border-box;"><i class="bi bi-search"></i><br>Buscar</button>
+        </div>
+    </div>
+</div>
+<hr>
+<br>
+<router-outlet></router-outlet>
