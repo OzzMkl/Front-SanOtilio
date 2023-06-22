@@ -5,7 +5,7 @@ import { Proveedor } from 'src/app/models/proveedor';
 import { ProveedorService } from 'src/app/services/proveedor.service';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import {ToastService} from 'src/app/services/toast.service';
+import { MessageService } from 'primeng/api';
 import { EmpleadoService } from 'src/app/services/empleado.service';
 
 
@@ -13,7 +13,7 @@ import { EmpleadoService } from 'src/app/services/empleado.service';
   selector: 'app-proveedor-ver',
   templateUrl: './proveedor-ver.component.html',
   styleUrls: ['./proveedor-ver.component.css'],
-  providers:[ProveedorService,BancoService,EmpleadoService]  
+  providers:[ProveedorService,BancoService,EmpleadoService,MessageService]  
 })
 export class ProveedorVerComponent implements OnInit {
 
@@ -37,7 +37,7 @@ export class ProveedorVerComponent implements OnInit {
     private _route: ActivatedRoute,
     private _empleadoService: EmpleadoService,
     private modalService: NgbModal,
-    public toastService: ToastService
+    private messageService: MessageService
 
   ) { 
 
@@ -167,12 +167,12 @@ export class ProveedorVerComponent implements OnInit {
         if(response.status == 'success'){
           //console.log(response);
           this._router.navigate(['./proveedor-modulo/proveedorBuscar']);
-          // this.toastService.show('Estatus cambiado correctamente', { classname: 'bg-success text-light', delay: 5000 }); 
+          this.messageService.add({severity:'success', summary:'Éxito', detail:'Estatus cambiado correctamente'});
         }
       },
       error =>{
         console.log(error);
-        // this.toastService.show('Ups... Algo salio mal', { classname: 'bg-danger text-light', delay: 15000 });
+        this.messageService.add({severity:'error', summary:'Error', detail:'No se actualizó el status'});
       }
     )
   });

@@ -4,15 +4,15 @@ import { ProveedorService } from 'src/app/services/proveedor.service';
 import { Router} from '@angular/router';
 import { Banco } from 'src/app/models/banco';
 import { BancoService } from 'src/app/services/banco.service';
-import { ToastService } from 'src/app/services/toast.service';
 import { EmpleadoService } from 'src/app/services/empleado.service';
 import { Subscription } from 'rxjs';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-proveedor-agregar',
   templateUrl: './proveedor-agregar.component.html',
   styleUrls: ['./proveedor-agregar.component.css'],
-  providers:[ProveedorService,BancoService]  
+  providers:[ProveedorService,BancoService,MessageService]  
 })
 export class ProveedorAgregarComponent implements OnInit, OnDestroy {
 
@@ -29,7 +29,7 @@ export class ProveedorAgregarComponent implements OnInit, OnDestroy {
                 private _bancoService: BancoService,
                 private _router: Router,
                 private _empleadoService: EmpleadoService,
-                public toastService: ToastService
+                private messageService: MessageService
                 ) { }
 
   ngOnInit(): void {
@@ -61,12 +61,12 @@ export class ProveedorAgregarComponent implements OnInit, OnDestroy {
     this.registraProveedor =  this._proveedorService.register(this.proveedor,identity).subscribe(
        response =>{ 
          //console.log(response);
-        //  this.toastService.show('Proveedor guardado correctamente', { classname: 'bg-success text-light', delay: 5000 }); 
+          this.messageService.add({severity:'success', summary:'Éxito', detail:'Proveedor guardado'});
          form.reset();
          this._router.navigate(['./proveedor-modulo/proveedorBuscar']);
         },
        error => {
-        //  this.toastService.show('Ups... Algo salio mal', { classname: 'bg-danger text-light', delay: 15000 });
+        this.messageService.add({severity:'error', summary:'Error', detail:'No se registró al proveedor'});
          console.log(<any>error);
        }
      )

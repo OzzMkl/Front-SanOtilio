@@ -4,10 +4,10 @@ import { ActivatedRoute } from '@angular/router';
 import { ProveedorService } from 'src/app/services/proveedor.service';
 import { ProductoService } from 'src/app/services/producto.service';
 import { global } from 'src/app/services/global';
-import { ToastService } from 'src/app/services/toast.service';
 import { OrdendecompraService } from 'src/app/services/ordendecompra.service';
 import { EmpleadoService } from 'src/app/services/empleado.service';
 import { HttpClient} from '@angular/common/http';
+import { MessageService } from 'primeng/api';
 //modelos
 import { Ordencompra } from 'src/app/models/orden_compra';
 import { Producto_orden } from 'src/app/models/producto_orden';
@@ -21,7 +21,7 @@ import autoTable from 'jspdf-autotable';
   selector: 'app-ordencompra-editar',
   templateUrl: './ordencompra-editar.component.html',
   styleUrls: ['./ordencompra-editar.component.css'],
-  providers:[ProveedorService,ProductoService, OrdendecompraService, EmpleadoService]
+  providers:[ProveedorService,ProductoService, OrdendecompraService, EmpleadoService, MessageService]
 })
 export class OrdencompraEditarComponent implements OnInit {
 
@@ -82,7 +82,7 @@ pageActual2: number = 0;
     private _proveedorService: ProveedorService,
     private _http: HttpClient,
     private _productoService: ProductoService,
-    public toastService: ToastService,
+    private messageService: MessageService,
     private _ordencompraService: OrdendecompraService,
     public _empleadoService : EmpleadoService,
     private _route: ActivatedRoute,
@@ -108,7 +108,7 @@ pageActual2: number = 0;
     }
     
     if(this.lista_productosorden.length == 0){
-      // this.toastService.show('La lista de productos está vacía ',{classname: 'bg-danger text-light', delay: 6000});
+      this.messageService.add({severity:'error', summary:'Error', detail:'No se puede crear la orden de compra si no tiene productos'});
     }else{
       console.log(this.orden_compra);
       console.log(this.lista_productosorden);
@@ -117,20 +117,21 @@ pageActual2: number = 0;
         this._ordencompraService.updateOrdenCompra(id,this.orden_compra).subscribe( 
           response =>{
             if(response.status == 'success'){
+              this.messageService.add({severity:'success', summary:'Éxito', detail:'Orden de compra actualizada'});
               //console.log(response);
               this._ordencompraService.updateProductosOrderC(id,this.lista_productosorden).subscribe( 
                 response=>{
                   if(response.status == 'success'){
-                    // this.toastService.show('Orden editada correctamente',{classname: 'bg-success text-light', delay: 3000});
+                    this.messageService.add({severity:'success', summary:'Éxito', detail:'Productos actualizados'});
                     this.getOrderModificada();
                     //console.log(response);
                   }else{
-                    // this.toastService.show('Algo salio mal con la lista de productos',{classname: 'bg-danger text-light', delay: 6000});
+                    this.messageService.add({severity:'error', summary:'Error', detail:'Fallo al actualizar los productos de la orden de compra'});
                     //console.log('Algo salio mal con la lista de productos');
                   }
               
                 },error=>{
-                  // this.toastService.show('Algo salio mal',{classname: 'bg-danger text-light', delay: 6000})
+                  this.messageService.add({severity:'error', summary:'Error', detail:'Fallo al actualizar la orden de compra'});
                 console.log(error);
               });
             }else{
@@ -162,12 +163,13 @@ pageActual2: number = 0;
     this.productosOrden.nombreMedida = this.medidaActualizada.nombreMedida;
 
     if(this.productosOrden.cantidad <= 0){
-      // this.toastService.show('No se pueden agregar productos con cantidad 0 ó menor a 0',{classname: 'bg-danger text-light', delay: 6000})
+      this.messageService.add({severity:'error', summary:'Error', detail:'No se pueden agregar productos con cantidad igual o menor a 0'});
     }else if(this.productosOrden.idProducto == 0){
-      // this.toastService.show('Ese producto no existe',{classname: 'bg-danger text-light', delay: 6000})
+      this.messageService.add({severity:'error', summary:'Error', detail:'Ese producto no existe'});
     }else if( this.lista_productosorden.find( x => x.idProducto == this.productosOrden.idProducto)){
-      //verificamos si la lista de compras ya contiene el producto buscandolo por idProducto
-      // this.toastService.show('Ese producto ya esta en la lista',{classname: 'bg-danger text-light', delay: 6000})
+      this.messageService.add({severity:'error', summary:'Error', detail:'Ese producto ya esta en la lista'});
+    }else if(this.productosOrden.idProdMedida <= 0){
+      this.messageService.add({severity:'error', summary:'Error', detail:'Falta ingresar medida'});
     }else{
       this.lista_productosorden.push({...this.productosOrden});
       this.isSearch=true;
