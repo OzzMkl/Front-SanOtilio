@@ -8,7 +8,10 @@ import { EmpleadoService } from 'src/app/services/empleado.service';
 })
 export class CotizacionModuloComponent implements OnInit {
 
-  public userPermisos:any
+  public userPermisos:Array<any> = [];
+  //PERMISOS
+  private idModulo: number = 6;
+  private idSubmodulo: number = 19;
 
   constructor(private _empleadoService:EmpleadoService) { }
 
@@ -17,7 +20,7 @@ export class CotizacionModuloComponent implements OnInit {
   }
   
   loadUser(){
-    this.userPermisos = this._empleadoService.getPermisosModulo()
+    this.userPermisos = this._empleadoService.getPermisosModulo(this.idModulo, this.idSubmodulo);
   }
 
 }

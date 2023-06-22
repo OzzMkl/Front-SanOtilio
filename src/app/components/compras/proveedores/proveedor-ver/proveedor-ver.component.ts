@@ -25,6 +25,9 @@ export class ProveedorVerComponent implements OnInit {
   public token:any;
   public userPermisos:any
   public closeModal: string = '';
+  //PERMISOS
+  private idModulo: number = 3;
+  private idSubmodulo: number = 4;
 
   constructor(
 
@@ -176,7 +179,7 @@ export class ProveedorVerComponent implements OnInit {
   }
   
   loadUser(){
-    this.userPermisos = this._empleadoService.getPermisosModulo();
+    this.userPermisos = this._empleadoService.getPermisosModulo(this.idModulo, this.idSubmodulo);
   }
   
 }

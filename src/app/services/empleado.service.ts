@@ -37,9 +37,13 @@ export class EmpleadoService{
         return this.identity;
     }
     /************ */
-    getPermisosModulo(){
-        let permisos = JSON.parse(localStorage.getItem('PermisosModulo') || '{}');
-        if(permisos && permisos != null){
+    getPermisosModulo(idModulo:number, idSubModulo:number){
+        
+        var user = this.getIdentity();
+
+        var permisos = user.permisos.find((x:any) => x.idModulo == idModulo && x.idSubModulo == idSubModulo);
+
+        if(permisos && permisos != undefined){
             this.permisos = permisos;
         } else{
             this.permisos = null;

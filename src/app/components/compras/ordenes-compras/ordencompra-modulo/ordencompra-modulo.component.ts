@@ -9,7 +9,10 @@ import { EmpleadoService } from 'src/app/services/empleado.service';
 })
 export class OrdencompraModuloComponent implements OnInit {
 
-  public userPermisos:any;
+  public userPermisos:Array<any> = [];
+  //PERMISOS
+  private idModulo: number = 3;
+  private idSubmodulo: number = 6;
 
   constructor(private _empleadoService: EmpleadoService) { }
 
@@ -17,6 +20,6 @@ export class OrdencompraModuloComponent implements OnInit {
     this.loadUser()
   }
   loadUser(){
-    this.userPermisos = this._empleadoService.getPermisosModulo();
+    this.userPermisos = this._empleadoService.getPermisosModulo(this.idModulo, this.idSubmodulo);
   }
 }

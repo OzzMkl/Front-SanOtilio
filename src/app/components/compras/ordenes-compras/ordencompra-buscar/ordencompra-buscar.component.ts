@@ -49,6 +49,9 @@ export class OrdencompraBuscarComponent implements OnInit {
   public isLoading: boolean = false;
   //variable para el pdf
   public fecha : Date = new Date();
+//PERMISOS
+private idModulo: number = 3;
+private idSubmodulo: number = 6;
 
 
 
@@ -123,7 +126,7 @@ export class OrdencompraBuscarComponent implements OnInit {
   }
   /***** */
   loadUser(){
-    this.userPermisos = this._empleadoService.getPermisosModulo();
+    this.userPermisos = this._empleadoService.getPermisosModulo(this.idModulo, this.idSubmodulo);
   }
   /***** */
 

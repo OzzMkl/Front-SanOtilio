@@ -57,7 +57,7 @@ export class CompraBuscarComponent implements OnInit {
 
   ngOnInit(): void {
     this.getComprasR();
-    this.loadUser();
+    //this.loadUser();
   }
 
   //
@@ -318,10 +318,10 @@ export class CompraBuscarComponent implements OnInit {
     }
   }
 
-  loadUser(){
-    this.userPermisos = this._empleadoService.getPermisosModulo();  
-    console.log(this.userPermisos);
-  }
+  // loadUser(){
+  //   this.userPermisos = this._empleadoService.getPermisosModulo();  
+  //   console.log(this.userPermisos);
+  // }
 
    /**
    * Destruye las subscripciones a los observables de regitro proveedor

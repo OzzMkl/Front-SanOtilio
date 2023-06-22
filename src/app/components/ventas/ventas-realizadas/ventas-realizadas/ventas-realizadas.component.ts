@@ -33,6 +33,9 @@ export class VentasRealizadasComponent implements OnInit {
   buscaNombreEmpleado='';
   //cerrar modal
   closeResult = '';
+  //PERMISOS
+  private idModulo: number = 6;
+  private idSubmodulo: number = 17;
 
   constructor( private _ventasService: VentasService, private modalService: NgbModal, private _empleadoService: EmpleadoService) { }
 
@@ -74,7 +77,7 @@ export class VentasRealizadasComponent implements OnInit {
   }
   //cargamos permisos
   loadUser(){
-    this.userPermisos = this._empleadoService.getPermisosModulo()
+    this.userPermisos = this._empleadoService.getPermisosModulo(this.idModulo,this.idSubmodulo)
   }
   // Metodos del  modal
   open(content:any) {//abrir modal

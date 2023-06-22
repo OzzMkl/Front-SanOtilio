@@ -33,6 +33,9 @@ export class CotizacionBuscarComponent implements OnInit {
   tipoBusqueda: number = 1;
   //spinner
   public isLoading: boolean = false;
+  //PERMISOS
+  private idModulo: number = 6;
+  private idSubmodulo: number = 19;
   
   constructor(  private _ventasService: VentasService,
                 private modalService: NgbModal,
@@ -47,7 +50,7 @@ export class CotizacionBuscarComponent implements OnInit {
   }
 
   loadUser(){
-    this.userPermisos = this._empleadoService.getPermisosModulo()
+    this.userPermisos = this._empleadoService.getPermisosModulo(this.idModulo, this.idSubmodulo)
   }
 
   //obtenemos array con todas las cotizaciones

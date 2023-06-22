@@ -50,6 +50,9 @@ export class ClienteBuscarComponent implements OnInit {
   public isLoading: boolean = false;
   //Subscripciones
   private getClienteSub : Subscription = new Subscription;
+  //PERMISOS
+  private idModulo: number = 6;
+  private idSubmodulo: number = 20;
 
   constructor( 
                 private _clienteService: ClientesService, 
@@ -64,7 +67,7 @@ export class ClienteBuscarComponent implements OnInit {
   }
 
   loadUser(){
-    this.userPermisos = this._empleadoService.getPermisosModulo();
+    this.userPermisos = this._empleadoService.getPermisosModulo(this.idModulo, this.idSubmodulo);
   }
 
   seleccionarCliente(idCliente:any){

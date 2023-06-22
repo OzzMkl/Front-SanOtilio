@@ -86,6 +86,9 @@ export class PuntoDeVentaComponent implements OnInit {
   public isLoadingClientes: boolean = false;
   //contadores para los text area
   contador: number =0;
+  //PERMISOS
+  private idModulo: number = 6;
+  private idSubmodulo: number = 17;
 
 
   constructor( 
@@ -506,7 +509,7 @@ export class PuntoDeVentaComponent implements OnInit {
   //traemos la informacion del usuario logeado
   loadUser(){
     this.identity = this._empleadoService.getIdentity();
-     this.userPermisos = this._empleadoService.getPermisosModulo();
+     this.userPermisos = this._empleadoService.getPermisosModulo(this.idModulo, this.idSubmodulo);
     if(this.userPermisos[0]['agregar'] != 1){
       this._router.navigate(['./ventas-modulo/ventas-realizadas-buscar']);
 

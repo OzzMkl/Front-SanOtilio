@@ -9,7 +9,9 @@ import { EmpleadoService } from 'src/app/services/empleado.service';
 })
 export class ProveedorModuloComponent implements OnInit {
 
-  public userPermisos:any
+  public userPermisos:Array <any> = [];
+  private idModulo: number = 3;
+  private idSubmodulo: number = 4;
   
   constructor(private _empleadoService: EmpleadoService) {}
 
@@ -18,7 +20,7 @@ export class ProveedorModuloComponent implements OnInit {
   }
 
   loadUser(){
-    this.userPermisos = this._empleadoService.getPermisosModulo();
+    this.userPermisos = this._empleadoService.getPermisosModulo(this.idModulo,this.idSubmodulo);
     console.log(this.userPermisos)
   }
 }

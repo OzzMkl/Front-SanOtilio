@@ -13,12 +13,10 @@ import { MessageService } from 'primeng/api';
 export class ProveedorGuard implements CanActivate {
 
   
-  public user:any
-  public userPermisos:any
-  public roles:any
-  public check: boolean = false
+  public user:any;
+  public check: boolean = false;
   idModulo=3;
-  idSubModulo=88;
+  idSubModulo=4;
 
   constructor(private _router: Router,
               private _empleadoService: EmpleadoService,
@@ -37,7 +35,7 @@ export class ProveedorGuard implements CanActivate {
         this.validaPermiso();
         //this.validateRol()
       }else{
-        this._router.navigate(['/login'])
+        this._router.navigate(['/login']);
       }
       
       return false;
@@ -48,6 +46,9 @@ export class ProveedorGuard implements CanActivate {
     this.user = this._empleadoService.getIdentity();
     //console.log(this.user.permisos);
 
+    /**
+     * Bucamos en los permisos guardados en el navegador el modulo y su submodulo si lo encuentra este ingresa al modulo
+     */
     var userPermi = this.user.permisos.find((x:any) => x.idModulo == this.idModulo && x.idSubModulo == this.idSubModulo);
     
     if( userPermi == undefined){
