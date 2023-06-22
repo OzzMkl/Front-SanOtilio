@@ -35,7 +35,7 @@ export class CotizacionGuard implements CanActivate {
         this._router.navigate(['/login']);
       }
       
-      return this.check
+      return this.check;
   }
 
   private validaPermiso(){
@@ -56,7 +56,7 @@ export class CotizacionGuard implements CanActivate {
 
     } else{
 
-      return true;
+      return this.check= true;
 
     }
   }

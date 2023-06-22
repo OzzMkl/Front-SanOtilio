@@ -33,7 +33,7 @@ export class PuntoDeVentaGuard implements CanActivate {
         this._router.navigate(['/login']);
       }
       
-      return this.check
+      return this.check;
   }
 
   validaPermiso(){
@@ -53,7 +53,7 @@ export class PuntoDeVentaGuard implements CanActivate {
 
     } else{
 
-      return true;
+      return this.check= true;
 
     }
   }

@@ -34,7 +34,7 @@ export class OrdencompraGuardGuard implements CanActivate {
         this._router.navigate(['/login']);
       }
       
-      return this.check
+      return this.check;
   }
 
   private validaPermiso(){
@@ -55,7 +55,7 @@ export class OrdencompraGuardGuard implements CanActivate {
 
     } else{
 
-      return true;
+      return this.check= true;
 
     }
   }
