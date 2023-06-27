@@ -3,6 +3,7 @@ import { ActivatedRouteSnapshot, CanActivate, RouterStateSnapshot, UrlTree, Rout
 import { Observable } from 'rxjs';
 
 import { EmpleadoService } from '../services/empleado.service';
+import { ModulosService } from '../services/modulos.service';
 //primeng
 import { MessageService } from 'primeng/api';
 
@@ -13,12 +14,12 @@ export class ProductosGuard implements CanActivate {
 
   public user: any = [];
   public check: boolean = false;
-  private idModulo: number = 5;
-  private idSubModulo: number = 13;
+  private mInv = this._modulosService.modsInventario();
 
   constructor(
     private _router: Router,
     private _empleadoService: EmpleadoService,
+    private _modulosService: ModulosService,
     private messageService: MessageService ){}
 
   canActivate(
@@ -45,7 +46,7 @@ export class ProductosGuard implements CanActivate {
     /**
      * Bucamos en los permisos guardados en el navegador el modulo y su submodulo si lo encuentra este ingresa al modulo
      */
-    var userPermi = this.user.permisos.find((x:any) => x.idModulo == this.idModulo && x.idSubModulo == this.idSubModulo);
+    var userPermi = this.user.permisos.find((x:any) => x.idModulo == this.mInv.idModulo && x.idSubModulo == this.mInv.idSubModulo);
     
     if( userPermi == undefined){
       //this.toastService.show('Acceso denegado', { classname: 'bg-danger  text-light', delay: 5000 });
