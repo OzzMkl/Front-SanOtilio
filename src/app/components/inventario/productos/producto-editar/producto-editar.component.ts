@@ -35,6 +35,10 @@ export class ProductoEditarComponent implements OnInit {
   public categoria: Array<any> = []
   public almacenes: Array<any> = []
   public identity: any;
+  //PERMISOS
+  public userPermisos:any;
+  private idModulo: number = 5;
+  private idSubmodulo: number = 13;
   //
   public url:string = global.url;
   //  para el codbar
@@ -76,6 +80,9 @@ export class ProductoEditarComponent implements OnInit {
   public checkMantPrecio: boolean = false;
   public checkMantPorce: boolean = false;
   public mmValue: number = 0;
+  //contador para redireccion al no tener permisos
+  counter: number = 5;
+  timerId:any;
 
   constructor(
     private _productoService: ProductoService,
@@ -100,12 +107,7 @@ export class ProductoEditarComponent implements OnInit {
    }
 
   ngOnInit(): void {
-    this.getIdProduct();
-    this.getMedida();
-    this.getMarca();
-    this.getDepartamentos();
-    this.getCategoria();
-    this.getAlmacen();
+    this.loadUser();
   }
 
   /**
@@ -496,7 +498,7 @@ export class ProductoEditarComponent implements OnInit {
      * @param form 
      */
     submit(form:any){
-      this.loadUser();
+      
       this.insertaListaProdM();
       //console.log(this.producto, this.listaProdMedida)
 
@@ -997,8 +999,31 @@ export class ProductoEditarComponent implements OnInit {
         }
       );
     }
+
     loadUser(){
-      this.identity = this._empleadoService.getIdentity();
+      this.userPermisos = this._empleadoService.getPermisosModulo(this.idModulo, this.idSubmodulo);
+      if(this.userPermisos.editar != 1){
+
+        this.timerId = setInterval(()=>{
+          this.counter--;
+          if(this.counter === 0){
+            clearInterval(this.timerId);
+            this._router.navigate(['./producto-modulo/producto-buscar']);
+          }
+          this.messageService.add({severity:'error', summary:'Acceso denegado', detail: 'El usuario no cuenta con los permisos necesarios, redirigiendo en '+this.counter+' segundos'});
+        },1000);
+
+        
+
+      } else{
+        this.getIdProduct();
+        this.getMedida();
+        this.getMarca();
+        this.getDepartamentos();
+        this.getCategoria();
+        this.getAlmacen();
+        this.identity = this._empleadoService.getIdentity();
+      }
     }
   
     //MODAL
