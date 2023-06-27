@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 /**IMPORTACIONS DE LOS MODULOS DE SERVICIO */
 import { ProductoService } from 'src/app/services/producto.service';
-//import { ToastService } from 'src/app/services/toast.service';
 import { MessageService } from 'primeng/api';
 import { MedidaService } from 'src/app/services/medida.service';
 import { MarcaService } from 'src/app/services/marca.service';
@@ -10,6 +9,7 @@ import { DepartamentoService } from 'src/app/services/departamento.service';
 import { CategoriaService } from 'src/app/services/categoria.service';
 import { AlmacenService } from 'src/app/services/almacen.service';
 import { EmpleadoService } from 'src/app/services/empleado.service';
+import { ModulosService } from 'src/app/services/modulos.service';
 import { global } from 'src/app/services/global';
 /*Modelos */
 import { Producto} from 'src/app/models/producto';
@@ -35,10 +35,6 @@ export class ProductoEditarComponent implements OnInit {
   public categoria: Array<any> = []
   public almacenes: Array<any> = []
   public identity: any;
-  //PERMISOS
-  public userPermisos:any;
-  private idModulo: number = 5;
-  private idSubmodulo: number = 13;
   //
   public url:string = global.url;
   //  para el codbar
@@ -80,9 +76,12 @@ export class ProductoEditarComponent implements OnInit {
   public checkMantPrecio: boolean = false;
   public checkMantPorce: boolean = false;
   public mmValue: number = 0;
-  //contador para redireccion al no tener permisos
-  counter: number = 5;
-  timerId:any;
+ //PERMISOS
+ public userPermisos:any = [];
+ public mInv = this._modulosService.modsInventario();
+ //contador para redireccion al no tener permisos
+ counter: number = 5;
+ timerId:any;
 
   constructor(
     private _productoService: ProductoService,
@@ -92,8 +91,8 @@ export class ProductoEditarComponent implements OnInit {
     private _categoriaService: CategoriaService,
     private _almacenService: AlmacenService,
     private _empleadoService : EmpleadoService,
+    private _modulosService: ModulosService,
     private modalService: NgbModal,
-    //public toastService: ToastService,
     private _router: Router,
     private _route: ActivatedRoute,
     private messageService: MessageService,
@@ -1001,28 +1000,25 @@ export class ProductoEditarComponent implements OnInit {
     }
 
     loadUser(){
-      this.userPermisos = this._empleadoService.getPermisosModulo(this.idModulo, this.idSubmodulo);
-      if(this.userPermisos.editar != 1){
-
-        this.timerId = setInterval(()=>{
-          this.counter--;
-          if(this.counter === 0){
-            clearInterval(this.timerId);
-            this._router.navigate(['./producto-modulo/producto-buscar']);
-          }
-          this.messageService.add({severity:'error', summary:'Acceso denegado', detail: 'El usuario no cuenta con los permisos necesarios, redirigiendo en '+this.counter+' segundos'});
-        },1000);
-
-        
-
-      } else{
-        this.getIdProduct();
-        this.getMedida();
-        this.getMarca();
-        this.getDepartamentos();
-        this.getCategoria();
-        this.getAlmacen();
-        this.identity = this._empleadoService.getIdentity();
+      this.userPermisos = this._empleadoService.getPermisosModulo(this.mInv.idModulo, this.mInv.idSubModulo);
+        //revisamos si el permiso del modulo esta activo si no redireccionamos
+        if( this.userPermisos.ver != 1 ){
+          this.timerId = setInterval(()=>{
+            this.counter--;
+            if(this.counter === 0){
+              clearInterval(this.timerId);
+              this._router.navigate(['./']);
+            }
+            this.messageService.add({severity:'error', summary:'Acceso denegado', detail: 'El usuario no cuenta con los permisos necesarios, redirigiendo en '+this.counter+' segundos'});
+          },1000);
+        } else{
+          this.getIdProduct();
+          this.getMedida();
+          this.getMarca();
+          this.getDepartamentos();
+          this.getCategoria();
+          this.getAlmacen();
+          this.identity = this._empleadoService.getIdentity();
       }
     }
   

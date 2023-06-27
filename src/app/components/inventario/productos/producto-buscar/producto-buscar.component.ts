@@ -19,6 +19,7 @@ import { HttpClient} from '@angular/common/http';
 import { global } from 'src/app/services/global';
 import { Router } from '@angular/router';
 import { EmpleadoService } from 'src/app/services/empleado.service';
+import { ModulosService } from 'src/app/services/modulos.service';
 //primeng
 import { MessageService } from 'primeng/api';
 
@@ -51,8 +52,7 @@ export class ProductoBuscarComponent implements OnInit {
   public isLoading:boolean = false;
   //PERMISOS
   public userPermisos:any = [];
-  private idModulo: number = 5;
-  private idSubmodulo: number = 13;
+  public mInv = this._modulosService.modsInventario();
   //contador para redireccion al no tener permisos
   counter: number = 5;
   timerId:any;
@@ -61,6 +61,7 @@ export class ProductoBuscarComponent implements OnInit {
     private _productoService: ProductoService,
     private _empleadoService:EmpleadoService,
     private messageService: MessageService,
+    private _modulosService: ModulosService,
     private _router: Router,
     private _http: HttpClient
   ) { }
@@ -73,7 +74,7 @@ export class ProductoBuscarComponent implements OnInit {
    * Funcion que carga los permisos
    */
   loadUser(){
-    this.userPermisos = this._empleadoService.getPermisosModulo(this.idModulo, this.idSubmodulo);
+    this.userPermisos = this._empleadoService.getPermisosModulo(this.mInv.idModulo, this.mInv.idSubModulo);
         //revisamos si el permiso del modulo esta activo si no redireccionamos
         if( this.userPermisos.ver != 1 ){
           this.timerId = setInterval(()=>{

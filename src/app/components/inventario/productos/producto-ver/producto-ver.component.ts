@@ -7,6 +7,7 @@ import { global } from 'src/app/services/global';
 import { Productos_medidas } from 'src/app/models/productos_medidas';
 import {MenuItem, MessageService} from 'primeng/api';
 import { EmpleadoService } from 'src/app/services/empleado.service';
+import { ModulosService } from 'src/app/services/modulos.service';
 
 @Component({
   selector: 'app-producto-ver',
@@ -47,10 +48,18 @@ export class ProductoVerComponent implements OnInit {
   public medida5: string = '';
   //
   items: MenuItem[] =[];
+  //PERMISOS
+  public userPermisos:any = [];
+  public mInv = this._modulosService.modsInventario();
+  //contador para redireccion al no tener permisos
+  counter: number = 5;
+  timerId:any;
+
 
   constructor( 
     private _productoService: ProductoService,
     private _empleadoService: EmpleadoService,
+    private _modulosService: ModulosService,
     private _router: Router,
     private _route: ActivatedRoute,
     public toastService: ToastService,
@@ -64,8 +73,9 @@ export class ProductoVerComponent implements OnInit {
    }
 
   ngOnInit(): void {
-    this.getIdProduct();
+    this.loadUser();
   }
+
   /**
    * Estructura del menu desplegable
    */
@@ -86,6 +96,26 @@ export class ProductoVerComponent implements OnInit {
           }
       ]}
     ];
+  }
+
+  /**
+   * Funcion que carga los permisos
+   */
+  loadUser(){
+    this.userPermisos = this._empleadoService.getPermisosModulo(this.mInv.idModulo, this.mInv.idSubModulo);
+        //revisamos si el permiso del modulo esta activo si no redireccionamos
+        if( this.userPermisos.ver != 1 ){
+          this.timerId = setInterval(()=>{
+            this.counter--;
+            if(this.counter === 0){
+              clearInterval(this.timerId);
+              this._router.navigate(['./']);
+            }
+            this.messageService.add({severity:'error', summary:'Acceso denegado', detail: 'El usuario no cuenta con los permisos necesarios, redirigiendo en '+this.counter+' segundos'});
+          },1000);
+        } else{
+          this.getIdProduct();
+        }
   }
 
   /**

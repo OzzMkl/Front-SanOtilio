@@ -23,10 +23,9 @@ import { SubCategoriaService } from 'src/app/services/subcategoria.service';
 import { AlmacenService } from 'src/app/services/almacen.service';
 import { ProductoService } from 'src/app/services/producto.service';
 import { EmpleadoService } from 'src/app/services/empleado.service';
+import { ModulosService } from 'src/app/services/modulos.service';
 import { MessageService } from 'primeng/api';
 
-
-import { ToastService } from 'src/app/services/toast.service';
 /*NGBOOTSTRAP */
 import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 /*MODELOS */
@@ -45,6 +44,13 @@ import { Router } from '@angular/router';
   ProductoService, MessageService]
 })
 export class ProductoAgregarComponent implements OnInit {
+
+  //PERMISOS
+  public userPermisos:any = [];
+  public mInv = this._modulosService.modsInventario();
+  //contador para redireccion al no tener permisos
+  counter: number = 5;
+  timerId:any;
   
   //variables para cargar informacion en los select
   public medidas: Array<any> = [];
@@ -97,11 +103,10 @@ export class ProductoAgregarComponent implements OnInit {
     private _categoriaService: CategoriaService,
     private _almacenService: AlmacenService,
     public _empleadoService : EmpleadoService,
+    private _modulosService: ModulosService,
     private modalService: NgbModal,
     public _router: Router,
     private messageService: MessageService,
-
-    public toastService: ToastService,
 
   ) {
     this.producto = new Producto(0,0,0,0,'',0,'',0,0,'',0,'','',null,0,0);
@@ -113,13 +118,33 @@ export class ProductoAgregarComponent implements OnInit {
    }
 
   ngOnInit(): void {
-    this.getMedida();
-    this.getMarca();
-    this.getDepartamentos();
-    this.getCategoria();
-    this.getAlmacen();
+    this.loadUser();
   }
 
+  /**
+  * Funcion que carga los permisos
+  */
+  loadUser(){
+    this.userPermisos = this._empleadoService.getPermisosModulo(this.mInv.idModulo, this.mInv.idSubModulo);
+        //revisamos si el permiso del modulo esta activo si no redireccionamos
+        if( this.userPermisos.ver != 1 ){
+          this.timerId = setInterval(()=>{
+            this.counter--;
+            if(this.counter === 0){
+              clearInterval(this.timerId);
+              this._router.navigate(['./']);
+            }
+            this.messageService.add({severity:'error', summary:'Acceso denegado', detail: 'El usuario no cuenta con los permisos necesarios, redirigiendo en '+this.counter+' segundos'});
+          },1000);
+        } else{
+          this.getMedida();
+          this.getMarca();
+          this.getDepartamentos();
+          this.getCategoria();
+          this.getAlmacen();
+          this.identity = this._empleadoService.getIdentity();
+        }
+  }
   
 
   /**
@@ -143,7 +168,7 @@ export class ProductoAgregarComponent implements OnInit {
    * @param form 
    */
   submit(form:any){
-    this.loadUser();
+    //this.loadUser();
     this.insertaListaProdM();
 //    console.log(this.producto, this.listaProdMedida)
        this._productoService.registerProducto(this.producto,this.listaProdMedida,this.identity).subscribe(
@@ -344,10 +369,6 @@ export class ProductoAgregarComponent implements OnInit {
       }
     );
   }
-  loadUser(){
-    this.identity = this._empleadoService.getIdentity();
-  }
-
   //MODAL
   // Metodos del  modal
   open(content:any) {//abrir modal
