@@ -5,6 +5,13 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import {NgxPaginationModule} from 'ngx-pagination'; // <-- import the module
+/****pasar pipes a espanol****/
+import {LOCALE_ID } from '@angular/core';
+import localeEs from '@angular/common/locales/es';
+import { registerLocaleData } from '@angular/common';
+registerLocaleData(localeEs, 'es');
+/*************************** */
+
 // import { AngularFileUploaderModule } from "angular-file-uploader";
 //import { ReactiveFormsModule } from '@angular/forms';
 import { NgxBarcodeModule } from 'ngx-barcode';
@@ -182,7 +189,7 @@ import { RequisicionEditarComponent } from './components/compras/requisiciones/r
     MessagesModule,
     
   ],
-  providers: [EmpleadoService, MessageService],
+  providers: [EmpleadoService, MessageService,{provide: LOCALE_ID, useValue: 'es'}],
   bootstrap: [AppComponent],
   exports: [
     CategoriaVerComponent    
