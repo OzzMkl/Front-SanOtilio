@@ -10,31 +10,31 @@ import { MessageService } from 'primeng/api';
 @Injectable({
   providedIn: 'root'
 })
-export class ClienteGuard implements CanActivate {
+export class ProductosGuard implements CanActivate {
 
-  public user:any;
+  public user: any = [];
   public check: boolean = false;
-  mCli = this._modulosService.modsClientes();
+  private mInv = this._modulosService.modsInventario();
 
-  constructor(private _router: Router,
-              private _empleadoService: EmpleadoService,
-              private _modulosService: ModulosService,
-              private messageService: MessageService,){}
+  constructor(
+    private _router: Router,
+    private _empleadoService: EmpleadoService,
+    private _modulosService: ModulosService,
+    private messageService: MessageService ){}
 
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
     
-      //variable para obtener el token del localstorage
+      //traemos el token de localstorage
       const token = this._empleadoService.getToken();
-      //validamos el token
-      if(token != null ){
-        //check = true
+
+      //validamos que exista el token
+      if(token != null){
         this.validaPermiso();
-      }else{
+      } else{
         this._router.navigate(['/login']);
       }
-      
       return this.check;
   }
 
@@ -46,7 +46,7 @@ export class ClienteGuard implements CanActivate {
     /**
      * Bucamos en los permisos guardados en el navegador el modulo y su submodulo si lo encuentra este ingresa al modulo
      */
-    var userPermi = this.user.permisos.find((x:any) => x.idModulo == this.mCli.idModulo && x.idSubModulo == this.mCli.idSubModulo);
+    var userPermi = this.user.permisos.find((x:any) => x.idModulo == this.mInv.idModulo && x.idSubModulo == this.mInv.idSubModulo);
     
     if( userPermi == undefined){
       //this.toastService.show('Acceso denegado', { classname: 'bg-danger  text-light', delay: 5000 });
@@ -60,5 +60,5 @@ export class ClienteGuard implements CanActivate {
 
     }
   }
- 
+  
 }

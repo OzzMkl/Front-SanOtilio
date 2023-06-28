@@ -1,3 +1,4 @@
+<p-toast></p-toast>
 <div class="container">
     <h3 class="text-center">Buscar Productos</h3>
 </div>
@@ -48,10 +49,10 @@
                     <th scope="row">{{pr.nombreDep}}</th> 
                     <th scope="row">{{pr.nombreCat}}</th>
                     <th scope="row"> 
-                        <i class="pi pi-eye p-1" pTooltip="Ver" tooltipPosition="top" 
+                        <i *ngIf="userPermisos.ver ==1" class="pi pi-eye p-1" pTooltip="Ver" tooltipPosition="top" 
                             [routerLink]="['../producto-ver',pr.idProducto]">
                         </i>
-                        <i class="pi pi-file-edit p-1" pTooltip="Editar" tooltipPosition="top"
+                        <i *ngIf="userPermisos.editar ==1" class="pi pi-file-edit p-1" pTooltip="Editar" tooltipPosition="top"
                             [routerLink]="['../producto-editar',pr.idProducto]"></i>
                     </th>
                 </tr>

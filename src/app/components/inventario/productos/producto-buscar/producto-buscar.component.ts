@@ -18,12 +18,16 @@ import { ProductoService } from 'src/app/services/producto.service';
 import { HttpClient} from '@angular/common/http';
 import { global } from 'src/app/services/global';
 import { Router } from '@angular/router';
+import { EmpleadoService } from 'src/app/services/empleado.service';
+import { ModulosService } from 'src/app/services/modulos.service';
+//primeng
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-producto-buscar',
   templateUrl: './producto-buscar.component.html',
   styleUrls: ['./producto-buscar.component.css'],
-  providers: [ProductoService]
+  providers: [ProductoService, EmpleadoService, MessageService]
 })
 export class ProductoBuscarComponent implements OnInit {
   
@@ -46,15 +50,44 @@ export class ProductoBuscarComponent implements OnInit {
   public tipoBusqueda: string = "uno";
   //spinner
   public isLoading:boolean = false;
+  //PERMISOS
+  public userPermisos:any = [];
+  public mInv = this._modulosService.modsInventario();
+  //contador para redireccion al no tener permisos
+  counter: number = 5;
+  timerId:any;
 
   constructor(
     private _productoService: ProductoService,
+    private _empleadoService:EmpleadoService,
+    private messageService: MessageService,
+    private _modulosService: ModulosService,
     private _router: Router,
     private _http: HttpClient
   ) { }
 
   ngOnInit(): void {
-    this.getProd();
+    this.loadUser();
+  }
+
+  /**
+   * Funcion que carga los permisos
+   */
+  loadUser(){
+    this.userPermisos = this._empleadoService.getPermisosModulo(this.mInv.idModulo, this.mInv.idSubModulo);
+        //revisamos si el permiso del modulo esta activo si no redireccionamos
+        if( this.userPermisos.ver != 1 ){
+          this.timerId = setInterval(()=>{
+            this.counter--;
+            if(this.counter === 0){
+              clearInterval(this.timerId);
+              this._router.navigate(['./']);
+            }
+            this.messageService.add({severity:'error', summary:'Acceso denegado', detail: 'El usuario no cuenta con los permisos necesarios, redirigiendo en '+this.counter+' segundos'});
+          },1000);
+        } else{
+          this.getProd();
+        }
   }
 
   /**

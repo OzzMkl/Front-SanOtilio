@@ -15,20 +15,24 @@
  * 
  */
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 //servicio
 import { ClientesService } from 'src/app/services/clientes.service';
 import { EmpleadoService } from 'src/app/services/empleado.service';
+import { ModulosService } from 'src/app/services/modulos.service';
 import { HttpClient} from '@angular/common/http';
 //ngbootstrap
 import { NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
-import { Subscription } from 'rxjs';
+//primeng
+import { MessageService } from 'primeng/api';
 
 
 @Component({
   selector: 'app-cliente-buscar',
   templateUrl: './cliente-buscar.component.html',
   styleUrls: ['./cliente-buscar.component.css'],
-  providers:[ClientesService]
+  providers:[ClientesService,MessageService]
 })
 export class ClienteBuscarComponent implements OnInit {
 
@@ -36,7 +40,6 @@ export class ClienteBuscarComponent implements OnInit {
   public clientes : Array<any> = [];
   public cliente:any;
   public dirCliente:any;
-  public userPermisos:any//loaduser
   /**PAGINATOR */
   public totalPages: any;
   public path: string = '';
@@ -51,23 +54,41 @@ export class ClienteBuscarComponent implements OnInit {
   //Subscripciones
   private getClienteSub : Subscription = new Subscription;
   //PERMISOS
-  private idModulo: number = 6;
-  private idSubmodulo: number = 20;
+  public userPermisos:any = [];
+  public mCli = this._modulosService.modsInventario();
+  //contador para redireccion al no tener permisos
+  counter: number = 5;
+  timerId:any;
+
 
   constructor( 
                 private _clienteService: ClientesService, 
-                private modalService: NgbModal, 
                 private _empleadoService:EmpleadoService,
-                private _http: HttpClient ) { }
+                private _modulosService: ModulosService,
+                private modalService: NgbModal, 
+                private messageService: MessageService,
+                private _http: HttpClient,
+                private _router: Router ) { }
 
   ngOnInit(): void {
-    this.getClientes();
     this.loadUser();
-    //this.pdf();
   }
 
   loadUser(){
-    this.userPermisos = this._empleadoService.getPermisosModulo(this.idModulo, this.idSubmodulo);
+    this.userPermisos = this._empleadoService.getPermisosModulo(this.mCli.idModulo, this.mCli.idSubModulo);
+        //revisamos si el permiso del modulo esta activo si no redireccionamos
+        if( this.userPermisos.ver != 1 ){
+          this.timerId = setInterval(()=>{
+            this.counter--;
+            if(this.counter === 0){
+              clearInterval(this.timerId);
+              this._router.navigate(['./']);
+            }
+            this.messageService.add({severity:'error', summary:'Acceso denegado', detail: 'El usuario no cuenta con los permisos necesarios, redirigiendo en '+this.counter+' segundos'});
+          },1000);
+        } else{
+          this.getClientes();
+        }
   }
 
   seleccionarCliente(idCliente:any){

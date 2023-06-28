@@ -70,6 +70,7 @@ import { PuntoDeVentaGuard } from './guards/punto-de-venta.guard';
 import { CheckTokenGuard } from './guards/check-token.guard';
 import { CotizacionGuard } from './guards/cotizacion.guard';
 import { ClienteGuard } from './guards/cliente.guard';
+import { ProductosGuard } from './guards/productos.guard';
 
 
 const routes: Routes = [
@@ -139,7 +140,7 @@ const routes: Routes = [
         {path:'notas-a-credito',component: NotasACreditoComponent}
       ]},
   {path:'corte-de-caja',component: CorteDeCajaComponent},
-  {path: 'producto-modulo', component: ProductoModuloComponent,
+  {path: 'producto-modulo', component: ProductoModuloComponent,canActivate:[ProductosGuard],
    children:
    [
       {path: 'producto-agregar', component: ProductoAgregarComponent},

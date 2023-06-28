@@ -1,15 +1,15 @@
-
+<p-toast></p-toast>
 <div class="container">
     <br>
     <div class="row justify-content-between">
         <div class="col-9">
             <h2>Modulo de clientes</h2>
         </div>
-        <div class="col-auto" *ngFor="let permiso of userPermisos">
+        <div class="col-auto" >
             
-            <button *ngIf="permiso.agregar == 1" type="button" value="Agregar" class="btn btn-success me-md-2" [routerLink]="['cliente-agregar']" style="box-sizing: border-box;" ngbTooltip="AGREGAR"><i class="bi bi-plus-circle"></i><br> </button>
+            <button *ngIf="userPermisos.agregar == 1" type="button" value="Agregar" class="btn btn-success me-md-2" [routerLink]="['cliente-agregar']" style="box-sizing: border-box;" ngbTooltip="AGREGAR"><i class="bi bi-plus-circle"></i><br> </button>
             
-            <button *ngIf="permiso.ver == 1" type="button" value="Buscar" class="btn btn-primary" [routerLink]="['cliente-buscar']"  style="box-sizing: border-box;" ngbTooltip="BUSCAR"><i class="bi bi-search"></i><br></button>
+            <button *ngIf="userPermisos.ver == 1" type="button" value="Buscar" class="btn btn-primary" [routerLink]="['cliente-buscar']"  style="box-sizing: border-box;" ngbTooltip="BUSCAR"><i class="bi bi-search"></i><br></button>
         </div>
     </div>
 </div>

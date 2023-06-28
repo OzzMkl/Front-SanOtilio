@@ -510,7 +510,7 @@ export class PuntoDeVentaComponent implements OnInit {
   loadUser(){
     this.identity = this._empleadoService.getIdentity();
      this.userPermisos = this._empleadoService.getPermisosModulo(this.idModulo, this.idSubmodulo);
-    if(this.userPermisos[0]['agregar'] != 1){
+    if(this.userPermisos.agregar != 1){
       this._router.navigate(['./ventas-modulo/ventas-realizadas-buscar']);
 
       this.messageService.add({severity:'error', summary:'Acceso denegado', detail:'El usuario no tiene los permisos'});
