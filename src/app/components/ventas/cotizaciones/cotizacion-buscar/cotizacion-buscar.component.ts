@@ -1,16 +1,21 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
 //Servicios
 import { VentasService } from 'src/app/services/ventas.service';
 import { EmpleadoService } from 'src/app/services/empleado.service';
+import { ModulosService } from 'src/app/services/modulos.service';
 import { global } from 'src/app/services/global';
 //NGBOOTSTRAP-modal
 import { NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
+//primeng
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-cotizacion-buscar',
   templateUrl: './cotizacion-buscar.component.html',
-  styleUrls: ['./cotizacion-buscar.component.css']
+  styleUrls: ['./cotizacion-buscar.component.css'],
+  providers:[MessageService]
 })
 export class CotizacionBuscarComponent implements OnInit {
 
@@ -20,7 +25,6 @@ export class CotizacionBuscarComponent implements OnInit {
   public cotizaciones:Array<any> = [];//getCotizaciones
   public detallesCotiza:any;//getDetallesCotiza
   public productosdCotiza:any;//getDetallesCotiza
-  public userPermisos:any//loadUser
   //paginador
   public totalPages:any;
   public path: any;
@@ -34,23 +38,44 @@ export class CotizacionBuscarComponent implements OnInit {
   //spinner
   public isLoading: boolean = false;
   //PERMISOS
-  private idModulo: number = 6;
-  private idSubmodulo: number = 19;
+  public userPermisos:any = [];
+  public mCoti = this._modulosService.modsCotizaciones();
+  //contador para redireccion al no tener permisos
+  counter: number = 5;
+  timerId:any;
   
   constructor(  private _ventasService: VentasService,
-                private modalService: NgbModal,
                 private _empleadoService: EmpleadoService,
-                private _http: HttpClient) {
+                private _modulosService: ModulosService,
+                private modalService: NgbModal,
+                private messageService: MessageService,
+                private _http: HttpClient,
+                private _router: Router) {
 
                  }
 
   ngOnInit(): void {
-    this.getCotizaciones();
     this.loadUser()
   }
 
+  /**
+   * Funcion que carga los permisos
+   */
   loadUser(){
-    this.userPermisos = this._empleadoService.getPermisosModulo(this.idModulo, this.idSubmodulo)
+    this.userPermisos = this._empleadoService.getPermisosModulo(this.mCoti.idModulo, this.mCoti.idSubModulo);
+        //revisamos si el permiso del modulo esta activo si no redireccionamos
+        if( this.userPermisos.ver != 1 ){
+          this.timerId = setInterval(()=>{
+            this.counter--;
+            if(this.counter === 0){
+              clearInterval(this.timerId);
+              this._router.navigate(['./']);
+            }
+            this.messageService.add({severity:'error', summary:'Acceso denegado', detail: 'El usuario no cuenta con los permisos necesarios, redirigiendo en '+this.counter+' segundos'});
+          },1000);
+        } else{
+          this.getCotizaciones();
+        }
   }
 
   //obtenemos array con todas las cotizaciones
