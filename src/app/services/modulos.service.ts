@@ -10,10 +10,18 @@ export class ModulosService {
                 idModulo: 5,
                 idSubModulo: 13
               }
+  public pCli: propModulo ={
+                idModulo: 6,
+                idSubModulo: 20
+              }
 
   constructor() { }
 
   modsInventario(){
     return this.pInv;
+  }
+
+  modsClientes(){
+    return this.pCli;
   }
 }

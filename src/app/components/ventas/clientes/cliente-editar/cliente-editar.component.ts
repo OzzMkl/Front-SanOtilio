@@ -2,13 +2,15 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 //servicio
 import { ClientesService } from 'src/app/services/clientes.service';
-import { MessageService } from 'primeng/api';
 import { EmpleadoService } from 'src/app/services/empleado.service';
+import { ModulosService } from 'src/app/services/modulos.service';
 //modelo
 import { Cliente } from 'src/app/models/cliente';
 import { Cdireccion} from 'src/app/models/cdireccion'
 //ngbootstrap
 import { NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
+//primeng
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-cliente-editar',
@@ -30,12 +32,20 @@ export class ClienteEditarComponent implements OnInit {
   public clienteEditado: Cliente;
   public dirEditada: Cdireccion;
   public listaDirecciones: Array<Cdireccion>;
+  //PERMISOS
+  public userPermisos:any = [];
+  public mCli = this._modulosService.modsInventario();
+  //contador para redireccion al no tener permisos
+  counter: number = 5;
+  timerId:any;
 
   constructor(  private _clienteService: ClientesService,
                 private _empleadoService: EmpleadoService,
+                private _modulosService: ModulosService,
                 private modalService:NgbModal,
                 public messageService: MessageService,
-                private _route: ActivatedRoute) {
+                private _route: ActivatedRoute,
+                private _router: Router) {
 
       this.clienteEditado = new Cliente (0,'','','','','',0,1,0);
       this.dirEditada = new Cdireccion (0,'Mexico','Puebla','','','','','','',0,'',0,1,'');
@@ -43,8 +53,28 @@ export class ClienteEditarComponent implements OnInit {
      }
 
   ngOnInit(): void {
-    this.getIdCliente();
-    this.getTipocliente();
+    this.loadUser();
+  }
+
+  /**
+  * Funcion que carga los permisos
+  */
+  loadUser(){
+    this.userPermisos = this._empleadoService.getPermisosModulo(this.mCli.idModulo, this.mCli.idSubModulo);
+        //revisamos si el permiso del modulo esta activo si no redireccionamos
+        if( this.userPermisos.editar != 1 ){
+          this.timerId = setInterval(()=>{
+            this.counter--;
+            if(this.counter === 0){
+              clearInterval(this.timerId);
+              this._router.navigate(['./']);
+            }
+            this.messageService.add({severity:'error', summary:'Acceso denegado', detail: 'El usuario no cuenta con los permisos necesarios, redirigiendo en '+this.counter+' segundos'});
+          },1000);
+        } else{
+          this.getIdCliente();
+          this.getTipocliente();
+        }
   }
 
   getIdCliente(){//obtenemos informacion del cliente de acuerdo a su id

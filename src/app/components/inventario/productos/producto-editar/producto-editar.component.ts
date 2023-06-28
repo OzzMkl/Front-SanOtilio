@@ -1002,7 +1002,7 @@ export class ProductoEditarComponent implements OnInit {
     loadUser(){
       this.userPermisos = this._empleadoService.getPermisosModulo(this.mInv.idModulo, this.mInv.idSubModulo);
         //revisamos si el permiso del modulo esta activo si no redireccionamos
-        if( this.userPermisos.ver != 1 ){
+        if( this.userPermisos.editar != 1 ){
           this.timerId = setInterval(()=>{
             this.counter--;
             if(this.counter === 0){
