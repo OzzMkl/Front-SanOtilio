@@ -1,23 +1,24 @@
+<p-toast></p-toast>
 <div class="container-fluid">
     <br>
     <div class="row justify-content-between">
         <div class="col-5">
             <h2>Modulo de proveedores</h2>
         </div>
-        <div class="col-auto" *ngFor="let permiso of userPermisos">
+        <div class="col-auto">
             
                 <button pButton pRipple type="button" class="p-button-rounded p-button-success me-md-2" icon="pi pi-check"
-                        [routerLink]="['agregarProveedor']" *ngIf="permiso.agregar == 1" pTooltip="Agregar" tooltipPosition="top" >
+                        [routerLink]="['agregarProveedor']" *ngIf="userPermisos.agregar == 1" pTooltip="Agregar" tooltipPosition="top" >
                 </button>
             
             
                 <button pButton pRipple type="button" class="p-button-rounded me-md-2" icon="pi pi-search"
-                        [routerLink]="['proveedorBuscar']" *ngIf="permiso.ver == 1" pTooltip="Buscar" tooltipPosition="top">
+                        [routerLink]="['proveedorBuscar']" *ngIf="userPermisos.ver == 1" pTooltip="Buscar" tooltipPosition="top">
                 </button>
             
             
                 <button pButton pRipple type="button" class="p-button-rounded p-button-danger me-md-2" icon="pi pi-search"
-                [routerLink]="['proveedorDeshabilitado']" *ngIf="permiso.ver == 1" pTooltip="Deshabilitados" tooltipPosition="top">
+                [routerLink]="['proveedorDeshabilitado']" *ngIf="userPermisos.ver == 1" pTooltip="Deshabilitados" tooltipPosition="top">
         </button>
             
             

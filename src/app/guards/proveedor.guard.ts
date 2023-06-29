@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
-
 import { Observable } from 'rxjs';
+
 //Servicios
 import { EmpleadoService } from '../services/empleado.service';
+import { ModulosService } from '../services/modulos.service';
 //primeng
 import { MessageService } from 'primeng/api';
 
@@ -15,11 +16,11 @@ export class ProveedorGuard implements CanActivate {
   
   public user:any;
   public check: boolean = false;
-  idModulo=3;
-  idSubModulo=4;
+  public mProv = this._modulosService.modsProveedores();
 
   constructor(private _router: Router,
               private _empleadoService: EmpleadoService,
+              private _modulosService: ModulosService,
               private messageService: MessageService,
               ){}
 
@@ -49,7 +50,7 @@ export class ProveedorGuard implements CanActivate {
     /**
      * Bucamos en los permisos guardados en el navegador el modulo y su submodulo si lo encuentra este ingresa al modulo
      */
-    var userPermi = this.user.permisos.find((x:any) => x.idModulo == this.idModulo && x.idSubModulo == this.idSubModulo);
+    var userPermi = this.user.permisos.find((x:any) => x.idModulo == this.mProv.idModulo && x.idSubModulo == this.mProv.idSubModulo);
     
     if( userPermi == undefined){
       //this.toastService.show('Acceso denegado', { classname: 'bg-danger  text-light', delay: 5000 });

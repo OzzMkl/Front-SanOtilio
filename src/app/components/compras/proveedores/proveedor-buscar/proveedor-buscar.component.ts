@@ -15,16 +15,21 @@
  * 
  */
 import { Component, OnInit } from '@angular/core';
-import { ProveedorService } from 'src/app/services/proveedor.service';
-import { Router} from '@angular/router';
 import { HttpClient} from '@angular/common/http';
+import { Router} from '@angular/router';
 import { Subscription } from 'rxjs';
+//SERVICIOS
+import { ProveedorService } from 'src/app/services/proveedor.service';
+import { EmpleadoService } from 'src/app/services/empleado.service';
+import { ModulosService } from 'src/app/services/modulos.service';
+//primeng
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-proveedor-buscar',
   templateUrl: './proveedor-buscar.component.html',
   styleUrls: ['./proveedor-buscar.component.css'],
-  providers: [ProveedorService]
+  providers: [ProveedorService,EmpleadoService, MessageService]
 })
 export class ProveedorBuscarComponent implements OnInit {
  
@@ -42,14 +47,43 @@ export class ProveedorBuscarComponent implements OnInit {
   public isLoading: boolean = false;
   //subscription
   private getProveedorSub : Subscription = new Subscription;
+  //PERMISOS
+  public userPermisos:any = [];
+  public mProv = this._modulosService.modsProveedores();
+  //contador para redireccion al no tener permisos
+  counter: number = 5;
+  timerId:any;
 
   constructor(
     private _proveedorService: ProveedorService,
-    private _router: Router,
-    private _http: HttpClient ) { }
+    private _empleadoService:EmpleadoService,
+    private _modulosService: ModulosService,
+    private messageService: MessageService,
+    private _http: HttpClient,
+    private _router: Router ) { }
 
   ngOnInit(): void {
-    this.getProve();
+    this.loadUser();
+  }
+
+  /**
+  * Funcion que carga los permisos
+  */
+  loadUser(){
+    this.userPermisos = this._empleadoService.getPermisosModulo(this.mProv.idModulo, this.mProv.idSubModulo);
+        //revisamos si el permiso del modulo esta activo si no redireccionamos
+        if( this.userPermisos.ver != 1 ){
+          this.timerId = setInterval(()=>{
+            this.counter--;
+            if(this.counter === 0){
+              clearInterval(this.timerId);
+              this._router.navigate(['./']);
+            }
+            this.messageService.add({severity:'error', summary:'Acceso denegado', detail: 'El usuario no cuenta con los permisos necesarios, redirigiendo en '+this.counter+' segundos'});
+          },1000);
+        } else{
+          this.getProve();
+        }
   }
 
   /**
@@ -84,6 +118,7 @@ export class ProveedorBuscarComponent implements OnInit {
       }
     );
   }
+
   /**
    * 
    * @param page
@@ -119,12 +154,14 @@ export class ProveedorBuscarComponent implements OnInit {
     let id = idProveedor;
     this._router.navigate(['./proveedor-modulo/proveedorVer/'+id]);
   }
+
   /**
    * Destruye las subscripciones a los observables
    */
   ngOnDestroy(): void {
     this.getProveedorSub.unsubscribe();
   }
+
   /**
    * 
    * @param nombreProveedor 
@@ -167,6 +204,7 @@ export class ProveedorBuscarComponent implements OnInit {
     );
      }
   }
+
   /**
    * 
    * @param rfc 

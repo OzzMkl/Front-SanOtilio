@@ -14,10 +14,14 @@ export class ModulosService {
                 idModulo: 6,
                 idSubModulo: 20
               }
-  public pCoti: propModulo={
-    idModulo:6,
-    idSubModulo:19
-  }
+  public pCoti: propModulo ={
+                idModulo: 6,
+                idSubModulo: 19
+              }
+  public pProv: propModulo ={
+                idModulo:3,
+                idSubModulo:4
+              }
 
   constructor() { }
 
@@ -28,7 +32,12 @@ export class ModulosService {
   modsClientes(){
     return this.pCli;
   }
+
   modsCotizaciones(){
     return this.pCoti;
+  }
+
+  modsProveedores(){
+    return this.pProv;
   }
 }
