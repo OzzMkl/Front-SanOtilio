@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 //servicios
 import { ClientesService } from 'src/app/services/clientes.service';
@@ -7,6 +7,7 @@ import { ProductoService } from 'src/app/services/producto.service';
 import { VentasService } from 'src/app/services/ventas.service';
 import { EmpleadoService } from 'src/app/services/empleado.service';
 import { EmpresaService } from 'src/app/services/empresa.service';
+import { ModulosService } from 'src/app/services/modulos.service';
 import { global } from 'src/app/services/global';
 //modelos
 import { Ventag } from 'src/app/models/ventag';
@@ -84,12 +85,19 @@ export class CotizacionEditarComponent implements OnInit {
   buscarProducto:any;//modal de buscar producto
   //contadores para los text area
   contador: number =0;
+  //PERMISOS
+  public userPermisos:any = [];
+  public mCoti = this._modulosService.modsInventario();
+  //contador para redireccion al no tener permisos
+  counter: number = 5;
+  timerId:any;
 
   constructor( private _clienteService: ClientesService,private _productoService: ProductoService,
                 private _ventasService: VentasService, private _empleadoService: EmpleadoService,
                 private _empresaService: EmpresaService, private _route: ActivatedRoute,
                 private modalService: NgbModal, private _http: HttpClient, 
-                private messageService: MessageService ) {
+                private messageService: MessageService, private _router: Router,
+                private _modulosService: ModulosService ) {
                  this.cotizacion_editada = new Ventag(0,0,2,'',1,null,0,0,0,0,'','',0);
                  this.productos_cotizacion_e = [];
                  this.modeloCliente = new Cliente (0,'','','','','',0,1,1);
@@ -99,8 +107,6 @@ export class CotizacionEditarComponent implements OnInit {
                }
 
   ngOnInit(): void {
-    this.getDatosEmpresa();
-    this.getDetallesCotiza();
     this.loadUser();
   }
 
@@ -613,10 +619,26 @@ editarProductoLista(idPM:number){
   this.seleccionarProducto(this.productoVentag.idProducto);
 }
 
-//traemos la informacion del usuario logeado
-loadUser(){
-  this.identity = this._empleadoService.getIdentity();
-}
+  /**
+   * Funcion que carga los permisos
+   */
+  loadUser(){
+    this.userPermisos = this._empleadoService.getPermisosModulo(this.mCoti.idModulo, this.mCoti.idSubModulo);
+        //revisamos si el permiso del modulo esta activo si no redireccionamos
+        if( this.userPermisos.editar != 1 ){
+          this.timerId = setInterval(()=>{
+            this.counter--;
+            if(this.counter === 0){
+              clearInterval(this.timerId);
+              this._router.navigate(['./']);
+            }
+            this.messageService.add({severity:'error', summary:'Acceso denegado', detail: 'El usuario no cuenta con los permisos necesarios, redirigiendo en '+this.counter+' segundos'});
+          },1000);
+        } else{
+          this.getDatosEmpresa();
+          this.getDetallesCotiza();
+        }
+  }
 
 //actualizamos la cotizacion
 actualizaCotizacion(){

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { EmpleadoService } from 'src/app/services/empleado.service';
+import { ModulosService } from 'src/app/services/modulos.service';
 
 @Component({
   selector: 'app-cotizacion-modulo',
@@ -8,19 +9,19 @@ import { EmpleadoService } from 'src/app/services/empleado.service';
 })
 export class CotizacionModuloComponent implements OnInit {
 
-  public userPermisos:Array<any> = [];
-  //PERMISOS
-  private idModulo: number = 6;
-  private idSubmodulo: number = 19;
+ //PERMISOS
+ public userPermisos:  any ;
+ public mCoti = this._modulosService.modsCotizaciones();
 
-  constructor(private _empleadoService:EmpleadoService) { }
+  constructor( private _empleadoService:EmpleadoService,
+               private _modulosService: ModulosService) { }
 
   ngOnInit(): void {
     this.loadUser()
   }
   
   loadUser(){
-    this.userPermisos = this._empleadoService.getPermisosModulo(this.idModulo, this.idSubmodulo);
+    this.userPermisos = this._empleadoService.getPermisosModulo(this.mCoti.idModulo, this.mCoti.idSubModulo);
   }
 
 }

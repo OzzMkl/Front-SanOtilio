@@ -14,6 +14,10 @@ export class ModulosService {
                 idModulo: 6,
                 idSubModulo: 20
               }
+  public pCoti: propModulo={
+    idModulo:6,
+    idSubModulo:19
+  }
 
   constructor() { }
 
@@ -23,5 +27,8 @@ export class ModulosService {
 
   modsClientes(){
     return this.pCli;
+  }
+  modsCotizaciones(){
+    return this.pCoti;
   }
 }

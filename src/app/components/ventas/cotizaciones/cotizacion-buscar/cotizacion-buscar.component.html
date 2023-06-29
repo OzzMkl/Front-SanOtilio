@@ -1,3 +1,4 @@
+<p-toast></p-toast>
 <div class="container">
     <h3 class="text-center">Buscar cotizaciones</h3>
 </div>
@@ -51,6 +52,7 @@
         </pagination-controls>
     </div>
 </div>
+<!-- MODALAS DETALLES -->
 <ng-template #mDetallesCotiza let-modal>
     <div *ngFor="let dc of detallesCotiza">
         <div class="modal-header">
@@ -67,9 +69,9 @@
                     <label class="form-label">Fecha</label>
                     <input class="form-control" type="text" value="{{dc.created_at | date}}" readonly>
                 </div>
-                <div class="col" *ngFor="let permiso of userPermisos">
-                    <button *ngIf="permiso.pdf == 1" type="button" class="btn btn-secondary me-md-2" style="box-sizing: border-box;" (click)="generaPDF(dc.idCotiza)"><i class="bi bi-file-earmark-pdf" ngbTooltip="PDF"></i><br></button>
-                    <button *ngIf="permiso.editar == 1" type="button" class="btn btn-warning me-md-2" [routerLink]="['../cotizacion-editar',dc.idCotiza]" (click)="modal.dismiss('Cross click')" ngbTooltip="EDITAR"><i class="bi bi-pencil-square" ></i><br></button>
+                <div class="col">
+                    <button *ngIf="userPermisos.pdf == 1" type="button" class="btn btn-secondary me-md-2" style="box-sizing: border-box;" (click)="generaPDF(dc.idCotiza)"><i class="bi bi-file-earmark-pdf" ngbTooltip="PDF"></i><br></button>
+                    <button *ngIf="userPermisos.editar == 1" type="button" class="btn btn-warning me-md-2" [routerLink]="['../cotizacion-editar',dc.idCotiza]" (click)="modal.dismiss('Cross click')" ngbTooltip="EDITAR"><i class="bi bi-pencil-square" ></i><br></button>
                 </div>
             </div>
             <hr>
