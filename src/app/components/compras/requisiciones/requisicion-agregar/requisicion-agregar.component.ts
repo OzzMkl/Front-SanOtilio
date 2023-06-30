@@ -289,7 +289,7 @@ export class RequisicionAgregarComponent implements OnInit {
   }
 
   generaPDF(idReq:number){
-    this._requisicionservice.getPDF(idReq).subscribe(
+    this._requisicionservice.getPDF(idReq,this.identity['sub']).subscribe(
       (pdf: Blob) => {
         const blob = new Blob([pdf], {type: 'application/pdf'});
         const url = window.URL.createObjectURL(blob);
