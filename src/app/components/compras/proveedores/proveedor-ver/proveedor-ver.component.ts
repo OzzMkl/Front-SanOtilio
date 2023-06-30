@@ -1,12 +1,17 @@
 import { Component, OnInit } from '@angular/core';
-import { Banco } from 'src/app/models/banco';
-import { BancoService } from 'src/app/services/banco.service';
-import { Proveedor } from 'src/app/models/proveedor';
-import { ProveedorService } from 'src/app/services/proveedor.service';
 import { Router, ActivatedRoute, Params } from '@angular/router';
-import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { MessageService } from 'primeng/api';
+//Servicios
+import { ProveedorService } from 'src/app/services/proveedor.service';
 import { EmpleadoService } from 'src/app/services/empleado.service';
+import { ModulosService } from 'src/app/services/modulos.service';
+import { BancoService } from 'src/app/services/banco.service';
+//Modelos
+import { Banco } from 'src/app/models/banco';
+import { Proveedor } from 'src/app/models/proveedor';
+//ngboostrap
+import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+//primeng
+import { MessageService } from 'primeng/api';
 
 
 @Component({
@@ -23,21 +28,24 @@ export class ProveedorVerComponent implements OnInit {
   public banco: Array<Banco> = [];
   public status: string = '';
   public token:any;
-  public userPermisos:any
   public closeModal: string = '';
   //PERMISOS
-  private idModulo: number = 3;
-  private idSubmodulo: number = 4;
+  public userPermisos:any = [];
+  public mProv = this._modulosService.modsProveedores();
+  //contador para redireccion al no tener permisos
+  counter: number = 5;
+  timerId:any;
 
   constructor(
 
     private _proveedorService: ProveedorService,
+    private _empleadoService: EmpleadoService,
     private _bancoService: BancoService,
+    private messageService: MessageService,
+    private _modulosService: ModulosService,
     private _router: Router,
     private _route: ActivatedRoute,
-    private _empleadoService: EmpleadoService,
     private modalService: NgbModal,
-    private messageService: MessageService
 
   ) { 
 
@@ -47,15 +55,31 @@ export class ProveedorVerComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getBanco();
-    this.getidProv();
-    this.getContacto();
-    this.getNCP();
     this.loadUser();
   }
 
- 
-
+  /**
+   * Funcion que carga los permisos
+   */
+  loadUser(){
+    this.userPermisos = this._empleadoService.getPermisosModulo(this.mProv.idModulo, this.mProv.idSubModulo);
+        //revisamos si el permiso del modulo esta activo si no redireccionamos
+        if( this.userPermisos.ver != 1 ){
+          this.timerId = setInterval(()=>{
+            this.counter--;
+            if(this.counter === 0){
+              clearInterval(this.timerId);
+              this._router.navigate(['./']);
+            }
+            this.messageService.add({severity:'error', summary:'Acceso denegado', detail: 'El usuario no cuenta con los permisos necesarios, redirigiendo en '+this.counter+' segundos'});
+          },1000);
+        } else{
+          this.getBanco();
+          this.getidProv();
+          this.getContacto();
+          this.getNCP();
+        }
+  }
   //Obtener una lista de todos los bancos para rellenar el select
   getBanco(){
     //console.log(this.banco);
@@ -116,6 +140,7 @@ export class ProveedorVerComponent implements OnInit {
 
   });
   }
+
   /*Obtener lista de los contactos de un proveedor*/
   getNCP(){
     //Obtener el id del proveedor de la URL
@@ -137,6 +162,7 @@ export class ProveedorVerComponent implements OnInit {
 
   });
   }
+
   /***MODALES */
   triggerModal(content:any) {
     this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'}).result.then((res) => {
@@ -176,10 +202,6 @@ export class ProveedorVerComponent implements OnInit {
       }
     )
   });
-  }
-  
-  loadUser(){
-    this.userPermisos = this._empleadoService.getPermisosModulo(this.idModulo, this.idSubmodulo);
   }
   
 }

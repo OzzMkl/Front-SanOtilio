@@ -1,11 +1,15 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Proveedor } from 'src/app/models/proveedor';
-import { ProveedorService } from 'src/app/services/proveedor.service';
 import { Router} from '@angular/router';
-import { Banco } from 'src/app/models/banco';
-import { BancoService } from 'src/app/services/banco.service';
-import { EmpleadoService } from 'src/app/services/empleado.service';
 import { Subscription } from 'rxjs';
+//Servicios
+import { ProveedorService } from 'src/app/services/proveedor.service';
+import { EmpleadoService } from 'src/app/services/empleado.service';
+import { ModulosService } from 'src/app/services/modulos.service';
+import { BancoService } from 'src/app/services/banco.service';
+//Modelos
+import { Proveedor } from 'src/app/models/proveedor';
+import { Banco } from 'src/app/models/banco';
+//primeng
 import { MessageService } from 'primeng/api';
 
 @Component({
@@ -20,21 +24,48 @@ export class ProveedorAgregarComponent implements OnInit, OnDestroy {
   public banco: Array<Banco> = [];//Array de modelos del objeto banco
   public checkContacto: boolean = false;
   public checkNcp: boolean = false;
+  //PERMISOS
+  public userPermisos:any = [];
+  public mProv = this._modulosService.modsProveedores();
+  //contador para redireccion al no tener permisos
+  counter: number = 5;
+  timerId:any;
 
   //subscripciones
   private registraProveedor: Subscription = new Subscription;
   private getBancoSub: Subscription = new Subscription;
   
   constructor(  private _proveedorService: ProveedorService,
-                private _bancoService: BancoService,
-                private _router: Router,
                 private _empleadoService: EmpleadoService,
-                private messageService: MessageService
+                private _modulosService: ModulosService,
+                private _bancoService: BancoService,
+                private messageService: MessageService,
+                private _router: Router,
                 ) { }
 
   ngOnInit(): void {
-    this.getBanco(); 
+    this.loadUser(); 
 
+  }
+
+  /**
+  * Funcion que carga los permisos
+  */
+  loadUser(){
+    this.userPermisos = this._empleadoService.getPermisosModulo(this.mProv.idModulo, this.mProv.idSubModulo);
+        //revisamos si el permiso del modulo esta activo si no redireccionamos
+        if( this.userPermisos.agregar != 1 ){
+          this.timerId = setInterval(()=>{
+            this.counter--;
+            if(this.counter === 0){
+              clearInterval(this.timerId);
+              this._router.navigate(['./']);
+            }
+            this.messageService.add({severity:'error', summary:'Acceso denegado', detail: 'El usuario no cuenta con los permisos necesarios, redirigiendo en '+this.counter+' segundos'});
+          },1000);
+        } else{
+          this.getBanco();
+        }
   }
 
   /**
