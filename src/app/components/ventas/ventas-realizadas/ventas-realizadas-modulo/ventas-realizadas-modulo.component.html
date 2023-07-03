@@ -4,9 +4,9 @@
         <div class="col-9">
             <h2>Modulo de ventas</h2>
         </div>
-        <div class="col-auto" *ngFor="let permiso of userPermisos">
-            <button *ngIf="permiso.agregar == 1" type="button" value="Agregar" class="btn btn-success me-md-2" [routerLink]="['../punto-de-venta']" style="box-sizing: border-box;" ngbTooltip="AGREGAR"><i class="bi bi-plus-circle"></i><br></button>
-            <button *ngIf="permiso.ver == 1" type="button" value="Buscar" class="btn btn-primary" [routerLink]="['ventas-realizadas-buscar']"  style="box-sizing: border-box;" ngbTooltip="BUSCAR"><i class="bi bi-search"></i><br></button>
+        <div class="col-auto">
+            <button *ngIf="userPermisos.agregar == 1" type="button" value="Agregar" class="btn btn-success me-md-2" [routerLink]="['../punto-de-venta']" style="box-sizing: border-box;" ngbTooltip="AGREGAR"><i class="bi bi-plus-circle"></i><br></button>
+            <button *ngIf="userPermisos.ver == 1" type="button" value="Buscar" class="btn btn-primary" [routerLink]="['ventas-realizadas-buscar']"  style="box-sizing: border-box;" ngbTooltip="BUSCAR"><i class="bi bi-search"></i><br></button>
         </div>
     </div>
 </div>

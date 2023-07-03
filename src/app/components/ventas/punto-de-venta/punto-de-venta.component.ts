@@ -5,6 +5,7 @@ import { ClientesService } from 'src/app/services/clientes.service';
 import { ProductoService } from 'src/app/services/producto.service';
 import { VentasService } from 'src/app/services/ventas.service';
 import { EmpleadoService } from 'src/app/services/empleado.service';
+import { ModulosService } from 'src/app/services/modulos.service';
 import { global } from 'src/app/services/global';
 //modelos
 import { Ventag } from 'src/app/models/ventag';
@@ -42,7 +43,6 @@ export class PuntoDeVentaComponent implements OnInit {
   public UltimaCotizacion: number = 0;//obtenerultimacotiza
   public tipo_venta: Array<any> = []; //getTiposVentas
   public productoEG:any;
-  public userPermisos:any//loaduser
   public claveExt : string = '';//mostrarPrecios
   public prod_med: Array<any> = [];//mostrarPrecios
   public existenciasPorMed: Array<any> = [];//mostrarPrecios
@@ -87,8 +87,11 @@ export class PuntoDeVentaComponent implements OnInit {
   //contadores para los text area
   contador: number =0;
   //PERMISOS
-  private idModulo: number = 6;
-  private idSubmodulo: number = 17;
+  public userPermisos:any = [];
+  public mPuV = this._modulosService.modsPuntodeVenta();
+  //contador para redireccion al no tener permisos
+  counter: number = 5;
+  timerId:any;
 
 
   constructor( 
@@ -98,6 +101,7 @@ export class PuntoDeVentaComponent implements OnInit {
     private _productoService:ProductoService,
     private _ventasService: VentasService,
     private _empleadoService : EmpleadoService,
+    private _modulosService: ModulosService,
     private _router:Router,
     private _http: HttpClient,
     private messageService: MessageService ) {
@@ -112,7 +116,6 @@ export class PuntoDeVentaComponent implements OnInit {
 
   ngOnInit(): void { 
   this.loadUser();
-  this.getTiposVentas();
   }
 
   
@@ -508,13 +511,22 @@ export class PuntoDeVentaComponent implements OnInit {
 
   //traemos la informacion del usuario logeado
   loadUser(){
-    this.identity = this._empleadoService.getIdentity();
-     this.userPermisos = this._empleadoService.getPermisosModulo(this.idModulo, this.idSubmodulo);
-    if(this.userPermisos.agregar != 1){
-      this._router.navigate(['./ventas-modulo/ventas-realizadas-buscar']);
-
-      this.messageService.add({severity:'error', summary:'Acceso denegado', detail:'El usuario no tiene los permisos'});
-    }
+    
+    this.userPermisos = this._empleadoService.getPermisosModulo(this.mPuV.idModulo, this.mPuV.idSubModulo);
+        //revisamos si el permiso del modulo esta activo si no redireccionamos
+        if( this.userPermisos.agregar != 1 ){
+          this.timerId = setInterval(()=>{
+            this.counter--;
+            if(this.counter === 0){
+              clearInterval(this.timerId);
+              this._router.navigate(['./']);
+            }
+            this.messageService.add({severity:'error', summary:'Acceso denegado', detail: 'El usuario no cuenta con los permisos necesarios, redirigiendo en '+this.counter+' segundos'});
+          },1000);
+        } else{
+          this.identity = this._empleadoService.getIdentity();
+          this.getTiposVentas();
+        }
   }
 
   //evitamod que den enter en el textarea de observaciones
