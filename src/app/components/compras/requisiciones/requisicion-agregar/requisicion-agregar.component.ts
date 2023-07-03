@@ -6,6 +6,7 @@ import { ToastService } from 'src/app/services/toast.service';
 import { RequisicionService } from 'src/app/services/requisicion.service';
 import { EmpleadoService } from 'src/app/services/empleado.service';
 import { HttpClient} from '@angular/common/http';
+import {MessageService} from 'primeng/api';
 //Modelos
 import { Requisicion } from 'src/app/models/requisicion';
 import { Producto_requisicion } from 'src/app/models/producto_requisicion';
@@ -14,12 +15,11 @@ import { NgbModal, ModalDismissReasons, NgbDateStruct} from '@ng-bootstrap/ng-bo
 //Router
 import { Router } from '@angular/router';
 
-
 @Component({
   selector: 'app-requisicion-agregar',
   templateUrl: './requisicion-agregar.component.html',
   styleUrls: ['./requisicion-agregar.component.css'],
-  providers:[ProductoService, RequisicionService, EmpleadoService]
+  providers:[ProductoService, RequisicionService, EmpleadoService,MessageService]
 })
 export class RequisicionAgregarComponent implements OnInit {
 
@@ -78,7 +78,7 @@ export class RequisicionAgregarComponent implements OnInit {
     private _http: HttpClient,
     private modalService: NgbModal,
     private _productoService: ProductoService,
-    public toastService: ToastService,
+    private messageService: MessageService,
     private _requisicionservice: RequisicionService,
     public _empleadoService : EmpleadoService,
     public _router: Router
@@ -179,14 +179,14 @@ export class RequisicionAgregarComponent implements OnInit {
   */
   capturar(datos:any){ 
     if(this.producto_requisicion.cantidad <= 0){
-      // this.toastService.show('No se pueden agregar productos con cantidad 0 ó menor a 0',{classname: 'bg-danger text-light', delay: 6000})
+      this.messageService.add({severity:'error', summary:'Error', detail:'No se pueden agregar productos con cantidad igual o menor a 0'});
     }else if(this.producto_requisicion.idProducto == 0){
-      // this.toastService.show('Ese producto no existe',{classname: 'bg-danger text-light', delay: 6000});
+      this.messageService.add({severity:'error', summary:'Error', detail:'Ese producto no existe'});
     }else if( this.Lista_compras.find( x => x.idProducto == this.producto_requisicion.idProducto)){
       //verificamos si la lista de compras ya contiene el producto buscandolo por idProducto
-      // this.toastService.show('Ese producto ya esta en la lista',{classname: 'bg-danger text-light', delay: 6000});
+      this.messageService.add({severity:'error', summary:'Error', detail:'Ese producto ya esta en la lista'});
     }else if(this.producto_requisicion.idProdMedida <= 0){
-      // this.toastService.show('Falta ingresar medida',{classname: 'bg-danger text-light', delay: 6000});
+      this.messageService.add({severity:'error', summary:'Error', detail:'Falta ingresar medida'});
     }else{
       this.Lista_compras.push({...this.producto_requisicion});
       this.isSearch=true;
@@ -226,22 +226,22 @@ export class RequisicionAgregarComponent implements OnInit {
     this.requisicion.idEmpleado = this.identity['sub'];//asginamos id de Empleado
     console.log('Requisicion',this.requisicion);
     if(this.Lista_compras.length == 0){
-      // this.toastService.show('No se puede crear Orden de compra si no tiene productos',{classname: 'bg-danger text-light', delay: 6000})
+      this.messageService.add({severity:'error', summary:'Error', detail:'No se puede crear la requisicion de compra si no tiene productos'});
     }else{
       this._requisicionservice.registerRequisicion(this.requisicion).subscribe(
         response =>{
           if(response.status == 'Success!'){
-           // console.log(response)       
-           //   this.toastService.show(' ⚠ Orden creada', { classname: 'bg-warning  text-bold', delay: 5000 });
-             this._requisicionservice.registerProductosRequisicion(this.Lista_compras).subscribe(
+            // console.log(response)  
+            this.messageService.add({severity:'success', summary:'Éxito', detail:'Requisicion creada'});
+            this._requisicionservice.registerProductosRequisicion(this.Lista_compras).subscribe(
                res =>{
                    //console.log(res);
-                  //  this.toastService.show(' ⚠ Requisicion creada exitosamente!', { classname: 'bg-success  text-light', delay: 5000 });
-                   this.getDetailsReq();
-                   //this.createPDF();
+                  this.messageService.add({severity:'success', summary:'Éxito', detail:'Productos agregados'});
+                  this.getDetailsReq();
+                  //this.createPDF();
                },error =>{
-                 console.log(<any>error);
-                //  this.toastService.show('Ups... Fallo al agregar los productos a la requisicion', { classname: 'bg-danger text-light', delay: 15000 });
+                console.log(<any>error);
+                this.messageService.add({severity:'error', summary:'Error', detail:'Fallo al agregar los productos a la requisicion'});
                });
           }else{
            console.log('fallo');  
@@ -249,7 +249,7 @@ export class RequisicionAgregarComponent implements OnInit {
           }
         },error =>{
          console.log(<any>error);
-        //  this.toastService.show('Ups... Fallo al crear la requisicion', { classname: 'bg-danger text-light', delay: 15000 });
+         this.messageService.add({severity:'error', summary:'Error', detail:'Fallo al crear la requisicion'});
         });
     }
   }
@@ -289,7 +289,7 @@ export class RequisicionAgregarComponent implements OnInit {
   }
 
   generaPDF(idReq:number){
-    this._requisicionservice.getPDF(idReq).subscribe(
+    this._requisicionservice.getPDF(idReq,this.identity['sub']).subscribe(
       (pdf: Blob) => {
         const blob = new Blob([pdf], {type: 'application/pdf'});
         const url = window.URL.createObjectURL(blob);

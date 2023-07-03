@@ -4,14 +4,13 @@ import { ActivatedRoute } from '@angular/router';
 import { ProveedorService } from 'src/app/services/proveedor.service';
 import { ProductoService } from 'src/app/services/producto.service';
 import { global } from 'src/app/services/global';
-import { ToastService } from 'src/app/services/toast.service';
 import { OrdendecompraService } from 'src/app/services/ordendecompra.service';
 import { EmpleadoService } from 'src/app/services/empleado.service';
 import { MedidaService } from 'src/app/services/medida.service';
 import { ImpuestoService } from 'src/app/services/impuesto.service';
 import { CompraService } from 'src/app/services/compra.service';
 import { HttpClient} from '@angular/common/http';
-
+import {MessageService} from 'primeng/api';
 //modelos
 import { Ordencompra } from 'src/app/models/orden_compra';
 import { Producto_orden } from 'src/app/models/producto_orden';
@@ -27,7 +26,7 @@ import autoTable from 'jspdf-autotable';
   selector: 'app-compra-agregar-id',
   templateUrl: './compra-agregar-id.component.html',
   styleUrls: ['./compra-agregar-id.component.css'],
-  providers:[ProveedorService,MedidaService,ProductoService,ImpuestoService,OrdendecompraService, EmpleadoService,CompraService]
+  providers:[ProveedorService,MedidaService,ProductoService,ImpuestoService,OrdendecompraService, EmpleadoService,CompraService,MessageService]
 })
 export class CompraAgregarIdComponent implements OnInit {
 
@@ -128,7 +127,7 @@ export class CompraAgregarIdComponent implements OnInit {
     //declaracion de servicios
     private _proveedorService: ProveedorService,
     private _productoService: ProductoService,
-    public toastService: ToastService,
+    private messageService: MessageService,
     private _ordencompraService: OrdendecompraService,
     public _empleadoService : EmpleadoService,
     private _route: ActivatedRoute,
@@ -330,13 +329,18 @@ export class CompraAgregarIdComponent implements OnInit {
     this.producto_compra.nombreMedida = this.medidaActualizada.nombreMedida;
 
     
-    if(this.producto_compra.cantidad <= 0 || this.producto_compra.precio < 0 || this.producto_compra.subtotal < 0){
-      // this.toastService.show('No se pueden agregar productos con cantidad, precio o importe menor o igual a 0',{classname: 'bg-danger text-light', delay: 6000})
-    }else if(this.producto_compra.idProducto == 0){
-      // this.toastService.show('Ese producto no existe',{classname: 'bg-danger text-light', delay: 6000})
+    if(this.producto_compra.cantidad <= 0){
+      this.messageService.add({severity:'error', summary:'Error', detail:'No se pueden agregar productos con cantidad igual o menor a 0'});
+    }else if(this.producto_compra.precio < 0 ){
+      this.messageService.add({severity:'error', summary:'Error', detail:'No se pueden agregar productos con precio menor a 0'});
+    }else if(this.producto_compra.subtotal < 0){
+      this.messageService.add({severity:'error', summary:'Error', detail:'No se pueden agregar productos con subtotal menor a 0'});
+    }
+    else if(this.producto_compra.idProducto == 0){
+      this.messageService.add({severity:'error', summary:'Error', detail:'Ese producto no existe'});
     }else if( this.Lista_compras.find( x => x.idProducto == this.producto_compra.idProducto)){
       //verificamos si la lista de compras ya contiene el producto buscandolo por idProducto
-      // this.toastService.show('Ese producto ya esta en la lista',{classname: 'bg-danger text-light', delay: 6000})
+      this.messageService.add({severity:'error', summary:'Error', detail:'Ese producto ya esta en la lista'});
     }else{
       this.Lista_compras.push({...this.producto_compra}); 
       this.isSearch=true;
@@ -582,13 +586,13 @@ export class CompraAgregarIdComponent implements OnInit {
     this.compra.idEmpleadoR = this.identity['sub'];//asginamos id de Empleado
 
     if(this.model == undefined){
-      // this.toastService.show('Falta ingresar la fecha de recepción',{classname: 'bg-danger text-light', delay: 6000});
+      this.messageService.add({severity:'error', summary:'Error', detail:'Falta ingresar la fecha de recepción'});
     }
     else if(this.compra.folioProveedor == 0){
-      // this.toastService.show('Falta ingresar el folio del proveedor',{classname: 'bg-danger text-light', delay: 6000});
+      this.messageService.add({severity:'error', summary:'Error', detail:'Falta ingresar el folio del proveedor'});
     }
     else if(this.Lista_compras.length == 0){
-      // this.toastService.show('La lista de compras está vacía',{classname: 'bg-danger text-light', delay: 6000});
+      this.messageService.add({severity:'error', summary:'Error', detail:'La lista de compras está vacía'});
     }
     else 
     {
@@ -606,16 +610,16 @@ export class CompraAgregarIdComponent implements OnInit {
         console.log('response.status',response.status)
         if(response.status == 'success'){
           console.log(response)       
-          //   this.toastService.show(' ⚠ Orden creada', { classname: 'bg-warning  text-bold', delay: 5000 });
+            this.messageService.add({severity:'success', summary:'Éxito', detail:'Compra creada'});
             this._compraService.registerProductoscompra(this.Lista_compras).subscribe(
               res =>{
                   console.log(res);
-                  // this.toastService.show(' ⚠ Compra creada exitosamente!', { classname: 'bg-success  text-light', delay: 5000 });
+                  this.messageService.add({severity:'success', summary:'Éxito', detail:'Productos agregados'});
                   this.getLastCompra();
                   //this.createPDF();
               },error =>{
                 console.log(<any>error);
-                // this.toastService.show('Ups... Fallo al agregar los productos a la compra', { classname: 'bg-danger text-light', delay: 15000 });
+                this.messageService.add({severity:'error', summary:'Error', detail:'Fallo al agregar los productos a la compra'});
               });
           //Registro de lote
           // this._compraService.registerLote().subscribe( res =>{
@@ -625,24 +629,22 @@ export class CompraAgregarIdComponent implements OnInit {
             this._compraService.updateExistencia(this.Lista_compras).subscribe(
               res =>{
                   console.log(res);
-                  // this.toastService.show(' ⚠ Existencia actualizada exitosamente!', { classname: 'bg-success  text-light', delay: 5000 });
+                  this.messageService.add({severity:'success', summary:'Éxito', detail:'Existencia actualizada'});
                   //this.getLastCompra();
                   //this.createPDF();
               },error =>{
                 console.log(<any>error);
-                // this.toastService.show('Ups... Fallo al agregar los productos', { classname: 'bg-danger text-light', delay: 15000 });
+                this.messageService.add({severity:'error', summary:'Error', detail:'Fallo al actualizar la existencia'});
               });
 
             if(this.facturableCheck==true){
               this._compraService.updateExistenciaFacturable(this.Lista_compras).subscribe(
                 res =>{
                     console.log(res);
-                    // this.toastService.show(' ⚠ Existencia Facturable actualizada exitosamente!', { classname: 'bg-success  text-light', delay: 5000 });
-                    //this.getLastCompra();
-                    //this.createPDF();
+                  this.messageService.add({severity:'success', summary:'Éxito', detail:'Existencia facturable actualizada'});
                 },error =>{
                   console.log(<any>error);
-                  // this.toastService.show('Ups... Fallo al agregar los productos a la existencia facturable', { classname: 'bg-danger text-light', delay: 15000 });
+                this.messageService.add({severity:'error', summary:'Error', detail:'Fallo al actualizar la existencia facturable'});
                 });
             }else{
 
@@ -652,7 +654,7 @@ export class CompraAgregarIdComponent implements OnInit {
         }
       },error =>{
         console.log(<any>error);
-        // this.toastService.show('Ups... Fallo al crear la compra', { classname: 'bg-danger text-light', delay: 15000 });
+        this.messageService.add({severity:'error', summary:'Error', detail:'Fallo al crear la compra'});
       });
 
     }

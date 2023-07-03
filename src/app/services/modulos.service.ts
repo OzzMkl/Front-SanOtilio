@@ -23,6 +23,11 @@ export class ModulosService {
                 idSubModulo:4
               }
 
+  public pReq: propModulo={
+    idModulo:3,
+    idSubModulo:5
+  }
+
   constructor() { }
 
   modsInventario(){
@@ -36,7 +41,9 @@ export class ModulosService {
   modsCotizaciones(){
     return this.pCoti;
   }
-
+  modsRequisicion(){
+    return this.pReq;
+  }
   modsProveedores(){
     return this.pProv;
   }

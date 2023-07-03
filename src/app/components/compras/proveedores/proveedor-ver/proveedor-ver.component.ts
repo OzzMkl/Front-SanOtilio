@@ -193,12 +193,12 @@ export class ProveedorVerComponent implements OnInit {
         if(response.status == 'success'){
           //console.log(response);
           this._router.navigate(['./proveedor-modulo/proveedorBuscar']);
-          // this.toastService.show('Estatus cambiado correctamente', { classname: 'bg-success text-light', delay: 5000 }); 
+          this.messageService.add({severity:'success', summary:'Éxito', detail:'Estatus cambiado correctamente'});
         }
       },
       error =>{
         console.log(error);
-        // this.toastService.show('Ups... Algo salio mal', { classname: 'bg-danger text-light', delay: 15000 });
+        this.messageService.add({severity:'error', summary:'Error', detail:'No se actualizó el status'});
       }
     )
   });

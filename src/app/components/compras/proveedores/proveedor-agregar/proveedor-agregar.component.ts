@@ -16,7 +16,7 @@ import { MessageService } from 'primeng/api';
   selector: 'app-proveedor-agregar',
   templateUrl: './proveedor-agregar.component.html',
   styleUrls: ['./proveedor-agregar.component.css'],
-  providers:[ProveedorService,BancoService]  
+  providers:[ProveedorService,BancoService,MessageService]  
 })
 export class ProveedorAgregarComponent implements OnInit, OnDestroy {
 
@@ -92,12 +92,12 @@ export class ProveedorAgregarComponent implements OnInit, OnDestroy {
     this.registraProveedor =  this._proveedorService.register(this.proveedor,identity).subscribe(
        response =>{ 
          //console.log(response);
-        //  this.toastService.show('Proveedor guardado correctamente', { classname: 'bg-success text-light', delay: 5000 }); 
+          this.messageService.add({severity:'success', summary:'Éxito', detail:'Proveedor guardado'});
          form.reset();
          this._router.navigate(['./proveedor-modulo/proveedorBuscar']);
         },
        error => {
-        //  this.toastService.show('Ups... Algo salio mal', { classname: 'bg-danger text-light', delay: 15000 });
+        this.messageService.add({severity:'error', summary:'Error', detail:'No se registró al proveedor'});
          console.log(<any>error);
        }
      )

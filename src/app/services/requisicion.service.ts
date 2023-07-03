@@ -9,6 +9,7 @@ import { global } from "./global";
 export class RequisicionService {
   
   public url : string;
+  public headers:any = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');
 
   constructor( public _http: HttpClient ) { this.url = global.url; }
 
@@ -37,8 +38,12 @@ export class RequisicionService {
     return this._http.get(this.url+'requisicion/showMejorado/'+idReq, {headers:headers} );
   }
 
-  getPDF(idReq:number):Observable<Blob>{
-    return this._http.get(this.url+'requisicion/generatePDF/'+ idReq, {responseType:'blob'});
+  getPDF(idReq:number,idEmpleado:number):Observable<Blob>{
+    return this._http.get(this.url+'requisicion/generatePDF/'+ idReq+'/'+idEmpleado, {responseType:'blob'});
+  }
+
+  getReq():Observable<any>{
+    return this._http.get(this.url+'requisicion/listaRequisiciones', {headers:this.headers} );
   }
 
 }

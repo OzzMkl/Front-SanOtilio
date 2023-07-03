@@ -71,6 +71,7 @@ import { CheckTokenGuard } from './guards/check-token.guard';
 import { CotizacionGuard } from './guards/cotizacion.guard';
 import { ClienteGuard } from './guards/cliente.guard';
 import { ProductosGuard } from './guards/productos.guard';
+import { RequisicionGuard } from './guards/requisicion.guard';
 
 
 const routes: Routes = [
@@ -78,11 +79,11 @@ const routes: Routes = [
   {path: 'login', component: LoginComponent},
   {path: 'logout/:sure', component: LoginComponent},
   {path: 'ajustes',component: EmpleadoEditarComponent, canActivate:[CheckTokenGuard]},
-  {path: 'requisicion-modulo', component: RequisicionModuloComponent,
-  children:[
-    {path: 'requisicion-agregar',component: RequisicionAgregarComponent},
-    {path: 'requisicion-buscar',component: RequisicionBuscarComponent},
-    {path: 'requisicion-editar/:idReq',component: RequisicionEditarComponent}
+  {path: 'requisicion-modulo', component: RequisicionModuloComponent, canActivate:[RequisicionGuard],
+    children:[
+      {path: 'requisicion-agregar',component: RequisicionAgregarComponent},
+      {path: 'requisicion-buscar',component: RequisicionBuscarComponent},
+      {path: 'requisicion-editar/:idReq',component: RequisicionEditarComponent}
   ]},
   {path: 'ordencompra-modulo', component: OrdencompraModuloComponent, canActivate:[OrdencompraGuardGuard],
     children:[

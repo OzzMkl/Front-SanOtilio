@@ -1,1 +1,129 @@
-<p>requisicion-buscar works!</p>
+<div class="container">
+    <h3 class="text-center">Requisiciones Recibidas</h3>
+</div>
+<div>
+    <div class="container-fluid" *ngIf="requisiciones">
+        <!-- <div class="input-group mb-2">
+            <div class="col-2">
+                <select class="form-select" name="tipoBusqueda" [(ngModel)]="tipoBusqueda">
+                    <option value="1"># Compra</option>
+                    <option value="2">Proveedor</option>
+                    <option value="3"># Proveedor</option>
+                    <option value="4">Total</option>
+                </select>
+            </div>
+            <div class="col" *ngIf="tipoBusqueda == 1">
+                <input type="search" class="form-control" name="searchIdCompra" placeholder="Buscar ..." (keyup)="getSearchIdCompra($event)">
+            </div>
+            <div class="col" *ngIf="tipoBusqueda == 2">
+                <input type="search" class="form-control" name="searchNombreProveedor" placeholder="Buscar ..." (keyup)="getSearchNombreProveedor($event)">
+            </div>
+            <div class="col" *ngIf="tipoBusqueda == 3">
+                <input type="search" class="form-control" name="searchFolioProveedor" placeholder="Buscar ..." (keyup)="getSearchFolioProveedor($event)">
+            </div>
+            <div class="col" *ngIf="tipoBusqueda == 4">
+                <input type="search" class="form-control" name="searchTotal" placeholder="Buscar ..." (keyup)="getSearchTotal($event)">
+            </div>
+        </div> -->
+        <br>
+        <div class="text-center text-primary" *ngIf="isLoading">
+            <div class="spinner-border" role="status" >
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+        <div *ngIf="!isLoading">
+            <table class="table table-dark table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col">#REQUISICION</th>
+                        <th scope="col">FECHA</th>
+                        <th scope="col">EMPLEADO</th>
+                        <th scope="col">OBSERVACIOENS</th>
+                    </tr>
+                </thead>
+                <tbody *ngFor="let r of requisiciones | paginate:{id:'pagReq',itemsPerPage: itemsPerPage, currentPage: pageActual, totalItems:totalPages}">
+                    <tr (click)="open(content)" (click)="selected(r.idReq)">
+                        <th scope="row">{{r.idReq}}</th>
+                        <th scope="row">{{r.created_at | date: 'dd/MM/yyyy'}}</th>
+                        <th scope="row">{{r.nombreEmpleado}}</th>
+                        <th scope="row">{{r.observaciones}}</th>
+                    </tr>
+                </tbody>
+            </table>
+            <pagination-controls 
+                    id="pagReq" 
+                    (pageChange)="getPage(pageActual = $event)"
+                    previousLabel="Anterior"
+                    nextLabel="Siguiente" >
+            </pagination-controls>
+        </div>
+    
+    </div>
+</div>
+<!-- Modal -->
+<ng-template #content let-modal>
+    <div *ngFor="let datosReq of detailReq">
+        <div class="modal-header">
+            <h4 class="modal-title" id="modal-basic-title">Detalles requisicion no. {{datosReq.idReq}}</h4>
+            <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+        </div>
+        <div class="modal-body">
+            <form>
+                <div class="container">
+                    <div class="row">
+                        <div class="col-9">
+                        </div>
+                        <div class="col-auto">
+                            <button type="button" class="btn btn-secondary" style="box-sizing: border-box;" (click)="generaPDF(datosReq.idReq)" ><i class="bi bi-file-earmark-pdf" ngbTooltip="PDF"></i><br></button>
+                        </div>
+                        <div class="col-auto">
+                            <button type="button" class="btn btn-warning" (click)="modal.dismiss('Cross click')" [routerLink]="" ngbTooltip="EDITAR"><i class="bi bi-pencil-square"></i><br></button>
+                        </div>
+                        <div class="col-auto">
+                            <button type="button" class="btn btn-danger" ngbTooltip="CANCELAR"><i class="bi bi-trash3"></i><br></button>
+                        </div>
+                    </div>
+                    <hr>
+                    <h4 class="text-center">DATOS DE LA REQUISICION</h4>
+                    <div class="row align-items-start">
+                        <div class="col-5">
+                          <label for="nombreEmpleado" class="form-label">Realizo</label>
+                          <input id="nombreEmpleado" type="text" class="form-control" value="{{datosReq.nombreEmpleado}}" readonly>
+                        </div>
+                        <div class="col-3">
+                          <label for="fechaAlta" class="form-label">Fecha de alta</label>
+                          <input type="text" class="form-control" value="{{datosReq.created_at | date}}" readonly>
+                        </div>
+                        <div class="col-11">
+                          <label for="observaciones">Observaciones</label>
+                          <textarea class="form-control" name="observaciones" id="observaciones" cols="30" rows="2" value="{{datosReq.observaciones}}" readonly></textarea>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row align-items-start">
+                        <h4 class="text-center">LISTA DE PRODUCTOS</h4>
+                        <table class="table table-dark table-hover" id="table_productos">
+                            <thead>
+                                <tr>
+                                    <th scope="col">CLAVE EXTERNA</th>
+                                    <th scope="col">DESCRIPCION</th>
+                                    <th scope="col">MEDIDA</th>
+                                    <th scope="col">CANTIDAD</th>
+                                </tr>
+                            </thead>
+                            <tbody *ngFor="let p_d of productosdetailReq | paginate:{ id:'paginationDC', itemsPerPage: 5, currentPage: pageActual}">
+                                <tr>
+                                 <th scope="row">{{p_d.claveexterna}}</th>
+                                 <th scope="row">{{p_d.descripcion}}</th>
+                                 <th scope="row">{{p_d.nombreMedida}}</th>
+                                 <th scope="row">{{p_d.cantidad}}</th>
+                                </tr>
+                            </tbody> 
+                        </table>
+                        <pagination-controls id="paginationDC" (pageChange)="pageActual = $event"></pagination-controls>
+                    </div> 
+                </div>
+            </form>
+        </div>
+    </div>
+</ng-template>

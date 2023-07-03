@@ -4,11 +4,11 @@ import { ActivatedRoute } from '@angular/router';
 import { ProveedorService } from 'src/app/services/proveedor.service';
 import { ProductoService } from 'src/app/services/producto.service';
 import { global } from 'src/app/services/global';
-import { ToastService } from 'src/app/services/toast.service';
 import { EmpleadoService } from 'src/app/services/empleado.service';
 import { MedidaService } from 'src/app/services/medida.service';
 import { ImpuestoService } from 'src/app/services/impuesto.service';
 import { CompraService } from 'src/app/services/compra.service';
+import { MessageService } from 'primeng/api';
 //modelos
 import { Compra } from 'src/app/models/compra'
 import { Producto_compra } from 'src/app/models/producto_compra';
@@ -22,7 +22,7 @@ import autoTable from 'jspdf-autotable';
   selector: 'app-compra-editar',
   templateUrl: './compra-editar.component.html',
   styleUrls: ['./compra-editar.component.css'],
-  providers:[ProveedorService,MedidaService,ProductoService,ImpuestoService,EmpleadoService,CompraService]
+  providers:[ProveedorService,MedidaService,ProductoService,ImpuestoService,EmpleadoService,CompraService,MessageService]
 })
 export class CompraEditarComponent implements OnInit {
 
@@ -108,7 +108,7 @@ export class CompraEditarComponent implements OnInit {
     //declaracion de servicios
     private _proveedorService: ProveedorService,
     private _productoService: ProductoService,
-    public toastService: ToastService,
+    private messageService: MessageService,
     public _empleadoService : EmpleadoService,
     private _route: ActivatedRoute,
     private modalService: NgbModal,
@@ -358,13 +358,13 @@ export class CompraEditarComponent implements OnInit {
       this.compra.idEmpleadoR = this.identity['sub'];//asginamos id de Empleado
 
       if(this.fechaCheck == true && this.model == undefined){
-        // this.toastService.show('Falta ingresar la fecha de recepción',{classname: 'bg-danger text-light', delay: 6000});
+        this.messageService.add({severity:'error', summary:'Error', detail:'Falta ingresar la fecha de recepción'});
       }
       else if(this.compra.folioProveedor == 0){
-        // this.toastService.show('Falta ingresar el folio del proveedor',{classname: 'bg-danger text-light', delay: 6000});
+        this.messageService.add({severity:'error', summary:'Error', detail:'Falta ingresar el folio del proveedor'});
       }
       else if(this.Lista_compras.length == 0){
-        // this.toastService.show('La lista de compras está vacía',{classname: 'bg-danger text-light', delay: 6000});
+        this.messageService.add({severity:'error', summary:'Error', detail:'La lista de compras está vacía'});
       }
       else 
       {
@@ -430,13 +430,17 @@ export class CompraEditarComponent implements OnInit {
       this.producto_compra.nombreMedida = this.medidaActualizada.nombreMedida;
   
       
-      if(this.producto_compra.cantidad <= 0 || this.producto_compra.precio < 0 || this.producto_compra.subtotal < 0){
-        // this.toastService.show('No se pueden agregar productos con cantidad, precio o importe menor o igual a 0',{classname: 'bg-danger text-light', delay: 6000})
+      if(this.producto_compra.cantidad <= 0){
+        this.messageService.add({severity:'error', summary:'Error', detail:'No se pueden agregar productos con cantidad igual o menor a 0'});
+      }else if(this.producto_compra.precio < 0 ){
+        this.messageService.add({severity:'error', summary:'Error', detail:'No se pueden agregar productos con precio menor a 0'});
+      }else if(this.producto_compra.subtotal < 0){
+        this.messageService.add({severity:'error', summary:'Error', detail:'No se pueden agregar productos con subtotal menor a 0'});
       }else if(this.producto_compra.idProducto == 0){
-        // this.toastService.show('Ese producto no existe',{classname: 'bg-danger text-light', delay: 6000})
+        this.messageService.add({severity:'error', summary:'Error', detail:'Ese producto no existe'});
       }else if( this.Lista_compras.find( x => x.idProducto == this.producto_compra.idProducto)){
         //verificamos si la lista de compras ya contiene el producto buscandolo por idProducto
-        // this.toastService.show('Ese producto ya esta en la lista',{classname: 'bg-danger text-light', delay: 6000})
+        this.messageService.add({severity:'error', summary:'Error', detail:'Ese producto ya esta en la lista'});
       }else{
         this.Lista_compras.push({...this.producto_compra}); 
         this.isSearch=true;

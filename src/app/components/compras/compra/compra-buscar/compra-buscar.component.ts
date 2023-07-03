@@ -3,7 +3,7 @@ import { CompraService } from 'src/app/services/compra.service';
 import { HttpClient} from '@angular/common/http';
 import { Router} from '@angular/router';
 import { Subscription } from 'rxjs';
-import { NgbModal, ModalDismissReasons, NgbDateStruct} from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
 import { EmpleadoService } from 'src/app/services/empleado.service';
 //pdf
 import jsPDF from 'jspdf';
