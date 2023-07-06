@@ -475,7 +475,7 @@ getSearch(claveExterna:string){
 
   //accion de guardar el nuevo cliente del modal
   guardarCliente(){
-    var identity = this._empleadoService.getIdentity();
+    //var identity = this._empleadoService.getIdentity();
 
     if(this.isCompany == true ){
       this.modeloCliente.aMaterno ='';
@@ -484,7 +484,7 @@ getSearch(claveExterna:string){
     if(this.isRFC == false){
       this.modeloCliente.rfc = 'XAXX010101000';
     }
-    this._clienteService.postCliente(this.modeloCliente,identity).subscribe( 
+    this._clienteService.postCliente(this.modeloCliente,this.identity).subscribe( 
       response =>{
         if(response.status == 'success'){
           this.messageService.add({severity:'success', summary:'Registro exitoso', detail: 'Cliente registrado correctamente'});
@@ -492,7 +492,7 @@ getSearch(claveExterna:string){
           if(this.checkDireccion == true && this.cdireccion.ciudad != '' && this.cdireccion.colonia != '' && this.cdireccion.calle != ''
               && this.cdireccion.numExt != '' && this.cdireccion.cp != 0 && this.cdireccion.referencia != '' && this.cdireccion.telefono != 0){
 
-            this._clienteService.postCdireccion(this.cdireccion,identity).subscribe( 
+            this._clienteService.postCdireccion(this.cdireccion,this.identity).subscribe( 
               response=>{
                 this.messageService.add({severity:'success', summary:'Registro exitoso', detail:'La direccion se registro correctamente'});
                 //console.log(response);
@@ -635,6 +635,7 @@ editarProductoLista(idPM:number){
             this.messageService.add({severity:'error', summary:'Acceso denegado', detail: 'El usuario no cuenta con los permisos necesarios, redirigiendo en '+this.counter+' segundos'});
           },1000);
         } else{
+          this.identity = this._empleadoService.getIdentity();
           this.getDatosEmpresa();
           this.getDetallesCotiza();
         }
@@ -688,6 +689,36 @@ generaPDF(idCotiza:number){
       this.isLoadingDatos = false;
     }
   );
+}
+
+creaVenta(){
+  this.cotizacion_editada.idEmpleado = this.identity['sub'];
+  if(this.productos_cotizacion_e.length == 0){
+    this.messageService.add({severity:'warn', summary:'Alerta', detail:'No puedes generar una venta sin productos!'});
+
+  } else if( this.cotizacion_editada.idCliente == 0){
+    this.messageService.add({severity:'warn', summary:'Alerta', detail:'No puedes generar una cotizacion sin cliente!'});
+
+  } else {
+    this._ventasService.postVentas(this.cotizacion_editada).subscribe(
+      response =>{
+        if(response.status == 'success'){
+          this.messageService.add({severity:'success', summary:'Registro exitoso', detail:'Venta creada correctamente!'});
+          this._ventasService.postProductosVentas(this.productos_cotizacion_e).subscribe(
+            response =>{
+              if(response.status == 'success'){
+                this.messageService.add({severity:'success', summary:'Registro exitoso', detail:'productos cargados exitosamente'});
+              }
+            }, error =>{
+              this.messageService.add({severity:'error',summary:'Error', detail:'La venta a fallado'});
+              console.log(error);
+            });
+        }
+      }, error =>{
+        this.messageService.add({severity:'error',summary:'Error', detail:'La venta a fallado'});
+        console.log(error);
+      });
+  }
 }
 
   //modales
