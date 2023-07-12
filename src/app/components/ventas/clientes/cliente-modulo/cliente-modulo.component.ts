@@ -11,7 +11,7 @@ export class ClienteModuloComponent implements OnInit {
 
   //PERMISOS
   public userPermisos:  any ;
-  public mCli = this._modulosService.modsInventario();
+  public mCli = this._modulosService.modsClientes();
 
   constructor(private _empleadoService:EmpleadoService, private _modulosService: ModulosService) { }
 

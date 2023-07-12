@@ -55,7 +55,7 @@ export class ClienteBuscarComponent implements OnInit {
   private getClienteSub : Subscription = new Subscription;
   //PERMISOS
   public userPermisos:any = [];
-  public mCli = this._modulosService.modsInventario();
+  public mCli = this._modulosService.modsClientes();
   //contador para redireccion al no tener permisos
   counter: number = 5;
   timerId:any;

@@ -65,9 +65,9 @@
                         <label class="form-label">TIPO CLIENTE</label>
                         <input class="form-control" type="text" value="{{c.nombreTipoC}}" readonly>
                     </div>
-                    <div class="col-1" *ngFor="let permiso of userPermisos">
+                    <div class="col-1">
                         
-                        <button *ngIf="permiso.editar == 1" type="button" class="btn btn-warning" (click)="modal.dismiss('Cross click')" [routerLink]="['../cliente-editar',c.idCliente]" ngbTooltip="EDITAR"><i class="bi bi-pencil-square"></i><br></button>
+                        <button *ngIf="userPermisos.editar == 1" type="button" class="btn btn-warning" (click)="modal.dismiss('Cross click')" [routerLink]="['../cliente-editar',c.idCliente]" ngbTooltip="EDITAR"><i class="bi bi-pencil-square"></i><br></button>
                     </div>
                 </div>
                 <hr>

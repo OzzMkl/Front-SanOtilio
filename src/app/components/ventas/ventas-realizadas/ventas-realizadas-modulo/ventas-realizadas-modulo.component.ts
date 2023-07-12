@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 //servicios
 import { EmpleadoService } from 'src/app/services/empleado.service';
+import { ModulosService } from 'src/app/services/modulos.service';
 
 @Component({
   selector: 'app-ventas-realizadas-modulo',
@@ -9,19 +10,18 @@ import { EmpleadoService } from 'src/app/services/empleado.service';
 })
 export class VentasRealizadasModuloComponent implements OnInit {
 
-  public userPermisos:any;
   //PERMISOS
-  private idModulo: number = 6;
-  private idSubmodulo: number = 17;
+  public userPermisos:any;
+  public mPuV = this._modulosService.modsPuntodeVenta();
 
-  constructor(private _empleadoService:EmpleadoService) { }
+  constructor(private _empleadoService:EmpleadoService, private _modulosService: ModulosService) { }
 
   ngOnInit(): void {
     this.loadUser()
   }
 
   loadUser(){
-    this.userPermisos = this._empleadoService.getPermisosModulo(this.idModulo, this.idSubmodulo);
+    this.userPermisos = this._empleadoService.getPermisosModulo(this.mPuV.idModulo, this.mPuV.idSubModulo);
   }
 
 }

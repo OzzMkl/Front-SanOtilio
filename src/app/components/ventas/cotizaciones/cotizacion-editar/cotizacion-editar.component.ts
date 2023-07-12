@@ -87,7 +87,7 @@ export class CotizacionEditarComponent implements OnInit {
   contador: number =0;
   //PERMISOS
   public userPermisos:any = [];
-  public mCoti = this._modulosService.modsInventario();
+  public mCoti = this._modulosService.modsCotizaciones();
   //contador para redireccion al no tener permisos
   counter: number = 5;
   timerId:any;

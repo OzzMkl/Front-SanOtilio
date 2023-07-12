@@ -34,7 +34,7 @@ export class ClienteEditarComponent implements OnInit {
   public listaDirecciones: Array<Cdireccion>;
   //PERMISOS
   public userPermisos:any = [];
-  public mCli = this._modulosService.modsInventario();
+  public mCli = this._modulosService.modsClientes();
   //contador para redireccion al no tener permisos
   counter: number = 5;
   timerId:any;
