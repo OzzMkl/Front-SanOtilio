@@ -708,6 +708,11 @@ creaVenta(){
             response =>{
               if(response.status == 'success'){
                 this.messageService.add({severity:'success', summary:'Registro exitoso', detail:'productos cargados exitosamente'});
+
+                // setInterval(()=>{
+                //     this._router.navigate(['./']);
+                // },3000);
+
               }
             }, error =>{
               this.messageService.add({severity:'error',summary:'Error', detail:'La venta a fallado'});

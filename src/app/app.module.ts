@@ -98,6 +98,7 @@ import { RequisicionModuloComponent } from './components/compras/requisiciones/r
 import { RequisicionAgregarComponent } from './components/compras/requisiciones/requisicion-agregar/requisicion-agregar.component';
 import { RequisicionBuscarComponent } from './components/compras/requisiciones/requisicion-buscar/requisicion-buscar.component';
 import { RequisicionEditarComponent } from './components/compras/requisiciones/requisicion-editar/requisicion-editar.component';
+import { PuntoDeVentaEditarComponent } from './components/ventas/punto-de-venta-editar/punto-de-venta-editar.component';
 
 
 
@@ -170,7 +171,8 @@ import { RequisicionEditarComponent } from './components/compras/requisiciones/r
     RequisicionModuloComponent,
     RequisicionAgregarComponent,
     RequisicionBuscarComponent,
-    RequisicionEditarComponent
+    RequisicionEditarComponent,
+    PuntoDeVentaEditarComponent
   ],
   imports: [
     BrowserModule,
