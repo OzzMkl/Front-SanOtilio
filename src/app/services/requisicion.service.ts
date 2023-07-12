@@ -46,4 +46,17 @@ export class RequisicionService {
     return this._http.get(this.url+'requisicion/listaRequisiciones', {headers:this.headers} );
   }
 
+  updateRequisicion(idOrd:any,orden:any):Observable<any>{
+    let json = JSON.stringify(orden);
+    let params = 'json='+json;
+    let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');//mandamos el json con las cabeceras para que obtengamos el token
+    return this._http.put(this.url+'ordendecompra/updateOrder/'+idOrd,params, {headers:headers} );
+  }
+  updateProductosRequisicion(idOrd:any, productosOrden:any):Observable<any>{
+    let json = JSON.stringify(productosOrden);
+    let params = 'json='+json;
+    let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');//mandamos el json con las cabeceras para que obtengamos el token
+    return this._http.put(this.url+'ordendecompra/updateProductsOrder/'+idOrd,params, {headers:headers} );
+  }
+
 }

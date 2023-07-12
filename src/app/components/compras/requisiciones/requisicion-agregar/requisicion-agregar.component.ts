@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 //Servicios
 import { ProductoService } from 'src/app/services/producto.service';
 import { global } from 'src/app/services/global';
-import { ToastService } from 'src/app/services/toast.service';
 import { RequisicionService } from 'src/app/services/requisicion.service';
 import { EmpleadoService } from 'src/app/services/empleado.service';
 import { HttpClient} from '@angular/common/http';
@@ -164,6 +163,12 @@ export class RequisicionAgregarComponent implements OnInit {
     );
   }
 
+  /**
+  * @param idProdMedida
+  * Recibimos el id de la medida del producto
+  * @description
+  * Trae y asigna elnombre de la medida seleccionada por el usuario
+  */
   capturaNombreMedida(idProdMedida:any){
     console.log(idProdMedida);
     var pm = this.medidasLista.find((x:any) => x.idProdMedida == idProdMedida)!;
