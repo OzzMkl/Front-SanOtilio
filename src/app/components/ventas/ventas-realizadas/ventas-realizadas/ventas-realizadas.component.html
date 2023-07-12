@@ -107,8 +107,9 @@
                     <tr>
                         <th scope="col">CLAVE EXTERNA</th>
                         <th scope="col">DESCRIPCION</th>
-                        <th scope="col">PRECIO</th>
+                        <th scope="col">MEDIDA</th>
                         <th scope="col">CANTIDAD</th>
+                        <th scope="col">PRECIO</th>
                         <th scope="col">DESCUENTO</th>
                         <th scope="col">SUBTOTAL</th>
                     </tr>
@@ -117,10 +118,11 @@
                     <tr>
                         <th scope="row">{{pdv.claveEx}}</th>
                         <th scope="row">{{pdv.descripcion}}</th>
-                        <th scope="row">{{pdv.precio}}</th>
+                        <th scope="row">{{pdv.nombreMedida}}</th>
                         <th scope="row">{{pdv.cantidad}}</th>
-                        <th scope="row">{{pdv.descuento}}</th>
-                        <th scope="row">{{pdv.subtotal}}</th>
+                        <th scope="row">{{pdv.precio | currency}}</th>
+                        <th scope="row">{{pdv.descuento | currency}}</th>
+                        <th scope="row">{{pdv.total | currency}}</th>
                     </tr>
                 </tbody>
             </table>
