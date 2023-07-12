@@ -14,9 +14,6 @@ import { Compra } from 'src/app/models/compra'
 import { Producto_compra } from 'src/app/models/producto_compra';
 //Modal
 import { NgbDateStruct, NgbModal,ModalDismissReasons, NgbCalendar } from '@ng-bootstrap/ng-bootstrap';
-//pdf
-import jsPDF from 'jspdf';
-import autoTable from 'jspdf-autotable';
 
 @Component({
   selector: 'app-compra-editar',
@@ -544,45 +541,6 @@ export class CompraEditarComponent implements OnInit {
   /** */
 
   public createPDF():void{//Crear PDF
-    //this.getLastCompra();
-    const doc = new jsPDF;
-
-    //Formateamos la fecha
-    // console.log(this.detailComp[0]['fechaRecibo']);
-    
-    
-
-    var logo = new Image();//CREAMOS VARIABLE
-    logo.src = 'assets/images/logo-solo.png'//ASIGNAMOS LA UBICACION DE LA IMAGEN
-    var nombreE = this.identity['nombre']+' '+this.identity['apellido']+' '+this.identity['amaterno']//concatenamos el nombre completo 
-    
-    doc.setDrawColor(255, 145, 0);//AGREGAMOS COLOR NARANJA A LAS LINEAS
-
-    //           ancho linea   x1,y1  x2,y2
-    doc.setLineWidth(2.5).line(10,10,200,10);//colocacion de linea
-    doc.setLineWidth(2.5).line(50,15,160,15);
-    //          tipografia       tamaño letra       texto                         x1,y1
-    doc.setFont('Helvetica').setFontSize(16).text('MATERIALES PARA CONSTRUCCION', 55,25);
-    doc.setFont('Helvetica').setFontSize(16).text(" \"SAN OTILIO\" ", 85,30);
-    // variable con logo, tipo x1,y1, ancho, largo
-    doc.addImage(logo,'PNG',100,32,10,10);
-    doc.setFont('Helvetica').setFontSize(10).text('REPORTE DE COMPRA', 10,50);
-    doc.setLineWidth(2.5).line(10,53,70,53);
-    //           tipografia,negrita        tamaño          texto              x1,y1
-    doc.setFont('Helvetica','bold').setFontSize(10).text('NO. COMPRA: '+this.detailComp[0]['idCompra'], 10,60);
-    doc.setFont('Helvetica','bold').setFontSize(10).text('FOLIO DEL PROVEEDOR: '+this.detailComp[0]['folioProveedor'], 10,65);
-    doc.setFont('Helvetica','normal').setFontSize(10).text('FECHA IMPRESION: '+this.fecha.toLocaleDateString('es-ES', this.dateOptions), 115,60);
-    doc.setFont('Helvetica','normal').setFontSize(10).text('FECHA DE RECEPCION: '+this.detailComp[0]['fecha_format'].substring(0,10), 115,65);
-
-    doc.setLineWidth(1).line(10,70,200,70);
-    doc.setFont('Helvetica','normal').setFontSize(10).text('REALIZO: '+ nombreE.toUpperCase(), 10,75);
-    doc.setFont('Helvetica','normal').setFontSize(10).text('PROVEEDOR: '+this.detailComp[0]['nombreProveedor'], 10,80);
-    doc.setFont('Helvetica','normal').setFontSize(10).text('OBSERVACIONES: '+this.detailComp[0]['observaciones'], 10,85);
-
-
-    doc.setLineWidth(1).line(10,92,200,92);
-    autoTable(doc,{html: '#table_productos',startY:95})
-    doc.save('compra.pdf')
   } 
 
   /**
