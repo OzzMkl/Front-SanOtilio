@@ -16,11 +16,6 @@ import { Ordencompra } from 'src/app/models/orden_compra';
 import { Producto_orden } from 'src/app/models/producto_orden';
 //NGBOOTSTRAP
 import { NgbModal, ModalDismissReasons, NgbDateStruct, NgbCalendar} from '@ng-bootstrap/ng-bootstrap';
-//pdf
-//import jsPDF from 'jspdf';
-//import 'jspdf-autotable';
-import jsPDF from 'jspdf';
-import autoTable from 'jspdf-autotable';
 
 
 @Component({
@@ -150,39 +145,6 @@ export class CompraAgregarComponent implements OnInit {
   }
   
   public createPDF():void{//Crear PDF
-    //this.getDetailsOrd();
-    const doc = new jsPDF;
-
-    var logo = new Image();//CREAMOS VARIABLE
-    logo.src = 'assets/images/logo-solo.png'//ASIGNAMOS LA UBICACION DE LA IMAGEN
-    var nombreE = this.identity['nombre']+' '+this.identity['apellido']+' '+this.identity['amaterno']//concatenamos el nombre completo 
-    
-    doc.setDrawColor(255, 145, 0);//AGREGAMOS COLOR NARANJA A LAS LINEAS
-
-    //           ancho linea   x1,y1  x2,y2
-    doc.setLineWidth(2.5).line(10,10,200,10);//colocacion de linea
-    doc.setLineWidth(2.5).line(50,15,160,15);
-    //          tipografia       tamaño letra       texto                         x1,y1
-    doc.setFont('Helvetica').setFontSize(16).text('MATERIALES PARA CONSTRUCCION', 55,25);
-    doc.setFont('Helvetica').setFontSize(16).text(" \"SAN OTILIO\" ", 85,30);
-    // variable con logo, tipo x1,y1, ancho, largo
-    doc.addImage(logo,'PNG',100,32,10,10);
-    doc.setFont('Helvetica').setFontSize(10).text('REPORTE DE COMPRA', 10,50);
-    doc.setLineWidth(2.5).line(10,53,70,53);
-    //           tipografia,negrita        tamaño          texto              x1,y1
-    doc.setFont('Helvetica','bold').setFontSize(10).text('NO. ORDEN: '+this.detailComp[0]['idOrd'], 10,60);
-    doc.setFont('Helvetica','normal').setFontSize(10).text('FECHA IMPRESION: '+this.fecha.toLocaleDateString(), 50,65);
-    doc.setFont('Helvetica','normal').setFontSize(10).text('FECHA ESTIMADA: '+this.detailComp[0]['fecha'], 115,65);  
-
-    doc.setLineWidth(1).line(10,70,200,70);
-    doc.setFont('Helvetica','normal').setFontSize(10).text('REALIZO: '+ nombreE.toUpperCase(), 10,75);
-    doc.setFont('Helvetica','normal').setFontSize(10).text('PROVEEDOR: '+this.detailComp[0]['nombreProveedor'], 10,80);
-    doc.setFont('Helvetica','normal').setFontSize(10).text('OBSERVACIONES: '+this.detailComp[0]['observaciones'], 10,85);
-
-
-    doc.setLineWidth(1).line(10,92,200,92);
-    autoTable(doc,{html: '#table_productos',startY:95})
-    doc.save('a.pdf')
   } 
 
 
