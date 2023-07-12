@@ -1,20 +1,15 @@
 <p-toast></p-toast>
-<div class="text-center text-primary" *ngIf="isLoadingDatos">
-    <div class="spinner-border" role="status" >
-        <span class="visually-hidden">Loading...</span>
-    </div>
-</div>
-<div class="container" *ngIf="!isLoadingDatos">
+<div class="container">
     <!-- DATOS CLIENTE -->
     <div>
-        <h5 class="text-center">DATOS DEL CLIENTE</h5>
-        <div class="row align-items-start">
+        <h4 class="text-center">DATOS DEL CLIENTE</h4>
+        <div class="row align-items-start" >
             <div class="col-4">
-                <label class="form-label">Buscar cliente</label>
-                <div class="input-group">
-                    <span class="input-group-addon" id="sizing-addon2"><i class="bi-search" style="font-size: 1.5rem; color: black; left: 0;" (click)="open(content)"></i></span>
-                    <input class="form-control" type="text" name="nombreCliente" #nombreCliente="ngModel" [(ngModel)]="cotizacion_editada.nombreCliente" id="" readonly>
-                </div>
+                <label class="form-label" for="">Buscar cliente</label>
+                    <div class="input-group">
+                        <span class="input-group-addon" id="sizing-addon2"><i class="bi-search" style="font-size: 1.5rem; color: black; left: 0;" (click)="open(content)"></i></span>
+                        <input class="form-control" type="text" name="nomreCliente" #nombreCliente="ngModel" [(ngModel)]="ventag.nombreCliente" readonly >
+                    </div>
             </div>
             <div class="col-1">
                 <br>
@@ -28,31 +23,35 @@
                 <label class="form-label">Tipo cliente</label>
                 <input class="form-control" type="text" value="{{c.nombreTipoC}}"  readonly>
             </div>
-            <div *ngIf="cotizacion_editada.nombreCliente.length > 0" class="col-2">
+            <!-- <div class="col-1" *ngFor="let c of cliente">
+                <p>{{c.nombreStatus}}</p>
+            </div> -->
+            <div *ngIf="ventag.nombreCliente.length > 0" class="col-2">
                 <label class="form-label" for="flexSwitchCheckDefault">¿Se envia?</label>
                 <div class="form-check form-switch">
-                    <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" name="seEnvia" [(ngModel)]="seEnvia" (change)="modalSeEnvia(buscarDireccion)" (click)="getDireccionCliente(cotizacion_editada.idCliente)">
+                    <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" name="seEnvia" [(ngModel)]="seEnvia" (change)="modalSeEnvia(buscarDireccion)" (click)="getDireccionCliente(ventag.idCliente)" >
                   </div>
             </div>
         </div>
-        <div *ngIf="seEnvia == true || cotizacion_editada.cdireccion != null" class="row">
+        <!-- //<br> -->
+        <div *ngIf="seEnvia == true" class="row">
             <div class="col">
                 <label class="form-label">Direccion del cliente</label>
                 <!-- <input type="text" class="form-control" value="{{ventag.dirCliente}}" readonly> -->
-                <textarea class="form-control" value="{{cotizacion_editada.cdireccion}}" readonly></textarea>
+                <textarea class="form-control" value="{{ventag.cdireccion}}" readonly></textarea>
             </div>
         </div>
     </div>
     <hr>
     <!-- PRODUCTOS -->
     <div class="row align-items-start">
-        <h5 class="text-center">AGREGAR PRODUCTO</h5>
+        <h4 class="text-center">AGREGAR PRODUCTO</h4>
         <div class="col-2">
-            <label class="form-label">Buscar producto</label>
-            <div class="input-group">
-                <span class="input-group-addon" id="sizing-addon2" (click)="modalBuscarProducto(mBuscarProducto)"><i class="bi-search" style="font-size: 1.5rem; color: black; left: 0;"></i></span>
-                <input class="form-control" type="text" name="claveEx" #claveEx="ngModel" [(ngModel)]="productoVentag.claveEx" readonly>
-            </div>
+            <label class="form-label" for="">Buscar producto</label>
+                <div class="input-group">
+                    <span class="input-group-addon" id="sizing-addon2" (click)="modalBuscarProducto(mBuscarProducto)" ><i class="bi-search" style="font-size: 1.5rem; color: black; left: 0;"></i></span>
+                    <input class="form-control" type="text" name="claveEx" #claveEx="ngModel" [(ngModel)]="productoVentag.claveEx" readonly>
+                </div>
         </div>
         <div class="col-2">
             <label class="form-label">Medida</label>
@@ -65,6 +64,7 @@
             <select class="form-select" name="precio" id="precio" #precio="ngModel" [(ngModel)]="productoVentag.precio" (change)="calculaSubtotalPP()">
                 <option *ngFor="let precio of preciosArray" value="{{precio}}">{{precio}}</option>
             </select>
+            <!-- <input class="form-control" type="number" min="{{productoVentag.precioMinimo}}" name="precio" #precio="ngModel" [(ngModel)]="productoVentag.precio" (change)="calculaSubtotalPP()" > -->
         </div>
         <div class="col-2">
             <label class="form-label">Cantidad</label>
@@ -93,7 +93,7 @@
     <hr>
     <!-- LISTA PRODUCTOS -->
     <div>
-        <h5 class="text-center">LISTA DE PRODUCTOS</h5>
+        <h4 class="text-center">LISTA DE PRODUCTOS</h4>
         <table class="table table-dark table-hover">
             <thead>
                 <tr>
@@ -106,19 +106,19 @@
                     <th scope="col">SUBTOTAL</th>
                 </tr>
             </thead>
-            <tbody *ngFor="let pce of productos_cotizacion_e    | paginate: { id:'tablePV', itemsPerPage: 5, currentPage: pagePV }">
-                <tr (click)="editarProductoLista(pce.idProdMedida)">
-                    <th scope="row">{{pce.claveEx}}</th>
-                    <th scope="row">{{pce.descripcion}}</th>
-                    <th scope="row">{{pce.nombreMedida}}</th>
-                    <th scope="row">{{pce.precio | currency}}</th>
-                    <th scope="row">{{pce.cantidad}}</th>
-                    <th scope="row">{{pce.descuento | currency}}</th>
-                    <th scope="row">{{pce.subtotal | currency}}</th>
+            <tbody *ngFor="let producto of lista_productoVentag | paginate:{id:'tablePV', itemsPerPage: 5, currentPage:pageActual3}">
+                <tr (click)="editarProductoLista(producto.idProdMedida)" >
+                    <th scope="row">{{producto.claveEx}}</th>
+                    <th scope="row">{{producto.descripcion}}</th>
+                    <th scope="row">{{producto.nombreMedida}}</th>
+                    <th scope="row">{{producto.precio | currency}}</th>
+                    <th scope="row">{{producto.cantidad}}</th>
+                    <th scope="row">{{producto.descuento | currency}}</th>
+                    <th scope="row">{{producto.subtotal | currency}}</th>
                 </tr>
             </tbody>
         </table>
-        <pagination-controls id="tablePV" (pageChange)="pagePV = $event"></pagination-controls>
+        <pagination-controls id="tablePV" (pageChange)="pageActual3 = $event"></pagination-controls>
     </div>
     <hr>
     <!-- FINAL VENTA -->
@@ -127,33 +127,42 @@
             <label class="form-label">Observaciones</label>
             <textarea class="form-control" rows="2" maxlength="250" 
                         name="observaciones" #observaciones="ngModel" 
-                        [(ngModel)]="cotizacion_editada.observaciones" 
-                        (input)="contadorCaracteres($event)">
+                        [(ngModel)]="ventag.observaciones" 
+                        (keydown)="contadorCaracteres($event)">
             </textarea>
             <span> {{contador}}/250</span>
             <div class="row">
                 <div class="col-3">
                     <label for="">Subtotal</label>
-                    <input class="form-control" type="text" value="{{cotizacion_editada.subtotal | currency}}" readonly>
+                    <input class="form-control" type="text" value="{{ventag.subtotal | currency}}" readonly>
                 </div>
                 <div class="col-3">
                     <label for="">DESCUENTO</label>
-                    <input class="form-control" type="text" value="{{cotizacion_editada.descuento | currency}}" readonly>
+                    <input class="form-control" type="text" value="{{ventag.descuento | currency}}" readonly>
                 </div>
                 <div class="col-3">
                     <label for="">TOTAL</label>
-                    <input class="form-control" type="text" value="{{cotizacion_editada.total | currency}}" readonly>
+                    <input class="form-control" type="text" value="{{ventag.total | currency}}" readonly>
+                </div>
+                <div class="col-3">
+                    <label for="">TIPO VENTA</label>
+                    <select class="form-select" name="tipoventa" id="tipoventa" #tipoventa="ngModel" [(ngModel)]="ventag.idTipoVenta" ngModel required>
+                        <option *ngFor="let tipoV of tipo_venta" value="{{tipoV.idTipoVenta}}">{{tipoV.nombre}}</option>
+                    </select>
                 </div>
             </div>
         </div>
         <div class="col-2">
             <div class="col">
-                <button class="btn btn-secondary form-control" (click)="modalAlertaExistencia(mAlertaExistencia)" ><i class="bi bi-file-earmark-medical"></i> <br> Guardar</button>
-                <!-- <button class="btn btn-secondary form-control"  ><i class="bi bi-file-earmark-medical"></i> <br> Guardar</button> -->
+                <button class="btn btn-secondary form-control" (click)="modalAlertaExistencia(mAlertaExistencia)"><i class="bi bi-file-earmark-medical"></i> Cotizacion</button>
             </div>
             <br>
             <div class="col">
-                <button class="btn btn-success form-control" (click)="creaVenta()"><i class="bi bi-receipt-cutoff"></i> <br> Pasar a venta</button>
+                <button class="btn btn-success form-control" (click)="creaVenta()"><i class="bi bi-receipt-cutoff"> </i> Ticket</button>
+            </div>
+            <br>
+            <div class="col">
+                <button class="btn btn-info form-control" (click)="obtenerUltimaCotiza()"><i class="bi bi-truck"></i> Pedido</button>
             </div>
         </div>
     </div>
@@ -162,45 +171,45 @@
 <!-- Modal buscar clientes-->
 <ng-template #content let-modal>
     <div class="modal-header">
-      <h5 class="modal-title" id="modal-basic-title">Buscar cliente</h5>
+      <h4 class="modal-title" id="modal-basic-title">Buscar cliente</h4>
       <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
     </div>
     <div class="modal-body">
-        <div class="col">
-            <input type="text" class="form-control" name="buscarCliente" placeholder="buscar por nombre" (keyup)="searchNombreClienteS($event)">
-        </div>
-        <div class="text-center text-primary" *ngIf="isLoadingClientes">
-            <div class="spinner-border" role="status" >
-                <span class="visually-hidden">Loading...</span>
-              </div>
-        </div>
-        <br>
-        <div *ngIf="!isLoadingClientes">
-            <table class="table table-dark table-hover">
-                <thead>
-                    <tr>
-                        <th scope="col">NOMBRE</th>
-                        <th scope="col">RFC</th>
-                        <th scope="col">TELEFONO</th>
-                        <th scope="col">TIPO CLIENTE</th>
-                    </tr>
-                </thead>
-                <tbody *ngFor="let c of clientes | paginate:{id:'pagCliente',itemsPerPage: itemsPerPage, currentPage: pageActual, totalItems:totalPagesClientes}">
-                    <tr (click)="seleccionarCliente(c.idCliente)" (click)="modal.dismiss('Cross click')">
-                        <th class="text-truncate" style="max-width: 150px;"  scope="row">{{c.nombre}} {{c.aPaterno }} {{c.aMaterno}}</th>
-                        <th scope="row">{{c.rfc}}</th>
-                        <th scope="row">{{c.telefono}}</th>
-                        <th scope="row">{{c.nombreTipoC}}</th>
-                    </tr>
-                </tbody>
-            </table>
-            <pagination-controls 
-                id="pagCliente" 
-                (pageChange)="getPageClientes(pageActual = $event)"
-                previousLabel="Anterior"
-                nextLabel="Siguiente"></pagination-controls>
-        </div>
-        
+            <div class="col">
+                <input type="search" class="form-control" name="nombreCliente" placeholder="buscar por nombre" (keyup)="searchNombreClienteS($event)">
+            </div>
+            <div class="text-center text-primary" *ngIf="isLoadingClientes">
+                <div class="spinner-border" role="status" >
+                    <span class="visually-hidden">Loading...</span>
+                  </div>
+            </div>
+            <br>
+            <div *ngIf="!isLoadingClientes">
+                <table class="table table-sm table-dark table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col">NOMBRE</th>
+                            <th scope="col">RFC</th>
+                            <th scope="col">TELEFONO</th>
+                            <th scope="col">TIPO CLIENTE</th>
+                        </tr>
+                    </thead>
+                    <tbody *ngFor="let c of clientes | paginate:{id:'pagCliente',itemsPerPage: itemsPerPage, currentPage: pageActual, totalItems:totalPagesClientes}">
+                        <tr (click)="seleccionarCliente(c.idCliente)" (click)="modal.dismiss('Cross click')">
+                            <th scope="row">{{c.nombre}} {{c.aPaterno }} {{c.aMaterno}}</th>
+                            <th scope="row">{{c.rfc}}</th>
+                            <th scope="row">{{c.telefono}}</th>
+                            <th scope="row">{{c.nombreTipoC}}</th>
+                        </tr>
+                    </tbody>
+                </table>
+                <pagination-controls 
+                        id="pagCliente" 
+                        (pageChange)="getPageClientes(pageActual = $event)"
+                        previousLabel="Anterior"
+                        nextLabel="Siguiente" >
+                </pagination-controls>
+            </div>
     </div>
     <!-- <div class="modal-footer">
       <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Guardar</button>
@@ -210,13 +219,13 @@
 <!-- Modal agregar cliente-->
 <ng-template #content2 let-modal>
     <div class="modal-header">
-      <h5 class="modal-title" id="modal-basic-title">Agregar cliente</h5>
+      <h4 class="modal-title" id="modal-basic-title">Agregar cliente</h4>
       <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
     </div>
     <div class="modal-body">
         <div class="row">
             <div class="col">
-            <h4 class="text-center">DATOS PERSONALES</h4>
+            <h5 class="text-center">DATOS PERSONALES</h5>
             </div>
             <div class="col">
                 <div class="form-check form-switch">
@@ -230,7 +239,7 @@
                 <div *ngIf="isCompany == false; else elseBlock" class="row">
                     <div class="col-4">
                         <label class="form-label" for="">Nombre(s) *</label>
-                        <input class="form-control" oninput="this.value = this.value.toUpperCase()" type="text" maxlength="254" 
+                        <input class="form-control" oninput="this.value = this.value.toUpperCase()" type="text" maxlength="254"
                                 name="nombre" #nombre="ngModel" [(ngModel)]="modeloCliente.nombre" ngModel required>
                         <div [hidden]="nombre.valid || nombre.pristine" class="alert alert-danger">
                             CAMPO REQUERIDO
@@ -289,7 +298,7 @@
                         <label class="form-check-label" for="flexCheckDefault3">¿Tiene RFC?</label>
                     </div>
                     <div *ngIf="isRFC == true; else RFCgenerico">
-                        <input class="form-control" oninput="this.value = this.value.toUpperCase()" type="text"
+                        <input class="form-control" maxlength="13" oninput="this.value = this.value.toUpperCase()" type="text"
                                 name="rfc" #rfc="ngModel" [(ngModel)]="modeloCliente.rfc">
                         <div [hidden]="rfc.valid || rfc.pristine" class="alert alert-danger">
                             CAMPO REQUERIDO
@@ -314,14 +323,14 @@
                 
             </div>
             <hr>
-            <div *ngIf="checkDireccion" >
+            <div *ngIf="checkDireccion">
                 <h5>Direccion</h5>
                 <input type="text" class="form-control" value="{{cdireccion.estado}}. {{cdireccion.ciudad}}, {{cdireccion.colonia}} {{cdireccion.calle}} {{cdireccion.numExt}} {{cdireccion.numInt}} entre {{cdireccion.entreCalles}}" readonly>
             </div>
             <br>
             <div>
                 <div class="col-12">
-                    <button  class="btn btn-primary" type="submit" [disabled]="fGuardarCliente.invalid" (click)="guardarCliente()" (click)="modal.close('Save click')">Guardar</button>
+                    <button  class="btn btn-primary" type="submit" [disabled]="fGuardarCliente.invalid" (click)="guardarCliente()" (click)="modal.close()">Guardar</button>
                 </div>
             </div>
         </form>
@@ -355,34 +364,34 @@
                       <div class="col-3">
                         <label class="form-label" for="">Ciudad *</label>
                         <input class="form-control" oninput="this.value = this.value.toUpperCase()" type="text"
-                                name="ciudad" #ciudad="ngModel" [(ngModel)]="cdireccion.ciudad" maxlength="50" required >
-                                <div [hidden]="ciudad.valid || ciudad.pristine" class="alert alert-danger">
-                                    CAMPO REQUERIDO
-                                </div>
+                                name="ciudad" #ciudad="ngModel" [(ngModel)]="cdireccion.ciudad" maxlength="50" required>
+                        <div [hidden]="ciudad.valid || ciudad.pristine" class="alert alert-danger">
+                            CAMPO REQUERIDO
+                        </div>
                       </div>
                       <div class="col-3">
                         <label class="form-label" for="">Colonia *</label>
                         <input class="form-control" oninput="this.value = this.value.toUpperCase()" type="text"
                                 name="colonia" #colonia="ngModel" [(ngModel)]="cdireccion.colonia" maxlength="50" required >
-                                <div [hidden]="colonia.valid || colonia.pristine" class="alert alert-danger">
-                                    CAMPO REQUERIDO
-                                </div>
+                        <div [hidden]="colonia.valid || colonia.pristine" class="alert alert-danger">
+                            CAMPO REQUERIDO
+                        </div>
                       </div>
                       <div class="col-3">
                         <label class="form-label" for="">Calle *</label>
                         <input class="form-control" oninput="this.value = this.value.toUpperCase()" type="text"
                                 name="calle" #calle="ngModel" [(ngModel)]="cdireccion.calle" maxlength="50" required >
-                                <div [hidden]="calle.valid || calle.pristine" class="alert alert-danger">
-                                    CAMPO REQUERIDO
-                                </div>
+                        <div [hidden]="calle.valid || calle.pristine" class="alert alert-danger">
+                            CAMPO REQUERIDO
+                        </div>
                       </div>
                       <div class="col-3">
                         <label class="form-label" for="">Numero exterior *</label>
                         <input class="form-control" oninput="this.value = this.value.toUpperCase()" type="text"
                                 name="numExt" #numExt="ngModel" [(ngModel)]="cdireccion.numExt" maxlength="10" required >
-                                <div [hidden]="numExt.valid || numExt.pristine" class="alert alert-danger">
-                                    CAMPO REQUERIDO
-                                </div>
+                        <div [hidden]="numExt.valid || numExt.pristine" class="alert alert-danger">
+                            CAMPO REQUERIDO
+                        </div>
                       </div>
                       <div class="col-3">
                         <label class="form-label" for="">Numero interior</label>
@@ -397,27 +406,27 @@
                       <div class="col-3">
                         <label class="form-label" for="">Codigo postal *</label>
                         <input class="form-control" type="number" pattern="^[0-9]{1,5}" min="0"
-                                name="cp" #cp="ngModel" [(ngModel)]="cdireccion.cp" required >
-                                <div [hidden]="cp.valid || cp.pristine" class="alert alert-danger">
-                                    SOLO INGRESAR DE 1 HASTA 5 NUMEROS
-                                </div>
+                                name="cp" #cp="ngModel" [(ngModel)]="cdireccion.cp" required>
+                        <div [hidden]="cp.valid || cp.pristine" class="alert alert-danger">
+                            SOLO INGRESAR DE 1 HASTA 5 NUMEROS
+                        </div>
                       </div>
                       <div class="col-3">
                         <label class="form-label" for="">Telefono *</label>
                         <input class="form-control" type="number" maxlength="10" min="1" pattern="^[0-9]{1,10}"
                                 name="telefono" #telefono="ngModel" [(ngModel)]="cdireccion.telefono" required>
-                                <div [hidden]="telefono.valid || telefono.pristine" class="alert alert-danger">
-                                    CAMPO REQUERIDO
-                                    SOLO INGRESAR HASTA 10 NUMEROS
-                                </div> 
+                        <div [hidden]="telefono.valid || telefono.pristine" class="alert alert-danger">
+                            CAMPO REQUERIDO
+                            SOLO INGRESAR HASTA 10 NUMEROS
+                        </div> 
                       </div>
                       <div class="col">
                         <label class="form-label" for="">Referencia *</label>
                         <textarea class="form-control" oninput="this.value = this.value.toUpperCase()" maxlength="254"
-                                    cols="30" rows="2" name="referencia" #referencia="ngModel" [(ngModel)]="cdireccion.referencia" required></textarea>
-                                    <div [hidden]="referencia.valid || referencia.pristine" class="alert alert-danger">
-                                        CAMPO REQUERIDO
-                                    </div> 
+                                    cols="30" rows="2" name="referencia" #referencia="ngModel" [(ngModel)]="cdireccion.referencia" required ></textarea>
+                        <div [hidden]="referencia.valid || referencia.pristine" class="alert alert-danger">
+                            CAMPO REQUERIDO
+                        </div> 
                       </div>
                     </div>
                 
@@ -432,7 +441,7 @@
 <!-- Modal para elegir direccion del cliente -->
 <ng-template #buscarDireccion let-modal>
     <div class="modal-header">
-        <h5 class="modal-title" id="modal-basic-title">Seleccionar direccion</h5>
+        <h4 class="modal-title" id="modal-basic-title">Seleccionar direccion</h4>
         <button class="btn btn-success col-auto offset-md-8" ngbTooltip="Agregar direccion" (click)="modalAgregarDireccion(nuevaDireccion)">
             <i class="bi bi-plus-circle-dotted" style="font-size: 1.3rem; color: rgb(255, 249, 249); left: 0;"></i>
         </button>
@@ -474,7 +483,7 @@
                       <div class="col-3">
                           <label class="form-label" for="">Pais *</label>
                           <input class="form-control" oninput="this.value = this.value.toUpperCase()" type="text"
-                                value="Mexico" name="pais" #pais="ngModel" [(ngModel)]="nuevaDir.pais" maxlength="50" readonly>
+                                    value="Mexico" name="pais" #pais="ngModel" [(ngModel)]="nuevaDir.pais" maxlength="50" readonly>
                       </div>
                       <div class="col-3">
                         <label class="form-label" for="">Estado *</label>
@@ -483,35 +492,35 @@
                       </div>
                       <div class="col-3">
                         <label class="form-label" for="">Ciudad *</label>
-                        <input class="form-control" oninput="this.value = this.value.toUpperCase()" type="text" 
+                        <input class="form-control" oninput="this.value = this.value.toUpperCase()" type="text"
                                 name="ciudad" #ciudad="ngModel" [(ngModel)]="nuevaDir.ciudad" maxlength="50" required >
-                                <div [hidden]="ciudad.valid || ciudad.pristine" class="alert alert-danger">
-                                    CAMPO REQUERIDO
-                                </div>
+                        <div [hidden]="ciudad.valid || ciudad.pristine" class="alert alert-danger">
+                            CAMPO REQUERIDO
+                        </div>
                       </div>
                       <div class="col-3">
                         <label class="form-label" for="">Colonia *</label>
                         <input class="form-control" oninput="this.value = this.value.toUpperCase()" type="text"
                                 name="colonia" #colonia="ngModel" [(ngModel)]="nuevaDir.colonia" maxlength="50" required >
-                                <div [hidden]="colonia.valid || colonia.pristine" class="alert alert-danger">
-                                    CAMPO REQUERIDO
-                                </div><
+                        <div [hidden]="colonia.valid || colonia.pristine" class="alert alert-danger">
+                            CAMPO REQUERIDO
+                        </div>
                       </div>
                       <div class="col-3">
                         <label class="form-label" for="">Calle *</label>
                         <input class="form-control" oninput="this.value = this.value.toUpperCase()" type="text"
                                 name="calle" #calle="ngModel" [(ngModel)]="nuevaDir.calle" maxlength="50" required >
-                                <div [hidden]="calle.valid || calle.pristine" class="alert alert-danger">
-                                    CAMPO REQUERIDO
-                                </div>
+                        <div [hidden]="calle.valid || calle.pristine" class="alert alert-danger">
+                            CAMPO REQUERIDO
+                        </div>
                       </div>
                       <div class="col-3">
                         <label class="form-label" for="">Numero exterior *</label>
                         <input class="form-control" oninput="this.value = this.value.toUpperCase()" type="text"
                                 name="numExt" #numExt="ngModel" [(ngModel)]="nuevaDir.numExt" maxlength="10" required >
-                                <div [hidden]="numExt.valid || numExt.pristine" class="alert alert-danger">
-                                    CAMPO REQUERIDO
-                                </div> 
+                        <div [hidden]="numExt.valid || numExt.pristine" class="alert alert-danger">
+                            CAMPO REQUERIDO
+                        </div> 
                       </div>
                       <div class="col-3">
                         <label class="form-label" for="">Numero interior</label>
@@ -527,92 +536,93 @@
                         <label class="form-label" for="">Codigo postal *</label>
                         <input class="form-control" type="number" pattern="^[0-9]{1,5}" min="0"
                                 name="cp" #cp="ngModel" [(ngModel)]="nuevaDir.cp" required >
-                                <div [hidden]="cp.valid || cp.pristine" class="alert alert-danger">
-                                    SOLO INGRESAR DE 1 HASTA 5 NUMEROS
-                                </div> 
+                        <div [hidden]="cp.valid || cp.pristine" class="alert alert-danger">
+                            SOLO INGRESAR DE 1 HASTA 5 NUMEROS
+                        </div> 
                       </div>
                       <div class="col-3">
                         <label class="form-label" for="">Telefono *</label>
                         <input class="form-control" type="number" maxlength="10" min="0" pattern="^[0-9]{1,10}"
                                 name="telefono" #telefono="ngModel" [(ngModel)]="nuevaDir.telefono" required >
-                                <div [hidden]="telefono.valid || telefono.pristine" class="alert alert-danger">
-                                    CAMPO REQUERIDO
-                                    SOLO INGRESAR HASTA 10 NUMEROS
-                                </div>
+                        <div [hidden]="telefono.valid || telefono.pristine" class="alert alert-danger">
+                            CAMPO REQUERIDO
+                            SOLO INGRESAR HASTA 10 NUMEROS
+                        </div>
                       </div>
                       <div class="col">
                         <label class="form-label" for="">Referencia *</label>
                         <textarea class="form-control" oninput="this.value = this.value.toUpperCase()" maxlength="254"
                                     cols="30" rows="2" name="referencia" #referencia="ngModel" [(ngModel)]="nuevaDir.referencia" required ></textarea>
-                                    <div [hidden]="referencia.valid || referencia.pristine" class="alert alert-danger">
-                                        CAMPO REQUERIDO
-                                    </div> 
+                        <div [hidden]="referencia.valid || referencia.pristine" class="alert alert-danger">
+                            CAMPO REQUERIDO
+                        </div> 
                       </div>
                     </div>
                 
               </div>
             </div>
             <div class="modal-footer">
-                <button type="submit" class="btn btn-success" (click)="guardarNuevaDireccion()" (click)="modal.close()" >Guardar</button>
+                <button type="submit" class="btn btn-success" (click)="guardarNuevaDireccion()" (click)="modal.close()"  >Guardar</button>
             </div>  
         </form>
 </ng-template>
 
 <!-- Modal productos -->
-<ng-template #mBuscarProducto let-modal>
+ <ng-template #mBuscarProducto let-modal>
     <div class="modal-header">
         <h4 class="modal-title" id="modal-basic-title">Buscar producto</h4>
         <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
-      </div>
+    </div>
       <div class="modal-body">
-        <div>
+        
+        <div >
             <div class="input-group mb-2">
                 <div class="col-2">
                     <select class="form-select" name="seleccionado" [(ngModel)]="seleccionado" (ngModelChange)="selectBusqueda()">
-                        <option value="uno" selected>DESCRIPCION</option>
+                        <option value="uno">DESCRIPCION</option>
                         <option value="dos">CLAVE EXTERNA</option>
                         <option value="tres">CODIGO DE BARRAS</option>
                     </select>
                 </div>
                  <div class="col">
-                    <input type="search" class="form-control" name="buscarProducto" placeholder="Buscar . . ." [(ngModel)]="buscarProducto" (ngModelChange)="selectBusqueda()">
+                    <input type="search" class="form-control" name="buscar" placeholder=" Buscar ..." [(ngModel)]="buscar" (ngModelChange)="selectBusqueda()">
                 </div>
-                
             </div>
-            <br>
-            <div class="text-center text-primary" *ngIf="isLoadingProductos">
-                <div class="spinner-border" role="status" >
-                    <span class="visually-hidden">Loading...</span>
-                  </div>
-            </div>
-              
-              <table *ngIf="!isLoadingProductos" class="table table-dark table-hover">
+                <br>
+                <div class="text-center text-primary" *ngIf="isLoadingProductos">
+                    <div class="spinner-border" role="status" >
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+              <table *ngIf="!isLoadingProductos" class="table table-sm table-dark table-hover">
                 <thead>
                     <tr>
                         <th>CLAVE EXTERNA</th>
                         <th>CODIGO DE BARRAS</th>
                         <th>DESCRIPCION</th>
                         <th>MARCA</th>
-                        <th>DEPARTAMENTO/th>
+                        <th>DEPARTAMENTO</th>
+                        <!-- <th>CATEGORIA</th> -->
                     </tr>
                 </thead>
-                <tbody *ngFor="let pr of productos | paginate:{id:'pcModal',itemsPerPage: itemsPerPage, currentPage: pageActual2, totalItems: totalPages}">
-                    <tr (click)="modalMuestraMedidas(mProdMedidas, pr.idProducto, pr.claveEx)">
+                <tbody *ngFor="let pr of productos | paginate:{id:'pcModal',itemsPerPage: itemsPerPage, currentPage: pageActual2, totalItems:totalPages}">
+                    <tr (click)="modalMuestraMedidas(mProdMedidas,pr.idProducto,pr.claveEx)">
                         <th scope="row">{{pr.claveEx}}</th>
                         <th scope="row">{{pr.cbarras}}</th>
                         <th scope="row">{{pr.descripcion}}</th>
                         <th scope="row">{{pr.nombreMarca}}</th>
                         <th scope="row">{{pr.nombreDep}}</th>
+                        <!-- <th scope="row">{{pr.nombreCat}}</th> -->
                     </tr>
                 </tbody>
               </table>
-              <pagination-controls id="pcModal"
-                                    (pageChange)="getPageProductos(pageActual2 = $event)"
+              <pagination-controls  id="pcModal"
+                                    (pageChange)="getPage(pageActual2 = $event)"
                                     previousLabel="Anterior"
-                                    nextLabel="Siguiente">
+                                    nextLabel="Siguiente" >
               </pagination-controls>
         </div>
-      </div>
+    </div>
 </ng-template>
 
 <!-- Modal medidas | precio de productos -->
@@ -699,22 +709,6 @@
     </div>
     <div class="modal-body">
         <p class="text-center">Algunos productos no cuenta con stock suficiente o estan agotados. ¿Seguro que desea continuar?</p>
-        <table class="table table-sm table-dark">
-            <thead>
-                <tr>
-                    <th>Clav. Ext.</th>
-                    <th>Med.</th>
-                    <th>Cant.</th>
-                </tr>
-            </thead>
-            <tbody *ngFor="let pc of productos_cotizacion_e">
-                <tr *ngIf="pc.tieneStock == false">
-                    <th >{{pc.claveEx}}</th>
-                    <th >{{pc.nombreMedida}}</th>
-                    <th >{{pc.cantidad}}</th>
-                </tr>
-            </tbody>
-        </table>
     </div>
     <div class="modal-footer">
         <div class="col">
@@ -722,7 +716,10 @@
             <button class="btn btn-danger form-control" (click)="modal.dismiss('Cross click')">Cancelar</button>
         </div>
         <div class="col">
-            <button class="btn btn-success form-control" (click)="actualizaCotizacion()" (click)="modal.dismiss()">Si</button>
+            <button class="btn btn-success form-control" (click)="creaCotizacion()"(click)="modal.dismiss('Cross click')">Si</button>
         </div>
     </div>
 </ng-template>
+
+
+
