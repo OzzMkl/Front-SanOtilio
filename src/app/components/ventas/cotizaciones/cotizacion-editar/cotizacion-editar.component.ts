@@ -546,6 +546,9 @@ muestraPrecios(){
   this.productoVentag.nombreMedida = med.nombreMedida;
   //cargamos los precios a mostrar en el select
   this.preciosArray.push(med.precio1, med.precio2, med.precio3, med.precio4, med.precio5);
+
+  this.productoVentag.precio = this.preciosArray[0];
+  this.calculaSubtotalPP();
 }
 
 calculaSubtotalPP(){
