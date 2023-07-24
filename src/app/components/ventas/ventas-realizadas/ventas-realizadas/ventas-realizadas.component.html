@@ -75,7 +75,10 @@
                 </div>
                 <div class="col">
                     <!-- <button type="button" class="btn btn-secondary me-md-2" style="box-sizing: border-box;" ><i class="bi bi-receipt-cutoff"></i><br>TICKET</button> -->
-                    <button *ngIf="userPermisos.editar == 1" type="button" class="btn btn-warning me-md-2" ngbTooltip="EDITAR"><i class="bi bi-pencil-square" ></i><br></button>
+                    <button *ngIf="userPermisos.editar == 1" type="button" class="btn btn-warning me-md-2" ngbTooltip="EDITAR" 
+                                [routerLink]="['../../punto-de-venta-editar',v.idVenta]" (click)="modal.dismiss('Cross click')">
+                        <i class="bi bi-pencil-square" ></i><br>
+                    </button>
                     <button *ngIf="userPermisos.cancelar == 1" type="button" class="btn btn-danger me-md-2" ngbTooltip="CANCELAR"><i class="bi bi-trash3" ></i><br></button>
                 </div>
             </div>
