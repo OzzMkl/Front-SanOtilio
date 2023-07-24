@@ -438,7 +438,9 @@ export class PuntoDeVentaComponent implements OnInit {
     this.productoVentag.nombreMedida = med.nombreMedida;
     //cargamos los precios a mostrar en el select
     this.preciosArray.push(med.precio1, med.precio2, med.precio3, med.precio4, med.precio5);
-
+    //asiignamos el precio compra al producto
+    this.productoVentag.precioCompra = med.precioCompra;
+    //asignamos el primer precio
     this.productoVentag.precio = this.preciosArray[0];
     this.calculaSubtotalPP();
   }
@@ -450,7 +452,10 @@ export class PuntoDeVentaComponent implements OnInit {
     if(this.productoVentag.descuento < 0){
       this.messageService.add({severity:'warn', summary:'Alerta', detail: 'No puedes agregar descuento negativo'});
       this.isSearch=true;
-    }else{
+    } else if(this.productoVentag.precioCompra > (this.productoVentag.precio - this.productoVentag.descuento)){
+      this.messageService.add({severity:'warn', summary:'Alerta', detail: 'No puedes agregar descuento mayor al precio compra'});
+      this.isSearch=true;
+    } else{
       this.productoVentag.subtotal = (this.productoVentag.cantidad * this.productoVentag.precio)- this.productoVentag.descuento;
       this.isSearch=false;
     }
@@ -891,7 +896,7 @@ export class PuntoDeVentaComponent implements OnInit {
     this.productoVentag.total = 0;
     this.productoVentag.claveEx = "";
     this.productoVentag.nombreMedida = "";
-    this.productoVentag.precioMinimo = 0;
+    this.productoVentag.precioCompra = 0;
     this.productoVentag.subtotal = 0;
     this.productoVentag.tieneStock = false;
     //limpia medidas

@@ -99,9 +99,9 @@
                 <tr>
                     <th scope="col">CLAVE EXTERNA</th>
                     <th scope="col">DESCRIPCION</th>
+                    <th scope="col">CANTIDAD</th>
                     <th scope="col">MEDIDA</th>
                     <th scope="col">PRECIO</th>
-                    <th scope="col">CANTIDAD</th>
                     <th scope="col">DESCUENTO</th>
                     <th scope="col">SUBTOTAL</th>
                 </tr>
@@ -717,6 +717,27 @@
         </div>
         <div class="col">
             <button class="btn btn-success form-control" (click)="creaCotizacion()"(click)="modal.dismiss('Cross click')">Si</button>
+        </div>
+    </div>
+</ng-template>
+
+<!-- Modal Motivo Edicion -->
+<ng-template #mMotivoEdicion let-modal>
+    <div class="modal-header">
+        <h4>Ingresa el motivo de modificacion</h4>
+    </div>
+    <div class="modal-body">
+        <div class="col-auto">
+            <textarea class="form-control" name="motivoEdicion" id="motivoEdicion" 
+                        cols="3" rows="2" [(ngModel)]="motivoEdicion" ngModel></textarea>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <div class="col">
+            <button class="btn btn-danger form-control" (click)="modal.dismiss()">Cancelar</button>
+        </div>
+        <div class="col">
+            <button class="btn btn-success form-control">Guardar</button>
         </div>
     </div>
 </ng-template>
