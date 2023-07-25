@@ -33,6 +33,11 @@ export class ModulosService {
                 idSubModulo:17
               }
 
+  public pOrdC: propModulo={
+                idModulo:3,
+                idSubModulo:6
+              }
+
   constructor() { }
 
   modsInventario(){
@@ -57,5 +62,9 @@ export class ModulosService {
 
   modsPuntodeVenta(){
     return this.pPuv;
+  }
+
+  modsOrdendeCompra(){
+    return this.pOrdC;
   }
 }

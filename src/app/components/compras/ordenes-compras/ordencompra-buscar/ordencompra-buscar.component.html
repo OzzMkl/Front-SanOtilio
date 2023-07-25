@@ -1,3 +1,4 @@
+<p-toast></p-toast>
 <div class="container">
     <h3 class="text-center">Ordenes de compra por recibir</h3>
 </div>
@@ -37,16 +38,21 @@
                     <th scope="col">FECHA ESTIMADA</th>
             </tr>
             </thead>
-            <tbody *ngFor="let oc of ordenesdecompra | filterOrders:buscarOrdProveedor | filterOrdersIdord:buscarOrdId | paginate:{id:'paginationOrders',itemsPerPage: 10, currentPage: pageActual}">
+            <tbody *ngFor="let oc of ordenesdecompra | paginate:{id:'paginationOrders',itemsPerPage: itemsPerPageL, currentPage: pageActualL, totalItems:totalPagesL}">
                 <tr (click)="open(content)" (click)="selected(oc.idOrd)">
-                    <th scope="row">{{oc.idOrd}}</th>
+                    <th scope="row">{{oc.idOrd}}</th>   
                     <th scope="row">{{oc.nombreProveedor}}</th>
                     <th scope="row">{{oc.observaciones}}</th>
                     <th  scope="row">{{oc.fecha | date: 'dd/MM/yyyy'}}</th>
                 </tr>
             </tbody>
         </table>
-       <pagination-controls id="paginationOrders" (pageChange)="pageActual = $event"></pagination-controls>
+       <pagination-controls 
+            id="paginationOrders" 
+            (pageChange)="getPage(pageActualL = $event)"
+            previousLabel="Anterior"
+            nextLabel="Siguiente">
+        </pagination-controls>
     </div>
 </div>
 <!-- Modal -->
@@ -60,21 +66,21 @@
             <form>
                 <div  class="container">
                   
-                  <div class="row" *ngFor="let permiso of  userPermisos">
+                  <div class="row">
                       <div class="col-9">
                           <h4>{{doc.nombreProveedor}}</h4>
                       </div>
                       
-                      <div class="col-auto" *ngIf="permiso.pdf == 1">
+                      <div class="col-auto" *ngIf="userPermisos.pdf == 1">
                           <button type="button" class="btn btn-secondary" style="box-sizing: border-box;" (click)="generaPDF()" ><i class="bi bi-file-earmark-pdf" ngbTooltip="PDF"></i><br></button>
                       </div>
-                      <div class="col-auto" *ngIf="permiso.editar == 1">
+                      <div class="col-auto" *ngIf="userPermisos.editar == 1">
                           <button type="button" class="btn btn-warning" (click)="modal.dismiss('Cross click')" [routerLink]="['../ordencompra-editar',doc.idOrd]" ngbTooltip="EDITAR"><i class="bi bi-pencil-square"></i><br></button>
                       </div>
-                      <div class="col-auto" *ngIf="permiso.cancelar == 1">
+                      <div class="col-auto" *ngIf="userPermisos.cancelar == 1">
                           <button type="button" class="btn btn-danger" ngbTooltip="CANCELAR"><i class="bi bi-trash3"></i><br></button>
                       </div>
-                      <div class="col-auto" *ngIf="permiso.editar == 1">
+                      <div class="col-auto" *ngIf="userPermisos.editar == 1">
                         <button type="button" class="btn btn-success" (click)="modal.dismiss('Cross click')" [routerLink]="['../../compra-modulo/compra-agregar-id',doc.idOrd]" ngbTooltip="PASAR A COMPRA"><i class="bi bi-arrow-up-right-square"></i><br></button> 
                     </div>
                   </div>
