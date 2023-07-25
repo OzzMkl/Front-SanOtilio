@@ -99,9 +99,9 @@
                 <tr>
                     <th scope="col">CLAVE EXTERNA</th>
                     <th scope="col">DESCRIPCION</th>
+                    <th scope="col">CANTIDAD</th>
                     <th scope="col">MEDIDA</th>
                     <th scope="col">PRECIO</th>
-                    <th scope="col">CANTIDAD</th>
                     <th scope="col">DESCUENTO</th>
                     <th scope="col">SUBTOTAL</th>
                 </tr>
@@ -110,9 +110,9 @@
                 <tr (click)="editarProductoLista(producto.idProdMedida)" >
                     <th scope="row">{{producto.claveEx}}</th>
                     <th scope="row">{{producto.descripcion}}</th>
+                    <th scope="row">{{producto.cantidad}}</th>
                     <th scope="row">{{producto.nombreMedida}}</th>
                     <th scope="row">{{producto.precio | currency}}</th>
-                    <th scope="row">{{producto.cantidad}}</th>
                     <th scope="row">{{producto.descuento | currency}}</th>
                     <th scope="row">{{producto.subtotal | currency}}</th>
                 </tr>
