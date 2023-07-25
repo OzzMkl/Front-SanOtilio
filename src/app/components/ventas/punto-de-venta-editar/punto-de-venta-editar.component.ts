@@ -1,4 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+  /******** NUEVO CODIGO*/  
+  import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
+  /******** */
+
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 //servicio
@@ -90,6 +93,11 @@ export class PuntoDeVentaEditarComponent implements OnInit {
   //contador para redireccion al no tener permisos
   counter: number = 5;
   timerId:any;
+
+  /******** NUEVO CODIGO*/
+  public motivoEdicion: string = "";
+  @ViewChild('mMotivoEdicion',{static:true}) mitempalte!: TemplateRef<any>;
+  /******** */
 
   constructor(//declaramos servicios
   private modalService: NgbModal,
@@ -437,7 +445,9 @@ export class PuntoDeVentaEditarComponent implements OnInit {
     this.productoVentag.nombreMedida = med.nombreMedida;
     //cargamos los precios a mostrar en el select
     this.preciosArray.push(med.precio1, med.precio2, med.precio3, med.precio4, med.precio5);
-
+    //asignamos el precio compra al producto
+    this.productoVentag.precioCompra = med.precioCompra;
+    //asignamos el primer precio
     this.productoVentag.precio = this.preciosArray[0];
     this.calculaSubtotalPP();
   }
@@ -449,6 +459,10 @@ export class PuntoDeVentaEditarComponent implements OnInit {
     if(this.productoVentag.descuento < 0){
       this.messageService.add({severity:'warn', summary:'Alerta', detail: 'No puedes agregar descuento negativo'});
       this.isSearch=true;
+    } else if(this.productoVentag.precioCompra > (this.productoVentag.precio - this.productoVentag.descuento)){
+      this.messageService.add({severity:'warn', summary:'Alerta', detail: 'No puedes agregar descuento mayor al precio compra'});
+      this.isSearch=true;
+
     }else{
       this.productoVentag.subtotal = (this.productoVentag.cantidad * this.productoVentag.precio)- this.productoVentag.descuento;
       this.isSearch=false;
@@ -525,6 +539,7 @@ export class PuntoDeVentaEditarComponent implements OnInit {
         } else{
           this.identity = this._empleadoService.getIdentity();
           this.getTiposVentas();
+          this.modal();
         }
   }
 
@@ -891,7 +906,7 @@ export class PuntoDeVentaEditarComponent implements OnInit {
     this.productoVentag.total = 0;
     this.productoVentag.claveEx = "";
     this.productoVentag.nombreMedida = "";
-    this.productoVentag.precioMinimo = 0;
+    this.productoVentag.precioCompra = 0;
     this.productoVentag.subtotal = 0;
     this.productoVentag.tieneStock = false;
     //limpia medidas
@@ -923,5 +938,13 @@ export class PuntoDeVentaEditarComponent implements OnInit {
       console.log(error);
     });
   }
+
+  /******** NUEVO CODIGO*/
+  modal(){
+    this.modalService.open(this.mitempalte, {ariaLabelledBy: 'modal-basic-title', size: 'md', backdrop:'static'});
+    //console.log(this.mAlertaExistencia)
+  }
+  
+  /******** */
 
 }
