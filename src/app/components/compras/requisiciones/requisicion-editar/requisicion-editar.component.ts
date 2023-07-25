@@ -193,7 +193,7 @@ export class RequisicionEditarComponent implements OnInit {
     }else if(this.producto_requisicion.idProdMedida <= 0){
       this.messageService.add({severity:'error', summary:'Error', detail:'Falta ingresar medida'});
     }else{
-      this.Lista_compras.push({...this.producto_requisicion});
+      this.productosdetailReq.push({...this.producto_requisicion});
       this.isSearch=true;
     }
     this.producto_requisicion.idProdMedida = 0;
@@ -203,15 +203,16 @@ export class RequisicionEditarComponent implements OnInit {
   actualizarRequisicion(form:any){//Enviar Form insertar en DB
     this.requisicion.idEmpleado = this.identity['sub'];//asginamos id de Empleado
     console.log('Requisicion',this.requisicion);
-    if(this.Lista_compras.length == 0){
+    if(this.productosdetailReq.length == 0){
       this.messageService.add({severity:'error', summary:'Error', detail:'No se puede crear la requisicion de compra si no tiene productos'});
     }else{
+      this.requisicion.idStatus = 36;
       this._requisicionservice.updateRequisicion(this.requisicion.idReq,this.requisicion).subscribe(
         response =>{
-          if(response.status == 'Success!'){
-            // console.log(response)  
-            this.messageService.add({severity:'success', summary:'Éxito', detail:'Requisicion creada'});
-            this._requisicionservice.updateProductosRequisicion(this.requisicion.idReq,this.Lista_compras).subscribe(
+          if(response.status == 'success'){
+            console.log(response);  
+            this.messageService.add({severity:'success', summary:'Éxito', detail:'Requisicion modificada'});
+            this._requisicionservice.updateProductosReq(this.requisicion.idReq,this.productosdetailReq).subscribe(
                res =>{
                    //console.log(res);
                   this.messageService.add({severity:'success', summary:'Éxito', detail:'Productos agregados'});
@@ -219,7 +220,7 @@ export class RequisicionEditarComponent implements OnInit {
                   //this.createPDF();
                },error =>{
                 console.log(<any>error);
-                this.messageService.add({severity:'error', summary:'Error', detail:'Fallo al agregar los productos a la requisicion'});
+                this.messageService.add({severity:'error', summary:'Error', detail:'Fallo al actualizar los productos de la requisicion'});
                });
           }else{
            console.log('fallo');  
@@ -282,6 +283,9 @@ export class RequisicionEditarComponent implements OnInit {
       response =>{
         if(response.status == 'success'){
           this.detailReq = response.requisicion; 
+          this.requisicion.observaciones = response.requisicion[0]['observaciones'];
+          this.requisicion.idReq = response.requisicion[0]['idReq'];
+
           
           this.productosdetailReq = response.productos;
           console.log('response',response);
