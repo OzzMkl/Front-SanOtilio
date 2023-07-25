@@ -4,23 +4,35 @@ import { OrdendecompraService } from 'src/app/services/ordendecompra.service';
 import { global } from 'src/app/services/global';
 import { EmpresaService } from 'src/app/services/empresa.service';
 import { EmpleadoService } from 'src/app/services/empleado.service';
+import { ModulosService } from 'src/app/services/modulos.service';
+import { HttpClient} from '@angular/common/http'
+import { Router } from '@angular/router';
 //NGBOOTSTRAP
 import { NgbModal, ModalDismissReasons, NgbDateStruct} from '@ng-bootstrap/ng-bootstrap';
+//primeng
+import { MessageService } from 'primeng/api';
 
 
 @Component({
   selector: 'app-ordencompra-buscar',
   templateUrl: './ordencompra-buscar.component.html',
   styleUrls: ['./ordencompra-buscar.component.css'],
-  providers:[OrdendecompraService]
+  providers:[OrdendecompraService,MessageService]
 })
 export class OrdencompraBuscarComponent implements OnInit {
 
   /***** */
-  public userPermisos:any
+  
   /***** */
-  constructor( private _ordendecompraService: OrdendecompraService,private _empresaService: EmpresaService,
-               private modalService: NgbModal,public _empleadoService : EmpleadoService) { }
+  constructor( private _ordendecompraService: OrdendecompraService,
+               private _http: HttpClient,
+               private _empresaService: EmpresaService,
+               private modalService: NgbModal,
+               public _empleadoService : EmpleadoService,
+               public _modulosService: ModulosService,
+               private messageService: MessageService,
+               private _router: Router,
+  ) { }
 
 
   public fechaActual : Date = new Date();
@@ -47,14 +59,23 @@ export class OrdencompraBuscarComponent implements OnInit {
   public isLoading: boolean = false;
   //variable para el pdf
   public fecha : Date = new Date();
-//PERMISOS
-private idModulo: number = 3;
-private idSubmodulo: number = 6;
+  //PERMISOS
+  public userPermisos:any;
+  public mOrdC = this._modulosService.modsOrdendeCompra();
+  counter:number = 1;
+  timerId:any;
+
+  //Paginacion lista de ordenes
+  public totalPagesL: any;
+  public pathL: any;
+  public next_pageL: any;
+  public prev_pageL: any;
+  public itemsPerPageL:number=0;
+  pageActualL: number = 0;
 
 
 
   ngOnInit(): void {
-    this.getAllOrdenes();
     this.loadUser();
     //console.log(this.fechaActual.toLocaleDateString());
   }
@@ -62,9 +83,17 @@ private idSubmodulo: number = 6;
     this.isLoading = true;
     this._ordendecompraService.getAllOrders().subscribe(
       response =>{
+        console.log(response)
         if(response.status == 'success'){
-          this.ordenesdecompra = response.ordencompra;
-          //console.log(this.ordenesdecompra);
+          this.ordenesdecompra = response.ordencompra.data;
+          console.log(this.ordenesdecompra);
+          //navegacion de paginacion
+          this.totalPagesL = response.ordencompra.total;
+          this.itemsPerPageL = response.ordencompra.per_page;
+          this.pageActualL = response.ordencompra.current_page;
+          this.next_pageL = response.ordencompra.next_page_url;
+          this.pathL = response.ordencompra.path;
+
           this.isLoading = false;
         }else{
           console.log('Algo salio mal');
@@ -124,13 +153,48 @@ private idSubmodulo: number = 6;
   }
   /***** */
   loadUser(){
-    this.userPermisos = this._empleadoService.getPermisosModulo(this.idModulo, this.idSubmodulo);
+    this.userPermisos = this._empleadoService.getPermisosModulo(this.mOrdC.idModulo, this.mOrdC.idSubModulo);
+    //revisamos si el permiso del modulo esta activo si no redireccionamos
+    if( this.userPermisos.ver != 1 ){
+      this.timerId = setInterval(()=>{
+        this.counter--;
+        if(this.counter === 0){
+          clearInterval(this.timerId);
+          this._router.navigate(['./']);
+        }
+        this.messageService.add({severity:'error', summary:'Acceso denegado', detail: 'El usuario no cuenta con los permisos necesarios, redirigiendo en '+this.counter+' segundos'});
+      },1000);
+    } else{
+      this.getAllOrdenes();
+    }
   }
   /***** */
 
   generaPDF(){
     
     
+  }
+
+  getPage(page:number) {
+    //iniciamos spinner
+    this.isLoading = true;
+
+    this._http.get(this.pathL+'?page='+page).subscribe(
+      (response:any) => {
+        
+        //asignamos datos a varibale para poder mostrarla en la tabla
+        this.ordenesdecompra = response.ordencompra.data;
+        console.log('getOrden',response.ordencompra.data);
+        //navegacion de paginacion
+        this.totalPagesL = response.ordencompra.total;
+        this.itemsPerPageL = response.ordencompra.per_page;
+        this.pageActualL = response.ordencompra.current_page;
+        this.next_pageL = response.ordencompra.next_page_url;
+        this.pathL = response.ordencompra.path;
+
+        //una vez terminado quitamos el spinner
+        this.isLoading=false;        
+    })
   }
 
 }

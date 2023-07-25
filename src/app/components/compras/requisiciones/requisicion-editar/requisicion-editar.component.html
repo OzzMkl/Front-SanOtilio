@@ -1,5 +1,16 @@
 <p-toast></p-toast>
-<div class="container">
+<div class="container" *ngFor="let datosReq of detailReq" >
+    <h4 class="text-center">REQUISICION No. {{datosReq.idReq}}</h4>
+                    <div class="row align-items-start">
+                        <div class="col-5">
+                          <label for="nombreEmpleado" class="form-label">Realizó</label>
+                          <input id="nombreEmpleado" type="text" class="form-control" value="{{datosReq.nombreEmpleado}}" readonly>
+                        </div>
+                        <div class="col-3">
+                          <label for="fechaAlta" class="form-label">Fecha de alta</label>
+                          <input type="text" class="form-control" value="{{datosReq.created_at | date}}" readonly>
+                        </div>
+                    </div>
     <form class="form-group" #FormReq="ngForm" (ngSubmit)="actualizarRequisicion(FormReq)">
         <hr>
         <div >
@@ -68,7 +79,7 @@
                 </thead>
                 <tbody *ngFor="let p_d of productosdetailReq | paginate:{id:'pcListaCompras',itemsPerPage: 5, currentPage: pageActual}">
                     <tr (click)="editarProductoO(p_d)"> 
-                     <th scope="row">{{p_d.claveEx}}</th>
+                     <th scope="row">{{p_d.claveexterna}}</th>
                      <th scope="row">{{p_d.descripcion}}</th>
                      <th scope="row">{{p_d.nombreMedida}}</th>
                      <th scope="row">{{p_d.cantidad}}</th>
