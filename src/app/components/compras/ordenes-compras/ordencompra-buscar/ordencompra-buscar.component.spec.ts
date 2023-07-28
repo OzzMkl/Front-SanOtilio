@@ -11,9 +11,7 @@ describe('OrdencompraBuscarComponent', () => {
       declarations: [ OrdencompraBuscarComponent ]
     })
     .compileComponents();
-  });
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(OrdencompraBuscarComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

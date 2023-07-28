@@ -183,11 +183,12 @@ export class RequisicionEditarComponent implements OnInit {
   * Agrega el producto a la lista de compras
   */
   capturar(datos:any){ 
+    console.log(this.producto_requisicion);
     if(this.producto_requisicion.cantidad <= 0){
       this.messageService.add({severity:'error', summary:'Error', detail:'No se pueden agregar productos con cantidad igual o menor a 0'});
     }else if(this.producto_requisicion.idProducto == 0){
       this.messageService.add({severity:'error', summary:'Error', detail:'Ese producto no existe'});
-    }else if( this.Lista_compras.find( x => x.idProducto == this.producto_requisicion.idProducto)){
+    }else if( this.productosdetailReq.find( (x: { idProducto: number; }) => x.idProducto == this.producto_requisicion.idProducto)){
       //verificamos si la lista de compras ya contiene el producto buscandolo por idProducto
       this.messageService.add({severity:'error', summary:'Error', detail:'Ese producto ya esta en la lista'});
     }else if(this.producto_requisicion.idProdMedida <= 0){
@@ -197,7 +198,8 @@ export class RequisicionEditarComponent implements OnInit {
       this.isSearch=true;
     }
     this.producto_requisicion.idProdMedida = 0;
-    //console.log(this.Lista_compras);
+    this.producto_requisicion.cantidad = 0;
+    console.log(this.productosdetailReq);
   }
 
   actualizarRequisicion(form:any){//Enviar Form insertar en DB
@@ -235,7 +237,7 @@ export class RequisicionEditarComponent implements OnInit {
 
   editarProductoO(p_d:any){//metodo para editar la lista de compras
     console.log('p_d',p_d);
-    this.Lista_compras = this.Lista_compras.filter((item) => item.idProducto !== p_d.idProducto);//eliminamos el producto
+    this.productosdetailReq = this.productosdetailReq.filter((item: { idProducto: any; }) => item.idProducto !== p_d.idProducto);//eliminamos el producto
     //consultamos la informacion para motrar el producto nuevamente
     this.getProd(p_d.idProducto);
   

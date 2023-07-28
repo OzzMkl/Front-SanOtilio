@@ -61,7 +61,6 @@ import { CompraBuscarComponent } from './components/compras/compra/compra-buscar
 import { CompraVerComponent } from './components/compras/compra/compra-ver/compra-ver.component';
 import { CompraAgregarComponent } from './components/compras/compra/compra-agregar/compra-agregar.component';
 import { OrdencompraAgregarComponent } from './components/compras/ordenes-compras/ordencompra-agregar/ordencompra-agregar.component';
-import { OrdencompraBuscarComponent } from './components/compras/ordenes-compras/ordencompra-buscar/ordencompra-buscar.component';
 import { OrdencompraModuloComponent } from './components/compras/ordenes-compras/ordencompra-modulo/ordencompra-modulo.component';
 import { FilterProductsModalcePipe } from './pipes/filter-products-modalce.pipe';
 import { FilterProductsModalcbarPipe } from './pipes/filter-products-modalcbar.pipe';
@@ -99,6 +98,7 @@ import { RequisicionAgregarComponent } from './components/compras/requisiciones/
 import { RequisicionBuscarComponent } from './components/compras/requisiciones/requisicion-buscar/requisicion-buscar.component';
 import { RequisicionEditarComponent } from './components/compras/requisiciones/requisicion-editar/requisicion-editar.component';
 import { PuntoDeVentaEditarComponent } from './components/ventas/punto-de-venta-editar/punto-de-venta-editar.component';
+import { OrdencompraBuscarComponent } from './components/compras/ordenes-compras/ordencompra-buscar/ordencompra-buscar.component';
 
 
 
@@ -136,7 +136,6 @@ import { PuntoDeVentaEditarComponent } from './components/ventas/punto-de-venta-
     CompraVerComponent,
     CompraAgregarComponent,
     OrdencompraAgregarComponent,
-    OrdencompraBuscarComponent,
     OrdencompraModuloComponent,
     FilterProductsModalcePipe,
     FilterProductsModalcbarPipe,
@@ -172,7 +171,8 @@ import { PuntoDeVentaEditarComponent } from './components/ventas/punto-de-venta-
     RequisicionAgregarComponent,
     RequisicionBuscarComponent,
     RequisicionEditarComponent,
-    PuntoDeVentaEditarComponent
+    PuntoDeVentaEditarComponent,
+    OrdencompraBuscarComponent
   ],
   imports: [
     BrowserModule,

@@ -185,9 +185,9 @@ export class RequisicionBuscarComponent implements OnInit {
         if(response.status == 'success'){
           this.detailReq = response.requisicion; 
           this.productosdetailReq = response.productos;
-          console.log('response',response);
-          console.log('requisicion',this.detailReq);
-          console.log('productos',this.productosdetailReq);
+          // console.log('response',response);
+          // console.log('requisicion',this.detailReq);
+          // console.log('productos',this.productosdetailReq);
           
         }else{ console.log('Algo salio mal');}
         
@@ -195,6 +195,10 @@ export class RequisicionBuscarComponent implements OnInit {
 
         console.log(error);
       });
+  }
+
+  deshabilitarReq(idReq:any){
+    
   }
 
 }
