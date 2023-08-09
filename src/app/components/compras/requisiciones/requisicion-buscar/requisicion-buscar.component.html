@@ -1,3 +1,4 @@
+<p-toast></p-toast>
 <div class="container">
     <h3 class="text-center">Requisiciones Recibidas</h3>
 </div>
@@ -80,7 +81,7 @@
                             <button type="button" class="btn btn-warning" (click)="modal.dismiss('Cross click')" [routerLink]="['../requisicion-editar',datosReq.idReq]" ngbTooltip="EDITAR"><i class="bi bi-pencil-square"></i><br></button>
                         </div>
                         <div class="col-auto">
-                            <button type="button" class="btn btn-danger" ngbTooltip="CANCELAR"><i class="bi bi-trash3"></i><br></button>
+                            <button type="button" class="btn btn-danger" (click)="deshabilitarReq(datosReq.idReq)" ngbTooltip="CANCELAR"><i class="bi bi-trash3"></i><br></button>
                         </div>
                     </div>
                     <hr>

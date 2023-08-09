@@ -198,7 +198,19 @@ export class RequisicionBuscarComponent implements OnInit {
   }
 
   deshabilitarReq(idReq:any){
-    
+    console.log('deshabilitarReq ',idReq);
+    var identity = this._empleadoService.getIdentity();
+    this._requisicionservice.deshabilitarReq(idReq,identity['sub']).subscribe(
+    response =>{
+      if(response.status == 'success'){
+        this.messageService.add({severity:'success', summary:'Requisición cancelada'});
+        //this._router.navigate(['./requisicion-modulo/requisicion-buscar']);
+        window.location.reload();
+        
+      }else{ this.messageService.add({severity:'success', summary:'Requisición cancelada'});}
+    }, error =>{
+      console.log(error);
+    });
   }
 
 }
