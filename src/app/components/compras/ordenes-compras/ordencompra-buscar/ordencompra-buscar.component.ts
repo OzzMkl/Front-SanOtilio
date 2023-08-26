@@ -35,6 +35,8 @@ export class OrdencompraBuscarComponent implements OnInit {
   ) { }
 
 
+  public identity: any;
+
   public fechaActual : Date = new Date();
   //Variables de servicios
   public ordenesdecompra: any = [];
@@ -166,12 +168,19 @@ export class OrdencompraBuscarComponent implements OnInit {
       },1000);
     } else{
       this.getAllOrdenes();
+      this.identity = this._empleadoService.getIdentity();
     }
   }
   /***** */
 
-  generaPDF(){
-    
+  generaPDF(idOrd:number){
+    this._ordendecompraService.getPDF(idOrd, this.identity['sub']).subscribe(
+      (pdf: Blob) => {
+        const blob = new Blob([pdf], {type: 'application/pdf'});
+        const url = window.URL.createObjectURL(blob);
+        window.open(url);
+      }
+    );
     
   }
 

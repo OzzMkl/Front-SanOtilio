@@ -52,4 +52,7 @@ export class OrdendecompraService {
     let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');//mandamos el json con las cabeceras para que obtengamos el token
     return this._http.put(this.url+'ordendecompra/updateProductsOrder/'+idOrd,params, {headers:headers} );
   }
+  getPDF(idOrd:number,idEmpleado:number):Observable<Blob>{
+    return this._http.get(this.url+'ordendecompra/generatePDF/'+ idOrd+'/'+idEmpleado, {responseType:'blob'});
+  }
 }

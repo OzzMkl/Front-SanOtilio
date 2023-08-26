@@ -1,18 +1,25 @@
 import { Component, OnInit } from '@angular/core';
 //Servicios
-import { ProveedorService } from 'src/app/services/proveedor.service';
-import { ProductoService } from 'src/app/services/producto.service';
 import { global } from 'src/app/services/global';
 import { MessageService } from 'primeng/api';
 import { OrdendecompraService } from 'src/app/services/ordendecompra.service';
+import { RequisicionService } from 'src/app/services/requisicion.service';
 import { EmpleadoService } from 'src/app/services/empleado.service';
+import { ProveedorService } from 'src/app/services/proveedor.service';
+import { ProductoService } from 'src/app/services/producto.service';
 import { HttpClient} from '@angular/common/http';
+import { Subscription } from 'rxjs';
 //Modelos
 import { Ordencompra } from 'src/app/models/orden_compra';
 import { Producto_orden } from 'src/app/models/producto_orden';
+
 //NGBOOTSTRAP-modal
 import { NgbModal, ModalDismissReasons, NgbDateStruct} from '@ng-bootstrap/ng-bootstrap';
+//import { error } from 'console';
 //pdf
+//Router
+import { Router } from '@angular/router';
+
 
 
 
@@ -25,6 +32,21 @@ import { NgbModal, ModalDismissReasons, NgbDateStruct} from '@ng-bootstrap/ng-bo
 export class OrdencompraAgregarComponent implements OnInit {
 //cerrar modal
   closeResult = '';
+
+  //Lista de requisiciones
+  public requisiciones: Array<any> = [];
+  //Paginacion en modalReq
+  public totalPagesModR: any;
+  public pathModR: any;
+  public next_pageModR: any;
+  public prev_pageModR: any;
+  public itemsPerPageModR:number=0;
+  pageActualModR: number = 0;  
+  //Subscripciones
+  private getReqSub : Subscription = new Subscription;
+  public listaReq : Array<any> = [];
+
+
 
   public proveedoresLista:any;
   public proveedorVer:any;
@@ -80,7 +102,9 @@ export class OrdencompraAgregarComponent implements OnInit {
       private _productoService: ProductoService,
       private messageService: MessageService,
       private _ordencompraService: OrdendecompraService,
-      public _empleadoService : EmpleadoService
+      public _empleadoService : EmpleadoService,
+      public _requisicionservice : RequisicionService,
+      public _router: Router
     ) {
     this.orden_compra = new Ordencompra(0,null,0,'',null,0,1,null);
     this.producto_orden = new Producto_orden(0,0,0,0,'','','');
@@ -139,12 +163,13 @@ export class OrdencompraAgregarComponent implements OnInit {
   agregarOrdCompra(form:any){//Enviar Form insertar en DB
     this.orden_compra.idEmpleado = this.identity['sub'];//asginamos id de Empleado
     this.orden_compra.fecha = this.model.year+'-'+this.model.month+'-'+this.model.day;//concatenamos la fecha del datepicker
-    
+    console.log(this.orden_compra);
     if(this.Lista_compras.length == 0){
       this.messageService.add({severity:'error', summary:'Error', detail:'No se puede crear la orden de compra si no tiene productos'});
     }else{
       this._ordencompraService.registerOrdencompra(this.orden_compra).subscribe(
         response =>{
+          console.log('response',response);
           if(response.status == 'Success!'){
            // console.log(response)       
             this.messageService.add({severity:'success', summary:'Éxito', detail:'Orden de compra creada'});
@@ -152,8 +177,14 @@ export class OrdencompraAgregarComponent implements OnInit {
                res =>{
                    //console.log(res);
                   this.messageService.add({severity:'success', summary:'Éxito', detail:'Productos agregados'});
-                   this.getDetailsOrd();
-                   //this.createPDF();
+                  //this.getDetailsOrd();
+                  if(this.listaReq.length > 0){
+                    this.updateidOrden();
+                    //console.log(this.listaReq);
+                  }else{
+                    //console.log('listaReq vacía',this.listaReq);
+                  }
+                  this.createPDF(response.Ordencompra.idOrd);
                },error =>{
                  console.log(<any>error);
                 this.messageService.add({severity:'error', summary:'Error', detail:'Fallo al agregar los productos a la orden de compra'});
@@ -169,8 +200,17 @@ export class OrdencompraAgregarComponent implements OnInit {
     }
   }
   //
-  public createPDF():void{
-    
+  public createPDF($idOrd:number):void{
+    this._ordencompraService.getPDF($idOrd, this.identity['sub']).subscribe(
+      (pdf: Blob) => {
+        const blob = new Blob([pdf], {type: 'application/pdf'});
+        const url = window.URL.createObjectURL(blob);
+        window.open(url);
+      }
+    );
+    this._router.navigate(['./ordencompra-modulo/ordencompra-buscar']);
+
+
   }
   //Servicios
   getProvee(){
@@ -253,7 +293,7 @@ export class OrdencompraAgregarComponent implements OnInit {
             response => {
               this.detailOrd = response.ordencompra;
               this.productosdetailOrd = response.productos;
-              this.createPDF();
+              //this.createPDF();
             },error =>{
               console.log(error);
             });
@@ -275,6 +315,7 @@ export class OrdencompraAgregarComponent implements OnInit {
       this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
     });
   }
+
   private getDismissReason(reason: any): string {
     if (reason === ModalDismissReasons.ESC) {
       return 'by pressing ESC';
@@ -458,6 +499,7 @@ export class OrdencompraAgregarComponent implements OnInit {
 
  editarProductoO(p_d:any){//metodo para editar la lista de compras
   console.log('p_d',p_d);
+  this.producto_orden.cantidad = p_d.cantidad;
   this.Lista_compras = this.Lista_compras.filter((item) => item.idProducto !== p_d.idProducto);//eliminamos el producto
   //consultamos la informacion para motrar el producto nuevamente
   this.getProd(p_d.idProducto);
@@ -480,6 +522,132 @@ export class OrdencompraAgregarComponent implements OnInit {
       //console.log('prevented');
     }
   }
+
+  //Modal Requisiciones
+    // Modal
+    open2(content2:any) {
+      this.getRequisiciones();
+      this.modalService.open(content2, {ariaLabelledBy: 'modal-basic-title', size: 'xl'}).result.then((result) => {
+        this.closeResult = `Closed with: ${result}`;
+      }, (reason) => {
+        this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+      });
+    }
+
+    getRequisiciones(){
+      //mostramos el spinner
+      this.isLoading = true;
+  
+  
+      this.getReqSub = this._requisicionservice.getReq().subscribe(
+        response =>{
+          if(response.status == 'success'){
+  
+             this.requisiciones = response.requisicion.data;
+             console.log('getReq',response.requisicion.data);
+             //navegacion de paginacion
+             this.totalPagesModR = response.requisicion.last_page;
+             this.itemsPerPageModR = response.requisicion.per_page;
+             this.pageActualModR = response.requisicion.current_page;
+             this.next_pageModR = response.requisicion.next_page_url;
+             this.pathModR = response.requisicion.path;
+  
+            //una vez terminado quitamos el spinner
+            this.isLoading=false;
+          }
+        },
+        error =>{
+          console.log(error);
+        }
+      );
+    }
+
+    getPageModR(page:number) {
+      //iniciamos spinner
+      this.isLoading = true;
+  
+      this._http.get(this.path+'?page='+page).subscribe(
+        (response:any) => {
+          
+          //asignamos datos a varibale para poder mostrarla en la tabla
+          this.requisiciones = response.requisicion.data;
+          console.log('getReq',response.requisicion.data);
+          //navegacion de paginacion
+          this.totalPagesModR = response.requisicion.last_page;
+          this.itemsPerPageModR = response.requisicion.per_page;
+          this.pageActualModR = response.requisicion.current_page;
+          this.next_pageModR = response.requisicion.next_page_url;
+          this.pathModR = response.requisicion.path;
+  
+          //una vez terminado quitamos el spinner
+          this.isLoading=false;        
+      })
+    }
+
+    agregarReq(idReq:number){
+      if(this.listaReq.find( x => x == idReq)){
+        this.listaReq =  this.listaReq.filter((x) => x != idReq);
+        this.messageService.add({severity:'error', summary:'Alerta', detail:'Requisicion eliminada de la lista'});
+      }else{
+        this.listaReq.push(idReq);
+        this.messageService.add({severity:'success', summary:'Éxito', detail:'Requisicion agregada a la lista'});
+
+      }
+      //console.log(this.listaReq);
+    }
+    estaPintada(idReq:number):boolean{
+      return this.listaReq.includes(idReq);
+    }
+
+    generarOrden(){
+      this.modalService.dismissAll();
+      console.log(this.listaReq);
+      this._requisicionservice.generarOrden(this.listaReq).subscribe(
+        response =>{
+          if(response.status == 'success'){
+            this.Lista_compras = response.ListaCompras;
+            //console.log(response.ListaCompras);
+
+            //  this.requisiciones = response.requisicion.data;
+            //  console.log('getReq',response.requisicion.data);
+            //  //navegacion de paginacion
+            //  this.totalPagesModR = response.requisicion.last_page;
+            //  this.itemsPerPageModR = response.requisicion.per_page;
+            //  this.pageActualModR = response.requisicion.current_page;
+            //  this.next_pageModR = response.requisicion.next_page_url;
+            //  this.pathModR = response.requisicion.path;
+  
+            //una vez terminado quitamos el spinner
+            this.isLoading=false;
+          }
+        },
+        error =>{
+          console.log(error);
+        }
+      );
+
+
+      
+
+
+
+      
+    }
+
+    updateidOrden(){
+      this._requisicionservice.updateidOrden(this.listaReq).subscribe(
+        resp =>{
+          if(resp.status == 'success'){
+            this.messageService.add({severity:'success', summary:'Éxito', detail:'Requisiciones actualizadas exitosamente'});
+            console.log(resp);
+          }
+        },
+        error =>{
+          this.messageService.add({severity:'error', summary:'Error', detail:'Fallo al actualizar los idOrd de las requisiciones'});
+          console.log(error);
+        }
+      )
+    }
 
 
 }

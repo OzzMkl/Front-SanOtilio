@@ -72,7 +72,7 @@
                       </div>
                       
                       <div class="col-auto" *ngIf="userPermisos.pdf == 1">
-                          <button type="button" class="btn btn-secondary" style="box-sizing: border-box;" (click)="generaPDF()" ><i class="bi bi-file-earmark-pdf" ngbTooltip="PDF"></i><br></button>
+                          <button type="button" class="btn btn-secondary" style="box-sizing: border-box;" (click)="generaPDF(doc.idOrd)" ><i class="bi bi-file-earmark-pdf" ngbTooltip="PDF"></i><br></button>
                       </div>
                       <div class="col-auto" *ngIf="userPermisos.editar == 1">
                           <button type="button" class="btn btn-warning" (click)="modal.dismiss('Cross click')" [routerLink]="['../ordencompra-editar',doc.idOrd]" ngbTooltip="EDITAR"><i class="bi bi-pencil-square"></i><br></button>

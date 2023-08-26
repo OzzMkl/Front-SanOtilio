@@ -1,4 +1,11 @@
 <p-toast></p-toast>
+<div>
+    <div class="container-fluid">
+        <div >
+            <button type="button" class="btn btn-success" text="" ngbTooltip="Genera una orden de compra a partir de una o varias requisiciones" (click)="open2(content2)">Generar desde requisición <i class="bi bi-arrow-up-right-square"></i><br></button>
+        </div>
+    </div>
+</div>
 <div class="container">
     <form class="form-group" #FormOrdCom="ngForm" (ngSubmit)="agregarOrdCompra(FormOrdCom)">
         <div class="row align-items-start">
@@ -6,7 +13,7 @@
             
             <div class="col-2">
                 <label for="idRequisicion" class="form-label"># Requisicion</label>
-                <input type="text" class="form-control" id="idRequisicion"  readonly>
+                <input type="text" class="form-control" value="{{listaReq.toString()}}" id=""  readonly>
             </div>
             <div class="col-5">
                 <label for="idProveedor" class="form-label">Seleccionar proveedor</label>
@@ -131,7 +138,7 @@
         </div>
     </form>
 </div>
-<!-- Modal -->
+<!-- Modal Producto -->
 <ng-template #content let-modal>
     <div class="modal-header">
       <h4 class="modal-title" id="modal-basic-title">Buscar producto</h4>
@@ -194,3 +201,67 @@
       <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Guardar</button>
     </div> -->
 </ng-template>
+
+<!-- Modal Requisición -->
+<ng-template #content2 let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Buscar Requisicion</h4>
+      <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+
+        <div class="row">
+            <div class="col-10">
+                <input type="text" class="form-control" value="{{listaReq.toString()}}" id="idRequisicion"  readonly>
+            </div>
+            <div class="col-2">
+                <button type="button" class="btn btn-success form-control" aria-label="Close" (click)="generarOrden()"><i class="bi bi-check-circle-fill"> Guardar </i></button>
+            </div>
+           
+        </div>
+        <br>
+        
+       
+        <div class="text-center text-primary" *ngIf="isLoading">
+            <div class="spinner-border" role="status" >
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+        <div *ngIf="!isLoading">
+            <table class="table table-dark">
+                <thead>
+                    <tr>
+                        <th scope="col">#REQUISICION</th>
+                        <th scope="col">FECHA</th>
+                        <th scope="col">EMPLEADO</th>
+                        <th scope="col">OBSERVACIONES</th>
+                    </tr>
+                </thead>
+                <tbody *ngFor="let r of requisiciones | paginate:{id:'pagReq',itemsPerPage: itemsPerPageModR, currentPage: pageActualModR, totalItems:totalPagesModR}">
+                    <tr (click)="agregarReq(r.idReq)" [ngClass]="{ 'table-primary' : estaPintada(r.idReq)}" >
+                        <th scope="row">{{r.idReq}}</th>
+                        <th scope="row">{{r.created_at | date: 'dd/MM/yyyy'}}</th>
+                        <th scope="row">{{r.nombreEmpleado}}</th>
+                        <th scope="row">{{r.observaciones}}</th>
+                    </tr>
+                </tbody>
+            </table>
+            <pagination-controls 
+                    id="pagReq" 
+                    (pageChange)="getPageModR(pageActualModR = $event)"
+                    previousLabel="Anterior"
+                    nextLabel="Siguiente" >
+            </pagination-controls>
+        </div>
+       
+    </div>
+    <!-- <div class="modal-footer">
+      <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Guardar</button>
+    </div> -->
+</ng-template>
+
+
+
+
+
+
