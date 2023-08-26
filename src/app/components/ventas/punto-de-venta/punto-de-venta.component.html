@@ -1,5 +1,5 @@
 <p-toast></p-toast>
-<div class="container">
+<div class="container-xxl">
     <!-- DATOS CLIENTE -->
     <div>
         <h4 class="text-center">DATOS DEL CLIENTE</h4>
@@ -59,18 +59,30 @@
                 <option *ngFor="let pm of productos_medidas" value="{{pm.idProdMedida}}" >{{pm.nombreMedida}}</option>
             </select>
         </div>
-        <div class="col-2">
-            <label class="form-label">Precio</label>
-            <select class="form-select" name="precio" id="precio" #precio="ngModel" [(ngModel)]="productoVentag.precio" (change)="calculaSubtotalPP()">
-                <option *ngFor="let precio of preciosArray" value="{{precio}}">{{precio}}</option>
-            </select>
-            <!-- <input class="form-control" type="number" min="{{productoVentag.precioMinimo}}" name="precio" #precio="ngModel" [(ngModel)]="productoVentag.precio" (change)="calculaSubtotalPP()" > -->
-        </div>
-        <div class="col-2">
+        <div [ngClass]="{'col-1': PagoConTarjeta, 'col-2': !PagoConTarjeta}">
             <label class="form-label">Cantidad</label>
             <input class="form-control" type="number" min="0" name="cantidad" #cantidad="ngModel" [(ngModel)]="productoVentag.cantidad" (change)="calculaSubtotalPP()">
         </div>
         <div class="col-2">
+            <label class="form-label">Precio</label>
+                <input class="offset-md-1 form-check-input" type="checkbox" pTooltip="Modificar precio" tooltipPosition="top" [(ngModel)]="isModificaPrecio" (ngModelChange)="habilitaInputPrecio($event)">
+            <div *ngIf="isModificaPrecio == false; else blockModificaPrecio">
+                <select class="form-select" name="precio" id="precio" #precio="ngModel" [(ngModel)]="productoVentag.precio" (change)="calculaSubtotalPP()">
+                    <option *ngFor="let precio of preciosArray" value="{{precio}}">{{precio}}</option>
+                </select>
+            </div>
+
+            <ng-template #blockModificaPrecio>
+                <input class="form-control" type="number" name="precio" id="precio" #precio="ngModel" [(ngModel)]="productoVentag.precio" (change)="calculaSubtotalPP()">
+            </ng-template>
+
+            <!-- <input class="form-control" type="number" min="{{productoVentag.precioMinimo}}" name="precio" #precio="ngModel" [(ngModel)]="productoVentag.precio" (change)="calculaSubtotalPP()" > -->
+        </div>
+        <div class="col-2" *ngIf="PagoConTarjeta">
+            <label class="form-label" for="">Comision</label>
+            <input class="form-control" type="number" name="comision" id="comision" #comision="ngModel" [(ngModel)]="productoVentag.comision" readonly>
+        </div>
+        <div [ngClass]="{'col-1': PagoConTarjeta, 'col-2': !PagoConTarjeta}">
             <label class="form-label">Descuento</label>
             <input class="form-control" type="number" min="0" name="descuento" #descuento="ngModel" [(ngModel)]="productoVentag.descuento" (change)="calculaSubtotalPP()">
         </div>
@@ -79,7 +91,7 @@
             <input class="form-control" type="number" value="{{productoVentag.subtotal}}" readonly >
         </div>
         <div class="col">
-            <label for="">Descripcion</label>
+            <label class="" for="">Descripcion</label>
             <input type="text" class="form-control" name="descripcion" #descripcion="ngModel" [(ngModel)]="productoVentag.descripcion" readonly>
         </div>
         <div class="col-2">
@@ -125,30 +137,39 @@
     <div class="row">
         <div class="col-10">
             <label class="form-label">Observaciones</label>
-            <textarea class="form-control" rows="2" maxlength="250" 
-                        name="observaciones" #observaciones="ngModel" 
+            <textarea class="form-control" rows="3" maxlength="250" 
+                        name="observaciones" #observaciones="ngModel"
+                        placeholder="Ingrese unicamente observaciones"
                         [(ngModel)]="ventag.observaciones" 
                         (keydown)="contadorCaracteres($event)">
             </textarea>
             <span> {{contador}}/250</span>
+            <br>
+
             <div class="row">
-                <div class="col-3">
+                <div class="col-2">
                     <label for="">Subtotal</label>
                     <input class="form-control" type="text" value="{{ventag.subtotal | currency}}" readonly>
                 </div>
-                <div class="col-3">
-                    <label for="">DESCUENTO</label>
+                <div class="col-2">
+                    <label for="">Descuento</label>
                     <input class="form-control" type="text" value="{{ventag.descuento | currency}}" readonly>
                 </div>
-                <div class="col-3">
-                    <label for="">TOTAL</label>
+                <div class="col-2">
+                    <label for="">Total</label>
                     <input class="form-control" type="text" value="{{ventag.total | currency}}" readonly>
                 </div>
                 <div class="col-3">
-                    <label for="">TIPO VENTA</label>
+                    <label class="form-label" for="">Tipo venta</label>
                     <select class="form-select" name="tipoventa" id="tipoventa" #tipoventa="ngModel" [(ngModel)]="ventag.idTipoVenta" ngModel required>
                         <option *ngFor="let tipoV of tipo_venta" value="{{tipoV.idTipoVenta}}">{{tipoV.nombre}}</option>
                     </select>
+                </div>
+                <div class="col-2">
+                    <label class="form-label" for="">¿Pago con tarjeta?</label>
+                    <div class="col-md-5 offset-md-5">
+                        <input class="form-check-input" type="checkbox" name="PagoConTarjeta" id="PagoConTarjeta" [(ngModel)]="PagoConTarjeta" (ngModelChange)="sumaPorcentajeComi($event)">
+                    </div>
                 </div>
             </div>
         </div>
@@ -166,7 +187,11 @@
             </div>
         </div>
     </div>
+
+    
 </div>
+
+
 
 <!-- Modal buscar clientes-->
 <ng-template #content let-modal>

@@ -13,6 +13,8 @@ export class Producto_ventasg{//Modelo de la compra
         public nombreMedida:string,
         public precioCompra:number,
         public subtotal:number,
-        public tieneStock: boolean
+        public tieneStock: boolean,
+        public comision: number,
+        public isComision: boolean
     ){}
 }

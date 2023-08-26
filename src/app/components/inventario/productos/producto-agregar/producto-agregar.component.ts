@@ -176,14 +176,15 @@ export class ProductoAgregarComponent implements OnInit {
            //console.log('asdasdasd :',response);
            if(response.status == 'success'){
         
+             this.messageService.add({severity:'success', summary:'Alerta', detail:'Producto guardado correctamente'});
              this._router.navigate(['./producto-modulo/producto-buscar']);
-             //this.toastService.show('Producto guardado correctamente', { classname: 'bg-success text-light', delay: 5000 });
            }
          },
          error =>{
            //console.log(this.producto);
            //console.log('error ',error);
            //this.toastService.show(error, { classname: 'bg-danger text-light', delay: 15000 });
+           this.messageService.add({severity:'error', summary:'Alerta', detail:'Algo salio mal: '+error});
          });
   }
 
