@@ -79,6 +79,8 @@ export class PuntoDeVentaEditarComponent implements OnInit {
   public isCredito: boolean = false;
   public isRFC: boolean = false;
   public checkDireccion: boolean = false;
+  public isModificaPrecio: boolean = false;
+  public PagoConTarjeta: boolean = false;
 
   //public descuentoVenta:number = 0;
   //public subtotalVenta:number =0;
@@ -115,7 +117,7 @@ export class PuntoDeVentaEditarComponent implements OnInit {
     this.modeloCliente = new Cliente (0,'','','','','',0,1,1);
     this.cdireccion = new Cdireccion (0,'Mexico','Puebla','','','','','','',0,'',0,1,'');
     this.nuevaDir = new Cdireccion (0,'Mexico','Puebla','','','','','','',0,'',0,1,'');
-    this.productoVentag = new Producto_ventasg(0,0,'',0,0,0,0,0,'','',0,0,true);
+    this.productoVentag = new Producto_ventasg(0,0,'',0,0,0,0,0,'','',0,0,true,0,false);
     this.lista_productoVentag = [];
   }
 
@@ -409,11 +411,12 @@ export class PuntoDeVentaEditarComponent implements OnInit {
     //cerramos los modales abiertos
     this.modalService.dismissAll();
 
+    this.limpiaProducto();
+
     //console.log(idProducto);
     this._productoService.getProdverDos(idProducto).subscribe( response => {
       //console.log(response);
       if(response.status == 'success'){
-        this.limpiaProducto();
 
         this.producto = response.producto;
         this.productoVentag.claveEx = this.producto[0]['claveEx'];
@@ -448,7 +451,9 @@ export class PuntoDeVentaEditarComponent implements OnInit {
     //asignamos el precio compra al producto
     this.productoVentag.precioCompra = med.precioCompra;
     //asignamos el primer precio
-    this.productoVentag.precio = this.preciosArray[0];
+    if(this.preciosArray.length > 1){
+      this.productoVentag.precio = this.preciosArray[0];
+    }
     this.calculaSubtotalPP();
   }
 
@@ -460,13 +465,34 @@ export class PuntoDeVentaEditarComponent implements OnInit {
       this.messageService.add({severity:'warn', summary:'Alerta', detail: 'No puedes agregar descuento negativo'});
       this.isSearch=true;
     } else if(this.productoVentag.precioCompra > (this.productoVentag.precio - this.productoVentag.descuento)){
-      this.messageService.add({severity:'warn', summary:'Alerta', detail: 'No puedes agregar descuento mayor al precio compra'});
+      if(this.productoVentag.precio < this.productoVentag.precioCompra){
+        this.messageService.add({severity:'warn', summary:'Alerta', detail:'El precio no puede ser menor al precio compra'});
+      } else{
+        this.messageService.add({severity:'warn', summary:'Alerta', detail: 'No puedes agregar descuento mayor al precio compra'});
+      }
       this.isSearch=true;
-
     }else{
-      this.productoVentag.subtotal = (this.productoVentag.cantidad * this.productoVentag.precio)- this.productoVentag.descuento;
-      this.isSearch=false;
+      //Ponemos comision a cero
+      this.productoVentag.comision = 0;
+      /**
+       * Calcula la comision del precio seleccionado/ingresado, se redondeda a 2 decimales y se convierte a numero
+       * ya que el metodo toFixed() retorna un string
+       */
+      this.productoVentag.comision = parseFloat((this.productoVentag.precio * 0.03).toFixed(2));
+
+      if(this.PagoConTarjeta){
+        /**
+         * Si el check de pagocontarjeta es true, multiplicamos la cantidad por la comision y
+         * lo sumamos al subtotal del producto
+         */
+        this.productoVentag.subtotal = (this.productoVentag.cantidad * this.productoVentag.precio) + (this.productoVentag.cantidad * this.productoVentag.comision) - this.productoVentag.descuento;
+
+      } else{
+        this.productoVentag.subtotal = (this.productoVentag.cantidad * this.productoVentag.precio)- this.productoVentag.descuento;
+      }
+      this.isSearch=false;  
     }
+    //console.log(this.productoVentag);
   }
 
   /**
@@ -503,6 +529,13 @@ export class PuntoDeVentaEditarComponent implements OnInit {
               this.messageService.add({severity:'warn', summary:'Alerta', detail:'El producto no cuenta con suficiente stock'});
               this.productoVentag.tieneStock = false;
             } 
+
+              //Verificamos si esta true el check de pago con tarjeta
+              if(this.PagoConTarjeta){
+                //Si es true al precio le agregamos la comision del 3% del precio
+                this.productoVentag.precio = this.productoVentag.precio * 1.03;
+              }
+
               //asignamos los valores del producto 
               this.ventag.subtotal = this.ventag.subtotal + (this.productoVentag.precio * this.productoVentag.cantidad);
               this.ventag.descuento = this.ventag.descuento + this.productoVentag.descuento;
@@ -510,7 +543,7 @@ export class PuntoDeVentaEditarComponent implements OnInit {
               this.lista_productoVentag.push({...this.productoVentag});
               this.isSearch = true;
             
-              
+              this.limpiaProducto();
           }
         }, error =>{
           this.messageService.add({severity:'error', summary:'Error!', detail:'Ocurrio un error al verificar la existencia'});
@@ -909,10 +942,14 @@ export class PuntoDeVentaEditarComponent implements OnInit {
     this.productoVentag.precioCompra = 0;
     this.productoVentag.subtotal = 0;
     this.productoVentag.tieneStock = false;
+    this.productoVentag.comision = 0;
+    this.productoVentag.isComision = false;
     //limpia medidas
     this.productos_medidas=[];
     //limpia array
     this.preciosArray=[];
+
+    this.isModificaPrecio = false;
 
   }
 
@@ -937,6 +974,53 @@ export class PuntoDeVentaEditarComponent implements OnInit {
     }, error =>{
       console.log(error);
     });
+  }
+
+  habilitaInputPrecio(e:any){
+    if(this.preciosArray.length == 0 && this.isModificaPrecio == true){
+      this.messageService.add({severity:'warn', summary:'Advertencia', detail: 'No puedes modificar el precio sin elegir una medida'});
+      this.isModificaPrecio = false
+    }
+  }
+
+  sumaPorcentajeComi(e:any){
+    if(e == true){
+      //llamamos el metodo para recalcular si es que un producto esta por agregarse
+      this.calculaSubtotalPP();
+      /**
+       * Como se moveran todos los precios de la lista de productos se inician nuevamente en ceros
+       * Descuento no se modifica aqui ya que no se toca.
+       */
+      this.ventag.subtotal = 0;
+      this.ventag.total = 0;
+      //Recorremos la lista de productos
+      this.lista_productoVentag.forEach(producto =>{
+        /*
+        * Sumamos la comision al precio del producto la comision ya viene calculada y esta se calcula en calculaSubtotalPP()
+        * Generemos subtotal del producto y despues lo sumamos al subtotal de la venta y asi sucesivamente
+        * hasta terminar de recorrer la lista de productos
+        */
+        producto.precio = producto.precio + producto.comision;
+        producto.subtotal = (producto.precio * producto.cantidad) - producto.descuento;
+        this.ventag.subtotal = this.ventag.subtotal + (producto.precio * producto.cantidad);
+        this.ventag.total = this.ventag.total + producto.subtotal;
+      });
+    } else {
+      //Ponemos variables en ceros
+      this.ventag.subtotal = 0;
+      this.ventag.total = 0;
+      //Recorremos la lista de productos
+      this.lista_productoVentag.forEach(producto =>{
+        /**
+         * Ahora descontamos la comision del precio
+         * Recalculamos el subtotal por producto y lo sumamos al total y subtotal de la venta
+         */
+        producto.precio = producto.precio - producto.comision;
+        producto.subtotal = (producto.precio * producto.cantidad) - producto.descuento;
+        this.ventag.subtotal = this.ventag.subtotal + (producto.precio * producto.cantidad);
+        this.ventag.total = this.ventag.total + producto.subtotal;
+      });
+    }
   }
 
   /******** NUEVO CODIGO*/

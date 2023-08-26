@@ -4,7 +4,7 @@
         <span class="visually-hidden">Loading...</span>
     </div>
 </div>
-<div class="container" *ngIf="!isLoadingDatos">
+<div class="container-xxl" *ngIf="!isLoadingDatos">
     <!-- DATOS CLIENTE -->
     <div>
         <h5 class="text-center">DATOS DEL CLIENTE</h5>
@@ -60,17 +60,30 @@
                 <option *ngFor="let pm of productos_medidas" value="{{pm.idProdMedida}}" >{{pm.nombreMedida}}</option>
             </select>
         </div>
-        <div class="col-2">
-            <label class="form-label">Precio</label>
-            <select class="form-select" name="precio" id="precio" #precio="ngModel" [(ngModel)]="productoVentag.precio" (change)="calculaSubtotalPP()">
-                <option *ngFor="let precio of preciosArray" value="{{precio}}">{{precio}}</option>
-            </select>
-        </div>
-        <div class="col-2">
+        <div [ngClass]="{'col-1': PagoConTarjeta, 'col-2': !PagoConTarjeta}">
             <label class="form-label">Cantidad</label>
             <input class="form-control" type="number" min="0" name="cantidad" #cantidad="ngModel" [(ngModel)]="productoVentag.cantidad" (change)="calculaSubtotalPP()">
         </div>
         <div class="col-2">
+            <label class="form-label">Precio</label>
+                <input class="offset-md-1 form-check-input" type="checkbox" pTooltip="Modificar precio" tooltipPosition="top" [(ngModel)]="isModificaPrecio" (ngModelChange)="habilitaInputPrecio($event)">
+            <div *ngIf="isModificaPrecio == false; else blockModificaPrecio">
+                <select class="form-select" name="precio" id="precio" #precio="ngModel" [(ngModel)]="productoVentag.precio" (change)="calculaSubtotalPP()">
+                    <option *ngFor="let precio of preciosArray" value="{{precio}}">{{precio}}</option>
+                </select>
+            </div>
+
+            <ng-template #blockModificaPrecio>
+                <input class="form-control" type="number" name="precio" id="precio" #precio="ngModel" [(ngModel)]="productoVentag.precio" (change)="calculaSubtotalPP()">
+            </ng-template>
+
+            <!-- <input class="form-control" type="number" min="{{productoVentag.precioMinimo}}" name="precio" #precio="ngModel" [(ngModel)]="productoVentag.precio" (change)="calculaSubtotalPP()" > -->
+        </div>
+        <div class="col-2" *ngIf="PagoConTarjeta">
+            <label class="form-label" for="">Comision</label>
+            <input class="form-control" type="number" name="comision" id="comision" #comision="ngModel" [(ngModel)]="productoVentag.comision" readonly>
+        </div>
+        <div [ngClass]="{'col-1': PagoConTarjeta, 'col-2': !PagoConTarjeta}">
             <label class="form-label">Descuento</label>
             <input class="form-control" type="number" min="0" name="descuento" #descuento="ngModel" [(ngModel)]="productoVentag.descuento" (change)="calculaSubtotalPP()">
         </div>
@@ -125,23 +138,25 @@
     <div class="row">
         <div class="col-10">
             <label class="form-label">Observaciones</label>
-            <textarea class="form-control" rows="2" maxlength="250" 
+            <textarea class="form-control" rows="3" maxlength="250" 
                         name="observaciones" #observaciones="ngModel" 
+                        placeholder="Ingrese unicamente observaciones"
                         [(ngModel)]="cotizacion_editada.observaciones" 
                         (input)="contadorCaracteres($event)">
             </textarea>
             <span> {{contador}}/250</span>
+            <br>
             <div class="row">
-                <div class="col-3">
+                <div class="col-2">
                     <label for="">Subtotal</label>
                     <input class="form-control" type="text" value="{{cotizacion_editada.subtotal | currency}}" readonly>
                 </div>
-                <div class="col-3">
-                    <label for="">DESCUENTO</label>
+                <div class="col-2">
+                    <label for="">Descuento</label>
                     <input class="form-control" type="text" value="{{cotizacion_editada.descuento | currency}}" readonly>
                 </div>
-                <div class="col-3">
-                    <label for="">TOTAL</label>
+                <div class="col-2">
+                    <label for="">Total</label>
                     <input class="form-control" type="text" value="{{cotizacion_editada.total | currency}}" readonly>
                 </div>
             </div>
