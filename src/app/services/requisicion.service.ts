@@ -52,11 +52,18 @@ export class RequisicionService {
     let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');//mandamos el json con las cabeceras para que obtengamos el token
     return this._http.put(this.url+'requisicion/updateRequisicion/'+idReq,params, {headers:headers} );
   }
-  updateProductosReq(idOrd:any, productosOrden:any):Observable<any>{
+  updateProductosReq(idReq:any, productosOrden:any):Observable<any>{
     let json = JSON.stringify(productosOrden);
     let params = 'json='+json;
     let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');//mandamos el json con las cabeceras para que obtengamos el token
-    return this._http.put(this.url+'requisicion/updateProductosReq/'+idOrd,params, {headers:headers} );
+    return this._http.put(this.url+'requisicion/updateProductosReq/'+idReq,params, {headers:headers} );
+  }
+
+  deshabilitarReq(idReq:number,idEmpleado:number):Observable<any>{
+    let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');//mandamos el json con las cabeceras para que obtengamos el token
+    return this._http.put(this.url+'requisicion/deshabilitarReq/'+idReq+'/'+idEmpleado, {headers:headers} );
+
+
   }
 
 }
