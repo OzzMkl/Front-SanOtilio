@@ -43,6 +43,7 @@ export class CompraBuscarComponent implements OnInit {
     day: '2-digit'
   };
 
+  public identity: any;
 
   constructor(
     private _compraService: CompraService,
@@ -54,7 +55,7 @@ export class CompraBuscarComponent implements OnInit {
 
   ngOnInit(): void {
     this.getComprasR();
-    //this.loadUser();
+    this.loadUser();
   }
 
   //
@@ -315,10 +316,9 @@ export class CompraBuscarComponent implements OnInit {
     }
   }
 
-  // loadUser(){
-  //   this.userPermisos = this._empleadoService.getPermisosModulo();  
-  //   console.log(this.userPermisos);
-  // }
+  loadUser(){
+    this.identity = this._empleadoService.getIdentity();
+  }
 
    /**
    * Destruye las subscripciones a los observables de regitro proveedor
@@ -329,7 +329,15 @@ export class CompraBuscarComponent implements OnInit {
   }
 
 
-  public createPDF():void{//Crear PDF
+  public createPDF(idCompra:number):void{//Crear PDF
+    this._compraService.getPDF(idCompra, this.identity['sub']).subscribe(
+      (pdf: Blob) => {
+        const blob = new Blob([pdf], {type: 'application/pdf'});
+        const url = window.URL.createObjectURL(blob);
+        window.open(url);
+      }
+    );
+
   } 
 
 }

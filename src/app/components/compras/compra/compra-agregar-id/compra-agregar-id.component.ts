@@ -18,6 +18,9 @@ import { Compra } from 'src/app/models/compra'
 import { Producto_compra } from 'src/app/models/producto_compra';
 //Modal
 import { NgbDateStruct, NgbModal,ModalDismissReasons, NgbCalendar } from '@ng-bootstrap/ng-bootstrap';
+//Router
+import { Router } from '@angular/router';
+
 
 @Component({
   selector: 'app-compra-agregar-id',
@@ -134,7 +137,8 @@ export class CompraAgregarIdComponent implements OnInit {
     private _medidaService: MedidaService,
     private _impuestoService: ImpuestoService,
     public _compraService : CompraService,
-    private calendar: NgbCalendar
+    private calendar: NgbCalendar,
+    public _router: Router
 
 
   ) {
@@ -394,8 +398,14 @@ export class CompraAgregarIdComponent implements OnInit {
   
   }
   
-  public createPDF():void{//Crear PDF
-    
+  public createPDF(idCompra:number):void{//Crear PDF
+    this._compraService.getPDF(idCompra, this.identity['sub']).subscribe(
+      (pdf: Blob) => {
+        const blob = new Blob([pdf], {type: 'application/pdf'});
+        const url = window.URL.createObjectURL(blob);
+        window.open(url);
+      }
+    );
   } 
 
   
@@ -482,12 +492,13 @@ export class CompraAgregarIdComponent implements OnInit {
         if(response.status == 'success'){
           this.ultimaCompra = response.compra;
           this._compraService.getDetailsCompra(this.ultimaCompra['idCompra']).subscribe(
-            response => {
-              this.detailComp = response.compra;
-              this.detailProdComp = response.productos;
+            resp => {
+              this.detailComp = resp.compra;
+              this.detailProdComp = resp.productos;
               console.log('detailComp',this.detailComp);
               console.log('detailProdComp',this.detailProdComp);
-              this.createPDF();
+              this.createPDF(this.detailComp[0]['idCompra']);
+              this._router.navigate(['./compra-modulo/compra-buscar']);
             },error =>{
               console.log(error);
             });
@@ -547,17 +558,16 @@ export class CompraAgregarIdComponent implements OnInit {
       console.log(this.compra);
       this._compraService.registrerCompra(this.compra).subscribe(
       response =>{
-        console.log('response',response)
-        console.log('response.status',response.status)
+        //console.log('response',response)
+        //console.log('response.status',response.status)
         if(response.status == 'success'){
-          console.log(response)       
+          //console.log(response)       
             this.messageService.add({severity:'success', summary:'Éxito', detail:'Compra creada'});
             this._compraService.registerProductoscompra(this.Lista_compras).subscribe(
               res =>{
-                  console.log(res);
+                  //console.log(res);
                   this.messageService.add({severity:'success', summary:'Éxito', detail:'Productos agregados'});
                   this.getLastCompra();
-                  //this.createPDF();
               },error =>{
                 console.log(<any>error);
                 this.messageService.add({severity:'error', summary:'Error', detail:'Fallo al agregar los productos a la compra'});

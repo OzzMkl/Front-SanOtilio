@@ -80,6 +80,10 @@ export class CompraService {
       return this._http.post(this.url+'compra/alterExistencia',params, {headers:this.headers} );
     }
 
+    getPDF(idcompra:number,idEmpleado:number):Observable<Blob>{
+      return this._http.get(this.url+'compra/generatePDF/'+ idcompra+'/'+idEmpleado, {responseType:'blob'});
+    }
+
 
   /**
    * SERVICIOS DE BUSQUEDA DEL COMPONENTE COMPRA-BUSCAR
