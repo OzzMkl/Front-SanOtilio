@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders} from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import { Observable } from "rxjs";
 import { global } from "./global"; 
 
@@ -62,8 +62,22 @@ export class RequisicionService {
   deshabilitarReq(idReq:number,idEmpleado:number):Observable<any>{
     let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');//mandamos el json con las cabeceras para que obtengamos el token
     return this._http.put(this.url+'requisicion/deshabilitarReq/'+idReq+'/'+idEmpleado, {headers:headers} );
+  }
 
+  generarOrden(listaReq:any):Observable<any>{
+    const params = new HttpParams().set('json', listaReq.join(','));
+    // let json = JSON.stringify(listaReq);
+    // let params = 'json='+json;
+    let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');//mandamos el json con las cabeceras para que obtengamos el token
+    return this._http.get(this.url+'requisicion/generarOrden', {params, headers:headers} );
+  }
 
+  updateidOrden(listaReq:any):Observable<any>{
+    const params = new HttpParams().set('json', listaReq.join(','));
+    // let json = JSON.stringify(listaReq);
+    // let params = 'json='+json;
+    let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');//mandamos el json con las cabeceras para que obtengamos el token
+    return this._http.get(this.url+'requisicion/updateidOrden',{params, headers:headers} );
   }
 
 }

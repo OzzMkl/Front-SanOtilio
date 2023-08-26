@@ -2,6 +2,7 @@
 <div class="container">
     <h3 class="text-center">Requisiciones Recibidas</h3>
 </div>
+<br>
 <div>
     <div class="container-fluid" *ngIf="requisiciones">
         <!-- <div class="input-group mb-2">
@@ -26,6 +27,19 @@
                 <input type="search" class="form-control" name="searchTotal" placeholder="Buscar ..." (keyup)="getSearchTotal($event)">
             </div>
         </div> -->
+        <!-- <div>
+            <div class="container-fluid">
+                <div class="input-group mb-2">
+                    <input type="search" class="form-control" id="agregarAOrden" name="agregarAOrden" placeholder="Para añadir varias requisiciones a orden de compra: 1 ó 1, 2, 3, 4,... ">
+                    <button type="button" class="btn btn-success" style="box-sizing: border-box;" ngbTooltip="Pasar a orden de compra"  ><i class="bi bi-arrow-up-right-square"></i><br></button>
+
+
+
+                </div>
+
+            </div>
+
+        </div> -->
         <br>
         <div class="text-center text-primary" *ngIf="isLoading">
             <div class="spinner-border" role="status" >
@@ -39,7 +53,7 @@
                         <th scope="col">#REQUISICION</th>
                         <th scope="col">FECHA</th>
                         <th scope="col">EMPLEADO</th>
-                        <th scope="col">OBSERVACIOENS</th>
+                        <th scope="col">OBSERVACIONES</th>
                     </tr>
                 </thead>
                 <tbody *ngFor="let r of requisiciones | paginate:{id:'pagReq',itemsPerPage: itemsPerPage, currentPage: pageActual, totalItems:totalPages}">
@@ -61,6 +75,9 @@
     
     </div>
 </div>
+
+
+
 <!-- Modal -->
 <ng-template #content let-modal>
     <div *ngFor="let datosReq of detailReq">

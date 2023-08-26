@@ -213,4 +213,9 @@ export class RequisicionBuscarComponent implements OnInit {
     });
   }
 
+  generarOrden(requisiicones:any){
+    console.log(requisiicones);
+
+  }
+
 }
