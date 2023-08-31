@@ -23,6 +23,7 @@ import {FieldsetModule} from 'primeng/fieldset';
 //import { ToastModule } from 'primeng/toast';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { TableModule } from 'primeng/table';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
 
 
 
@@ -49,7 +50,8 @@ import { TableModule } from 'primeng/table';
     FieldsetModule,
     //ToastModule,
     InputSwitchModule,
-    TableModule
+    TableModule,
+    ConfirmDialogModule,
   ],
   imports: [
     CommonModule,
