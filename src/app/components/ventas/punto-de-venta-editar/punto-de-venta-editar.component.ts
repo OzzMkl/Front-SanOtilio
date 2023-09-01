@@ -3,7 +3,7 @@
   /******** */
 
 import { HttpClient } from '@angular/common/http';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 //servicio
 import { ClientesService } from 'src/app/services/clientes.service';
 import { ProductoService } from 'src/app/services/producto.service';
@@ -19,13 +19,13 @@ import { Producto_ventasg } from 'src/app/models/productoVentag';
 //NGBOOTSTRAP-modal
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 //primeng
-import { MessageService } from 'primeng/api';
+import { MessageService, ConfirmationService, ConfirmEventType } from 'primeng/api';
 
 @Component({
   selector: 'app-punto-de-venta-editar',
   templateUrl: './punto-de-venta-editar.component.html',
   styleUrls: ['./punto-de-venta-editar.component.css'],
-  providers:[ProductoService, MessageService]
+  providers:[ProductoService, MessageService,ConfirmationService]
 })
 export class PuntoDeVentaEditarComponent implements OnInit {
 
@@ -87,6 +87,7 @@ export class PuntoDeVentaEditarComponent implements OnInit {
   public isSearch: boolean = true;
   public isLoadingProductos: boolean = false;
   public isLoadingClientes: boolean = false;
+  public isLoadingDetallesVenta: boolean = false;
   //contadores para los text area
   contador: number =0;
   //PERMISOS
@@ -110,7 +111,9 @@ export class PuntoDeVentaEditarComponent implements OnInit {
   private _modulosService: ModulosService,
   private _router:Router,
   private _http: HttpClient,
-  private messageService: MessageService) { 
+  private messageService: MessageService,
+  private _confirmationService: ConfirmationService,
+  private _route: ActivatedRoute,) { 
 
     //declaramos modelos
     this.ventag = new Ventag(0,0,1,'',1,null,0,0,0,0,'','',0);
@@ -560,7 +563,7 @@ export class PuntoDeVentaEditarComponent implements OnInit {
     
     this.userPermisos = this._empleadoService.getPermisosModulo(this.mPuV.idModulo, this.mPuV.idSubModulo);
         //revisamos si el permiso del modulo esta activo si no redireccionamos
-        if( this.userPermisos.agregar != 1 ){
+        if( this.userPermisos.editar != 1 ){
           this.timerId = setInterval(()=>{
             this.counter--;
             if(this.counter === 0){
@@ -570,8 +573,6 @@ export class PuntoDeVentaEditarComponent implements OnInit {
             this.messageService.add({severity:'error', summary:'Acceso denegado', detail: 'El usuario no cuenta con los permisos necesarios, redirigiendo en '+this.counter+' segundos'});
           },1000);
         } else{
-          this.identity = this._empleadoService.getIdentity();
-          this.getTiposVentas();
           this.modal();
         }
   }
@@ -657,38 +658,20 @@ export class PuntoDeVentaEditarComponent implements OnInit {
   }
 
   creaVenta(){
-    //asignamos id del empleado
-    this.ventag.idEmpleado = this.identity['sub'];
-    if(this.lista_productoVentag.length == 0){
-      this.messageService.add({severity:'warn', summary:'Alerta', detail:'No puedes generar una venta sin productos!'});
-
-    }else if(this.ventag.idCliente == 0){
-      this.messageService.add({severity:'warn', summary:'Alerta', detail:'No puedes generar una venta sin cliente!'});
-
-    }else{
-      console.log(this.ventag)
-      console.log(this.lista_productoVentag)
-      this._ventasService.postVentas(this.ventag).subscribe(
-        response => {
-          if(response.status == 'success'){
-              this.messageService.add({severity:'success', summary:'Registro exitoso', detail:'Venta creada correctamente!'});
-            this._ventasService.postProductosVentas(this.lista_productoVentag).subscribe(
-              response => {
-                if(response.status == 'success'){
-                  this.messageService.add({severity:'success', summary:'Registro exitoso', detail:'productos cargados exitosamente'});
-                }
-                //console.log(response);
-              }, error =>{
-                console.log(error);
-              }
-            );
-          }
-          //console.log(response);
-        }, error => {
-          console.log(error);
-        }
-      );
+    //Sustituimos todos los permisos por solo los permisos del modulo
+    //Esto con la finalidad de no enviar informacion innecesaria
+    let identityMod ={
+      ... this.identity,
+      'permisos': this.userPermisos
     }
+
+    this._ventasService.putVenta(this.ventag.idVenta, this.ventag, this.lista_productoVentag, identityMod, this.motivoEdicion).subscribe(
+      response =>{
+        console.log(response);
+      }, error =>{
+        console.log(error)
+      }
+    );
   }
 
   // Metodos del  modal
@@ -1024,10 +1007,121 @@ export class PuntoDeVentaEditarComponent implements OnInit {
   }
 
   /******** NUEVO CODIGO*/
+  /**
+   * @description
+   * Muestra modal para capturar el motivo, una vez capturado
+   * comienza a cargar la informacion de la venta
+   */
   modal(){
     this.modalService.open(this.mitempalte, {ariaLabelledBy: 'modal-basic-title', size: 'md', backdrop:'static'});
     //console.log(this.mAlertaExistencia)
   }
+
+  /**
+   * @description
+   * Revisa que el motivo tenga mas de 10 caracteres, si es asi
+   * cierra modal, notifica que fue capturado el motivo y 
+   * comienza a cargar la informacion de la venta
+   */
+  almacenaMotivo(){
+    if(this.motivoEdicion.length >= 10){
+      //cerramos modal
+      this.modalService.dismissAll();
+      //notificamos
+      this.messageService.add({severity:'success', summary:'Realizado', detail: 'El motivo fue capturado.'});
+      //asignamos informacion usuario y cargamos detalle venta
+      this.identity = this._empleadoService.getIdentity();
+      this.getTiposVentas();
+      this.getDetallesVenta();
+    } else {
+      this.messageService.add({severity:'error', summary:'Advertencia', detail: 'El motivo de modificacón tiene que contener minimo 10 caracteres.'});
+    }
+  }
+
+  /**
+   * @description
+   * Redirecciona al componente de ventas-realizadas-buscar, al hacer
+   * click en el boton cancelar del modal
+   */
+  cancelaEdicion(){
+    this._router.navigate(['/ventas-modulo/ventas-realizadas-buscar']);
+    this.modalService.dismissAll();
+  }
+
+  /**
+   * @description
+   * Obtiene la informacion de la venta a modificar.
+   */
+  getDetallesVenta(){
+    //Mostramos spiner de cargando
+    this.isLoadingDetallesVenta = true;
+    //notificamos que la inforamcion se esta cargando
+    this.messageService.add({severity:'warn', summary:'Cargando', detail: 'Cargando informacion de la venta.'});
+    //obtenemos el id de la ruta
+    this._route.params.subscribe( params =>{
+      //la asignamos
+      let idVenta = + params['idVenta'];
+      //ejecutamos servicio que trae la informacion
+      this._ventasService.getDetallesVenta(idVenta).subscribe(
+        response =>{
+          if(response.status == 'success'){
+
+            this.ventag.idVenta = response.venta[0]['idVenta'];
+            this.ventag.idCliente = response.venta[0]['idCliente'];
+            this.ventag.idEmpleado = response.venta[0]['idEmpleado'];
+            this.ventag.cdireccion = response.venta[0]['cdireccion'];
+            this.ventag.observaciones = response.venta[0]['observaciones'];
+            this.ventag.idStatus = response.venta[0]['idStatus'];
+            this.ventag.subtotal = response.venta[0]['subtotal'];
+            this.ventag.descuento = response.venta[0]['descuento'];
+            this.ventag.total = response.venta[0]['total'];
+            //cargamos productos
+            this.lista_productoVentag = response.productos_ventasg;
+
+            this.lista_productoVentag.forEach(element => {
+              element.comision = element.precio * 0.03;
+            });
+            //cargamos cliente
+            this.seleccionarCliente(this.ventag.idCliente);
+
+
+            this.messageService.add({severity:'success', summary:'Realizado', detail: 'Informacion cargada exitosamente.'});
+            this.isLoadingDetallesVenta = false;
+            //console.log(response);
+            //console.log(this.lista_productoVentag);
+          } else{
+            this.messageService.add({severity:'error', summary:'Error', detail: 'Fallo al obtener la informacion de la venta.'});
+            console.log(response);
+          }
+        }, error =>{
+          this.messageService.add({severity:'error', summary:'Error', detail: 'Fallo al obtener la informacion de la venta.'});
+          console.log(error);
+        }
+      );
+    })
+  }
+
+  confirmVenta() {
+    this._confirmationService.confirm({
+        message: '¿Esta seguro(a) que desea terminar la venta?',
+        header: 'Advertencia',
+        icon: 'pi pi-exclamation-triangle',
+        accept: () => {
+            //this.messageService.add({severity:'info', summary:'Confirmado', detail:'Venta'});
+            this.creaVenta();
+        },
+        reject: (type:any) => {
+            switch(type) {
+                case ConfirmEventType.REJECT:
+                    this.messageService.add({severity:'warn', summary:'Cancelado', detail:'Confirmacion de venta cancelada.'});
+                break;
+                case ConfirmEventType.CANCEL:
+                    this.messageService.add({severity:'warn', summary:'Cancelado', detail:'Confirmacion de venta cancelada.'});
+                break;
+            }
+        }
+    });
+}
   
   /******** */
 
