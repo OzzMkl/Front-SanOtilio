@@ -99,6 +99,10 @@ import { RequisicionBuscarComponent } from './components/compras/requisiciones/r
 import { RequisicionEditarComponent } from './components/compras/requisiciones/requisicion-editar/requisicion-editar.component';
 import { PuntoDeVentaEditarComponent } from './components/ventas/punto-de-venta-editar/punto-de-venta-editar.component';
 import { OrdencompraBuscarComponent } from './components/compras/ordenes-compras/ordencompra-buscar/ordencompra-buscar.component';
+import { TraspasoModuloComponent } from './components/inventario/traspasos/traspaso-modulo/traspaso-modulo.component';
+import { TraspasoAgregarComponent } from './components/inventario/traspasos/traspaso-agregar/traspaso-agregar.component';
+import { TraspasoBuscarComponent } from './components/inventario/traspasos/traspaso-buscar/traspaso-buscar.component';
+import { TraspasoEditarComponent } from './components/inventario/traspasos/traspaso-editar/traspaso-editar.component';
 
 
 
@@ -172,7 +176,11 @@ import { OrdencompraBuscarComponent } from './components/compras/ordenes-compras
     RequisicionBuscarComponent,
     RequisicionEditarComponent,
     PuntoDeVentaEditarComponent,
-    OrdencompraBuscarComponent
+    OrdencompraBuscarComponent,
+    TraspasoModuloComponent,
+    TraspasoAgregarComponent,
+    TraspasoBuscarComponent,
+    TraspasoEditarComponent
   ],
   imports: [
     BrowserModule,
