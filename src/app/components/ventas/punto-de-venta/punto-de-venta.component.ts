@@ -16,13 +16,13 @@ import { Producto_ventasg } from 'src/app/models/productoVentag';
 //NGBOOTSTRAP-modal
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 //primeng
-import { MessageService } from 'primeng/api';
+import { MessageService, ConfirmationService, ConfirmEventType } from 'primeng/api';
 
 @Component({
   selector: 'app-punto-de-venta',
   templateUrl: './punto-de-venta.component.html',
   styleUrls: ['./punto-de-venta.component.css'],
-  providers:[ProductoService, MessageService]
+  providers:[ProductoService, MessageService, ConfirmationService]
 })
 export class PuntoDeVentaComponent implements OnInit {
   //cerrar modal
@@ -103,6 +103,7 @@ export class PuntoDeVentaComponent implements OnInit {
     private _modulosService: ModulosService,
     private _router:Router,
     private _http: HttpClient,
+    private _confirmationService: ConfirmationService,
     private messageService: MessageService ) {
     //declaramos modelos
     this.ventag = new Ventag(0,0,1,'',1,null,0,0,0,0,'','',0);
@@ -1013,5 +1014,27 @@ export class PuntoDeVentaComponent implements OnInit {
       });
     }
   }
+
+  confirmVenta() {
+    this._confirmationService.confirm({
+        message: '¿Esta seguro(a) que desea terminar la venta?',
+        header: 'Advertencia',
+        icon: 'pi pi-exclamation-triangle',
+        accept: () => {
+            //this.messageService.add({severity:'info', summary:'Confirmado', detail:'Venta'});
+            this.creaVenta();
+        },
+        reject: (type:any) => {
+            switch(type) {
+                case ConfirmEventType.REJECT:
+                    this.messageService.add({severity:'warn', summary:'Cancelado', detail:'Confirmacion de venta cancelada.'});
+                break;
+                case ConfirmEventType.CANCEL:
+                    this.messageService.add({severity:'warn', summary:'Cancelado', detail:'Confirmacion de venta cancelada.'});
+                break;
+            }
+        }
+    });
+}
   
 }

@@ -668,11 +668,11 @@ export class PuntoDeVentaEditarComponent implements OnInit {
     this._ventasService.putVenta(this.ventag.idVenta, this.ventag, this.lista_productoVentag, identityMod, this.motivoEdicion).subscribe(
       response =>{
         if(response.status == 'success'){
-          this.messageService.add({severity:'success', summary:'Alerta', detail:response.message});
+          this.messageService.add({severity:'success', summary:'Alerta', detail:response.message, sticky:true});
           
-          setInterval(()=>{
-              this._router.navigate(['./ventas-modulo/ventas-realizadas-buscar']);
-          },2000);
+          // setInterval(()=>{
+          //     this._router.navigate(['./ventas-modulo/ventas-realizadas-buscar']);
+          // },2000);
         }
         //console.log(response);
       }, error =>{

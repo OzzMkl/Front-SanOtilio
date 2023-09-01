@@ -178,8 +178,9 @@
                 <button class="btn btn-secondary form-control" (click)="modalAlertaExistencia(mAlertaExistencia)"><i class="bi bi-file-earmark-medical"></i> Cotizacion</button>
             </div>
             <br>
+            <p-confirmDialog [style]="{width: '50vw'}" [baseZIndex]="10000" acceptLabel="Si" rejectButtonStyleClass="p-button-text"></p-confirmDialog>
             <div class="col">
-                <button class="btn btn-success form-control" (click)="creaVenta()"><i class="bi bi-receipt-cutoff"> </i> Ticket</button>
+                <button class="btn btn-success form-control" (click)="confirmVenta()"><i class="bi bi-receipt-cutoff"> </i> Ticket</button>
             </div>
             <br>
             <div class="col">
