@@ -85,7 +85,7 @@ export class VentasService {
     return this._http.post(this.url+'ventas/guardarProductosVenta',params, {headers:this.headers} );
   }
 
-  putVenta( idVenta:number, ventasg:any, lista_productoVentag: Array<any>, identity: Array<any>, motivoEdicion: string){
+  putVenta( idVenta:number, ventasg:any, lista_productoVentag: Array<any>, identity: Array<any>, motivoEdicion: string):Observable<any>{
     const combinado = {
       'ventasg': ventasg,
       'lista_productoVentag': lista_productoVentag,
