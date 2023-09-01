@@ -14,6 +14,9 @@ import { Compra } from 'src/app/models/compra'
 import { Producto_compra } from 'src/app/models/producto_compra';
 //Modal
 import { NgbDateStruct, NgbModal,ModalDismissReasons, NgbCalendar } from '@ng-bootstrap/ng-bootstrap';
+//Router
+import { Router } from '@angular/router';
+
 
 @Component({
   selector: 'app-compra-editar',
@@ -113,7 +116,8 @@ export class CompraEditarComponent implements OnInit {
     private _medidaService: MedidaService,
     private _impuestoService: ImpuestoService,
     public _compraService : CompraService,
-    private calendar: NgbCalendar
+    private calendar: NgbCalendar,
+    public _router: Router
   ) {
       this.compra = new Compra(0,null,0,0,0,0,0,0,null,'',false,null); 
       this.producto_compra = new Producto_compra(0,0,0,0,0,0,null,0,null,null,null,null,null,0,null);
@@ -133,11 +137,13 @@ export class CompraEditarComponent implements OnInit {
   /**ngOnInit */
     getCompra(){
       this._route.params.subscribe( params =>{
-        let id = + params['idCompra'];//la asignamos en una variable
-        //console.log('id',id);
+        let id:number = + params['idCompra'];//la asignamos en una variable
+        console.log( id);
         //Mandamos a traer la informacion de la orden de compra
         this._compraService.getDetailsCompra(id).subscribe(
           response =>{
+            console.log(response.compra.length);
+            console.log(response);
             if(response.status  == 'success' && response.compra.length > 0 && response.productos.length > 0){
               console.log('---INFORMACION DE COMPRA---');
               console.log('response.compra',response.compra);
@@ -204,7 +210,7 @@ export class CompraEditarComponent implements OnInit {
 
     loadUser(){//traemos la informacion del usuario
       this.identity = this._empleadoService.getIdentity();
-      console.log(this.identity);
+      //console.log(this.identity);
     }
 
     getImpuesto(){//traemos los impuestos
@@ -286,7 +292,7 @@ export class CompraEditarComponent implements OnInit {
           this.productoVer = response.producto;//informacion completa del producto para recorrerlo atraves del html
           console.log('productoVer',this.productoVer);
           this.producto_compra.descripcion = this.productoVer[0]['descripcion'];//asignamos variables
-          this.producto_compra.claveEx = this.productoVer[0]['claveEx'];
+          this.producto_compra.claveexterna = this.productoVer[0]['claveEx'];
           this.producto_compra.idProducto = this.productoVer[0]['idProducto'];
           this.producto_compra.cantidad = lpo.cantidad;
           this.productoVerM = response.productos_medidas;//informacion completa de productos_medidas para recorrerlo atraves del html
@@ -315,7 +321,7 @@ export class CompraEditarComponent implements OnInit {
               response => {
                 this.detailComp = response.compra;
                 console.log(this.detailComp);
-                this.createPDF();
+                //this.createPDF();
               },error =>{
                 console.log(error);
               });
@@ -377,37 +383,38 @@ export class CompraEditarComponent implements OnInit {
 
         this.compra.idStatus = 33;
         console.log(this.compra);
-        this._compraService.updateCompra(this.compra,this.Lista_compras,this.identity).subscribe(
+        this._compraService.updateCompra(this.compra,this.identity).subscribe(
         response =>{
-          console.log('response',response)
-          console.log('response.status',response.status)
-          // if(response.status == 'success'){
-          //   //console.log(response)       
-          //   //   this.toastService.show(' ⚠ Orden creada', { classname: 'bg-warning  text-bold', delay: 5000 });
-          //     // this._compraService.updateProductosCompra(this.Lista_compras).subscribe(
-          //     //   res =>{
-          //     //       console.log(res);
-          //     //       this.toastService.show(' ⚠ Compra creada exitosamente!', { classname: 'bg-success  text-light', delay: 5000 });
-          //     //       this.getLastCompra();
-          //     //       //this.createPDF();
-          //     //   },error =>{
-          //     //     console.log(<any>error);
-          //     //     this.toastService.show('Ups... Fallo al agregar los productos a la compra', { classname: 'bg-danger text-light', delay: 15000 });
-          //     //   });
-          //   //SUMAR EXISTENCIAG
-          //     // this._compraService.alterExistencia(this.Lista_compras).subscribe(
-          //     //   res =>{
-          //     //       console.log(res);
-          //     //       this.toastService.show(' ⚠ Existencia actualizada exitosamente!', { classname: 'bg-success  text-light', delay: 5000 });
-          //     //   },error =>{
-          //     //     console.log(<any>error);
-          //     //     this.toastService.show('Ups... Fallo al agregar los productos', { classname: 'bg-danger text-light', delay: 15000 });
-          //     //   });
+          console.log('response',response);
+          //console.log('response.status',response.status);
+          if(response.status == 'success'){
+            //console.log(response.compra[0]['idCompra']);
+            this.messageService.add({severity:'success', summary:'Éxito', detail:'Compra actualizada'});
+            console.log(this.Lista_compras);
+            console.log(this.identity['sub']);
 
-          // }
+              this._compraService.updateProductosCompra(response.compra[0]['idCompra'],this.identity['sub'],this.Lista_compras).subscribe(
+                res =>{
+                  if(res.status == 'success'){
+                    console.log(res);
+                    this.messageService.add({severity:'success', summary:'Éxito', detail:'Productos actualizados'});
+                  }else{
+                    
+                  }
+                    //this.getLastCompra();
+                    this.createPDF(response.compra[0]['idCompra']);
+                },error =>{
+                  console.log(<any>error);
+                  this.messageService.add({severity:'error', summary:'Error', detail:'Fallo al actualizar los productos de la compra'});
+                });
+          }else{
+            console.log('fallo');  
+            console.log(response);
+          }
         },error =>{
           console.log(<any>error);
-          // this.toastService.show('Ups... Fallo al crear la compra', { classname: 'bg-danger text-light', delay: 15000 });
+          this.messageService.add({severity:'error', summary:'Error', detail:'Fallo al actualizar la compra'});
+
         });
 
       }
@@ -452,7 +459,7 @@ export class CompraEditarComponent implements OnInit {
         //Reset variables 
         this.productoVer=[];
         this.productoVerM=[];
-        this.producto_compra.claveEx = '';
+        this.producto_compra.claveexterna = '';
         this.producto_compra.cantidad = 0 ;
         this.producto_compra.precio = 0 ;
         this.producto_compra.idImpuesto = 0 ;
@@ -540,7 +547,15 @@ export class CompraEditarComponent implements OnInit {
     }
   /** */
 
-  public createPDF():void{//Crear PDF
+  public createPDF(idCompra:number):void{//Crear PDF
+    this._compraService.getPDF(idCompra, this.identity['sub']).subscribe(
+      (pdf: Blob) => {
+        const blob = new Blob([pdf], {type: 'application/pdf'});
+        const url = window.URL.createObjectURL(blob);
+        window.open(url);
+        this._router.navigate(['./compra-modulo/compra-buscar']);
+      }
+    );
   } 
 
   /**

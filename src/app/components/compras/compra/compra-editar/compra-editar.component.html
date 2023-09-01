@@ -80,7 +80,7 @@
                     <label class="form-label" for="">Buscar producto</label>
                     <div class="input-group">
                         <span class="input-group-addon" id="sizing-addon2"><i class="bi-search" style="font-size: 1.5rem; color: black; left: 0;" (click)="open(content)"></i> </span>
-                        <input class="form-control" type="text" ngbTooltip="Solo busca por clave externa" name="claveEx" #claveEx="ngModel" [(ngModel)]="producto_compra.claveEx" (keydown)="consultarProducto($event)">
+                        <input class="form-control" type="text" ngbTooltip="Solo busca por clave externa" name="claveEx" #claveEx="ngModel" [(ngModel)]="producto_compra.claveexterna" (keydown)="consultarProducto($event)">
                     </div>
                 </div>
                 <div class="col-4">
@@ -185,7 +185,7 @@
                 </thead>
                 <tbody *ngFor="let p_d of Lista_compras | paginate:{itemsPerPage: 5, currentPage: pageActual}">
                     <tr (click)="editarProductoC(p_d)">
-                     <th scope="row">{{p_d.claveEx}}</th>
+                     <th scope="row">{{p_d.claveexterna}}</th>
                      <th scope="row">{{p_d.descripcion}}</th>
                      <th scope="row">{{p_d.nombreMedida}}</th>
                      <th scope="row">{{p_d.cantidad}}</th>

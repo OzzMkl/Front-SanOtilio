@@ -356,7 +356,7 @@ export class CompraAgregarIdComponent implements OnInit {
       //Reset variables 
       this.productoVer=[];
       this.productoVerM=[];
-      this.producto_compra.claveEx = '';
+      this.producto_compra.claveexterna = '';
       this.producto_compra.cantidad = 0 ;
       this.producto_compra.precio = 0 ;
       this.producto_compra.idImpuesto = 0 ;
@@ -461,7 +461,7 @@ export class CompraAgregarIdComponent implements OnInit {
         this.productoVer = response.producto;//informacion completa del producto para recorrerlo atraves del html
         console.log('productoVer',this.productoVer);
         this.producto_compra.descripcion = this.productoVer[0]['descripcion'];//asignamos variables
-        this.producto_compra.claveEx = this.productoVer[0]['claveEx'];
+        this.producto_compra.claveexterna = this.productoVer[0]['claveEx'];
         this.producto_compra.idProducto = this.productoVer[0]['idProducto'];
         this.producto_compra.cantidad = lpo.cantidad;
         this.productoVerM = response.productos_medidas;//informacion completa de productos_medidas para recorrerlo atraves del html
@@ -605,7 +605,8 @@ export class CompraAgregarIdComponent implements OnInit {
         }
       },error =>{
         console.log(<any>error);
-        this.messageService.add({severity:'error', summary:'Error', detail:'Fallo al crear la compra'});
+        console.log(error.error.message);
+        this.messageService.add({severity:'error', summary:'Error', detail:error.error.message});
       });
 
     }

@@ -2,6 +2,7 @@ import { HttpClient,HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { global } from "./global"; 
+import { identifierName } from '@angular/compiler';
 
 @Injectable({
   providedIn: 'root'
@@ -59,30 +60,39 @@ export class CompraService {
       return this._http.post(this.url+'compra/registerLote', {headers:this.headers} );
     }  
 
-    updateCompra(compra:any,Lista_compras:any,empleado:any):Observable<any>{
-      let combinado = {...compra,...Lista_compras,...empleado};
+    updateCompra(compra:any,empleado:any):Observable<any>{
+      let combinado = {...compra,...empleado};
       let json = JSON.stringify(combinado);
       let params = 'json='+json;
-      console.log('combinado',combinado);
-      console.log('json',json);
+      //console.log('combinado',combinado);
+      //console.log('json',json);
       return this._http.post(this.url+'compra/updateCompra',params, {headers:this.headers} );
     }
 
-    updateProductosCompra(ProductosCompra:any):Observable<any>{
+    updateProductosCompra(idCompra:number,idEmpleado:any,ProductosCompra:any):Observable<any>{
       let json = JSON.stringify(ProductosCompra);
       let params = 'json='+json;
-      return this._http.post(this.url+'compra/updateProductosCompra',params, {headers:this.headers} );
-    }
-
-    alterExistencia(ProductosCompra:any):Observable<any>{
-      let json = JSON.stringify(ProductosCompra);
-      let params = 'json='+json;
-      return this._http.post(this.url+'compra/alterExistencia',params, {headers:this.headers} );
+      let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');//mandamos el json con las cabeceras para que obtengamos el token
+      return this._http.post(this.url+'compra/updateProductosCompra/'+idCompra+'/'+idEmpleado,params, {headers:this.headers} );
     }
 
     getPDF(idcompra:number,idEmpleado:number):Observable<Blob>{
       return this._http.get(this.url+'compra/generatePDF/'+ idcompra+'/'+idEmpleado, {responseType:'blob'});
     }
+
+    cancelarCompra(idCompra:any,motivo:any,idEmpleado:any):Observable<any>{
+      let combinado = {'idCompra':idCompra,
+                       'motivo':motivo,
+                       'idEmpleado':idEmpleado
+      };
+      let json = JSON.stringify(combinado);
+      let params = 'json='+json;
+      //console.log('combinado',combinado);
+      //console.log('json',json);
+      return this._http.post(this.url+'compra/cancelarCompra',params, {headers:this.headers} );
+    }
+
+
 
 
   /**

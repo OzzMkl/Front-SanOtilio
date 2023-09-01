@@ -128,7 +128,7 @@ pageActual2: number = 0;
                   }
               
                 },error=>{
-                  this.messageService.add({severity:'error', summary:'Error', detail:'Fallo al actualizar la orden de compra'});
+                  this.messageService.add({severity:'error', summary:'Error', detail:'Fallo al actualizar los productos de la orden de compra'});
                 console.log(error);
               });
             }else{

@@ -1,3 +1,4 @@
+<p-toast></p-toast>
 <div class="container">
     <h3 class="text-center">Compras Recibidas</h3>
 </div>
@@ -84,7 +85,7 @@
                             <button type="button" class="btn btn-warning" (click)="modal.dismiss('Cross click')" [routerLink]="['../compra-editar',datosCompra.idCompra]" ngbTooltip="EDITAR"><i class="bi bi-pencil-square"></i><br></button>
                         </div>
                         <div class="col-auto">
-                            <button type="button" class="btn btn-danger" ngbTooltip="CANCELAR"><i class="bi bi-trash3"></i><br></button>
+                            <button type="button" class="btn btn-danger" (click)="open(confirmacion)" ngbTooltip="CANCELAR"><i class="bi bi-trash3"></i><br></button>
                         </div>
                     </div>
                     <hr>
@@ -184,5 +185,22 @@
                 </div>
             </form>
         </div>
+    </div>
+</ng-template>
+
+<ng-template #confirmacion let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Ingrese el motivo de la cancelacion de la compra</h4>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+        <div class="col-11">
+            <label for="motivo">Motivo</label>
+            <textarea class="form-control" name="observaciones" id="observaciones" cols="30" rows="2" [(ngModel)]="motivo" ></textarea>
+          </div>
+    </div>
+    <div class="modal-footer">
+        <p-confirmDialog [style]="{width: '50vw'}" [baseZIndex]="10000" acceptLabel="Si" rejectButtonStyleClass="p-button-text"></p-confirmDialog>
+        <button type="button" class="btn btn-success" (click)="confirmCan()">Guardar</button>
     </div>
 </ng-template>

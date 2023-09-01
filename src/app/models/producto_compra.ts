@@ -11,7 +11,7 @@ export class Producto_compra{//Modelo de la compra
         public updated_at: any,
         /**Se agregan campos extras para mostrar 
          * en la vista de la lista de compras */
-        public claveEx: any,
+        public claveexterna: any,
         public NombreImpuesto: any,
         public valorImpuesto: any,
         public descripcion: any,

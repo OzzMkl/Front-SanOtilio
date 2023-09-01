@@ -6,11 +6,15 @@ import { Subscription } from 'rxjs';
 import { NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
 import { EmpleadoService } from 'src/app/services/empleado.service';
 
+//primeng
+import { MessageService, ConfirmationService, ConfirmEventType } from 'primeng/api';
+
+
 @Component({
   selector: 'app-compra-buscar',
   templateUrl: './compra-buscar.component.html',
   styleUrls: ['./compra-buscar.component.css'],
-  providers: [CompraService]
+  providers: [CompraService,ConfirmationService,MessageService]
 })
 export class CompraBuscarComponent implements OnInit {
   public userPermisos:any
@@ -44,13 +48,16 @@ export class CompraBuscarComponent implements OnInit {
   };
 
   public identity: any;
+  public motivo:string = '';
 
   constructor(
     private _compraService: CompraService,
     private _router: Router,
     private _http: HttpClient,
     private _modalService: NgbModal,
-    private _empleadoService:EmpleadoService
+    private _empleadoService:EmpleadoService,
+    private _confirmationService: ConfirmationService,
+    private messageService: MessageService
   ) {}
 
   ngOnInit(): void {
@@ -339,5 +346,56 @@ export class CompraBuscarComponent implements OnInit {
     );
 
   } 
+
+  
+  confirmCan() {
+    if(this.motivo.length < 10){
+      this.messageService.add({severity:'error', summary:'Advertencia', detail: 'El motivo de la cancelación tiene que contener minimo 10 caracteres.'});
+    }
+    else{
+      this._confirmationService.confirm({
+        message: '¿Está seguro(a) que desea cancelar la compra?',
+        header: 'Advertencia',
+        icon: 'pi pi-exclamation-triangle',
+        accept: () => {
+            //this.messageService.add({severity:'info', summary:'Confirmado', detail:'Compra'});
+            this.cancelarCompra();
+        },
+        reject: (type:any) => {
+            switch(type) {
+                case ConfirmEventType.REJECT:
+                    this.messageService.add({severity:'warn', summary:'Cancelado', detail:'Cancelación de compra cancelada.'});
+                break;
+                case ConfirmEventType.CANCEL:
+                    this.messageService.add({severity:'warn', summary:'Cancelado', detail:'Cancelación de compra cancelada.'});
+                break;
+            }
+        }
+      });
+    }
+  }
+
+  public cancelarCompra(){
+    // console.log(this.detallesCompra[0]['idCompra']);
+    // console.log(this.motivo);
+    // console.log(this.identity['sub']);
+
+    this._compraService.cancelarCompra(this.detallesCompra[0]['idCompra'],this.motivo,this.identity['sub']).subscribe(
+      response =>{
+        if(response.status == 'success'){
+          console.log(response);
+          this.messageService.add({severity:'success', summary:'Éxito', detail:'Compra cancelada'});
+          this._modalService.dismissAll();
+          this.getComprasR();
+        }else{
+          this.messageService.add({severity:'error', summary:'Error', detail:'Fallo al cancelar la compra'});
+        }
+      },
+      error =>{
+        this.messageService.add({severity:'error', summary:'Error', detail:'Fallo al cancelar la compra'});
+        console.log(error);
+      }
+    )
+  }
 
 }

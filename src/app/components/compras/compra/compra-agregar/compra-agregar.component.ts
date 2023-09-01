@@ -211,7 +211,7 @@ export class CompraAgregarComponent implements OnInit {
       response =>{
         this.productoVer = response.producto;//informacion completa del producto para recorrerlo atraves del html
         this.producto_compra.descripcion = this.productoVer[0]['descripcion'];//asignamos variables
-        this.producto_compra.claveEx = this.productoVer[0]['claveEx'];
+        this.producto_compra.claveexterna = this.productoVer[0]['claveEx'];
         this.producto_compra.idProducto = this.productoVer[0]['idProducto'];
         this.producto_compra.nombreMedida = this.productoVer[0]['nombreMedida'];
         //console.log(this.productoVer);
