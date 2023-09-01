@@ -84,5 +84,17 @@ export class VentasService {
     let params = 'json='+json;
     return this._http.post(this.url+'ventas/guardarProductosVenta',params, {headers:this.headers} );
   }
+
+  putVenta( idVenta:number, ventasg:any, lista_productoVentag: Array<any>, identity: Array<any>, motivoEdicion: string){
+    const combinado = {
+      'ventasg': ventasg,
+      'lista_productoVentag': lista_productoVentag,
+      'identity': identity,
+      'motivo_edicion': motivoEdicion
+    };
+    let json = JSON.stringify(combinado);
+    let params = 'json='+json;
+    return this._http.put(this.url+'ventas/updateVenta/'+idVenta,params, {headers:this.headers} );
+  }
 }
 
