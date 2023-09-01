@@ -1,5 +1,10 @@
 <p-toast></p-toast>
-<div class="container-xxl">
+<div class="text-center text-primary" *ngIf="isLoadingDetallesVenta">
+    <div class="spinner-border" role="status" >
+        <span class="visually-hidden">Loading...</span>
+    </div>
+</div>
+<div class="container-xxl" *ngIf="!isLoadingDetallesVenta">
     <!-- DATOS CLIENTE -->
     <div>
         <h4 class="text-center">DATOS DEL CLIENTE</h4>
@@ -134,7 +139,7 @@
     <!-- FINAL VENTA -->
     <div class="row">
         <div class="col-10">
-            <label class="form-label">Observaciones</label>
+            <label class="form-label" for="observaciones">Observaciones</label>
             <textarea class="form-control" rows="3" maxlength="250" 
                         name="observaciones" #observaciones="ngModel"
                         placeholder="Ingrese unicamente observaciones"
@@ -145,15 +150,15 @@
             <br>
             <div class="row">
                 <div class="col-2">
-                    <label for="">Subtotal</label>
+                    <label class="form-label" for="subtotal">Subtotal</label>
                     <input class="form-control" type="text" value="{{ventag.subtotal | currency}}" readonly>
                 </div>
                 <div class="col-2">
-                    <label for="">Descuento</label>
+                    <label class="form-label" for="descuento">Descuento</label>
                     <input class="form-control" type="text" value="{{ventag.descuento | currency}}" readonly>
                 </div>
                 <div class="col-2">
-                    <label for="">Total</label>
+                    <label class="form-label" for="total">Total</label>
                     <input class="form-control" type="text" value="{{ventag.total | currency}}" readonly>
                 </div>
                 <div class="col-3">
@@ -175,8 +180,9 @@
                 <button class="btn btn-secondary form-control" (click)="modalAlertaExistencia(mAlertaExistencia)"><i class="bi bi-file-earmark-medical"></i> Cotizacion</button>
             </div>
             <br>
+            <p-confirmDialog [style]="{width: '50vw'}" [baseZIndex]="10000" acceptLabel="Si" rejectButtonStyleClass="p-button-text"></p-confirmDialog>
             <div class="col">
-                <button class="btn btn-success form-control" (click)="creaVenta()"><i class="bi bi-receipt-cutoff"> </i> Ticket</button>
+                <button class="btn btn-success form-control" (click)="confirmVenta()"><i class="bi bi-receipt-cutoff"> </i> Ticket</button>
             </div>
             <br>
             <div class="col">
@@ -752,10 +758,10 @@
     </div>
     <div class="modal-footer">
         <div class="col">
-            <button class="btn btn-danger form-control" (click)="modal.dismiss()">Cancelar</button>
+            <button class="btn btn-danger form-control" (click)="cancelaEdicion()">Cancelar</button>
         </div>
         <div class="col">
-            <button class="btn btn-success form-control">Guardar</button>
+            <button class="btn btn-success form-control" (click)="almacenaMotivo()">Guardar</button>
         </div>
     </div>
 </ng-template>
