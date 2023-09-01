@@ -96,5 +96,15 @@ export class VentasService {
     let params = 'json='+json;
     return this._http.put(this.url+'ventas/updateVenta/'+idVenta,params, {headers:this.headers} );
   }
+
+  cancelaVenta(idVenta:number, identity: Array<any>, motivoCancelacion: string):Observable<any>{
+    const combinado = {
+      'identity': identity,
+      'motivo_cancelacion': motivoCancelacion
+    };
+    let json = JSON.stringify(combinado);
+    let params = 'json='+json;
+    return this._http.post(this.url+'ventas/cancelaVenta/'+idVenta,params, {headers:this.headers} );
+  }
 }
 

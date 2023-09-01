@@ -1,3 +1,4 @@
+<p-toast></p-toast>
 <div class="container">
     <h3 class="text-center">Ver ventas</h3>
 </div>
@@ -79,7 +80,7 @@
                                 [routerLink]="['../../punto-de-venta-editar',v.idVenta]" (click)="modal.dismiss('Cross click')">
                         <i class="bi bi-pencil-square" ></i><br>
                     </button>
-                    <button *ngIf="userPermisos.cancelar == 1" type="button" class="btn btn-danger me-md-2" ngbTooltip="CANCELAR"><i class="bi bi-trash3" ></i><br></button>
+                    <button *ngIf="userPermisos.cancelar == 1" type="button" class="btn btn-danger me-md-2" (click)="openModalMotivo(mMotivoCancelacion)" ngbTooltip="CANCELAR"><i class="bi bi-trash3" ></i><br></button>
                 </div>
             </div>
             <div class="row">
@@ -140,3 +141,26 @@
         </div>
     </div>
 </ng-template>
+<!-- Modal Motivo Cncelacion -->
+<ng-template #mMotivoCancelacion let-modal>
+    <div class="modal-header">
+        <h4>Ingresa el motivo de modificacion</h4>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+        <div class="col-auto">
+            <textarea class="form-control" name="motivoCancelacion" id="motivoCancelacion" 
+                        cols="3" rows="2" [(ngModel)]="motivoCancelacion" ngModel></textarea>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <div class="col">
+            <button class="btn btn-danger form-control" >Cancelar</button>
+        </div>
+        <div class="col">
+            <button class="btn btn-success form-control" (click)="almacenaMotivo()" >Guardar</button>
+        </div>
+    </div>
+</ng-template>
+
+<p-confirmDialog [style]="{width: '50vw'}" [baseZIndex]="10000" acceptLabel="Si" rejectButtonStyleClass="p-button-text"></p-confirmDialog>
