@@ -243,7 +243,17 @@ export class AppComponent implements OnInit, DoCheck{
           }]
         },{
           label: 'Traspasos',
-          icon: 'pi pi-fw pi-sync'
+          icon: 'pi pi-fw pi-sync',
+          routerLink:'traspaso-modulo/traspaso-buscar',
+          items:[{
+            label:'Agregar traspaso',
+            icon:'',
+            routerLink:'traspaso-modulo/traspaso-agregar'
+          },{
+            label:'Editar traspaso',
+            icon:'',
+            routerLink:'traspaso-modulo/traspaso-editar'
+          }]
         },{
           label: 'Clasificaciones',
           icon: 'pi pi-fw pi-sitemap',
