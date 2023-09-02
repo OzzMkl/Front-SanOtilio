@@ -39,6 +39,11 @@ import { ProductoVerComponent } from './components/inventario/productos/producto
 import { ProductoDeshabilitadosComponent } from './components/inventario/productos/producto-deshabilitados/producto-deshabilitados.component';
 import { ProductoEditarComponent } from './components/inventario/productos/producto-editar/producto-editar.component';
 
+import { TraspasoModuloComponent } from './components/inventario/traspasos/traspaso-modulo/traspaso-modulo.component';
+import { TraspasoBuscarComponent } from './components/inventario/traspasos/traspaso-buscar/traspaso-buscar.component';
+import { TraspasoAgregarComponent } from './components/inventario/traspasos/traspaso-agregar/traspaso-agregar.component';
+import { TraspasoEditarComponent } from './components/inventario/traspasos/traspaso-editar/traspaso-editar.component';
+
 import { ClasificacionModuloComponent } from './components/inventario/taxonomia/clasificacion-modulo/clasificacion-modulo.component';
 
 import { PuntoDeVentaComponent } from './components/ventas/punto-de-venta/punto-de-venta.component';
@@ -73,6 +78,8 @@ import { CotizacionGuard } from './guards/cotizacion.guard';
 import { ClienteGuard } from './guards/cliente.guard';
 import { ProductosGuard } from './guards/productos.guard';
 import { RequisicionGuard } from './guards/requisicion.guard';
+
+
 
 
 const routes: Routes = [
@@ -152,6 +159,14 @@ const routes: Routes = [
       {path: 'producto-ver/:idProducto', component: ProductoVerComponent},
       {path: 'producto-editar/:idProducto', component:ProductoEditarComponent}
    ]},
+  {path:'traspaso-modulo', component: TraspasoModuloComponent,
+    children:
+    [
+      {path: 'traspaso-buscar', component: TraspasoBuscarComponent},
+      {path: 'traspaso-agregar', component: TraspasoAgregarComponent},
+      {path: 'traspaso-editar', component: TraspasoEditarComponent}
+      
+    ]},
   {path: 'clasificacion-modulo',component: ClasificacionModuloComponent},
   {path: '**', component: ErrorComponent}
   
