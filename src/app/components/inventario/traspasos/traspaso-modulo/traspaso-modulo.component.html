@@ -1,1 +1,20 @@
-<p>traspaso-modulo works!</p>
+<p-toast></p-toast>
+<div class="container">
+    <br>
+    <div class="row justify-content-between">
+        <div class="col-5">
+            <h2>Modulo de traspasos</h2>
+        </div>
+        <div class="col-auto">
+                <button pButton pRipple type="button" class="p-button-rounded p-button-success me-md-2" icon="pi pi-check"
+                        [routerLink]="['traspaso-agregar']" *ngIf="userPermisos.agregar == 1" pTooltip="Agregar" tooltipPosition="top" >
+                </button>
+            
+                <button pButton pRipple type="button" class="p-button-rounded me-md-2" icon="pi pi-search"
+                        [routerLink]="['traspaso-buscar']" *ngIf="userPermisos.ver == 1" pTooltip="Buscar" tooltipPosition="top">
+                </button>
+        </div>
+    </div>
+</div>
+<hr>
+<router-outlet></router-outlet>

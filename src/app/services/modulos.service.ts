@@ -38,6 +38,11 @@ export class ModulosService {
                 idSubModulo:6
               }
 
+  public pTras: propModulo ={
+    idModulo:5,
+    idSubModulo:13
+  }
+
   constructor() { }
 
   modsInventario(){
@@ -66,5 +71,9 @@ export class ModulosService {
 
   modsOrdendeCompra(){
     return this.pOrdC;
+  }
+
+  modsTraspaso(){
+    return this.pTras;
   }
 }
