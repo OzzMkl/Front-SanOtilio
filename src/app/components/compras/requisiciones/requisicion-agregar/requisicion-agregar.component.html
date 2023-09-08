@@ -136,7 +136,7 @@
                     <th>Marca</th>
                 </tr>
             </thead>
-            <tbody *ngFor="let pr of productos | paginate:{id:'pcModal',itemsPerPage: itemsPerPage, currentPage: pageActual,totalItems:totalPages}">
+            <tbody *ngFor="let pr of productos | paginate:{id:'pcModal',itemsPerPage: itemsPerPageMod, currentPage: pageActualMod,totalItems:totalPagesMod}">
                 <tr (click)="consultarProductoModal(pr.idProducto)" (click)="modal.dismiss('Cross click')">
                     <th scope="row">{{pr.claveEx}}</th>
                     <th scope="row">{{pr.cbarras}}</th>
@@ -147,7 +147,7 @@
           </table>
             <pagination-controls 
                     id="pcModal" 
-                    (pageChange)="getPage(pageActual = $event)"
+                    (pageChange)="getPage(pageActualMod = $event)"
                     previousLabel="Anterior"
                     nextLabel="Siguiente" >
             </pagination-controls>

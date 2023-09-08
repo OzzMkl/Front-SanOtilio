@@ -107,11 +107,11 @@ export class RequisicionAgregarComponent implements OnInit {
           //asignamos datos a varibale para poder mostrarla en la tabla
           this.productos = response.productos.data;
           //navegacion de paginacion
-          this.totalPages = response.productos.total;
-          this.itemsPerPage = response.productos.per_page;
-          this.pageActual = response.productos.current_page;
-          this.next_page = response.productos.next_page_url;
-          this.path = response.productos.path;
+          this.totalPagesMod = response.productos.total;
+          this.itemsPerPageMod = response.productos.per_page;
+          this.pageActualMod = response.productos.current_page;
+          this.next_pageMod = response.productos.next_page_url;
+          this.pathMod = response.productos.path;
 
           //una vez terminado quitamos el spinner
           this.isLoading=false;
@@ -340,7 +340,7 @@ export class RequisicionAgregarComponent implements OnInit {
     //iniciamos spinner
     this.isLoading = true;
 
-    this._http.get(this.path+'?page='+page).subscribe(
+    this._http.get(this.pathMod+'?page='+page).subscribe(
       (response:any) => {
         
         //asignamos datos a varibale para poder mostrarla en la tabla
