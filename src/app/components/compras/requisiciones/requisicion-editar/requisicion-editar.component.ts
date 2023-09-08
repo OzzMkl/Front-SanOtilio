@@ -14,6 +14,7 @@ import { Producto_requisicion } from 'src/app/models/producto_requisicion';
 import { NgbModal, ModalDismissReasons, NgbDateStruct} from '@ng-bootstrap/ng-bootstrap';
 //Router
 import { Router } from '@angular/router';
+import { timer } from 'rxjs';
 
 @Component({
   selector: 'app-requisicion-editar',
@@ -212,14 +213,15 @@ export class RequisicionEditarComponent implements OnInit {
       this._requisicionservice.updateRequisicion(this.requisicion.idReq,this.requisicion).subscribe(
         response =>{
           if(response.status == 'success'){
-            console.log(response);  
+            console.log(response.requisicion[0]['idReq']);  
             this.messageService.add({severity:'success', summary:'Éxito', detail:'Requisicion modificada'});
             this._requisicionservice.updateProductosReq(this.requisicion.idReq,this.productosdetailReq).subscribe(
                res =>{
                    //console.log(res);
                   this.messageService.add({severity:'success', summary:'Éxito', detail:'Productos agregados'});
                   //this.getDetailsReq();
-                  //this.createPDF();
+                  this.generaPDF(response.requisicion[0]['idReq']);
+                  
                },error =>{
                 console.log(<any>error);
                 this.messageService.add({severity:'error', summary:'Error', detail:'Fallo al actualizar los productos de la requisicion'});
@@ -233,6 +235,11 @@ export class RequisicionEditarComponent implements OnInit {
          this.messageService.add({severity:'error', summary:'Error', detail:'Fallo al crear la requisicion'});
         });
     }
+  }
+  
+
+  requisicionBuscar(){
+    this._router.navigate(['./requisicion-modulo/requisicion-buscar']);
   }
 
   editarProductoO(p_d:any){//metodo para editar la lista de compras
@@ -275,6 +282,7 @@ export class RequisicionEditarComponent implements OnInit {
         const blob = new Blob([pdf], {type: 'application/pdf'});
         const url = window.URL.createObjectURL(blob);
         window.open(url);
+        this._router.navigate(['./requisicion-modulo/requisicion-buscar']);
       }
     );
   }

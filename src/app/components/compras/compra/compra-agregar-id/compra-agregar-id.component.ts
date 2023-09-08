@@ -324,14 +324,13 @@ export class CompraAgregarIdComponent implements OnInit {
     console.log('capturar',datos.idProdMedida);
     console.log('Caducidad: ',this.producto_compra.caducidad);
 
-    //Asignar idProdMedida y nombreMedida antes de capturar
-    this.medidaActualizada = this.productoVerM.find( (x:any) => x.idProdMedida == datos.idProdMedida);
-    this.producto_compra.idProdMedida = parseInt(this.medidaActualizada.idProdMedida);
-    this.producto_compra.nombreMedida = this.medidaActualizada.nombreMedida;
+    
 
     
     if(this.producto_compra.cantidad <= 0){
       this.messageService.add({severity:'error', summary:'Error', detail:'No se pueden agregar productos con cantidad igual o menor a 0'});
+    }else if(datos.idProdMedida == 0){
+      this.messageService.add({severity:'error', summary:'Error', detail:'Falta agregar la medida'});
     }else if(this.producto_compra.precio < 0 ){
       this.messageService.add({severity:'error', summary:'Error', detail:'No se pueden agregar productos con precio menor a 0'});
     }else if(this.producto_compra.subtotal < 0){
@@ -343,6 +342,12 @@ export class CompraAgregarIdComponent implements OnInit {
       //verificamos si la lista de compras ya contiene el producto buscandolo por idProducto
       this.messageService.add({severity:'error', summary:'Error', detail:'Ese producto ya esta en la lista'});
     }else{
+
+      //Asignar idProdMedida y nombreMedida antes de capturar
+      this.medidaActualizada = this.productoVerM.find( (x:any) => x.idProdMedida == datos.idProdMedida);
+      this.producto_compra.idProdMedida = parseInt(this.medidaActualizada.idProdMedida);
+      this.producto_compra.nombreMedida = this.medidaActualizada.nombreMedida;
+
       this.Lista_compras.push({...this.producto_compra}); 
       this.isSearch=true;
 
@@ -353,30 +358,33 @@ export class CompraAgregarIdComponent implements OnInit {
       console.log('Subtotal: ',this.compra.subtotal);
       console.log('Total: ',this.compra.total);
 
-      //Reset variables 
-      this.productoVer=[];
-      this.productoVerM=[];
-      this.producto_compra.claveexterna = '';
-      this.producto_compra.cantidad = 0 ;
-      this.producto_compra.precio = 0 ;
-      this.producto_compra.idImpuesto = 0 ;
-      this.producto_compra.valorImpuesto = 0 ;
-      this.producto_compra.subtotal = 0 ;
-      this.producto_compra.caducidad = '' ;
-      this.producto_compra.idProdMedida = 0;
-      if(this.test == true){
-        this.modelP.day = 0;
-        this.modelP.month = 0;
-        this.modelP.year = 0;
-        this.test = false;
-      }
+      //Reset variables
+      this.resetVariables(); 
+
 
     }
-
-
-
     console.log('lista de compras',this.Lista_compras);
     
+  }
+
+  resetVariables(){
+    this.productoVer=[];
+    this.productoVerM=[];
+    this.producto_compra.claveexterna = '';
+    this.producto_compra.cantidad = 0 ;
+    this.producto_compra.precio = 0 ;
+    this.producto_compra.idImpuesto = 0 ;
+    this.producto_compra.valorImpuesto = 0 ;
+    this.producto_compra.subtotal = 0 ;
+    this.producto_compra.caducidad = '' ;
+    this.producto_compra.idProdMedida = 0;
+    if(this.test == true){
+      this.modelP.day = 0;
+      this.modelP.month = 0;
+      this.modelP.year = 0;
+      this.test = false;
+    }
+
   }
 
   consultarProductoModal(dato:any){
@@ -456,6 +464,7 @@ export class CompraAgregarIdComponent implements OnInit {
 
   getProd(lpo:any){//consultar producto y rellenar el formulario de producto
     console.log('getProd(lpo)',lpo);
+    this.resetVariables();
     this._productoService.getProdverDos(lpo.idProducto).subscribe(
       response =>{
         this.productoVer = response.producto;//informacion completa del producto para recorrerlo atraves del html
@@ -783,18 +792,20 @@ export class CompraAgregarIdComponent implements OnInit {
    )
  }
 
-   /**
-   * Omite el salto de linea del textarea de descripcion
-   * cuenta el numero de caracteres insertados
-   * @param event 
-   * omitimos los eventes de "enter""
-   */
-   omitirEnter(event:any){
-    this.conta = event.target.value.length;
-    if(event.which === 13){
-      event.preventDefault();
-      //console.log('prevented');
+  /**
+  * Omite el salto de linea del textarea de descripcion
+  * cuenta el numero de caracteres insertados
+  * @param event 
+  * omitimos los eventes de "enter""
+  */
+  omitirEnter(event:any){
+   this.conta = event.target.value.length;
+   if(event.which === 13){
+     event.preventDefault();
+     //console.log('prevented');
     }
   }
+
+  
 
 }

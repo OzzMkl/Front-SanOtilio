@@ -398,4 +398,21 @@ export class CompraBuscarComponent implements OnInit {
     )
   }
 
+  public editarCompra(compra:any){
+    //console.log(compra.created_at);
+    const resultado = new Date(compra.created_at);
+    resultado.setDate(resultado.getDate()+15);
+    //console.log(resultado);
+    const fechaActual = new Date();
+    //console.log(fechaActual);
+    if(resultado>fechaActual){
+      //this.messageService.add({severity:'success', summary:'Éxito', detail:'Si se puede'});
+      this._modalService.dismissAll('Cross click');
+      this._router.navigate(['../compra-modulo/compra-editar/',compra.idCompra]);
+    }else{
+      this.messageService.add({severity:'warn', summary:'Aviso', detail:'No se puede modificar una compra con más de 15 días de antiguedad'});
+    }
+
+  }
+
 }

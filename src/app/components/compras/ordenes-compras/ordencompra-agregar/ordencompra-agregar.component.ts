@@ -106,7 +106,7 @@ export class OrdencompraAgregarComponent implements OnInit {
       public _requisicionservice : RequisicionService,
       public _router: Router
     ) {
-    this.orden_compra = new Ordencompra(0,null,0,'',null,0,1,null);
+    this.orden_compra = new Ordencompra(0,null,0,'',null,0,0,null);
     this.producto_orden = new Producto_orden(0,0,0,0,'','','');
     this.Lista_compras = [];
     this.url = global.url;
