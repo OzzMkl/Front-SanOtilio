@@ -24,6 +24,7 @@ import {FieldsetModule} from 'primeng/fieldset';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { TableModule } from 'primeng/table';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { SpeedDialModule } from 'primeng/speeddial';
 
 
 
@@ -52,6 +53,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
     InputSwitchModule,
     TableModule,
     ConfirmDialogModule,
+    SpeedDialModule
   ],
   imports: [
     CommonModule,

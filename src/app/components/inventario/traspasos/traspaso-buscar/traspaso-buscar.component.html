@@ -1,1 +1,72 @@
-<p>traspaso-buscar works!</p>
+<p-toast></p-toast>
+<div class="container-fluid">
+    <h3 class="text-center">Buscar Traspasos</h3>
+    <br>
+    <!--CUADRO DE BUSQUEDA-->
+    <div class="input-group mb-2">
+        <div class="col-3">
+            <label class="form-label">Selecciona el traspaso</label>
+            <select class="form-select" name="tipoBusqueda" [(ngModel)]="tipoBusqueda" (ngModelChange)="selectBusqueda()" >
+                <option value="traspasoe" selected>Traspasos Enviados</option>
+                <option value="traspasor">Traspasos Recibidos</option>
+            </select>
+        </div>
+        <div class="col">
+            <label class="form-label">Escribe el traspaso a buscar</label>
+            <input type="search" class="form-control" name="search" placeholder="Ingrese solo numeros" [(ngModel)]="search" (ngModelChange)="selectBusqueda()">
+        </div>
+        <!-- <div class="col-1 d-flex justify-content-center">
+            <p-speedDial [model]="items" direction="down" showIcon="pi pi-bars" hideIcon="pi pi-times" class="p-button-rounded p-button-success me-md-2" ></p-speedDial>
+        </div> -->
+        <!-- <div class="col-2">
+            <label class="form-label">Fecha inicial</label>
+            <div class="input-group">
+                <input class="form-control" placeholder="aaaa-mm-dd" name="datInicial" [(ngModel)]="datInicial" ngbDatepicker #datInicialdp="ngbDatepicker" readonly>
+                <button class="btn btn-outline-secondary" (click)="datInicialdp.toggle()" type="button"><i class="bi bi-calendar-date-fill"></i></button>
+            </div>
+        </div>
+        <div class="col-2">
+            <label class="form-label">Fecha final</label>
+            <div class="input-group">
+                <input class="form-control" placeholder="aaaa-mm-dd" name="datFinal" [(ngModel)]="datFinal" ngbDatepicker #datFinaldp="ngbDatepicker" readonly>
+                <button class="btn btn-outline-secondary" (click)="datFinaldp.toggle()" type="button"><i class="bi bi-calendar-date-fill"></i></button>
+            </div>
+        </div> -->
+    </div>
+    <!-- SPINNER  -->
+    <div class="text-center text-primary" *ngIf="isLoading">
+        <br>
+        <div class="spinner-border" role="status" >
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+    <!-- FIN SPINNER  -->
+    <div *ngIf="!isLoading">
+        <table class="table table-sm table-dark table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Envia</th>
+                    <th scope="col">Recibe</th>
+                    <th scope="col">Fecha</th>
+                    <th scope="col">Observaciones</th> 
+                    <th scope="col">Usuario</th> 
+                    <!-- <th scope="col"></th> -->
+                </tr>
+            </thead>
+            <tbody *ngFor="let traspaso of traspasos | paginate: { itemsPerPage:itemsPerPage, currentPage: pageActual, totalItems:totalPages }">
+                <tr>
+                    <th scope="row">{{ traspaso.idTraspasoE ? traspaso.idTraspasoE : traspaso.idTraspasoR }}</th>
+                    <th scope="row">{{traspaso.sucursalEN}}</th>
+                    <th scope="row">{{traspaso.sucursalRN}}</th>
+                    <th scope="row">{{traspaso.created_at}}</th>
+                    <th scope="row">{{traspaso.observaciones}}</th>
+                    <th scope="row">{{traspaso.nombreEmpleado}}</th>
+                </tr>
+            </tbody>
+        </table>
+        <pagination-controls>
+
+        </pagination-controls>
+    </div>
+</div>
