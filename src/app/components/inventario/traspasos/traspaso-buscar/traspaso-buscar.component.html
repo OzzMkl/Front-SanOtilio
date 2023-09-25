@@ -59,7 +59,7 @@
                     <th scope="row">{{ traspaso.idTraspasoE ? traspaso.idTraspasoE : traspaso.idTraspasoR }}</th>
                     <th scope="row">{{traspaso.sucursalEN}}</th>
                     <th scope="row">{{traspaso.sucursalRN}}</th>
-                    <th scope="row">{{traspaso.created_at}}</th>
+                    <th scope="row">{{traspaso.created_at | date: 'dd/MM/yyyy'}}</th>
                     <th scope="row">{{traspaso.observaciones}}</th>
                     <th scope="row">{{traspaso.nombreEmpleado}}</th>
                 </tr>
