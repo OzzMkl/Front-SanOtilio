@@ -8,12 +8,12 @@ import { global } from "./global";
 })
 export class EmpresaService {
 
-  public url: string;
+  public url: string = global.url;
+  // public headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');
 
-  constructor( public _http: HttpClient) { this.url = global.url; }
+  constructor( public _http: HttpClient) {  }
 
   getDatosEmpresa():Observable<any>{
-    let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');
-    return this._http.get(this.url+'empresa/index', {headers:headers} );
+    return this._http.get(this.url+'empresa/index');
   }
 }
