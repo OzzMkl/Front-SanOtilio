@@ -606,7 +606,7 @@ export class OrdencompraAgregarComponent implements OnInit {
         response =>{
           if(response.status == 'success'){
             this.Lista_compras = response.ListaCompras;
-            //console.log(response.ListaCompras);
+            console.log(response.ListaCompras);
 
             //  this.requisiciones = response.requisicion.data;
             //  console.log('getReq',response.requisicion.data);
