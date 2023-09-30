@@ -83,6 +83,9 @@ export class ProductoEditarComponent implements OnInit {
  counter: number = 5;
  timerId:any;
 
+ ////
+ public preciosIncorrectos: { [key:string]: string } = {};
+
   constructor(
     private _productoService: ProductoService,
     private _medidaService: MedidaService,
@@ -256,6 +259,50 @@ export class ProductoEditarComponent implements OnInit {
   }
   /********************************************************************************************************************************* */
 
+  /**
+   * @description
+   * Verifica los precios adentro del submit
+   * Ocupa la funcion propia de la clase de Productos_medida
+   * Devuelve un true si algun precio es erroneo y en preciosIncorrectos se agrega el id del input de la tabla al que pertenece
+   * @returns boolean
+   */
+    verificaPreciosSubmit():boolean{
+      // iniciamos variables vacias
+      this.preciosIncorrectos = {};
+      var isCheck: boolean;
+
+      // revisamos que las medidas a revisar (tablas) sea mayor a cero
+      if(this.noMedida > 0){
+
+        // creamos ciclo como limite noMedida que seran las tablas a recorrer
+        for(let i = 1; i <= this.noMedida; i++){
+          // Creamos variables que nos ayudaran a crear el id del input de la tabla
+          const tabKey = `tab${i}`;
+          const precioKey = `precioMalo${tabKey}`;
+
+          // asociamos los datos de la tabla a revisar
+          const datosTab = this.listaProdMedida[i - 1];
+
+          // ejecutamos funcion del modelo, si retorna algo direfente a null
+          if(datosTab.comparePrices() != null){
+            // agregamos el valor del input y el id del input al que pertenece
+            this.preciosIncorrectos[precioKey] = `${tabKey}precio${datosTab.comparePrices()}`;
+          }
+        }
+        // Revisamos que la longitud de la variable sea mayor a cero para informar que si hay precios malos
+        if(Object.keys(this.preciosIncorrectos).length > 0){
+          isCheck = true;
+        } else{
+          isCheck = false;
+        }
+
+      } else{
+        isCheck = true;
+      }
+
+      return isCheck;
+    }
+
     /**
      * Permite mantener los precios establecidos al cambiar el precio de compra
      * Si el precio compra es mayor a un precio de cualquier medida este lo pone al precio de compra
@@ -267,18 +314,18 @@ export class ProductoEditarComponent implements OnInit {
         this.checkMantPorce = false;
         switch(this.noMedida){
           case 1:
-              var x5 = {target:{id:'precio5'}}; this.calculaPorcentaje(x5);
-              var x4 = {target:{id:'precio4'}}; this.calculaPorcentaje(x4);
-              var x3 = {target:{id:'precio3'}}; this.calculaPorcentaje(x3);
-              var x2 = {target:{id:'precio2'}}; this.calculaPorcentaje(x2);
-              var x1 = {target:{id:'precio1'}}; this.calculaPorcentaje(x1);
+              var x5 = {target:{id:'tab1precio5'}}; this.calculaPorcentaje(x5);
+              var x4 = {target:{id:'tab1precio4'}}; this.calculaPorcentaje(x4);
+              var x3 = {target:{id:'tab1precio3'}}; this.calculaPorcentaje(x3);
+              var x2 = {target:{id:'tab1precio2'}}; this.calculaPorcentaje(x2);
+              var x1 = {target:{id:'tab1precio1'}}; this.calculaPorcentaje(x1);
             break;
           case 2:
-              var x5 = {target:{id:'precio5'}}; this.calculaPorcentaje(x5);
-              var x4 = {target:{id:'precio4'}}; this.calculaPorcentaje(x4);
-              var x3 = {target:{id:'precio3'}}; this.calculaPorcentaje(x3);
-              var x2 = {target:{id:'precio2'}}; this.calculaPorcentaje(x2);
-              var x1 = {target:{id:'precio1'}}; this.calculaPorcentaje(x1);
+              var x5 = {target:{id:'tab1precio5'}}; this.calculaPorcentaje(x5);
+              var x4 = {target:{id:'tab1precio4'}}; this.calculaPorcentaje(x4);
+              var x3 = {target:{id:'tab1precio3'}}; this.calculaPorcentaje(x3);
+              var x2 = {target:{id:'tab1precio2'}}; this.calculaPorcentaje(x2);
+              var x1 = {target:{id:'tab1precio1'}}; this.calculaPorcentaje(x1);
 
               var z5 = {target:{id:'tab2precio5'}}; this.tab2calculaPorcentaje(z5);
               var z4 = {target:{id:'tab2precio4'}}; this.tab2calculaPorcentaje(z4);
@@ -287,11 +334,11 @@ export class ProductoEditarComponent implements OnInit {
               var z1 = {target:{id:'tab2precio1'}}; this.tab2calculaPorcentaje(z1);
             break;
           case 3:
-              var x5 = {target:{id:'precio5'}}; this.calculaPorcentaje(x5);
-              var x4 = {target:{id:'precio4'}}; this.calculaPorcentaje(x4);
-              var x3 = {target:{id:'precio3'}}; this.calculaPorcentaje(x3);
-              var x2 = {target:{id:'precio2'}}; this.calculaPorcentaje(x2);
-              var x1 = {target:{id:'precio1'}}; this.calculaPorcentaje(x1);
+              var x5 = {target:{id:'tab1precio5'}}; this.calculaPorcentaje(x5);
+              var x4 = {target:{id:'tab1precio4'}}; this.calculaPorcentaje(x4);
+              var x3 = {target:{id:'tab1precio3'}}; this.calculaPorcentaje(x3);
+              var x2 = {target:{id:'tab1precio2'}}; this.calculaPorcentaje(x2);
+              var x1 = {target:{id:'tab1precio1'}}; this.calculaPorcentaje(x1);
 
               var z5 = {target:{id:'tab2precio5'}}; this.tab2calculaPorcentaje(z5);
               var z4 = {target:{id:'tab2precio4'}}; this.tab2calculaPorcentaje(z4);
@@ -306,11 +353,11 @@ export class ProductoEditarComponent implements OnInit {
               var y1 = {target:{id:'tab3precio1'}}; this.tab3calculaPorcentaje(y1);
             break;
           case 4:
-              var x5 = {target:{id:'precio5'}}; this.calculaPorcentaje(x5);
-              var x4 = {target:{id:'precio4'}}; this.calculaPorcentaje(x4);
-              var x3 = {target:{id:'precio3'}}; this.calculaPorcentaje(x3);
-              var x2 = {target:{id:'precio2'}}; this.calculaPorcentaje(x2);
-              var x1 = {target:{id:'precio1'}}; this.calculaPorcentaje(x1);
+              var x5 = {target:{id:'tab1precio5'}}; this.calculaPorcentaje(x5);
+              var x4 = {target:{id:'tab1precio4'}}; this.calculaPorcentaje(x4);
+              var x3 = {target:{id:'tab1precio3'}}; this.calculaPorcentaje(x3);
+              var x2 = {target:{id:'tab1precio2'}}; this.calculaPorcentaje(x2);
+              var x1 = {target:{id:'tab1precio1'}}; this.calculaPorcentaje(x1);
 
               var z5 = {target:{id:'tab2precio5'}}; this.tab2calculaPorcentaje(z5);
               var z4 = {target:{id:'tab2precio4'}}; this.tab2calculaPorcentaje(z4);
@@ -331,11 +378,11 @@ export class ProductoEditarComponent implements OnInit {
               var w1 = {target:{id:'tab4precio1'}}; this.tab4calculaPorcentaje(w1);
             break;
           case 5:
-              var x5 = {target:{id:'precio5'}}; this.calculaPorcentaje(x5);
-              var x4 = {target:{id:'precio4'}}; this.calculaPorcentaje(x4);
-              var x3 = {target:{id:'precio3'}}; this.calculaPorcentaje(x3);
-              var x2 = {target:{id:'precio2'}}; this.calculaPorcentaje(x2);
-              var x1 = {target:{id:'precio1'}}; this.calculaPorcentaje(x1);
+              var x5 = {target:{id:'tab1precio5'}}; this.calculaPorcentaje(x5);
+              var x4 = {target:{id:'tab1precio4'}}; this.calculaPorcentaje(x4);
+              var x3 = {target:{id:'tab1precio3'}}; this.calculaPorcentaje(x3);
+              var x2 = {target:{id:'tab1precio2'}}; this.calculaPorcentaje(x2);
+              var x1 = {target:{id:'tab1precio1'}}; this.calculaPorcentaje(x1);
 
               var z5 = {target:{id:'tab2precio5'}}; this.tab2calculaPorcentaje(z5);
               var z4 = {target:{id:'tab2precio4'}}; this.tab2calculaPorcentaje(z4);
@@ -503,20 +550,44 @@ export class ProductoEditarComponent implements OnInit {
 
       //Revisamo si quieren actualizar precios
       if(this.checkMuestraPrecios){
-        this._productoService.updateProducto(this.producto,this.listaProdMedida,this.identity).subscribe(
-          response =>{
-            //console.log('asdasdasd :',response);
-            if(response.status == 'success'){
+        // Si actualiza preios entra la validacion
+        if(this.verificaPreciosSubmit()){
 
-               this._router.navigate(['./producto-modulo/producto-buscar']);
-               this.messageService.add({severity:'success', summary:'Alerta', detail:'Producto '+this.producto.claveEx+' actualizado correctamente'});
-             }
-          },
-          error =>{
-            //console.log(this.producto);
-            console.log('error ',error);
-            this.messageService.add({severity:'error', summary:'Error', detail:error});
-          });
+          // Si obtenemos un true recorremos el array con los id
+          for(const key in this.preciosIncorrectos){
+            // revisa que enverdad tenga la propiedad
+            if(this.preciosIncorrectos.hasOwnProperty(key)){
+              // asignamos el id
+              const idTab = this.preciosIncorrectos[key];
+              
+              var stylePrecioError = document.getElementById(idTab);
+              // Verificamos que al obtener el input este no sea vacio (undefined)
+              if(stylePrecioError != null){
+                // Asignamos style al input 
+                stylePrecioError.style.backgroundColor = "#FFB2B2";
+              }
+              this.messageService.add({severity:'error', summary:'Alerta', detail:'El precio ingresado es incorrecto.'});
+              //console.log(stylePrecioError);
+            }
+          }
+
+        } else{
+          this._productoService.updateProducto(this.producto,this.listaProdMedida,this.identity).subscribe(
+            response =>{
+              //console.log('asdasdasd :',response);
+              if(response.status == 'success'){
+  
+                 this._router.navigate(['./producto-modulo/producto-buscar']);
+                 this.messageService.add({severity:'success', summary:'Alerta', detail:'Producto '+this.producto.claveEx+' actualizado correctamente'});
+               }
+            },
+            error =>{
+              //console.log(this.producto);
+              console.log('error ',error);
+              this.messageService.add({severity:'error', summary:'Error', detail:error});
+            });
+        }
+        
       } //si no solo se guarda la informacion del producto
         else{
           this._productoService.putProducto(this.producto,this.identity).subscribe(
@@ -605,31 +676,31 @@ export class ProductoEditarComponent implements OnInit {
       switch(this.noMedida){
         case 1:
               this.datosTab1.idStatus = 31;
-              this.listaProdMedida.push({...this.datosTab1});
+              this.listaProdMedida.push(this.datosTab1);
             break;
         case 2:
               this.datosTab1.idStatus = 31;
               this.datosTab2.idStatus = 31;
-              this.listaProdMedida.push({...this.datosTab1},
-                                        {...this.datosTab2});
+              this.listaProdMedida.push(this.datosTab1,
+                                        this.datosTab2);
             break;
         case 3:
               this.datosTab1.idStatus = 31;
               this.datosTab2.idStatus = 31;
               this.datosTab3.idStatus = 31;
-              this.listaProdMedida.push({...this.datosTab1},
-                                        {...this.datosTab2},
-                                        {...this.datosTab3});
+              this.listaProdMedida.push(this.datosTab1,
+                                        this.datosTab2,
+                                        this.datosTab3);
             break;
         case 4:
               this.datosTab1.idStatus = 31;
               this.datosTab2.idStatus = 31;
               this.datosTab3.idStatus = 31;
               this.datosTab4.idStatus = 31;
-              this.listaProdMedida.push({...this.datosTab1},
-                                        {...this.datosTab2},
-                                        {...this.datosTab3},
-                                        {...this.datosTab4}); 
+              this.listaProdMedida.push(this.datosTab1,
+                                        this.datosTab2,
+                                        this.datosTab3,
+                                        this.datosTab4); 
             break;
         case 5:
               this.datosTab1.idStatus = 31;
@@ -637,11 +708,11 @@ export class ProductoEditarComponent implements OnInit {
               this.datosTab3.idStatus = 31;
               this.datosTab4.idStatus = 31;
               this.datosTab5.idStatus = 31;
-              this.listaProdMedida.push({...this.datosTab1},
-                                        {...this.datosTab2},
-                                        {...this.datosTab3},
-                                        {...this.datosTab4},
-                                        {...this.datosTab5}); 
+              this.listaProdMedida.push(this.datosTab1,
+                                        this.datosTab2,
+                                        this.datosTab3,
+                                        this.datosTab4,
+                                        this.datosTab5); 
             break;
       }
     }
@@ -659,22 +730,22 @@ export class ProductoEditarComponent implements OnInit {
       if(inputValue > 0){
         switch(this.noMedida){
           case 1:
-             this.datosTab1.precio5= this.datosTab1.precio5 + inputValue; var x5 = {target:{id:'precio5'}}; this.calculaPorcentaje(x5);
-             this.datosTab1.precio4= this.datosTab1.precio4 + inputValue; var x4 = {target:{id:'precio4'}}; this.calculaPorcentaje(x4);
-             this.datosTab1.precio3= this.datosTab1.precio3 + inputValue; var x3 = {target:{id:'precio3'}}; this.calculaPorcentaje(x3);
-             this.datosTab1.precio2= this.datosTab1.precio2 + inputValue; var x2 = {target:{id:'precio2'}}; this.calculaPorcentaje(x2);
-             this.datosTab1.precio1= this.datosTab1.precio1 + inputValue; var x1 = {target:{id:'precio1'}}; this.calculaPorcentaje(x1);
+             this.datosTab1.precio5= this.datosTab1.precio5 + inputValue; var x5 = {target:{id:'tab1precio5'}}; this.calculaPorcentaje(x5);
+             this.datosTab1.precio4= this.datosTab1.precio4 + inputValue; var x4 = {target:{id:'tab1precio4'}}; this.calculaPorcentaje(x4);
+             this.datosTab1.precio3= this.datosTab1.precio3 + inputValue; var x3 = {target:{id:'tab1precio3'}}; this.calculaPorcentaje(x3);
+             this.datosTab1.precio2= this.datosTab1.precio2 + inputValue; var x2 = {target:{id:'tab1precio2'}}; this.calculaPorcentaje(x2);
+             this.datosTab1.precio1= this.datosTab1.precio1 + inputValue; var x1 = {target:{id:'tab1precio1'}}; this.calculaPorcentaje(x1);
             break;
           case 2:
               
               suma2 = inputValue/ (this.datosTab1.unidad * this.datosTab2.unidad);
               suma2 = Math.round((suma2 + Number.EPSILON) * 100 ) / 100 ;
 
-              this.datosTab1.precio5= this.datosTab1.precio5 + inputValue; var x5 = {target:{id:'precio5'}}; this.calculaPorcentaje(x5);
-              this.datosTab1.precio4= this.datosTab1.precio4 + inputValue; var x4 = {target:{id:'precio4'}}; this.calculaPorcentaje(x4);
-              this.datosTab1.precio3= this.datosTab1.precio3 + inputValue; var x3 = {target:{id:'precio3'}}; this.calculaPorcentaje(x3);
-              this.datosTab1.precio2= this.datosTab1.precio2 + inputValue; var x2 = {target:{id:'precio2'}}; this.calculaPorcentaje(x2);
-              this.datosTab1.precio1= this.datosTab1.precio1 + inputValue; var x1 = {target:{id:'precio1'}}; this.calculaPorcentaje(x1);
+              this.datosTab1.precio5= this.datosTab1.precio5 + inputValue; var x5 = {target:{id:'tab1precio5'}}; this.calculaPorcentaje(x5);
+              this.datosTab1.precio4= this.datosTab1.precio4 + inputValue; var x4 = {target:{id:'tab1precio4'}}; this.calculaPorcentaje(x4);
+              this.datosTab1.precio3= this.datosTab1.precio3 + inputValue; var x3 = {target:{id:'tab1precio3'}}; this.calculaPorcentaje(x3);
+              this.datosTab1.precio2= this.datosTab1.precio2 + inputValue; var x2 = {target:{id:'tab1precio2'}}; this.calculaPorcentaje(x2);
+              this.datosTab1.precio1= this.datosTab1.precio1 + inputValue; var x1 = {target:{id:'tab1precio1'}}; this.calculaPorcentaje(x1);
 
               this.datosTab2.precio5= Math.round((this.datosTab2.precio5 + suma2 + Number.EPSILON)* 100)/100; var z5 = {target:{id:'tab2precio5'}}; this.tab2calculaPorcentaje(z5);
               this.datosTab2.precio4= Math.round((this.datosTab2.precio4 + suma2 + Number.EPSILON)* 100)/100; var z4 = {target:{id:'tab2precio4'}}; this.tab2calculaPorcentaje(z4);
@@ -689,11 +760,11 @@ export class ProductoEditarComponent implements OnInit {
               suma3 = inputValue/ (this.datosTab1.unidad * this.datosTab2.unidad * this.datosTab3.unidad);  
               suma3 = Math.round((suma3 + Number.EPSILON) * 100 ) / 100 ;
 
-              this.datosTab1.precio5= this.datosTab1.precio5 + inputValue; var x5 = {target:{id:'precio5'}}; this.calculaPorcentaje(x5);
-              this.datosTab1.precio4= this.datosTab1.precio4 + inputValue; var x4 = {target:{id:'precio4'}}; this.calculaPorcentaje(x4);
-              this.datosTab1.precio3= this.datosTab1.precio3 + inputValue; var x3 = {target:{id:'precio3'}}; this.calculaPorcentaje(x3);
-              this.datosTab1.precio2= this.datosTab1.precio2 + inputValue; var x2 = {target:{id:'precio2'}}; this.calculaPorcentaje(x2);
-              this.datosTab1.precio1= this.datosTab1.precio1 + inputValue; var x1 = {target:{id:'precio1'}}; this.calculaPorcentaje(x1);
+              this.datosTab1.precio5= this.datosTab1.precio5 + inputValue; var x5 = {target:{id:'tab1precio5'}}; this.calculaPorcentaje(x5);
+              this.datosTab1.precio4= this.datosTab1.precio4 + inputValue; var x4 = {target:{id:'tab1precio4'}}; this.calculaPorcentaje(x4);
+              this.datosTab1.precio3= this.datosTab1.precio3 + inputValue; var x3 = {target:{id:'tab1precio3'}}; this.calculaPorcentaje(x3);
+              this.datosTab1.precio2= this.datosTab1.precio2 + inputValue; var x2 = {target:{id:'tab1precio2'}}; this.calculaPorcentaje(x2);
+              this.datosTab1.precio1= this.datosTab1.precio1 + inputValue; var x1 = {target:{id:'tab1precio1'}}; this.calculaPorcentaje(x1);
 
               this.datosTab2.precio5= Math.round((this.datosTab2.precio5 + suma2 + Number.EPSILON)* 100)/100; var z5 = {target:{id:'tab2precio5'}}; this.tab2calculaPorcentaje(z5);
               this.datosTab2.precio4= Math.round((this.datosTab2.precio4 + suma2 + Number.EPSILON)* 100)/100; var z4 = {target:{id:'tab2precio4'}}; this.tab2calculaPorcentaje(z4);
@@ -717,11 +788,11 @@ export class ProductoEditarComponent implements OnInit {
               suma4 = inputValue/ (this.datosTab1.unidad * this.datosTab2.unidad * this.datosTab3.unidad * this.datosTab4.unidad);
               suma4 = Math.round((suma4 + Number.EPSILON) * 100 ) / 100 ;
 
-              this.datosTab1.precio5= this.datosTab1.precio5 + inputValue; var x5 = {target:{id:'precio5'}}; this.calculaPorcentaje(x5);
-              this.datosTab1.precio4= this.datosTab1.precio4 + inputValue; var x4 = {target:{id:'precio4'}}; this.calculaPorcentaje(x4);
-              this.datosTab1.precio3= this.datosTab1.precio3 + inputValue; var x3 = {target:{id:'precio3'}}; this.calculaPorcentaje(x3);
-              this.datosTab1.precio2= this.datosTab1.precio2 + inputValue; var x2 = {target:{id:'precio2'}}; this.calculaPorcentaje(x2);
-              this.datosTab1.precio1= this.datosTab1.precio1 + inputValue; var x1 = {target:{id:'precio1'}}; this.calculaPorcentaje(x1);
+              this.datosTab1.precio5= this.datosTab1.precio5 + inputValue; var x5 = {target:{id:'tab1precio5'}}; this.calculaPorcentaje(x5);
+              this.datosTab1.precio4= this.datosTab1.precio4 + inputValue; var x4 = {target:{id:'tab1precio4'}}; this.calculaPorcentaje(x4);
+              this.datosTab1.precio3= this.datosTab1.precio3 + inputValue; var x3 = {target:{id:'tab1precio3'}}; this.calculaPorcentaje(x3);
+              this.datosTab1.precio2= this.datosTab1.precio2 + inputValue; var x2 = {target:{id:'tab1precio2'}}; this.calculaPorcentaje(x2);
+              this.datosTab1.precio1= this.datosTab1.precio1 + inputValue; var x1 = {target:{id:'tab1precio1'}}; this.calculaPorcentaje(x1);
 
               this.datosTab2.precio5= Math.round((this.datosTab2.precio5 + suma2 + Number.EPSILON)* 100)/100; var z5 = {target:{id:'tab2precio5'}}; this.tab2calculaPorcentaje(z5);
               this.datosTab2.precio4= Math.round((this.datosTab2.precio4 + suma2 + Number.EPSILON)* 100)/100; var z4 = {target:{id:'tab2precio4'}}; this.tab2calculaPorcentaje(z4);
@@ -754,11 +825,11 @@ export class ProductoEditarComponent implements OnInit {
               suma5 = inputValue/ (this.datosTab1.unidad * this.datosTab2.unidad * this.datosTab3.unidad * this.datosTab4.unidad * this.datosTab5.unidad);
               suma5 = Math.round((suma5 + Number.EPSILON) * 100 ) / 100 ;
 
-              this.datosTab1.precio5= this.datosTab1.precio5 + inputValue; var x5 = {target:{id:'precio5'}}; this.calculaPorcentaje(x5);
-              this.datosTab1.precio4= this.datosTab1.precio4 + inputValue; var x4 = {target:{id:'precio4'}}; this.calculaPorcentaje(x4);
-              this.datosTab1.precio3= this.datosTab1.precio3 + inputValue; var x3 = {target:{id:'precio3'}}; this.calculaPorcentaje(x3);
-              this.datosTab1.precio2= this.datosTab1.precio2 + inputValue; var x2 = {target:{id:'precio2'}}; this.calculaPorcentaje(x2);
-              this.datosTab1.precio1= this.datosTab1.precio1 + inputValue; var x1 = {target:{id:'precio1'}}; this.calculaPorcentaje(x1);
+              this.datosTab1.precio5= this.datosTab1.precio5 + inputValue; var x5 = {target:{id:'tab1precio5'}}; this.calculaPorcentaje(x5);
+              this.datosTab1.precio4= this.datosTab1.precio4 + inputValue; var x4 = {target:{id:'tab1precio4'}}; this.calculaPorcentaje(x4);
+              this.datosTab1.precio3= this.datosTab1.precio3 + inputValue; var x3 = {target:{id:'tab1precio3'}}; this.calculaPorcentaje(x3);
+              this.datosTab1.precio2= this.datosTab1.precio2 + inputValue; var x2 = {target:{id:'tab1precio2'}}; this.calculaPorcentaje(x2);
+              this.datosTab1.precio1= this.datosTab1.precio1 + inputValue; var x1 = {target:{id:'tab1precio1'}}; this.calculaPorcentaje(x1);
 
               this.datosTab2.precio5= Math.round((this.datosTab2.precio5 + suma2 + Number.EPSILON)* 100)/100; var z5 = {target:{id:'tab2precio5'}}; this.tab2calculaPorcentaje(z5);
               this.datosTab2.precio4= Math.round((this.datosTab2.precio4 + suma2 + Number.EPSILON)* 100)/100; var z4 = {target:{id:'tab2precio4'}}; this.tab2calculaPorcentaje(z4);
@@ -801,22 +872,22 @@ export class ProductoEditarComponent implements OnInit {
       if(inputValue > 0){
         switch(this.noMedida){
           case 1:
-             this.datosTab1.precio5= this.datosTab1.precio5 - inputValue; var x5 = {target:{id:'precio5'}}; this.calculaPorcentaje(x5);
-             this.datosTab1.precio4= this.datosTab1.precio4 - inputValue; var x4 = {target:{id:'precio4'}}; this.calculaPorcentaje(x4);
-             this.datosTab1.precio3= this.datosTab1.precio3 - inputValue; var x3 = {target:{id:'precio3'}}; this.calculaPorcentaje(x3);
-             this.datosTab1.precio2= this.datosTab1.precio2 - inputValue; var x2 = {target:{id:'precio2'}}; this.calculaPorcentaje(x2);
-             this.datosTab1.precio1= this.datosTab1.precio1 - inputValue; var x1 = {target:{id:'precio1'}}; this.calculaPorcentaje(x1);
+             this.datosTab1.precio5= this.datosTab1.precio5 - inputValue; var x5 = {target:{id:'tab1precio5'}}; this.calculaPorcentaje(x5);
+             this.datosTab1.precio4= this.datosTab1.precio4 - inputValue; var x4 = {target:{id:'tab1precio4'}}; this.calculaPorcentaje(x4);
+             this.datosTab1.precio3= this.datosTab1.precio3 - inputValue; var x3 = {target:{id:'tab1precio3'}}; this.calculaPorcentaje(x3);
+             this.datosTab1.precio2= this.datosTab1.precio2 - inputValue; var x2 = {target:{id:'tab1precio2'}}; this.calculaPorcentaje(x2);
+             this.datosTab1.precio1= this.datosTab1.precio1 - inputValue; var x1 = {target:{id:'tab1precio1'}}; this.calculaPorcentaje(x1);
             break;
           case 2:
               
               suma2 = inputValue/ (this.datosTab1.unidad * this.datosTab2.unidad);
               suma2 = Math.round((suma2 + Number.EPSILON) * 100 ) / 100 ;
 
-              this.datosTab1.precio5= this.datosTab1.precio5 - inputValue; var x5 = {target:{id:'precio5'}}; this.calculaPorcentaje(x5);
-              this.datosTab1.precio4= this.datosTab1.precio4 - inputValue; var x4 = {target:{id:'precio4'}}; this.calculaPorcentaje(x4);
-              this.datosTab1.precio3= this.datosTab1.precio3 - inputValue; var x3 = {target:{id:'precio3'}}; this.calculaPorcentaje(x3);
-              this.datosTab1.precio2= this.datosTab1.precio2 - inputValue; var x2 = {target:{id:'precio2'}}; this.calculaPorcentaje(x2);
-              this.datosTab1.precio1= this.datosTab1.precio1 - inputValue; var x1 = {target:{id:'precio1'}}; this.calculaPorcentaje(x1);
+              this.datosTab1.precio5= this.datosTab1.precio5 - inputValue; var x5 = {target:{id:'tab1precio5'}}; this.calculaPorcentaje(x5);
+              this.datosTab1.precio4= this.datosTab1.precio4 - inputValue; var x4 = {target:{id:'tab1precio4'}}; this.calculaPorcentaje(x4);
+              this.datosTab1.precio3= this.datosTab1.precio3 - inputValue; var x3 = {target:{id:'tab1precio3'}}; this.calculaPorcentaje(x3);
+              this.datosTab1.precio2= this.datosTab1.precio2 - inputValue; var x2 = {target:{id:'tab1precio2'}}; this.calculaPorcentaje(x2);
+              this.datosTab1.precio1= this.datosTab1.precio1 - inputValue; var x1 = {target:{id:'tab1precio1'}}; this.calculaPorcentaje(x1);
 
               this.datosTab2.precio5= Math.round((this.datosTab2.precio5 - suma2 + Number.EPSILON)* 100)/100; var z5 = {target:{id:'tab2precio5'}}; this.tab2calculaPorcentaje(z5);
               this.datosTab2.precio4= Math.round((this.datosTab2.precio4 - suma2 + Number.EPSILON)* 100)/100; var z4 = {target:{id:'tab2precio4'}}; this.tab2calculaPorcentaje(z4);
@@ -831,11 +902,11 @@ export class ProductoEditarComponent implements OnInit {
               suma3 = inputValue/ (this.datosTab1.unidad * this.datosTab2.unidad * this.datosTab3.unidad);  
               suma3 = Math.round((suma3 + Number.EPSILON) * 100 ) / 100 ;
 
-              this.datosTab1.precio5= this.datosTab1.precio5 - inputValue; var x5 = {target:{id:'precio5'}}; this.calculaPorcentaje(x5);
-              this.datosTab1.precio4= this.datosTab1.precio4 - inputValue; var x4 = {target:{id:'precio4'}}; this.calculaPorcentaje(x4);
-              this.datosTab1.precio3= this.datosTab1.precio3 - inputValue; var x3 = {target:{id:'precio3'}}; this.calculaPorcentaje(x3);
-              this.datosTab1.precio2= this.datosTab1.precio2 - inputValue; var x2 = {target:{id:'precio2'}}; this.calculaPorcentaje(x2);
-              this.datosTab1.precio1= this.datosTab1.precio1 - inputValue; var x1 = {target:{id:'precio1'}}; this.calculaPorcentaje(x1);
+              this.datosTab1.precio5= this.datosTab1.precio5 - inputValue; var x5 = {target:{id:'tab1precio5'}}; this.calculaPorcentaje(x5);
+              this.datosTab1.precio4= this.datosTab1.precio4 - inputValue; var x4 = {target:{id:'tab1precio4'}}; this.calculaPorcentaje(x4);
+              this.datosTab1.precio3= this.datosTab1.precio3 - inputValue; var x3 = {target:{id:'tab1precio3'}}; this.calculaPorcentaje(x3);
+              this.datosTab1.precio2= this.datosTab1.precio2 - inputValue; var x2 = {target:{id:'tab1precio2'}}; this.calculaPorcentaje(x2);
+              this.datosTab1.precio1= this.datosTab1.precio1 - inputValue; var x1 = {target:{id:'tab1precio1'}}; this.calculaPorcentaje(x1);
 
               this.datosTab2.precio5= Math.round((this.datosTab2.precio5 - suma2 + Number.EPSILON)* 100)/100; var z5 = {target:{id:'tab2precio5'}}; this.tab2calculaPorcentaje(z5);
               this.datosTab2.precio4= Math.round((this.datosTab2.precio4 - suma2 + Number.EPSILON)* 100)/100; var z4 = {target:{id:'tab2precio4'}}; this.tab2calculaPorcentaje(z4);
@@ -859,11 +930,11 @@ export class ProductoEditarComponent implements OnInit {
               suma4 = inputValue/ (this.datosTab1.unidad * this.datosTab2.unidad * this.datosTab3.unidad * this.datosTab4.unidad);
               suma4 = Math.round((suma4 + Number.EPSILON) * 100 ) / 100 ;
 
-              this.datosTab1.precio5= this.datosTab1.precio5 - inputValue; var x5 = {target:{id:'precio5'}}; this.calculaPorcentaje(x5);
-              this.datosTab1.precio4= this.datosTab1.precio4 - inputValue; var x4 = {target:{id:'precio4'}}; this.calculaPorcentaje(x4);
-              this.datosTab1.precio3= this.datosTab1.precio3 - inputValue; var x3 = {target:{id:'precio3'}}; this.calculaPorcentaje(x3);
-              this.datosTab1.precio2= this.datosTab1.precio2 - inputValue; var x2 = {target:{id:'precio2'}}; this.calculaPorcentaje(x2);
-              this.datosTab1.precio1= this.datosTab1.precio1 - inputValue; var x1 = {target:{id:'precio1'}}; this.calculaPorcentaje(x1);
+              this.datosTab1.precio5= this.datosTab1.precio5 - inputValue; var x5 = {target:{id:'tab1precio5'}}; this.calculaPorcentaje(x5);
+              this.datosTab1.precio4= this.datosTab1.precio4 - inputValue; var x4 = {target:{id:'tab1precio4'}}; this.calculaPorcentaje(x4);
+              this.datosTab1.precio3= this.datosTab1.precio3 - inputValue; var x3 = {target:{id:'tab1precio3'}}; this.calculaPorcentaje(x3);
+              this.datosTab1.precio2= this.datosTab1.precio2 - inputValue; var x2 = {target:{id:'tab1precio2'}}; this.calculaPorcentaje(x2);
+              this.datosTab1.precio1= this.datosTab1.precio1 - inputValue; var x1 = {target:{id:'tab1precio1'}}; this.calculaPorcentaje(x1);
 
               this.datosTab2.precio5= Math.round((this.datosTab2.precio5 - suma2 + Number.EPSILON)* 100)/100; var z5 = {target:{id:'tab2precio5'}}; this.tab2calculaPorcentaje(z5);
               this.datosTab2.precio4= Math.round((this.datosTab2.precio4 - suma2 + Number.EPSILON)* 100)/100; var z4 = {target:{id:'tab2precio4'}}; this.tab2calculaPorcentaje(z4);
@@ -896,11 +967,11 @@ export class ProductoEditarComponent implements OnInit {
               suma5 = inputValue/ (this.datosTab1.unidad * this.datosTab2.unidad * this.datosTab3.unidad * this.datosTab4.unidad * this.datosTab5.unidad);
               suma5 = Math.round((suma5 + Number.EPSILON) * 100 ) / 100 ;
 
-              this.datosTab1.precio5= this.datosTab1.precio5 - inputValue; var x5 = {target:{id:'precio5'}}; this.calculaPorcentaje(x5);
-              this.datosTab1.precio4= this.datosTab1.precio4 - inputValue; var x4 = {target:{id:'precio4'}}; this.calculaPorcentaje(x4);
-              this.datosTab1.precio3= this.datosTab1.precio3 - inputValue; var x3 = {target:{id:'precio3'}}; this.calculaPorcentaje(x3);
-              this.datosTab1.precio2= this.datosTab1.precio2 - inputValue; var x2 = {target:{id:'precio2'}}; this.calculaPorcentaje(x2);
-              this.datosTab1.precio1= this.datosTab1.precio1 - inputValue; var x1 = {target:{id:'precio1'}}; this.calculaPorcentaje(x1);
+              this.datosTab1.precio5= this.datosTab1.precio5 - inputValue; var x5 = {target:{id:'tab1precio5'}}; this.calculaPorcentaje(x5);
+              this.datosTab1.precio4= this.datosTab1.precio4 - inputValue; var x4 = {target:{id:'tab1precio4'}}; this.calculaPorcentaje(x4);
+              this.datosTab1.precio3= this.datosTab1.precio3 - inputValue; var x3 = {target:{id:'tab1precio3'}}; this.calculaPorcentaje(x3);
+              this.datosTab1.precio2= this.datosTab1.precio2 - inputValue; var x2 = {target:{id:'tab1precio2'}}; this.calculaPorcentaje(x2);
+              this.datosTab1.precio1= this.datosTab1.precio1 - inputValue; var x1 = {target:{id:'tab1precio1'}}; this.calculaPorcentaje(x1);
 
               this.datosTab2.precio5= Math.round((this.datosTab2.precio5 - suma2 + Number.EPSILON)* 100)/100; var z5 = {target:{id:'tab2precio5'}}; this.tab2calculaPorcentaje(z5);
               this.datosTab2.precio4= Math.round((this.datosTab2.precio4 - suma2 + Number.EPSILON)* 100)/100; var z4 = {target:{id:'tab2precio4'}}; this.tab2calculaPorcentaje(z4);
@@ -1179,7 +1250,7 @@ export class ProductoEditarComponent implements OnInit {
        */
         switch (inputId){
   
-          case "precio5" : {
+          case "tab1precio5" : {
                 /**
                  * Realizamos el calculo del porcentaje : le restamos al precio nuevo (precio5) el precio anterior (precio compra)
                  * y el resultado lo dividimos entre el precio  anterior (precio compra)
@@ -1196,7 +1267,7 @@ export class ProductoEditarComponent implements OnInit {
                 }
                 break;
           }
-          case "precio4" : {
+          case "tab1precio4" : {
                 this.datosTab1.porcentaje4 = ((this.datosTab1.precio4 - (this.datosTab1.preciocompra / this.datosTab1.unidad)) / this.datosTab1.preciocompra) * 100 ;
                 
                 this.datosTab1.porcentaje4 = Math.round((this.datosTab1.porcentaje4 + Number.EPSILON) * 100 ) / 100 ;
@@ -1207,7 +1278,7 @@ export class ProductoEditarComponent implements OnInit {
                 }
             break;
           }
-          case "precio3" : {
+          case "tab1precio3" : {
                 this.datosTab1.porcentaje3 = ((this.datosTab1.precio3 - (this.datosTab1.preciocompra / this.datosTab1.unidad)) / this.datosTab1.preciocompra) * 100 ;
                 
                 this.datosTab1.porcentaje3 = Math.round((this.datosTab1.porcentaje3 + Number.EPSILON) * 100 ) / 100 ;
@@ -1217,7 +1288,7 @@ export class ProductoEditarComponent implements OnInit {
                 }
             break;
           }
-          case "precio2" : {
+          case "tab1precio2" : {
                 this.datosTab1.porcentaje2 = ((this.datosTab1.precio2 - (this.datosTab1.preciocompra / this.datosTab1.unidad)) / this.datosTab1.preciocompra) * 100 ;
                 
                 this.datosTab1.porcentaje2 = Math.round((this.datosTab1.porcentaje2 + Number.EPSILON) * 100 ) / 100 ;
@@ -1227,7 +1298,7 @@ export class ProductoEditarComponent implements OnInit {
                 }
             break;
           }
-          case "precio1" : {
+          case "tab1precio1" : {
                 this.datosTab1.porcentaje1 = ((this.datosTab1.precio1 - (this.datosTab1.preciocompra / this.datosTab1.unidad)) / this.datosTab1.preciocompra) * 100 ;
                 
                 this.datosTab1.porcentaje1 = Math.round((this.datosTab1.porcentaje1 + Number.EPSILON) * 100 ) / 100 ;
@@ -1258,7 +1329,7 @@ export class ProductoEditarComponent implements OnInit {
         return false;
       } else{
         switch (inputId) {
-          case "precio5": {
+          case "tab1precio5": {
   
               /**
                * Comparamos el precio ingresdo con el precio anterior
@@ -1271,12 +1342,17 @@ export class ProductoEditarComponent implements OnInit {
                 this.datosTab1.porcentaje5 = 0;
                 return false;
                 //this.ksks= true;
-              } //else { this.ksks = false;}
-              return true;
+              } else { 
+                let stylePrecioError = document.getElementById(inputId);
+                if(stylePrecioError != null){
+                  stylePrecioError.style.backgroundColor = "";
+                }
+                return true;
+              }
               break;
           }
   
-          case "precio4": {
+          case "tab1precio4": {
   
               if(this.datosTab1.precio4 < this.datosTab1.precio5){
                 this.messageService.add({severity:'warn', summary:'Alerta', detail:'El precio 4 no pueder ser menor que el precio 5'});
@@ -1284,12 +1360,17 @@ export class ProductoEditarComponent implements OnInit {
                 this.datosTab1.precio4 = Math.round((this.datosTab1.precio4 + Number.EPSILON) * 100 ) / 100 ;
                 this.datosTab1.porcentaje4 = 0;
                 return false;
+              } else { 
+                  let stylePrecioError = document.getElementById(inputId);
+                  if(stylePrecioError != null){
+                    stylePrecioError.style.backgroundColor = "";
+                  }
+                  return true;
               }
-                return true;
               break;
           }
   
-          case "precio3": {
+          case "tab1precio3": {
   
             if(this.datosTab1.precio3 < this.datosTab1.precio4){
               this.messageService.add({severity:'warn', summary:'Alerta', detail:'El precio 3 no pueder ser menor que el precio 4'});
@@ -1297,12 +1378,17 @@ export class ProductoEditarComponent implements OnInit {
               this.datosTab1.precio3 = Math.round((this.datosTab1.precio3 + Number.EPSILON) * 100 ) / 100 ;
               this.datosTab1.porcentaje3 = 0;
                 return false;
+            } else { 
+                let stylePrecioError = document.getElementById(inputId);
+                if(stylePrecioError != null){
+                  stylePrecioError.style.backgroundColor = "";
+                }
+                return true;
             }
-              return true;
             break;
   
           }
-          case "precio2": {
+          case "tab1precio2": {
   
             if(this.datosTab1.precio2 < this.datosTab1.precio3){
               this.messageService.add({severity:'warn', summary:'Alerta', detail:'El precio 2 no pueder ser menor que el precio 3'});
@@ -1310,12 +1396,17 @@ export class ProductoEditarComponent implements OnInit {
               this.datosTab1.precio2 = Math.round((this.datosTab1.precio2 + Number.EPSILON) * 100 ) / 100 ;
               this.datosTab1.porcentaje2 = 0;
                 return false;
+            } else { 
+                let stylePrecioError = document.getElementById(inputId);
+                if(stylePrecioError != null){
+                  stylePrecioError.style.backgroundColor = "";
+                }
+                return true;
             }
-              return true;
             break;
   
           }
-          case "precio1": {
+          case "tab1precio1": {
   
             if(this.datosTab1.precio1 < this.datosTab1.precio2){
               this.messageService.add({severity:'warn', summary:'Alerta', detail:'El precio 1 no pueder ser menor que el precio 2'});
@@ -1323,8 +1414,13 @@ export class ProductoEditarComponent implements OnInit {
               this.datosTab1.precio2 = Math.round((this.datosTab1.precio2 + Number.EPSILON) * 100 ) / 100 ;
               this.datosTab1.porcentaje1 = 0;
                 return false;
-            } 
-              return true;
+            } else { 
+                let stylePrecioError = document.getElementById(inputId);
+                if(stylePrecioError != null){
+                  stylePrecioError.style.backgroundColor = "";
+                }
+                return true;
+            }
             break;
           }
           default:{
@@ -1402,7 +1498,7 @@ export class ProductoEditarComponent implements OnInit {
                   //Redondeamos el resultado a 2 decimales
                   this.datosTab1.precio5 = Math.round((this.datosTab1.precio5 + Number.EPSILON) * 100 ) / 100;
                   
-                  let x = {target:{id:'precio5'}}
+                  let x = {target:{id:'tab1precio5'}}
                   this.revisaPreciosventa(x);
       
                   break;
@@ -1413,7 +1509,7 @@ export class ProductoEditarComponent implements OnInit {
                   this.datosTab1.precio4 =  (this.datosTab1.preciocompra / this.datosTab1.unidad) * (1+inputValue);
                   this.datosTab1.precio4 = Math.round((this.datosTab1.precio4 + Number.EPSILON) * 100 ) / 100;
   
-                  let x = {target:{id:'precio4'}}
+                  let x = {target:{id:'tab1precio4'}}
                   this.revisaPreciosventa(x);
               break;
             }
@@ -1422,7 +1518,7 @@ export class ProductoEditarComponent implements OnInit {
                   this.datosTab1.precio3 =  (this.datosTab1.preciocompra / this.datosTab1.unidad) * (1+inputValue);
                   this.datosTab1.precio3 = Math.round((this.datosTab1.precio3 + Number.EPSILON) * 100 ) / 100;
   
-                  let x = {target:{id:'precio3'}}
+                  let x = {target:{id:'tab1precio3'}}
                   this.revisaPreciosventa(x);
               break;
             }
@@ -1431,7 +1527,7 @@ export class ProductoEditarComponent implements OnInit {
                   this.datosTab1.precio2 =  (this.datosTab1.preciocompra / this.datosTab1.unidad) * (1+inputValue);
                   this.datosTab1.precio2 = Math.round((this.datosTab1.precio2 + Number.EPSILON) * 100 ) / 100;
   
-                  let x = {target:{id:'precio2'}}
+                  let x = {target:{id:'tab1precio2'}}
                   this.revisaPreciosventa(x);
               break;
             }
@@ -1440,7 +1536,7 @@ export class ProductoEditarComponent implements OnInit {
                   this.datosTab1.precio1 =  (this.datosTab1.preciocompra / this.datosTab1.unidad) * (1+inputValue);
                   this.datosTab1.precio1 = Math.round((this.datosTab1.precio1 + Number.EPSILON) * 100 ) / 100;
   
-                  let x = {target:{id:'precio1'}}
+                  let x = {target:{id:'tab1precio1'}}
                   this.revisaPreciosventa(x);
               break;
             }
@@ -1601,8 +1697,13 @@ export class ProductoEditarComponent implements OnInit {
               this.datosTab2.precio5 = this.datosTab1.precio5 / medidaMenor;
               this.datosTab2.porcentaje5 = 0;
               return false;
-            } 
-            return true;
+            } else { 
+                let stylePrecioError = document.getElementById(inputId);
+                if(stylePrecioError != null){
+                  stylePrecioError.style.backgroundColor = "";
+                }
+                return true;
+            }
             break;
         }
 
@@ -1613,8 +1714,13 @@ export class ProductoEditarComponent implements OnInit {
               this.datosTab2.precio4 = this.datosTab1.precio4 / medidaMenor;
               this.datosTab2.porcentaje4 = 0;
               return false;
+            } else { 
+                let stylePrecioError = document.getElementById(inputId);
+                if(stylePrecioError != null){
+                  stylePrecioError.style.backgroundColor = "";
+                }
+                return true;
             }
-              return true;
             break;
         }
 
@@ -1625,8 +1731,13 @@ export class ProductoEditarComponent implements OnInit {
             this.datosTab2.precio3 = this.datosTab1.precio3 / medidaMenor;
             this.datosTab2.porcentaje3 = 0;
               return false;
+          } else { 
+              let stylePrecioError = document.getElementById(inputId);
+              if(stylePrecioError != null){
+                stylePrecioError.style.backgroundColor = "";
+              }
+              return true;
           }
-            return true;
           break;
 
         }
@@ -1637,8 +1748,13 @@ export class ProductoEditarComponent implements OnInit {
             this.datosTab2.precio2 = this.datosTab1.precio2 / medidaMenor;
             this.datosTab2.porcentaje2 = 0;
               return false;
+          } else { 
+              let stylePrecioError = document.getElementById(inputId);
+              if(stylePrecioError != null){
+                stylePrecioError.style.backgroundColor = "";
+              }
+              return true;
           }
-            return true;
           break;
 
         }
@@ -1649,8 +1765,13 @@ export class ProductoEditarComponent implements OnInit {
             this.datosTab2.precio1 = this.datosTab1.precio1 / medidaMenor;
             this.datosTab2.porcentaje1 = 0;
               return false;
-          } 
-            return true;
+          } else { 
+              let stylePrecioError = document.getElementById(inputId);
+              if(stylePrecioError != null){
+                stylePrecioError.style.backgroundColor = "";
+              }
+              return true;
+          }
           break;
         }
         default:{
@@ -2083,8 +2204,13 @@ export class ProductoEditarComponent implements OnInit {
               this.datosTab3.precio5 = this.datosTab2.precio5/this.datosTab3.unidad;
               this.datosTab3.porcentaje5 = 0;
               return false;
-            } 
-            return true;
+            } else { 
+                let stylePrecioError = document.getElementById(inputId);
+                if(stylePrecioError != null){
+                  stylePrecioError.style.backgroundColor = "";
+                }
+                return true;
+            }
             break;
         }
 
@@ -2095,8 +2221,13 @@ export class ProductoEditarComponent implements OnInit {
               this.datosTab3.precio4 = this.datosTab2.precio4/this.datosTab3.unidad;
               this.datosTab3.porcentaje4 = 0;
               return false;
+            } else { 
+                let stylePrecioError = document.getElementById(inputId);
+                if(stylePrecioError != null){
+                  stylePrecioError.style.backgroundColor = "";
+                }
+                return true;
             }
-              return true;
             break;
         }
 
@@ -2107,8 +2238,13 @@ export class ProductoEditarComponent implements OnInit {
             this.datosTab3.precio3 = this.datosTab2.precio3 / this.datosTab3.unidad;
             this.datosTab3.porcentaje3 = 0;
               return false;
+          } else { 
+              let stylePrecioError = document.getElementById(inputId);
+              if(stylePrecioError != null){
+                stylePrecioError.style.backgroundColor = "";
+              }
+              return true;
           }
-            return true;
           break;
 
         }
@@ -2119,8 +2255,13 @@ export class ProductoEditarComponent implements OnInit {
             this.datosTab3.precio2 = this.datosTab2.precio2/this.datosTab3.unidad;
             this.datosTab3.porcentaje2 = 0;
               return false;
+          } else { 
+              let stylePrecioError = document.getElementById(inputId);
+              if(stylePrecioError != null){
+                stylePrecioError.style.backgroundColor = "";
+              }
+              return true;
           }
-            return true;
           break;
 
         }
@@ -2131,8 +2272,13 @@ export class ProductoEditarComponent implements OnInit {
             this.datosTab3.precio1 = this.datosTab2.precio1/this.datosTab3.unidad;
             this.datosTab3.porcentaje1 = 0;
               return false;
-          } 
-            return true;
+          } else { 
+              let stylePrecioError = document.getElementById(inputId);
+              if(stylePrecioError != null){
+                stylePrecioError.style.backgroundColor = "";
+              }
+              return true;
+          }
           break;
         }
         default:{
@@ -2563,8 +2709,13 @@ export class ProductoEditarComponent implements OnInit {
               this.datosTab4.precio5 = this.datosTab3.precio5/this.datosTab4.unidad;
               this.datosTab4.porcentaje5 = 0;
               return false;
-            } 
-            return true;
+            } else { 
+                let stylePrecioError = document.getElementById(inputId);
+                if(stylePrecioError != null){
+                  stylePrecioError.style.backgroundColor = "";
+                }
+                return true;
+            }
             break;
         }
 
@@ -2575,8 +2726,13 @@ export class ProductoEditarComponent implements OnInit {
               this.datosTab4.precio4 = this.datosTab3.precio4/this.datosTab4.unidad;
               this.datosTab4.porcentaje4 = 0;
               return false;
+            } else { 
+                let stylePrecioError = document.getElementById(inputId);
+                if(stylePrecioError != null){
+                  stylePrecioError.style.backgroundColor = "";
+                }
+                return true;
             }
-              return true;
             break;
         }
 
@@ -2587,8 +2743,13 @@ export class ProductoEditarComponent implements OnInit {
             this.datosTab4.precio3 = this.datosTab3.precio3/this.datosTab4.unidad;
             this.datosTab4.porcentaje3 = 0;
               return false;
+          } else { 
+              let stylePrecioError = document.getElementById(inputId);
+              if(stylePrecioError != null){
+                stylePrecioError.style.backgroundColor = "";
+              }
+              return true;
           }
-            return true;
           break;
 
         }
@@ -2599,8 +2760,13 @@ export class ProductoEditarComponent implements OnInit {
             this.datosTab4.precio2 = this.datosTab3.precio2/this.datosTab4.unidad;
             this.datosTab4.porcentaje2 = 0;
               return false;
+          } else { 
+              let stylePrecioError = document.getElementById(inputId);
+              if(stylePrecioError != null){
+                stylePrecioError.style.backgroundColor = "";
+              }
+              return true;
           }
-            return true;
           break;
 
         }
@@ -2611,8 +2777,13 @@ export class ProductoEditarComponent implements OnInit {
             this.datosTab4.precio1 = this.datosTab3.precio1/this.datosTab4.unidad;
             this.datosTab4.porcentaje1 = 0;
               return false;
-          } 
-            return true;
+          } else { 
+              let stylePrecioError = document.getElementById(inputId);
+              if(stylePrecioError != null){
+                stylePrecioError.style.backgroundColor = "";
+              }
+              return true;
+          }
           break;
         }
         default:{
@@ -3041,8 +3212,13 @@ export class ProductoEditarComponent implements OnInit {
               this.datosTab5.precio5 = this.datosTab4.precio5/this.datosTab5.unidad;
               this.datosTab5.porcentaje5 = 0;
               return false;
-            } 
-            return true;
+            } else { 
+                let stylePrecioError = document.getElementById(inputId);
+                if(stylePrecioError != null){
+                  stylePrecioError.style.backgroundColor = "";
+                }
+                return true;
+            }
             break;
         }
 
@@ -3053,8 +3229,13 @@ export class ProductoEditarComponent implements OnInit {
               this.datosTab5.precio4 = this.datosTab4.precio4/this.datosTab5.unidad;
               this.datosTab5.porcentaje4 = 0;
               return false;
+            } else { 
+                let stylePrecioError = document.getElementById(inputId);
+                if(stylePrecioError != null){
+                  stylePrecioError.style.backgroundColor = "";
+                }
+                return true;
             }
-              return true;
             break;
         }
 
@@ -3065,8 +3246,13 @@ export class ProductoEditarComponent implements OnInit {
             this.datosTab5.precio3 = this.datosTab4.precio3/this.datosTab5.unidad;
             this.datosTab5.porcentaje3 = 0;
               return false;
+          } else { 
+              let stylePrecioError = document.getElementById(inputId);
+              if(stylePrecioError != null){
+                stylePrecioError.style.backgroundColor = "";
+              }
+              return true;
           }
-            return true;
           break;
 
         }
@@ -3077,8 +3263,13 @@ export class ProductoEditarComponent implements OnInit {
             this.datosTab5.precio2 = this.datosTab4.precio2/this.datosTab5.unidad;
             this.datosTab5.porcentaje2 = 0;
               return false;
+          } else { 
+              let stylePrecioError = document.getElementById(inputId);
+              if(stylePrecioError != null){
+                stylePrecioError.style.backgroundColor = "";
+              }
+              return true;
           }
-            return true;
           break;
 
         }
@@ -3089,8 +3280,13 @@ export class ProductoEditarComponent implements OnInit {
             this.datosTab5.precio1 = this.datosTab4.precio1/this.datosTab5.unidad;
             this.datosTab5.porcentaje1 = 0;
               return false;
-          } 
-            return true;
+          } else { 
+              let stylePrecioError = document.getElementById(inputId);
+              if(stylePrecioError != null){
+                stylePrecioError.style.backgroundColor = "";
+              }
+              return true;
+          }
           break;
         }
         default:{
