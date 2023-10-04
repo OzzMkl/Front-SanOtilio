@@ -806,6 +806,17 @@ export class CompraAgregarIdComponent implements OnInit {
     }
   }
 
+  /**
+   * Lo mismoq que el de arriba pero para las observaciones xd
+   */
+  contaCaracteres(event:any){
+      this.conta = event.target.value.length;
+      if(event.which === 13){
+        event.preventDefault();
+        //console.log('prevented');
+       }
+  }
+
   
 
 }

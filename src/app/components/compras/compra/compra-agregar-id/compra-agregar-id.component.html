@@ -1,6 +1,8 @@
 <p-toast></p-toast>
 <div class="container">
-    <form class="form-group" #FormCom="ngForm" (ngSubmit)="agregarCompra(FormCom)">
+    <h2 class="text-center">AGREGAR COMPRA</h2>
+    <hr>
+    <form class="form-group" #FormCom="ngForm" (keydown)="omitirEnter($event)"  (ngSubmit)="agregarCompra(FormCom)">
         <div class="row align-items-start">
 
             <h4 class="text-center">DATOS DEL PROVEEDOR</h4>
@@ -87,7 +89,7 @@
                     <label class="form-label" for="">Buscar producto</label>
                     <div class="input-group">
                         <span class="input-group-addon" id="sizing-addon2"><i class="bi-search" style="font-size: 1.5rem; color: black; left: 0;" (click)="open(content)"></i> </span>
-                        <input class="form-control" type="text" ngbTooltip="Solo busca por clave externa" name="claveEx" #claveEx="ngModel" [(ngModel)]="producto_compra.claveexterna" (keydown)="consultarProducto($event)">
+                        <input class="form-control" type="text" ngbTooltip="Solo busca por clave externa" name="claveEx" #claveEx="ngModel" [(ngModel)]="producto_compra.claveexterna" readonly>
                     </div>
                 </div>
                 <div class="col-4">
@@ -154,7 +156,7 @@
                         [(ngModel)]="producto_compra.subtotal" readonly> 
                     <br>
                 </div>
-                <div class="col-2"> 
+                <div class="col-2" hidden> 
                     <label class="form-label" for="flexCheckDefault">¿Caduca?</label>
                     <br>
                     <input class="form-check-input" type="checkbox" value="false"  name="test" [(ngModel)]="test" id="flexCheckDefault">
@@ -204,7 +206,7 @@
                     </tr>
                 </tbody>
             </table>
-            <pagination-controls id="pcEdit2" (pageChange)="pageActual3 = $event"></pagination-controls>
+            <pagination-controls id="pcEdit3" (pageChange)="pageActual3 = $event"></pagination-controls>
         </div>
         <hr>
         <div class="row justify-content-end">
@@ -223,7 +225,7 @@
         <div class="row row-cols-lg-auto g-3 align-items-center">
             <div class="col-12">
                 <label for="observaciones">Observaciones</label>
-                <textarea class="form-control" name="observaciones" id="observaciones" rows="2" maxlength="254" #observaciones="ngModel" (keydown)="omitirEnter($event)" [(ngModel)]="compra.observaciones"></textarea>
+                <textarea class="form-control" name="observaciones" id="observaciones" rows="2" maxlength="254" #observaciones="ngModel" (keydown)="contaCaracteres($event)" [(ngModel)]="compra.observaciones"></textarea>
                 <span class="justify-content-md-end">{{conta}}/254</span>
             </div>
             <br>
