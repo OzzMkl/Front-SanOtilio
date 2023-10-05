@@ -670,9 +670,10 @@ export class PuntoDeVentaEditarComponent implements OnInit {
         if(response.status == 'success'){
           this.messageService.add({severity:'success', summary:'Alerta', detail:response.message, sticky:true});
           
-          // setInterval(()=>{
-          //     this._router.navigate(['./ventas-modulo/ventas-realizadas-buscar']);
-          // },2000);
+          this.ventag.idVenta=0;
+          setTimeout(()=>{
+              this._router.navigate(['./ventas-modulo/ventas-realizadas-buscar']);
+          },2000);
         }
         //console.log(response);
       }, error =>{

@@ -247,8 +247,11 @@ export class ProductoAgregarComponent implements OnInit {
            //console.log('asdasdasd :',response);
            if(response.status == 'success'){
         
-             this.messageService.add({severity:'success', summary:'Alerta', detail:'Producto guardado correctamente'});
-             this._router.navigate(['./producto-modulo/producto-buscar']);
+             this.messageService.add({severity:'success', summary:'Alerta', detail:'Producto guardado correctamente', sticky:true});
+             this.producto.claveEx =  '';
+             setTimeout(()=>{
+                this._router.navigate(['./producto-modulo/producto-buscar']);
+            },2000);
            }
          },
          error =>{
