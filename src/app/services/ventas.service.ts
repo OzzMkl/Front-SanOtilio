@@ -73,16 +73,16 @@ export class VentasService {
     return this._http.get(this.url+'ventas/getDetallesVenta/'+idVenta, {headers:this.headers} );
   }
 
-  postVentas(ventasg:any):Observable<any>{
-    let json = JSON.stringify(ventasg);
+  postVenta(ventasg:any, lista_productoVentag:Array<any>, identity: Array<any>):Observable<any>{
+    const combinado = {
+      'ventasg': ventasg,
+      'lista_productoVentag': lista_productoVentag,
+      'identity': identity
+    }
+
+    let json = JSON.stringify(combinado);
     let params = 'json='+json;
     return this._http.post(this.url+'ventas/guardarVenta',params, {headers:this.headers});
-  }
-
-  postProductosVentas(productosVenta:any):Observable<any>{
-    let json = JSON.stringify(productosVenta);
-    let params = 'json='+json;
-    return this._http.post(this.url+'ventas/guardarProductosVenta',params, {headers:this.headers} );
   }
 
   putVenta( idVenta:number, ventasg:any, lista_productoVentag: Array<any>, identity: Array<any>, motivoEdicion: string):Observable<any>{
