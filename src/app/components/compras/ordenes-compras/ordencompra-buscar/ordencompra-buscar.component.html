@@ -3,12 +3,7 @@
     <h3 class="text-center">Ordenes de compra por recibir</h3>
 </div>
 <div>
-    <div class="text-center text-primary" *ngIf="isLoading">
-        <div class="spinner-border" role="status" >
-            <span class="visually-hidden">Loading...</span>
-          </div>
-    </div>
-    <div class="container-fluid" *ngIf="!isLoading">
+    <div class="container-fluid" *ngIf="ordenesdecompra">
         <div class="input-group mb-2">
             <div class="col-2">
                 <select class="form-select" name="tipoBusqueda" [(ngModel)]="tipoBusqueda" (ngModelChange)="seleccionTipoBusqueda($event)">
@@ -17,42 +12,45 @@
                 </select>
             </div>
             <div class="col" *ngIf="tipoBusqueda==1;">
-                <input type="text" class="form-control" name="buscarOrdProveedor" placeholder="Buscar ..." [(ngModel)]="buscarOrdProveedor">
+                <input type="text" class="form-control" name="buscarOrdProveedor" placeholder="Buscar ..." (keyup)="searchNombreProveedor($event)" >
             </div>
             <div class="col" *ngIf="tipoBusqueda==2;">
-                <input type="text" class="form-control" name="buscarOrdId" placeholder="Buscar ...2" [(ngModel)]="buscarOrdId">
+                <input type="text" class="form-control" name="buscarOrdId" placeholder="Buscar ..." (keyup)="searchIdOrden($event)" >
             </div>
         </div>
-        <!--CUADRO DE BUSQUEDA-->
-        <!-- <div class="form-group">
-            <input type="text" class="form-control" name="buscarOrdProveedor" placeholder="Buscar ..." [(ngModel)]="buscarOrdProveedor">
+        <br>
+        <div class="text-center text-primary" *ngIf="isLoading">
+            <div class="spinner-border" role="status" >
+                <span class="visually-hidden">Loading...</span>
+            </div>
         </div>
-        <br> -->
-        <!--  -->
-        <table class="table table-dark table-hover" >
-            <thead>
-                <tr>
-                    <th scope="col"># Orden</th>
-                    <th scope="col">PROVEEDOR</th>
-                    <th scope="col">OBSERVACIONES</th>
-                    <th scope="col">FECHA ESTIMADA</th>
-            </tr>
-            </thead>
-            <tbody *ngFor="let oc of ordenesdecompra | paginate:{id:'paginationOrders',itemsPerPage: itemsPerPageL, currentPage: pageActualL, totalItems:totalPagesL}">
-                <tr (click)="open(content)" (click)="selected(oc.idOrd)">
-                    <th scope="row">{{oc.idOrd}}</th>   
-                    <th scope="row">{{oc.nombreProveedor}}</th>
-                    <th scope="row">{{oc.observaciones}}</th>
-                    <th  scope="row">{{oc.fecha | date: 'dd/MM/yyyy'}}</th>
+        <div *ngIf="!isLoading">
+            <table class="table table-dark table-hover" >
+                <thead>
+                    <tr>
+                        <th scope="col"># Orden</th>
+                        <th scope="col">PROVEEDOR</th>
+                        <th scope="col">OBSERVACIONES</th>
+                        <th scope="col">FECHA ESTIMADA</th>
                 </tr>
-            </tbody>
-        </table>
-       <pagination-controls 
-            id="paginationOrders" 
-            (pageChange)="getPage(pageActualL = $event)"
-            previousLabel="Anterior"
-            nextLabel="Siguiente">
-        </pagination-controls>
+                </thead>
+                <tbody *ngFor="let oc of ordenesdecompra | paginate:{id:'paginationOrders',itemsPerPage: itemsPerPageL, currentPage: pageActualL, totalItems:totalPagesL}">
+                    <tr (click)="open(content)" (click)="selected(oc.idOrd)">
+                        <th scope="row">{{oc.idOrd}}</th>   
+                        <th scope="row">{{oc.nombreProveedor}}</th>
+                        <th scope="row">{{oc.observaciones}}</th>
+                        <th  scope="row">{{oc.fecha | date: 'dd/MM/yyyy'}}</th>
+                    </tr>
+                </tbody>
+            </table>
+            <pagination-controls 
+                id="paginationOrders" 
+                (pageChange)="getPage(pageActualL = $event)"
+                previousLabel="Anterior"
+                nextLabel="Siguiente">
+            </pagination-controls>
+        </div>
+
     </div>
 </div>
 <!-- Modal -->
@@ -78,7 +76,7 @@
                           <button type="button" class="btn btn-warning" (click)="modal.dismiss('Cross click')" [routerLink]="['../ordencompra-editar',doc.idOrd]" ngbTooltip="EDITAR"><i class="bi bi-pencil-square"></i><br></button>
                       </div>
                       <div class="col-auto" *ngIf="userPermisos.cancelar == 1">
-                          <button type="button" class="btn btn-danger" ngbTooltip="CANCELAR"><i class="bi bi-trash3"></i><br></button>
+                          <button type="button" class="btn btn-danger" (click)="open(confirmacion)" ngbTooltip="CANCELAR"><i class="bi bi-trash3"></i><br></button>
                       </div>
                       <div class="col-auto" *ngIf="userPermisos.editar == 1">
                         <button type="button" class="btn btn-success" (click)="modal.dismiss('Cross click')" [routerLink]="['../../compra-modulo/compra-agregar-id',doc.idOrd]" ngbTooltip="PASAR A COMPRA"><i class="bi bi-arrow-up-right-square"></i><br></button> 
@@ -133,4 +131,21 @@
     <!-- <div class="modal-footer">
       <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Guardar</button>
     </div> -->
+</ng-template>
+
+<ng-template #confirmacion let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Ingrese el motivo de la cancelacion de la orden de compra</h4>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+        <div class="col-11">
+            <label for="motivo">Motivo</label>
+            <textarea class="form-control" name="observaciones" id="observaciones" cols="30" rows="2" [(ngModel)]="motivo" ></textarea>
+          </div>
+    </div>
+    <div class="modal-footer">
+        <p-confirmDialog [style]="{width: '50vw'}" [baseZIndex]="10000" acceptLabel="Si" rejectButtonStyleClass="p-button-text"></p-confirmDialog>
+        <button type="button" class="btn btn-success" (click)="confirmCan()">Guardar</button>
+    </div>
 </ng-template>
