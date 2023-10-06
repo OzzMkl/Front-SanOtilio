@@ -1,13 +1,15 @@
 <p-toast></p-toast>
 <div>
-    <div class="container-fluid">
+    <div class="container">
+        <h2 class="text-center">AGREGAR ORDEN DE COMPRA</h2>
+        <hr>
         <div >
             <button type="button" class="btn btn-success" text="" ngbTooltip="Genera una orden de compra a partir de una o varias requisiciones" (click)="open2(content2)">Generar desde requisición <i class="bi bi-arrow-up-right-square"></i><br></button>
         </div>
     </div>
 </div>
 <div class="container">
-    <form class="form-group" #FormOrdCom="ngForm" (ngSubmit)="agregarOrdCompra(FormOrdCom)">
+    <form class="form-group" #FormOrdCom="ngForm" (keydown)="omitirEnter($event)" (ngSubmit)="agregarOrdCompra(FormOrdCom)">
         <div class="row align-items-start">
             <h4 class="text-center">DATOS DEL PROVEEDOR</h4>
             
@@ -24,9 +26,9 @@
             </div>
             
             <div class="col-4">
-                <label class="form-label" for="">Selecciona el dia de entrega aproximado</label>
+                <label class="form-label" for="">Selecciona el día de entrega aproximado</label>
                 <div class="input-group">
-                  <input class="form-control" placeholder="aaaa-mm-dd"
+                  <input class="form-control" placeholder="aaaa-mm-dd" 
                          name="dp" [(ngModel)]="model" ngbDatepicker #d="ngbDatepicker">
                   <button class="btn btn-outline-secondary" (click)="d.toggle()" type="button"><i class="bi bi-calendar-date-fill"> </i> </button>
                 </div>
@@ -55,13 +57,20 @@
                     <label class="form-label" for="">Buscar producto</label>
                     <div class="input-group">
                         <span class="input-group-addon" id="sizing-addon2"><i class="bi-search" style="font-size: 1.5rem; color: black; left: 0;" (click)="open(content)"></i> </span>
-                        <input class="form-control" type="text" ngbTooltip="Solo busca por clave externa" name="claveEx" #claveEx="ngModel" [(ngModel)]="producto_orden.claveEx" (keydown)="consultarProducto($event)">
+                        <input readonly class="form-control" type="text" ngbTooltip="Solo busca por clave externa" name="claveEx" #claveEx="ngModel" [(ngModel)]="producto_orden.claveEx" readonly>
                         
                     </div>
                 </div>
-                <div class="col-4">
+                <div class="col-2">
                     <label class="form-label" for="cantidadProducto">Cantidad</label>
-                    <input class="form-control" type="number" name="cantidadProducto" id="cantidadProducto"  #cantidadProducto="ngModel" [(ngModel)]="producto_orden.cantidad">
+                    <input class="form-control" type="number" name="cantidadProducto" id="cantidadProducto" #cantidadProducto="ngModel" [(ngModel)]="producto_orden.cantidad">
+                </div>
+                <div class="col-3">
+                    <label for="medida" class="form-label">Seleccionar Medida</label>
+                    <select name="idMedida" id="idMedida" class="form-select" [(ngModel)]="producto_orden.idProdMedida" (ngModelChange)="capturaNombreMedida($event)">
+                        <option selected disabled value="">Abrir para seleccionar</option>
+                        <option  *ngFor="let medida of medidasLista" value={{medida.idProdMedida}} >{{medida.nombreMedida}}</option>
+                    </select>
                 </div>
                 <div class="col-2">
                     <label class="form-label" for="cantidadProducto">.</label>
@@ -90,13 +99,6 @@
                     <label for="imagen" class="form-label">Imagen</label>
                     <br>
                     <img src="{{url + 'productos/getImageProduc/' + prod.imagen}}" width="100px" height="100px">
-                </div>
-                <div class="col-5">
-                    <label for="medida" class="form-label">Seleccionar Medida</label>
-                    <select name="idMedida" id="idMedida" class="form-select" [(ngModel)]="producto_orden.idProdMedida" (ngModelChange)="capturaNombreMedida($event)">
-                        <option selected disabled value="">Abrir para seleccionar</option>
-                        <option  *ngFor="let medida of medidasLista" value={{medida.idProdMedida}} >{{medida.nombreMedida}}</option>
-                    </select>
                 </div>
             </div>
         </div>
@@ -128,7 +130,7 @@
             <div class="col-12">
                 <label for="observaciones">Observaciones</label>
                 <textarea class="form-control" name="observaciones" id="observaciones" rows="2" maxlength="254" #observaciones="ngModel" 
-                (keydown)="omitirEnter($event)" [(ngModel)]="orden_compra.observaciones"></textarea>
+                (keydown)="contaCaracteres($event)" [(ngModel)]="orden_compra.observaciones"></textarea>
                 <span class="justify-content-md-end">{{conta}}/254</span>
             </div>
             <br>
