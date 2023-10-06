@@ -194,10 +194,18 @@ export class RequisicionAgregarComponent implements OnInit {
       this.messageService.add({severity:'error', summary:'Error', detail:'Falta ingresar medida'});
     }else{
       this.Lista_compras.push({...this.producto_requisicion});
-      this.isSearch=true;
+      this.resetVariables();
     }
-    this.producto_requisicion.idProdMedida = 0;
     //console.log(this.Lista_compras);
+  }
+
+  resetVariables(){
+    this.isSearch=true;
+    this.productoVer=[];
+    this.medidasLista=[];
+    this.producto_requisicion.claveEx = '';
+    this.producto_requisicion.cantidad = 0 ;
+    this.producto_requisicion.idProdMedida = 0;
   }
 
   getDetailsReq(){
@@ -277,12 +285,23 @@ export class RequisicionAgregarComponent implements OnInit {
    * omitimos los eventes de "enter""
    */
   omitirEnter(event:any){
-    this.conta = event.target.value.length;
+    //this.conta = event.target.value.length;
     if(event.which === 13){
       event.preventDefault();
       //console.log('prevented');
     }
   }
+
+    /**
+   * Lo mismoq que el de arriba pero para las observaciones xd
+   */
+    contaCaracteres(event:any){
+      this.conta = event.target.value.length;
+      if(event.which === 13){
+        event.preventDefault();
+        //console.log('prevented');
+       }
+     }
   
   consultarProducto(event:any){//mostrar informacion del producto al dar enter
     //alert('you just pressed the enter key'+event);
