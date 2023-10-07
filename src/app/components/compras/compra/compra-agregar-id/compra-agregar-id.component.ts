@@ -349,7 +349,6 @@ export class CompraAgregarIdComponent implements OnInit {
       this.producto_compra.nombreMedida = this.medidaActualizada.nombreMedida;
 
       this.Lista_compras.push({...this.producto_compra}); 
-      this.isSearch=true;
 
       //Calculo de subtotal y total de la compra
       this.compra.subtotal=(this.producto_compra.cantidad*this.producto_compra.precio)+this.compra.subtotal;
@@ -368,6 +367,7 @@ export class CompraAgregarIdComponent implements OnInit {
   }
 
   resetVariables(){
+    this.isSearch=true;
     this.productoVer=[];
     this.productoVerM=[];
     this.producto_compra.claveexterna = '';
