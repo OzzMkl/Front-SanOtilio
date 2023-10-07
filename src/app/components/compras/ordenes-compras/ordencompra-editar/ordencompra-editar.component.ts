@@ -13,6 +13,8 @@ import { Ordencompra } from 'src/app/models/orden_compra';
 import { Producto_orden } from 'src/app/models/producto_orden';
 //Modal
 import { NgbDateStruct, NgbModal,ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
+//Router
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-ordencompra-editar',
@@ -83,8 +85,9 @@ pageActual2: number = 0;
     private _ordencompraService: OrdendecompraService,
     public _empleadoService : EmpleadoService,
     private _route: ActivatedRoute,
-    private modalService: NgbModal
-  ) {
+    private modalService: NgbModal,
+    public _router: Router
+    ) {
     this.orden_compra = new Ordencompra (0,null,0,'',null,0,null,null);
     this.productosOrden = new Producto_orden(0,0,0,0,'','','');
     this.lista_productosorden = [];
@@ -100,27 +103,28 @@ pageActual2: number = 0;
   editarOrdCompra(form:any){//registrar edicion de la orden
     this.orden_compra.idEmpleado = this.identity['sub'];//asginamos id de Empleado
 
-    if(this.test == true){//revisamos si el usuario quiso cambiar de fecha
-      this.orden_compra.fecha = this.model.year+'-'+this.model.month+'-'+this.model.day;//concatenamos la fecha del datepicke
-    }
-    
-    if(this.lista_productosorden.length == 0){
+    if(this.test == true && this.model == undefined){//revisamos si el usuario quiso cambiar de fecha
+      this.messageService.add({severity:'error', summary:'Error', detail:'Falta ingresar el día de entrega aproximado'});
+    }else if(this.lista_productosorden.length == 0){
       this.messageService.add({severity:'error', summary:'Error', detail:'No se puede crear la orden de compra si no tiene productos'});
     }else{
-      console.log(this.orden_compra);
-      console.log(this.lista_productosorden);
+      if(this.test == true){
+        this.orden_compra.fecha = this.model.year+'-'+this.model.month+'-'+this.model.day;//concatenamos la fecha del datepicke
+      }
+      //console.log(this.orden_compra);
+      //console.log(this.lista_productosorden);
       this._route.params.subscribe( params =>{
         let id =+ params['idOrd'];
         this._ordencompraService.updateOrdenCompra(id,this.orden_compra).subscribe( 
           response =>{
             if(response.status == 'success'){
               this.messageService.add({severity:'success', summary:'Éxito', detail:'Orden de compra actualizada'});
-              //console.log(response);
+              console.log(response);
               this._ordencompraService.updateProductosOrderC(id,this.lista_productosorden).subscribe( 
-                response=>{
-                  if(response.status == 'success'){
+                res=>{
+                  if(res.status == 'success'){
                     this.messageService.add({severity:'success', summary:'Éxito', detail:'Productos actualizados'});
-                    this.getOrderModificada();
+                    this.createPDF(response.orden.idOrd);
                     //console.log(response);
                   }else{
                     this.messageService.add({severity:'error', summary:'Error', detail:'Fallo al actualizar los productos de la orden de compra'});
@@ -154,10 +158,7 @@ pageActual2: number = 0;
   capturar(datos:any){//Agregar a lista de compras
     console.log(datos);
 
-    //Asignar idProdMedida y nombreMedida antes de capturar
-    this.medidaActualizada = this.productoVerM.find( (x:any) => x.idProdMedida == datos.idProdMedida);
-    this.productosOrden.idProdMedida = parseInt(this.medidaActualizada.idProdMedida);
-    this.productosOrden.nombreMedida = this.medidaActualizada.nombreMedida;
+    
 
     if(this.productosOrden.cantidad <= 0){
       this.messageService.add({severity:'error', summary:'Error', detail:'No se pueden agregar productos con cantidad igual o menor a 0'});
@@ -168,13 +169,23 @@ pageActual2: number = 0;
     }else if(this.productosOrden.idProdMedida <= 0){
       this.messageService.add({severity:'error', summary:'Error', detail:'Falta ingresar medida'});
     }else{
+
+      //Asignar idProdMedida y nombreMedida antes de capturar
+      this.medidaActualizada = this.productoVerM.find( (x:any) => x.idProdMedida == datos.idProdMedida);
+      this.productosOrden.idProdMedida = parseInt(this.medidaActualizada.idProdMedida);
+      this.productosOrden.nombreMedida = this.medidaActualizada.nombreMedida;
+
       this.lista_productosorden.push({...this.productosOrden});
-      this.isSearch=true;
+
+      this.resetVariables();
     }
     
     //console.log(this.Lista_compras);
+  } 
 
-    //Reset variables 
+  resetVariables(){
+        //Reset variables 
+    this.isSearch=true;
     this.productoVer=[];
     this.productoVerM=[];
     this.productosOrden.cantidad = 0;
@@ -184,7 +195,9 @@ pageActual2: number = 0;
     this.productosOrden.idProdMedida = 0;
     this.productosOrden.idProducto = 0;
     this.productosOrden.nombreMedida = '';
-  } 
+  }
+
+
   getOrdencompra(){//traemos la informacion de la orden seleccionada
     //Nos suscribimos al url para extraer el id
     this._route.params.subscribe( params =>{
@@ -295,23 +308,18 @@ pageActual2: number = 0;
   loadUser(){//traemos la informacion del usuario
     this.identity = this._empleadoService.getIdentity();
   }
-  createPDF():void{//creamos el pdf
-    
-    //doc.save('a.pdf')
+
+  public createPDF($idOrd:number):void{
+    this._ordencompraService.getPDF($idOrd, this.identity['sub']).subscribe(
+      (pdf: Blob) => {
+        const blob = new Blob([pdf], {type: 'application/pdf'});
+        const url = window.URL.createObjectURL(blob);
+        window.open(url);
+      }
+    );
+    this._router.navigate(['./ordencompra-modulo/ordencompra-buscar']);
   }
-  getOrderModificada(){//reconsultamos la informacion de la orden modificada
-    this._route.params.subscribe( params => {
-      let id =+ params['idOrd'];
-      this._ordencompraService.getDetailsOrdes(id).subscribe( 
-        response =>{
-              this.detailOrd = response.ordencompra;
-              this.productosdetailOrd = response.productos;
-              this.createPDF();
-        },error => {
-        console.log(error);
-      });
-    });
-  }
+
    // Modal
    open(content:any) {
     this.getAllProducts();
@@ -507,12 +515,22 @@ pageActual2: number = 0;
    * @param event 
    * omitimos los eventes de "enter""
    */
- omitirEnter(event:any){
-  this.conta = event.target.value.length;
-  if(event.which === 13){
-    event.preventDefault();
-    //console.log('prevented');
+  omitirEnter(event:any){
+    //this.conta = event.target.value.length;
+    if(event.which === 13){
+      event.preventDefault();
+      //console.log('prevented');
+    }
   }
-}
+  /**
+   * Lo mismoq que el de arriba pero para las observaciones xd
+   */
+  contaCaracteres(event:any){
+    this.conta = event.target.value.length;
+    if(event.which === 13){
+      event.preventDefault();
+      //console.log('prevented');
+     }
+  }
 
 }
