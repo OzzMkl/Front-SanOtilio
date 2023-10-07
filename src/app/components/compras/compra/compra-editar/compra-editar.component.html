@@ -1,6 +1,6 @@
 <p-toast></p-toast>
 <div class="container">
-    <form class="form-group" #FormCom="ngForm" (ngSubmit)="agregarCompra(FormCom)">
+    <form class="form-group" #FormCom="ngForm" (keydown)="omitirEnter($event)" (ngSubmit)="agregarCompra(FormCom)">
         <div class="row align-items-start">
 
             <h4 class="text-center">DATOS DEL PROVEEDOR</h4>
