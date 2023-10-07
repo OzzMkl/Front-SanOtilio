@@ -9,6 +9,7 @@ import { global } from "./global";
 export class OrdendecompraService {
 
   public url : string;
+  public headers:any = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');
 
   constructor( public _http: HttpClient ) { this.url = global.url; }
 
@@ -55,4 +56,30 @@ export class OrdendecompraService {
   getPDF(idOrd:number,idEmpleado:number):Observable<Blob>{
     return this._http.get(this.url+'ordendecompra/generatePDF/'+ idOrd+'/'+idEmpleado, {responseType:'blob'});
   }
+
+  cancelarOrden(idOrd:any,motivo:any,idEmpleado:any):Observable<any>{
+    let combinado = {'idOrd':idOrd,
+                     'motivo':motivo,
+                     'idEmpleado':idEmpleado
+    };
+    let json = JSON.stringify(combinado);
+    let params = 'json='+json;
+    //console.log('combinado',combinado);
+    //console.log('json',json);
+    return this._http.post(this.url+'ordendecompra/cancelarOrden',params, {headers:this.headers} );
+  }
+
+  /**
+   * SERVICIOS DE BUSQUEDA
+  */
+  searchIdOrden(idOrd:any):Observable<any>{
+    return this._http.get(this.url+'ordendecompra/searchIdOrden/'+idOrd, {headers:this.headers} );
+  }
+
+  searchNombreProveedor(nombreProveedor:any):Observable<any>{
+    return this._http.get(this.url+'ordendecompra/searchNombreProveedor/'+nombreProveedor, {headers:this.headers} );
+  }
+
+
+
 }
