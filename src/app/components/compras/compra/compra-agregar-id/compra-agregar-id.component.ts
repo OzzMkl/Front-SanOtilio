@@ -412,6 +412,7 @@ export class CompraAgregarIdComponent implements OnInit {
         const blob = new Blob([pdf], {type: 'application/pdf'});
         const url = window.URL.createObjectURL(blob);
         window.open(url);
+        this._router.navigate(['./compra-modulo/compra-buscar']);
       }
     );
   } 
