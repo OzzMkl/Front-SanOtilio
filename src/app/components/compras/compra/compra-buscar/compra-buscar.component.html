@@ -138,7 +138,7 @@
                         <div class="col-2"> 
                             <label class="form-label" for="facturableCheck">Facturada</label>
                             <br>
-                            <input class="form-check-input" type="checkbox" value="false"  name="facturable" [(ngModel)]="facturableCheck" id="facturableCheck">
+                            <input class="form-check-input" type="checkbox" value="false"  name="facturable" [(ngModel)]="facturableCheck" id="facturableCheck" disabled>
                         </div>
                         <div class="col-3">
                             <label for="fechaEstimada" class="form-label">Subtotal</label>
@@ -168,7 +168,7 @@
                                     <th scope="col">IMPORTE</th>
                                 </tr>
                             </thead>
-                            <tbody *ngFor="let p_d of productosDC | paginate:{ id:'paginationDC', itemsPerPage: 5, currentPage: pageActual}">
+                            <tbody *ngFor="let p_d of productosDC | paginate:{ id:'paginationDC', itemsPerPage: 5, currentPage: pageActualM}">
                                 <tr>
                                  <th scope="row">{{p_d.claveexterna}}</th>
                                  <th scope="row">{{p_d.descripcion}}</th>
@@ -180,7 +180,7 @@
                                 </tr>
                             </tbody> 
                         </table>
-                        <pagination-controls id="paginationDC" (pageChange)="pageActual = $event"></pagination-controls>
+                        <pagination-controls id="paginationDC" (pageChange)="pageActualM = $event"></pagination-controls>
                     </div> 
                 </div>
             </form>

@@ -29,6 +29,9 @@ export class CompraBuscarComponent implements OnInit {
   public prev_page: any;
   public itemsPerPage:number=0;
   pageActual: number = 0;
+
+  //Paginacion MODAL
+  pageActualM: number = 0;
   
   public detallesCompra:any;
   public productosDC:any;
@@ -314,6 +317,7 @@ export class CompraBuscarComponent implements OnInit {
       });
   }
   private getDismissReason(reason: any): string {//cierra modal con teclado ESC o al picar fuera del modal
+    this.pageActualM = 0;
     if (reason === ModalDismissReasons.ESC) {
       return 'by pressing ESC';
     } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {

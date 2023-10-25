@@ -6,7 +6,7 @@ import { EmpleadoService } from 'src/app/services/empleado.service';
 import { ModulosService } from 'src/app/services/modulos.service';
 //primeng
 import { MessageService, MenuItem } from 'primeng/api';
-import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDateStruct,NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-traspaso-buscar',
@@ -19,7 +19,7 @@ export class TraspasoBuscarComponent implements OnInit {
   //variables servicios
   public traspasos: Array<any> = [];
   //Buscador
-  public tipoBusqueda: string = 'traspasoe';
+  public tipoBusqueda: string = 'Envia';
   public search: string = '';
   public date_actual: Date = new Date();
   public datInicial: NgbDateStruct= { year:this.date_actual.getFullYear() , month:this.date_actual.getMonth(), day: this.date_actual.getDate()};
@@ -29,6 +29,7 @@ export class TraspasoBuscarComponent implements OnInit {
   //PERMISOS
   public userPermisos:any = [];
   public mTras = this._modulosService.modsTraspaso();
+  public identity: any;
   //contador para redireccion al no tener permisos
   counter: number = 5;
   timerId:any;
@@ -41,6 +42,13 @@ export class TraspasoBuscarComponent implements OnInit {
   pageActual: number = 0;
   //////////
   items: MenuItem[] =[];
+  //Modal
+  closeResult = '';
+  //Paginacion MODAL
+  pageActualM: number = 0;
+  //Datos para modal
+  public detallesTraspaso:any;
+  public productosDT:any;
 
   constructor(
     private _empleadoService: EmpleadoService,
@@ -48,7 +56,8 @@ export class TraspasoBuscarComponent implements OnInit {
     private _traspasoService: TraspasoService,
     private messageService: MessageService,
     private _router: Router,
-    private _http: HttpClient
+    private _http: HttpClient,
+    private _modalService: NgbModal
   ) { }
 
   ngOnInit(): void {
@@ -73,6 +82,8 @@ export class TraspasoBuscarComponent implements OnInit {
          } else{
          this.getTrasp();
          this.menuBusqueda();
+         this.identity = this._empleadoService.getIdentity();
+
          }
    }
 
@@ -139,29 +150,85 @@ export class TraspasoBuscarComponent implements OnInit {
    * Obtiene la informacion del input y busca
    */
   selectBusqueda(){
-    
-    if(this.search == "" || null){
-     
+      
+      if(this.search == "" || null){
+      
+        this.getTrasp();
+    } else{
       this.getTrasp();
-   } else{
-     this.getTrasp();
-    }//finelse
- }//finFunction
+      }//finelse
+  }//finFunction
 
- menuBusqueda(){
-  this.items = [
-    {
-      icon:'pi pi-pencil',
-      command: () => {
-        this.messageService.add({ severity: 'info', summary: 'Add', detail: 'Data Added' });
-      }
-    },
-    {
-        icon: 'pi pi-refresh',
+  menuBusqueda(){
+    this.items = [
+      {
+        icon:'pi pi-pencil',
         command: () => {
-            this.messageService.add({ severity: 'success', summary: 'Update', detail: 'Data Updated' });
+          this.messageService.add({ severity: 'info', summary: 'Add', detail: 'Data Added' });
         }
-    }];
- }
+      },
+      {
+          icon: 'pi pi-refresh',
+          command: () => {
+              this.messageService.add({ severity: 'success', summary: 'Update', detail: 'Data Updated' });
+          }
+      }];
+  }
+
+
+  /**MODAL */
+
+  open(content:any) {//abre modal
+    this._modalService.open(content, {ariaLabelledBy: 'modal-basic-title', size: 'xl'}).result.then((result) => {
+      this.closeResult = `Closed with: ${result}`;
+    }, (reason) => {
+      this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+    });
+  }
+
+  private getDismissReason(reason: any): string {//cierra modal con teclado ESC o al picar fuera del modal
+    this.pageActualM = 0;
+    if (reason === ModalDismissReasons.ESC) {
+      return 'by pressing ESC';
+    } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
+      return 'by clicking on a backdrop';
+    } else {
+      return `with: ${reason}`;
+    }
+  }
+
+  getDetailsTraspaso(idTraspaso:any,tipoTraspaso:any){
+  console.log(idTraspaso);
+  console.log(tipoTraspaso);
+    this._traspasoService.getDetailsTraspaso(idTraspaso,tipoTraspaso).subscribe(
+      response =>{
+        if(response.status == 'success'){
+          this.detallesTraspaso = response.traspaso; 
+          this.productosDT = response.productos;
+          console.log('response',response);
+          console.log('traspaso',this.detallesTraspaso);
+          console.log('productos',this.productosDT);
+
+        }else{ console.log('Algo salio mal'); }
+        
+      },error => {
+
+        console.log(error);
+      });
+  }
+
+  public createPDF(idTraspaso:number,tipoTraspaso:any):void{//Crear PDF
+    console.log(idTraspaso);
+    console.log(tipoTraspaso);
+    this._traspasoService.getPDF(idTraspaso,this.identity['sub'],tipoTraspaso).subscribe(
+      (pdf: Blob) => {
+        const blob = new Blob([pdf], {type: 'application/pdf'});
+        const url = window.URL.createObjectURL(blob);
+        window.open(url);
+        this._router.navigate(['./traspaso-modulo/traspaso-buscar']);
+      }
+    );
+  }
+
 
 }

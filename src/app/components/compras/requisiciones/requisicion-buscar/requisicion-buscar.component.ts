@@ -29,11 +29,6 @@ export class RequisicionBuscarComponent implements OnInit {
   //Cerrar modal
   closeResult = ''; 
   //Paginacion en modal
-  public totalPagesMod: any;
-  public pathMod: any;
-  public next_pageMod: any;
-  public prev_pageMod: any;
-  public itemsPerPageMod:number=0;
   pageActualMod: number = 0;  
   //spinner
   public isLoading:boolean = false;
@@ -143,6 +138,7 @@ export class RequisicionBuscarComponent implements OnInit {
   }
 
   private getDismissReason(reason: any): string {//cierra modal con teclado ESC o al picar fuera del modal
+    this.pageActualMod = 0;
     if (reason === ModalDismissReasons.ESC) {
       return 'by pressing ESC';
     } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {

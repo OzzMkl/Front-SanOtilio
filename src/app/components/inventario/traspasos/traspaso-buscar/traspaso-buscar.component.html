@@ -7,8 +7,8 @@
         <div class="col-3">
             <label class="form-label">Selecciona el traspaso</label>
             <select class="form-select" name="tipoBusqueda" [(ngModel)]="tipoBusqueda" (ngModelChange)="selectBusqueda()" >
-                <option value="traspasoe" selected>Traspasos Enviados</option>
-                <option value="traspasor">Traspasos Recibidos</option>
+                <option value="Envia" selected>Traspasos Enviados</option>
+                <option value="Recibe">Traspasos Recibidos</option>
             </select>
         </div>
         <div class="col">
@@ -55,7 +55,7 @@
                 </tr>
             </thead>
             <tbody *ngFor="let traspaso of traspasos | paginate: { itemsPerPage:itemsPerPage, currentPage: pageActual, totalItems:totalPages }">
-                <tr>
+                <tr  (click)="getDetailsTraspaso(traspaso.idTraspasoE ? traspaso.idTraspasoE : traspaso.idTraspasoR,tipoBusqueda)" (click)="open(content)">
                     <th scope="row">{{ traspaso.idTraspasoE ? traspaso.idTraspasoE : traspaso.idTraspasoR }}</th>
                     <th scope="row">{{traspaso.sucursalEN}}</th>
                     <th scope="row">{{traspaso.sucursalRN}}</th>
@@ -70,3 +70,92 @@
         </pagination-controls>
     </div>
 </div>
+
+<!-- Modal -->
+<ng-template #content let-modal>
+    <div *ngFor="let datosTraspaso of detallesTraspaso">
+        <div class="modal-header">
+            <h4 class="modal-title" id="modal-basic-title">DETALLES DEL TRASPASO NO. {{datosTraspaso.idTraspaso}}</h4>
+            <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+        </div>
+        <div class="modal-body">
+            <form>
+                <div class="container">
+                    <div class="row">
+                        <div class="col-9">
+                        </div>
+                        <div class="col-auto">
+                            <button type="button" class="btn btn-secondary" style="box-sizing: border-box;" (click)="createPDF(datosTraspaso.idTraspaso,tipoBusqueda)" ><i class="bi bi-file-earmark-pdf" ngbTooltip="PDF"></i><br></button>
+                        </div>
+                        <div class="col-auto">
+                            <button type="button" class="btn btn-warning"  ngbTooltip="EDITAR"><i class="bi bi-pencil-square"></i><br></button>
+                        </div>
+                        <div class="col-auto">
+                            <button type="button" class="btn btn-danger" ngbTooltip="CANCELAR"><i class="bi bi-trash3"></i><br></button>
+                        </div>
+                    </div>
+                    <hr>
+                    <h4 class="text-center">DATOS DEL TRASPASO</h4>
+                    <div class="row align-items-start">
+                        <div class="col-2">
+                            <label for="tipoTraspaso" class="form-label">Tipo de traspaso</label>
+                            <input type="text" class="form-control" value="{{tipoBusqueda}}" readonly>
+                        </div>
+                        <div class="col-2" *ngIf="tipoBusqueda == 'Recibe'">
+                            <label for="folioEnvio" class="form-label">Folio de envío</label>
+                            <input type="text" class="form-control" value="{{datosTraspaso.folio}}" readonly>
+                        </div>
+                    
+                        <div class="col-3">
+                            <label for="sucursalEN" class="form-label">Envía</label>
+                            <input id="sucursalEN" type="text" class="form-control" value="{{datosTraspaso.sucursalEN}}" readonly>
+                        </div>
+                        <div class="col-3">
+                            <label for="sucursalRN" class="form-label">Recibe</label>
+                            <input id="sucursalRN" type="text" class="form-control" value="{{datosTraspaso.sucursalRN}}" readonly>
+                        </div>
+                    
+                        <div class="col-5">
+                          <label for="nombreEmpleado" class="form-label">Realizó</label>
+                          <input id="nombreEmpleado" type="text" class="form-control" value="{{datosTraspaso.nombreEmpleado}}" readonly>
+                        </div>
+                        <div class="col-3">
+                          <label for="fechaAlta" class="form-label">Fecha de recepción</label>
+                          <input type="text" class="form-control" value="{{datosTraspaso.created_at | date}}" readonly>
+                        </div>
+                    
+                        <div class="col-11">
+                          <label for="observaciones">Observaciones</label>
+                          <textarea class="form-control" name="observaciones" id="observaciones" cols="30" rows="2" value="{{datosTraspaso.observaciones}}" readonly></textarea>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row align-items-start">
+                        <h4 class="text-center">LISTA DE PRODUCTOS</h4>
+                        <table class="table table-dark table-hover" id="table_productos">
+                            <thead>
+                                <tr>
+                                    <th scope="col">CLAVE EXTERNA</th>
+                                    <th scope="col">DESCRIPCION</th>
+                                    <th scope="col">MEDIDA</th>
+                                    <th scope="col">CANTIDAD</th>
+                                    <th scope="col">IGUAL MEDIDA MENOR</th>
+                                </tr>
+                            </thead>
+                            <tbody *ngFor="let p_d of productosDT | paginate:{ id:'paginationDT', itemsPerPage: 5, currentPage: pageActualM}">
+                                <tr>
+                                 <th scope="row">{{p_d.claveEx}}</th>
+                                 <th scope="row">{{p_d.descripcion}}</th>
+                                 <th scope="row">{{p_d.nombreMedida}}</th>
+                                 <th scope="row">{{p_d.cantidad}}</th>
+                                 <th scope="row">{{p_d.igualMedidaMenor}}</th>
+                                </tr>
+                            </tbody> 
+                        </table>
+                        <pagination-controls id="paginationDT" (pageChange)="pageActualM = $event"></pagination-controls>
+                    </div> 
+                </div>
+            </form>
+        </div>
+    </div>
+</ng-template>

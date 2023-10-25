@@ -14,6 +14,9 @@ export class TraspasoService {
 
   constructor( public _http: HttpClient) { }
 
+  /**
+   * GET
+   */
   getTraspasos(tipoTraspaso: string, traspaso: string ,datInicial:any, datFinal:any):Observable<any>{
     const combinado = {
       'str_traspaso': traspaso,
@@ -24,4 +27,35 @@ export class TraspasoService {
     let params = 'json='+json;
     return this._http.post(this.url+'traspasos/index/'+tipoTraspaso, params, {headers:this.headers});
   }
+
+  getPDF(idTraspaso:number,idEmpleado:number,tipoTraspaso:any):Observable<Blob>{
+    return this._http.get(this.url+'traspasos/generatePDF/'+idTraspaso+'/'+idEmpleado+'/'+tipoTraspaso,{responseType:'blob'});
+  }
+
+  getDetailsTraspaso(idTraspaso:any,tipoTraspaso:any):Observable<any>{
+    return this._http.get(this.url+'traspasos/showMejorado/'+idTraspaso+'/'+tipoTraspaso, {headers:this.headers} );
+  }
+
+  /**
+   * POST
+   */
+  registerTraspaso(traspaso:any,tipoTraspaso:string,lista_producto_traspaso:any,identity:any):Observable<any>{
+    const combinado = {
+      'traspaso': traspaso,
+      'tipoTraspaso':tipoTraspaso,
+      'lista_producto_traspaso':lista_producto_traspaso,
+      'identity':identity
+    };
+    let json = JSON.stringify(combinado);
+    let params = 'json='+json;
+    return this._http.post(this.url+'traspasos/registerTraspaso',params, {headers:this.headers} );
+  }
+
+
+
+
+
+
+  
+
 }

@@ -349,7 +349,6 @@ export class CompraAgregarIdComponent implements OnInit {
       this.producto_compra.nombreMedida = this.medidaActualizada.nombreMedida;
 
       this.Lista_compras.push({...this.producto_compra}); 
-      this.isSearch=true;
 
       //Calculo de subtotal y total de la compra
       this.compra.subtotal=(this.producto_compra.cantidad*this.producto_compra.precio)+this.compra.subtotal;
@@ -368,6 +367,7 @@ export class CompraAgregarIdComponent implements OnInit {
   }
 
   resetVariables(){
+    this.isSearch=true;
     this.productoVer=[];
     this.productoVerM=[];
     this.producto_compra.claveexterna = '';
@@ -412,6 +412,7 @@ export class CompraAgregarIdComponent implements OnInit {
         const blob = new Blob([pdf], {type: 'application/pdf'});
         const url = window.URL.createObjectURL(blob);
         window.open(url);
+        this._router.navigate(['./compra-modulo/compra-buscar']);
       }
     );
   } 
@@ -804,6 +805,17 @@ export class CompraAgregarIdComponent implements OnInit {
      event.preventDefault();
      //console.log('prevented');
     }
+  }
+
+  /**
+   * Lo mismoq que el de arriba pero para las observaciones xd
+   */
+  contaCaracteres(event:any){
+      this.conta = event.target.value.length;
+      if(event.which === 13){
+        event.preventDefault();
+        //console.log('prevented');
+       }
   }
 
   

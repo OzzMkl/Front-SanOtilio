@@ -3,7 +3,7 @@ export class Producto_traspaso{//Modelo de la compra
         public idTraspaso: number,
         public idProducto: number,
         public descripcion: any,
-        public claveexterna: any,
+        public claveEx: any,
         public idProdMedida:number,
         public cantidad: number,
         public precio: number,

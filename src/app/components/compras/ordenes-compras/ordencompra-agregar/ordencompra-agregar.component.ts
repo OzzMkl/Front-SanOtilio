@@ -142,12 +142,22 @@ export class OrdencompraAgregarComponent implements OnInit {
       this.messageService.add({severity:'error', summary:'Error', detail:'Falta ingresar medida'});
     }else{
       this.Lista_compras.push({...this.producto_orden});
-      this.isSearch=true;
+      this.resetVariables();
     }
-    this.producto_orden.idProdMedida = 0;
     
     //console.log(this.Lista_compras);
   } 
+
+  resetVariables(){
+    this.isSearch=true;
+    this.productoVer=[];
+    this.medidasLista=[];
+    this.producto_orden.claveEx= '';
+    this.producto_orden.cantidad = 0 ;
+    this.producto_orden.idProdMedida = 0;
+  }
+
+
   consultarProducto(event:any){//mostrar informacion del producto al dar enter
       //alert('you just pressed the enter key'+event);
       this.dato=event.target.value;
@@ -162,11 +172,13 @@ export class OrdencompraAgregarComponent implements OnInit {
   }
   agregarOrdCompra(form:any){//Enviar Form insertar en DB
     this.orden_compra.idEmpleado = this.identity['sub'];//asginamos id de Empleado
-    this.orden_compra.fecha = this.model.year+'-'+this.model.month+'-'+this.model.day;//concatenamos la fecha del datepicker
     console.log(this.orden_compra);
-    if(this.Lista_compras.length == 0){
+    if(this.model == undefined){
+      this.messageService.add({severity:'error', summary:'Error', detail:'Falta ingresar el día de entrega aproximado'});      
+    }else if(this.Lista_compras.length == 0){
       this.messageService.add({severity:'error', summary:'Error', detail:'No se puede crear la orden de compra si no tiene productos'});
     }else{
+      this.orden_compra.fecha = this.model.year+'-'+this.model.month+'-'+this.model.day;//concatenamos la fecha del datepicker
       this._ordencompraService.registerOrdencompra(this.orden_compra).subscribe(
         response =>{
           console.log('response',response);
@@ -516,11 +528,23 @@ export class OrdencompraAgregarComponent implements OnInit {
    * omitimos los eventes de "enter""
    */
   omitirEnter(event:any){
-    this.conta = event.target.value.length;
+    //this.conta = event.target.value.length;
     if(event.which === 13){
       event.preventDefault();
       //console.log('prevented');
     }
+  }
+
+
+  /**
+   * Lo mismoq que el de arriba pero para las observaciones xd
+   */
+  contaCaracteres(event:any){
+    this.conta = event.target.value.length;
+    if(event.which === 13){
+      event.preventDefault();
+      //console.log('prevented');
+     }
   }
 
   //Modal Requisiciones

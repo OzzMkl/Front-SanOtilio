@@ -127,7 +127,7 @@
                                     <th scope="col">CANTIDAD</th>
                                 </tr>
                             </thead>
-                            <tbody *ngFor="let p_d of productosdetailReq | paginate:{ id:'paginationDC', itemsPerPage: 5, currentPage: pageActual}">
+                            <tbody *ngFor="let p_d of productosdetailReq | paginate:{ id:'paginationDC', itemsPerPage: 5, currentPage: pageActualMod}">
                                 <tr>
                                  <th scope="row">{{p_d.claveEx}}</th>
                                  <th scope="row">{{p_d.descripcion}}</th>
@@ -136,7 +136,7 @@
                                 </tr>
                             </tbody> 
                         </table>
-                        <pagination-controls id="paginationDC" (pageChange)="pageActual = $event"></pagination-controls>
+                        <pagination-controls id="paginationDC" (pageChange)="pageActualMod = $event"></pagination-controls>
                     </div> 
                 </div>
             </form>
