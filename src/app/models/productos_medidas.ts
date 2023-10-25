@@ -23,4 +23,34 @@ export class Productos_medidas{//Modelo del producto_precio
 
         public idStatus:number
     ){}
+
+    /**
+     * @description
+     * Compara los precios del 1 al 5, si el p1 < p2
+     * retorna No. del precio que esta mal
+     * retorna null si los precios son correctos
+     * @returns boolean | null
+     */
+    comparePrices(): number | null {
+      // creamos array con los precios
+        const precios = [
+          this.precio1,
+          this.precio2,
+          this.precio3,
+          this.precio4,
+          this.precio5
+        ];
+    
+        //recorremos el array validando que sea menor uno del otro
+        for (let i = 1; i < precios.length; i++) {
+
+          // p1 < p2 si entra retornamos el p2
+            if (precios[i - 1] < precios[i]) {
+            return i+1;
+          }
+        }
+    
+        // Si todos los precios son correctos, devuelve null
+        return null;
+    }
 }

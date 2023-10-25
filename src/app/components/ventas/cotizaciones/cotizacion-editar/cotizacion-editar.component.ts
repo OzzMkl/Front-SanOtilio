@@ -742,29 +742,26 @@ creaVenta(){
     this.messageService.add({severity:'warn', summary:'Alerta', detail:'No puedes generar una cotizacion sin cliente!'});
 
   } else {
-    this._ventasService.postVentas(this.cotizacion_editada).subscribe(
-      response =>{
-        if(response.status == 'success'){
-          this.messageService.add({severity:'success', summary:'Registro exitoso', detail:'Venta creada correctamente!'});
-          this._ventasService.postProductosVentas(this.productos_cotizacion_e).subscribe(
-            response =>{
-              if(response.status == 'success'){
-                this.messageService.add({severity:'success', summary:'Registro exitoso', detail:'productos cargados exitosamente'});
-
-                // setInterval(()=>{
-                //     this._router.navigate(['./']);
-                // },3000);
-
-              }
-            }, error =>{
-              this.messageService.add({severity:'error',summary:'Error', detail:'La venta a fallado'});
-              console.log(error);
-            });
-        }
-      }, error =>{
-        this.messageService.add({severity:'error',summary:'Error', detail:'La venta a fallado'});
-        console.log(error);
-      });
+    //Sustituimos todos los permisos por solo los permisos del modulo
+      //Esto con la finalidad de no enviar informacion innecesaria
+      let identityMod = {
+        ... this.identity,
+        'permisos': this.userPermisos
+      }
+      this._ventasService.postVenta(this.cotizacion_editada, this.productos_cotizacion_e, identityMod).subscribe(
+        response =>{
+          if(response.status == 'success'){
+            this.messageService.add({severity:'success', summary:'Registro exitoso', detail:'Venta creada correctamente'});
+            this.cotizacion_editada.idCliente = 0;
+            // refrescamos la pagina
+            setTimeout(()=>{
+              window.location.reload();
+            },2000);
+          }
+        }, error =>{
+          this.messageService.add({severity:'error', summary:'Error', detail:'Algo salio mal al crear la venta'});
+          console.log(error);
+        });
   }
 }
 
