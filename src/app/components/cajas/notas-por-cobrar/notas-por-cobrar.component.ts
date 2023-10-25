@@ -72,6 +72,7 @@ export class NotasPorCobrarComponent implements OnInit {
     this.getDatosEmpresa();
     this.getTipoPago();
   }
+
   /***Revisamos si el usuario tiene abierto una sesion en caja*/
   verificaCaja(){
     //console.log(this.empleado)
@@ -90,11 +91,13 @@ export class NotasPorCobrarComponent implements OnInit {
       }
     )
   }
+
   //cargamos inforamcion del usuario guardada en el localstorage
   loadUser(){
     this.empleado = this._empleadoService.getIdentity();
     //console.log(this.empleado)
   }
+
   //Guarda Formulario para hacer apertura de caja
   iniciarCaja(FormCaja:any){
     
@@ -116,6 +119,7 @@ export class NotasPorCobrarComponent implements OnInit {
     )
     
   }
+
   //validacion del campo del cambio para el cobro de notas
   calculaCambio(){
 
@@ -169,6 +173,7 @@ export class NotasPorCobrarComponent implements OnInit {
         break;
     }
   }
+
   //metodo para cobrar la nota
   cobroVenta(){
     if(this.isTipoPago2 == true){
@@ -265,6 +270,10 @@ export class NotasPorCobrarComponent implements OnInit {
 
     }
   }
+
+  /**
+   * SERVICIOS
+   */
   getVentas(){
     this.isLoading = true;
     this._ventasService.getIndexVentas().subscribe(
@@ -278,6 +287,7 @@ export class NotasPorCobrarComponent implements OnInit {
       }
     )
   }
+
   getDetallesVenta(idVenta:any){
     this._ventasService.getDetallesVenta(idVenta).subscribe(
       response =>{
@@ -292,6 +302,7 @@ export class NotasPorCobrarComponent implements OnInit {
       }
     )
   }
+
   getDatosEmpresa(){
     this._empresaService.getDatosEmpresa().subscribe( 
       response => {
@@ -301,6 +312,7 @@ export class NotasPorCobrarComponent implements OnInit {
         }
       },error => {console.log(error)});
   }
+  
   getTipoPago(){
     this._ventasService.getTipoPago().subscribe(
       response =>{
@@ -308,12 +320,14 @@ export class NotasPorCobrarComponent implements OnInit {
       }
     )
   }
+
   //ponemos vacio al cambiar entre tipo de busqueda
   seleccionTipoBusqueda(e:any){
     this.buscaFolio='';
     this.buscaNombreCliente='';
     this.buscaNombreEmpleado='';
   }
+
   generaPDF(){
     const doc = new jsPDF;
     //para la tabla de productos
@@ -384,6 +398,7 @@ export class NotasPorCobrarComponent implements OnInit {
     doc.save("venta-"+this.detallesVenta[0]['idVenta']+".pdf");
 
   }
+
   // Metodos del  modal
   open(content:any) {//abrir modal
     this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title', size: 'xl'}).result.then((result) => {
@@ -392,6 +407,7 @@ export class NotasPorCobrarComponent implements OnInit {
       this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
     });
   }
+
   openModalCobro(content:any){
     this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title', size: 'lg', backdropClass: ''}).result.then((result) => {
       this.closeResult = `Closed with: ${result}`;
@@ -399,6 +415,7 @@ export class NotasPorCobrarComponent implements OnInit {
       this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
     });
   }
+
   private getDismissReason(reason: any): string {//cerrarmodal
     if (reason === ModalDismissReasons.ESC) {
       return 'by pressing ESC';
