@@ -51,7 +51,18 @@ export class TraspasoService {
     return this._http.post(this.url+'traspasos/registerTraspaso',params, {headers:this.headers} );
   }
 
-
+  cancelarTraspaso(idTraspaso:any,tipoTraspaso:any,motivo:any,idEmpleado:any):Observable<any>{
+    let combinado = {'idTraspaso':idTraspaso,
+                     'tipoTraspaso':tipoTraspaso,
+                     'motivo':motivo,
+                     'idEmpleado':idEmpleado
+    };
+    let json = JSON.stringify(combinado);
+    let params = 'json='+json;
+    //console.log('combinado',combinado);
+    //console.log('json',json);
+    return this._http.post(this.url+'traspasos/cancelarTraspaso',params, {headers:this.headers} );
+  }
 
 
 
