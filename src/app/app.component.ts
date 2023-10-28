@@ -193,7 +193,7 @@ export class AppComponent implements OnInit, DoCheck{
       },{
         label: 'Cajas',
         icon: 'pi pi-fw pi-wallet',
-        routerLink:'caja-modulo/notas-por-cobrar',
+        // routerLink:'caja-modulo/notas-por-cobrar',
         items: [{
           label: 'Caja',
           icon:'pi pi-fw pi-inbox',
