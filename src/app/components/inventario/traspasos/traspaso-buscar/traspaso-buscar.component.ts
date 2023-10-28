@@ -5,14 +5,14 @@ import { TraspasoService } from 'src/app/services/traspaso.service';
 import { EmpleadoService } from 'src/app/services/empleado.service';
 import { ModulosService } from 'src/app/services/modulos.service';
 //primeng
-import { MessageService, MenuItem } from 'primeng/api';
+import { MessageService, MenuItem,ConfirmationService, ConfirmEventType  } from 'primeng/api';
 import { NgbDateStruct,NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-traspaso-buscar',
   templateUrl: './traspaso-buscar.component.html',
   styleUrls: ['./traspaso-buscar.component.css'],
-  providers: [EmpleadoService, MessageService]
+  providers: [EmpleadoService, MessageService,ConfirmationService]
 })
 export class TraspasoBuscarComponent implements OnInit {
 
@@ -49,6 +49,9 @@ export class TraspasoBuscarComponent implements OnInit {
   //Datos para modal
   public detallesTraspaso:any;
   public productosDT:any;
+  //Modal para cancelación
+  public motivo:string = '';
+
 
   constructor(
     private _empleadoService: EmpleadoService,
@@ -57,7 +60,8 @@ export class TraspasoBuscarComponent implements OnInit {
     private messageService: MessageService,
     private _router: Router,
     private _http: HttpClient,
-    private _modalService: NgbModal
+    private _modalService: NgbModal,
+    private _confirmationService:ConfirmationService
   ) { }
 
   ngOnInit(): void {
@@ -187,7 +191,6 @@ export class TraspasoBuscarComponent implements OnInit {
   }
 
   private getDismissReason(reason: any): string {//cierra modal con teclado ESC o al picar fuera del modal
-    this.pageActualM = 0;
     if (reason === ModalDismissReasons.ESC) {
       return 'by pressing ESC';
     } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
@@ -195,31 +198,37 @@ export class TraspasoBuscarComponent implements OnInit {
     } else {
       return `with: ${reason}`;
     }
+    this.resetVariables();
+  }
+
+  resetVariables(){
+    this.pageActualM = 0;
+    this.detallesTraspaso = '';
+    this.productosDT = '';
   }
 
   getDetailsTraspaso(idTraspaso:any,tipoTraspaso:any){
-  console.log(idTraspaso);
-  console.log(tipoTraspaso);
+    //console.log(idTraspaso);
+    //console.log(tipoTraspaso);
     this._traspasoService.getDetailsTraspaso(idTraspaso,tipoTraspaso).subscribe(
       response =>{
         if(response.status == 'success'){
           this.detallesTraspaso = response.traspaso; 
           this.productosDT = response.productos;
-          console.log('response',response);
-          console.log('traspaso',this.detallesTraspaso);
-          console.log('productos',this.productosDT);
+          //console.log('response',response);
+          // console.log('traspaso',this.detallesTraspaso);
+          // console.log('productos',this.productosDT);
 
         }else{ console.log('Algo salio mal'); }
         
       },error => {
-
         console.log(error);
       });
   }
 
   public createPDF(idTraspaso:number,tipoTraspaso:any):void{//Crear PDF
-    console.log(idTraspaso);
-    console.log(tipoTraspaso);
+    // console.log(idTraspaso);
+    // console.log(tipoTraspaso);
     this._traspasoService.getPDF(idTraspaso,this.identity['sub'],tipoTraspaso).subscribe(
       (pdf: Blob) => {
         const blob = new Blob([pdf], {type: 'application/pdf'});
@@ -228,6 +237,56 @@ export class TraspasoBuscarComponent implements OnInit {
         this._router.navigate(['./traspaso-modulo/traspaso-buscar']);
       }
     );
+  }
+
+  confirmCan() {
+    if(this.motivo.length < 10){
+      this.messageService.add({severity:'error', summary:'Advertencia', detail: 'El motivo de la cancelación tiene que contener minimo 10 caracteres.'});
+    }
+    else{
+      this._confirmationService.confirm({
+        message: '¿Está seguro(a) que desea cancelar el traspaso?',
+        header: 'Advertencia',
+        icon: 'pi pi-exclamation-triangle',
+        accept: () => {
+          //this.messageService.add({severity:'info', summary:'Confirmado', detail:'Compra'});
+          this.cancelarCompra();
+        },
+        reject: (type:any) => {
+          switch(type) {
+              case ConfirmEventType.REJECT:
+                  this.messageService.add({severity:'warn', summary:'Cancelado', detail:'Cancelación de traspaso cancelada.'});
+              break;
+              case ConfirmEventType.CANCEL:
+                  this.messageService.add({severity:'warn', summary:'Cancelado', detail:'Cancelación de traspaso cancelada.'});
+              break;
+          }
+        }
+      });
+    }
+  }
+
+  public cancelarCompra(){
+    // console.log(this.detallesCompra[0]['idCompra']);
+    // console.log(this.motivo);
+    // console.log(this.identity['sub']);
+
+    this._traspasoService.cancelarTraspaso(this.detallesTraspaso[0]['idTraspaso'],this.tipoBusqueda,this.motivo,this.identity['sub']).subscribe(
+      response =>{
+        if(response.status == 'success'){
+          console.log(response);
+          this.messageService.add({severity:'success', summary:'Éxito', detail:'Traspaso cancelado'});
+          this._modalService.dismissAll();
+          this.getTrasp();
+        }else{
+          this.messageService.add({severity:'error', summary:'Error', detail:'Fallo al cancelar el traspaso'});
+        }
+      },
+      error =>{
+        this.messageService.add({severity:'error', summary:'Error', detail:'Fallo al cancelar el traspaso'});
+        console.log(error);
+      }
+    )
   }
 
 
