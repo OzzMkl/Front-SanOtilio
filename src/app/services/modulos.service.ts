@@ -6,6 +6,11 @@ import { propModulo } from '../models/interfaces/propModulo';
 })
 export class ModulosService {
 
+  public pCaja: propModulo ={
+                  idModulo: 2,
+                  idSubModulo: 1
+              }
+
   public pInv: propModulo ={
                 idModulo: 5,
                 idSubModulo: 13
@@ -44,6 +49,10 @@ export class ModulosService {
   }
 
   constructor() { }
+
+  modsCaja(){
+    return this.pCaja;
+  }
 
   modsInventario(){
     return this.pInv;

@@ -7,6 +7,8 @@ import { MonedaLiteralService } from 'src/app/services/moneda-literal.service';
 import { CajasService } from 'src/app/services/cajas.service';
 import { ToastService } from 'src/app/services/toast.service';
 import { EmpleadoService } from 'src/app/services/empleado.service';
+import { ModulosService } from 'src/app/services/modulos.service';
+import { MessageService } from 'primeng/api';
 //NGBOOTSTRAP-modal
 import { NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
 //pdf
@@ -20,9 +22,17 @@ import { Caja_movimientos } from 'src/app/models/caja_movimientos';
 @Component({
   selector: 'app-notas-por-cobrar',
   templateUrl: './notas-por-cobrar.component.html',
-  styleUrls: ['./notas-por-cobrar.component.css']
+  styleUrls: ['./notas-por-cobrar.component.css'],
+  providers: [MessageService]
 })
 export class NotasPorCobrarComponent implements OnInit {
+
+  // Permisos
+  public userPermisos:any;
+  public mCaja = this._modulosService.modsCaja();
+  //contador para redireccion al no tener permisos
+  counter: number = 5;
+  timerId:any;
 
   //variables servicios
   public vCaja:any;
@@ -63,14 +73,11 @@ export class NotasPorCobrarComponent implements OnInit {
 
   constructor(private _ventasService: VentasService, private modalService: NgbModal, private _empresaService: EmpresaService,
               private _monedaLiteral: MonedaLiteralService, private _cajaService: CajasService, private _router: Router,
-              public toastService: ToastService, private _empleadoService: EmpleadoService) {}
+              public toastService: ToastService, private _empleadoService: EmpleadoService, private _modulosService:ModulosService,
+              private messageService: MessageService) {}
 
   ngOnInit(): void {
     this.loadUser();
-    this.verificaCaja();
-    this.getVentas();
-    this.getDatosEmpresa();
-    this.getTipoPago();
   }
 
   /***Revisamos si el usuario tiene abierto una sesion en caja*/
@@ -94,8 +101,28 @@ export class NotasPorCobrarComponent implements OnInit {
 
   //cargamos inforamcion del usuario guardada en el localstorage
   loadUser(){
-    this.empleado = this._empleadoService.getIdentity();
-    //console.log(this.empleado)
+    this.userPermisos = this._empleadoService.getPermisosModulo(this.mCaja.idModulo, this.mCaja.idSubModulo);
+      // revisamos si el permiso del modulo esta activo si no redireccionamos
+      if( this.userPermisos.agregar != 1 ){
+        this.timerId = setInterval(()=>{
+          this.counter--;
+          if(this.counter === 0){
+            clearInterval(this.timerId);
+            this._router.navigate(['./']);
+          }
+          this.messageService.add({
+                    severity:'error', 
+                    summary:'Acceso denegado', 
+                    detail: 'El usuario no cuenta con los permisos necesarios, redirigiendo en '+this.counter+' segundos'
+                  });
+        },1000);
+      } else{
+        this.empleado = this._empleadoService.getIdentity();
+        this.verificaCaja();
+        this.getVentas();
+        this.getDatosEmpresa();
+        this.getTipoPago();
+      }
   }
 
   //Guarda Formulario para hacer apertura de caja
