@@ -1,7 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 //Servicios
+import { SucursalService } from 'src/app/services/sucursal.service';
+import { EmpresaService } from 'src/app/services/empresa.service';
 import { TraspasoService } from 'src/app/services/traspaso.service';
+//Modelos
+import { Empresa } from 'src/app/models/empresa';
+
 
 @Component({
   selector: 'app-traspaso-editar',
@@ -9,11 +14,17 @@ import { TraspasoService } from 'src/app/services/traspaso.service';
   styleUrls: ['./traspaso-editar.component.css']
 })
 export class TraspasoEditarComponent implements OnInit {
+  //Modelos
+  public empresaSesion: Empresa = new Empresa(0,'','','','','','','','','','','','','','');
   //Datos de traspaso
   public detallesTraspaso:any;
   public productosDT:any;
+  //Recive services
+  public sucursales: Array<any> = [];
 
   constructor(
+    private _sucursalService: SucursalService,
+    private _empresaService: EmpresaService,
     private _route: ActivatedRoute,
     private _traspasoService: TraspasoService
 
@@ -53,6 +64,44 @@ export class TraspasoEditarComponent implements OnInit {
       });
   }
 
+    /**
+   * @description
+   * Obtiene todas las sucursales
+   */
+    getSucursales(){
+      this._sucursalService.getSucursales().subscribe(
+        response =>{
+          if(response.status == 'success'){
+            this.sucursales = response.sucursales;
+          }
+          console.log(this.sucursales);
+        }, error =>{
+          console.log(error);
+        });
+    }
   
+    /**
+     * @description
+     * Obtiene la empresa/sucursal en la que se esta loguedo
+     */
+    getEmpresa(){
+      this._empresaService.getDatosEmpresa().subscribe(
+        response =>{
+          if(response.status == 'success'){
+            this.empresaSesion = response.empresa[0];
+            console.log(this.empresaSesion);
+          }
+        }, error =>{
+          console.log(error);
+        });
+    }
+  
+    //Funciones
+  
+    /**
+     * 
+     */
+
+
 
 }
