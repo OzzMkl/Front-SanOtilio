@@ -289,5 +289,21 @@ export class TraspasoBuscarComponent implements OnInit {
     )
   }
 
+  public editarTraspaso(traspaso:any){
+    //console.log(compra.created_at);
+    const resultado = new Date(traspaso.created_at);
+    resultado.setDate(resultado.getDate()+15);
+    //console.log(resultado);
+    const fechaActual = new Date();
+    //console.log(fechaActual);
+    if(resultado>fechaActual){
+      //this.messageService.add({severity:'success', summary:'Éxito', detail:'Si se puede'});
+      this._modalService.dismissAll('Cross click');
+      this._router.navigate(['../traspaso-modulo/traspaso-editar/',traspaso.idTraspaso,this.tipoBusqueda]);
+    }else{
+      this.messageService.add({severity:'warn', summary:'Aviso', detail:'No se puede modificar un traspaso con más de 15 días de antiguedad'});
+    }
+
+  }
 
 }

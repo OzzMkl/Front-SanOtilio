@@ -88,7 +88,7 @@
                             <button type="button" class="btn btn-secondary" style="box-sizing: border-box;" (click)="createPDF(datosTraspaso.idTraspaso,tipoBusqueda)" ><i class="bi bi-file-earmark-pdf" ngbTooltip="PDF"></i><br></button>
                         </div>
                         <div class="col-auto">
-                            <button type="button" class="btn btn-warning"  ngbTooltip="EDITAR"><i class="bi bi-pencil-square"></i><br></button>
+                            <button type="button" class="btn btn-warning" (click)="editarTraspaso(datosTraspaso)" ngbTooltip="EDITAR"><i class="bi bi-pencil-square"></i><br></button>
                         </div>
                         <div class="col-auto">
                             <button type="button" class="btn btn-danger" (click)="open(confirmacion)" ngbTooltip="CANCELAR"><i class="bi bi-trash3"></i><br></button>

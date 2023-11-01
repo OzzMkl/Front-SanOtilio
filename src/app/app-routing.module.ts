@@ -164,7 +164,7 @@ const routes: Routes = [
     [
       {path: 'traspaso-buscar', component: TraspasoBuscarComponent},
       {path: 'traspaso-agregar', component: TraspasoAgregarComponent},
-      {path: 'traspaso-editar', component: TraspasoEditarComponent}
+      {path: 'traspaso-editar/:idTraspaso/:tipoTraspaso', component: TraspasoEditarComponent}
       
     ]},
   {path: 'clasificacion-modulo',component: ClasificacionModuloComponent},
