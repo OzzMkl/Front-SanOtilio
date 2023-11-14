@@ -14,18 +14,18 @@
                         icon="pi pi-search"
                         [routerLink]="['notas-por-cobrar']" 
                         *ngIf="userPermisos.ver == 1" 
-                        pTooltip="Buscar" 
+                        pTooltip="Notas por cobrar" 
                         tooltipPosition="top">
                 </button>
             
-                <button class="p-button-rounded p-button-danger me-md-2" icon="pi pi-search"
+                <button class="p-button-rounded p-button-help me-md-2" icon="pi pi-search"
                         pButton 
                         pRipple 
                         type="button" 
                         [routerLink]="['notas-a-credito']" 
                         *ngIf="userPermisos.ver == 1" 
-                        pTooltip="Deshabilitados" 
-                        tooltipPosition="top">
+                        pTooltip="Notas a credito" 
+                        tooltipPosition="left">
                 </button>
         </div>
     </div>
