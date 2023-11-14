@@ -37,7 +37,7 @@ export class CajasGuard implements CanActivate {
         this.user = this._empleadoService.getIdentity();
         // usamos la funcion de la utileria enviando la info del usuario, modulos y el servicio de message
         this.check = validaPermiso(this.user,this.mCaja, this.messageService);
-      } else{
+      } else{ 
         this.messageService.add({
                   severity:'error', 
                   summary:'Acceso denegado', 
