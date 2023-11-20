@@ -166,8 +166,10 @@ export class NotasPorCobrarComponent implements OnInit {
     } else{
       //Si todo esta bien realizamos la operacion
       this.cambio = this.detallesVenta[0]['total'] - this.tp1;
+      console.log("cambio 1 = "+this.cambio)
       //si el cambio es menor o igual a cero
       if(this.cambio <= 0){
+        console.log('si entra')
         //multiplicamos el cambio por -1  para volverlo positivo
         this.cambio = (this.cambio)*(-1)
         //habilitamos el boton de cobrar

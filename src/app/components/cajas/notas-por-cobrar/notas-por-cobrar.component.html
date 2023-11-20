@@ -186,7 +186,7 @@
                             <label class="form-label" for="">TP1:</label>
                             <input class="form-control" type="text" value="{{tp1 | currency}}"  disabled>
                         </div>
-                        <div class="col" *ngIf="isCero else elseResta">
+                        <div class="col" *ngIf="cambio >= 0 ; else elseResta">
                             <label class="form-label" for="">CAMBIO:</label>
                             <input class="form-control" type="text" value="{{cambio | currency}}"  disabled>
                         </div>
