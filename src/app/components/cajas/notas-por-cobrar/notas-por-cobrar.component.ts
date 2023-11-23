@@ -176,8 +176,11 @@ export class NotasPorCobrarComponent implements OnInit {
       });
       this.isCero=true
     } else{
-      //Si todo esta bien realizamos la operacion
-      this.cambio = this.detallesVenta[0]['total'] - this.tp1;
+      if(this.abonos_ventas.length > 0){
+        this.cambio = this.total_actualizado - this.tp1;
+      } else{
+        this.cambio = this.detallesVenta[0]['total'] - this.tp1;
+      }
 
       if(this.cambio <= 0){
         
@@ -217,8 +220,10 @@ export class NotasPorCobrarComponent implements OnInit {
         this.caja_movimiento.idOrigen = this.detallesVenta[0]['idVenta'];
         this.caja_movimiento.saldo_restante = this.saldo_restante;
 
+        let tieneAbono = this.abonos_ventas.length > 0 ? true : false;
+
         // console.log(this.caja_movimiento);
-        this._cajaService.cobroVenta(this.detallesVenta[0]['idVenta'], this.caja_movimiento, this.isSaldo,this.empleado.sub).subscribe(
+        this._cajaService.cobroVenta(this.detallesVenta[0]['idVenta'], this.caja_movimiento, this.isSaldo,this.empleado.sub,tieneAbono).subscribe(
           response => {
             //si la respuesta es correcta
             if(response.status == 'success'){
