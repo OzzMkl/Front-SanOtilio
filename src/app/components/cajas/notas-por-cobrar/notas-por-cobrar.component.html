@@ -94,10 +94,42 @@
                     <input type="text" class="form-control" value="{{v.nombreStatus}}" readonly>
                 </div>
                 <div class="col" >
-                    <!-- <button type="button" class="btn btn-secondary me-md-2" style="box-sizing: border-box;" ><i class="bi bi-receipt-cutoff"></i><br>TICKET</button> -->
-                    <button type="button" class="btn btn-success me-md-2" (click)="openModalCobro(cobrarVenta)"><i class="bi bi-cash-coin"></i><br>COBRAR</button>
-                    <button type="button" class="btn btn-warning me-md-2"  ><i class="bi bi-box-arrow-in-up-right"></i><br>PASAR A CREDITO</button>
-                    <button type="button" class="btn btn-secondary" (click)="generaPDF()"><i class="bi bi-file-earmark-pdf"></i><br>PDF</button>
+                    <button class="p-button-rounded p-button-success me-md-2"
+                            pButton
+                            pRipple
+                            type="button"
+                            icon="bi bi-cash-coin"
+                            pTooltip="Cobrar"
+                            tooltipPosition="top"
+                            (click)="openModalCobro(cobrarVenta)">
+                    </button>
+                    <button class="p-button-rounded p-button-warning me-md-2"
+                            pButton
+                            pRipple
+                            type="button"
+                            icon="bi bi-box-arrow-in-up-right"
+                            pTooltip="Pasar a credito"
+                            tooltipPosition="top">
+                    </button>
+                    <button class="p-button-rounded p-button-secondary me-md-2"
+                            pButton
+                            pRipple
+                            type="button"
+                            icon="bi bi-file-earmark-pdf"
+                            pTooltip="PDF"
+                            tooltipPosition="top"
+                            (click)="generaPDF()">
+                    </button>
+                    <button *ngIf="abonos_ventas.length > 0"
+                            class="p-button-rounded p-button-info me-md-2"
+                            pButton
+                            pRipple
+                            type="button"
+                            icon="pi pi-info-circle"
+                            pTooltip="Abonos"
+                            tooltipPosition="top"
+                            (click)="openModalAbonos(abonosVenta)">
+                    </button>
                 </div>
             </div>
             <div class="row">
@@ -164,10 +196,12 @@
 
                 <div class="row">
                     <div class="col-8">
+                        <div class="col">
                             <label class="form-label">Tipo de pago</label>
                             <div class="input-group">
                                 <div class="col-4">
                                     <select class="form-select" name="tipopago1" #tipopago1="ngModel" [(ngModel)]="select1">
+                                        <option value="0" disabled>Seleccione una forma de pago</option>
                                         <option *ngFor="let tp of tipo_pago" value="{{tp.idt}}">{{tp.tipo}}</option>
                                     </select>
                                 </div>
@@ -175,18 +209,50 @@
                                     <input class="form-control" type="number" min="0" name="tp1" [(ngModel)]="tp1" (change)="calculaCambio()">
                                 </div>
                             </div>
+                        </div>
+                            <br>
+                        <div class="col" *ngIf="abonos_ventas.length > 0">
+                            <table class="table table-dark table-hover table-responsive text-center">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">ABONO</th>
+                                        <th scope="col">TOTAL ANTERIOR</th>
+                                        <th scope="col">TOTAL ACTUALIZADO</th>
+                                        <th scope="col">FECHA</th>
+                                        <!-- <th scope="col">REALIZO</th> -->
+                                    </tr>
+                                </thead>
+                                <tbody *ngFor="let abono of abonos_ventas">
+                                    <tr>
+                                        <th scope="row">{{abono.abono | currency}}</th>
+                                        <th scope="row">{{abono.totalAnterior | currency}}</th>
+                                        <th scope="row">{{abono.totalActualizado | currency}}</th>
+                                        <th scope="row">{{abono.created_at | date: 'dd/MM/yyyy'}}</th>
+                                        <!-- <th scope="row">{{abono.nombreEmpleado}}</th> -->
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                     <div class="col-3">
                         <h6 class="text-center">OPERACIONES</h6>
                         <div class="col">
-                            <label class="form-label" for="">TOTAL:</label>  
+                            <label class="form-label" for="">TOTAL NOTA:</label>  
                             <input class="form-control" type="text" value="{{v.total | currency}}" disabled>
                         </div>
+                        <div class="col" *ngIf="abonos_ventas.length > 0">
+                            <label class="form-label">TOTAL ABONOS:</label>
+                            <input class="form-control" type="text" value="{{total_abono | currency}}" disabled>
+                        </div>
+                        <div class="col" *ngIf="abonos_ventas.length > 0">
+                            <label class="form-label">SALDO ACTUAL:</label>
+                            <input class="form-control" type="text" value="{{total_actualizado | currency}}" disabled>
+                        </div>
                         <div class="col">
-                            <label class="form-label" for="">TP1:</label>
+                            <label class="form-label" for="">PAGO:</label>
                             <input class="form-control" type="text" value="{{tp1 | currency}}"  disabled>
                         </div>
-                        <div class="col" *ngIf="cambio >= 0 ; else elseResta">
+                        <div class="col" *ngIf="!isSaldo ; else elseResta">
                             <label class="form-label" for="">CAMBIO:</label>
                             <input class="form-control" type="text" value="{{cambio | currency}}"  disabled>
                         </div>
@@ -201,15 +267,44 @@
                 <br>
                 <div class="row justify-content-end">
                     <div class="col-auto">
-                        <button class="btn btn-success" type="submit" [disabled]="isCero" (click)="cobroVenta()">COBRAR</button>
+                        <button class="btn btn-success" type="submit" [disabled]="isCero" (click)="confirmCobro()">COBRAR</button>
                     </div>
                 </div>
-
-
-
-
 
             </form>
         </div>
     </div>
 </ng-template>
+
+<ng-template #abonosVenta let-modal>
+    <div *ngFor="let v of detallesVenta">
+        <div class="modal-header">
+            <h5 class="modal-title" id="modal-basic-title">Abonos venta #{{v.idVenta}}</h5>
+            <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+        </div>
+        <div class="modal-body">
+            <table class="table table-dark table-hover table-responsive text-center">
+                <thead>
+                    <tr>
+                        <th scope="col">ABONO</th>
+                        <th scope="col">TOTAL ANTERIOR</th>
+                        <th scope="col">TOTAL ACTUALIZADO</th>
+                        <th scope="col">FECHA</th>
+                        <th scope="col">REALIZO</th>
+                    </tr>
+                </thead>
+                <tbody *ngFor="let abono of abonos_ventas">
+                    <tr>
+                        <th scope="row">{{abono.abono | currency}}</th>
+                        <th scope="row">{{abono.totalAnterior | currency}}</th>
+                        <th scope="row">{{abono.totalActualizado | currency}}</th>
+                        <th scope="row">{{abono.created_at | date: 'dd/MM/yyyy'}}</th>
+                        <th scope="row">{{abono.nombreEmpleado}}</th>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</ng-template>
+
+<p-confirmDialog [style]="{width: '30vw'}" [baseZIndex]="10000" acceptLabel="Si" rejectButtonStyleClass="p-button-text"></p-confirmDialog>
