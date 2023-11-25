@@ -51,6 +51,8 @@ export class TraspasoBuscarComponent implements OnInit {
   public productosDT:any;
   //Modal para cancelación
   public motivo:string = '';
+  //Ayudantes
+  public isHidden = true;
 
 
   constructor(
@@ -96,7 +98,7 @@ export class TraspasoBuscarComponent implements OnInit {
     this.isLoading = true;
     let str_datInicial = this.datInicial.year+'-'+this.datInicial.month+'-'+this.datInicial.day;
     let str_datFinal = this.datFinal.year+'-'+this.datFinal.month+'-'+this.datFinal.day;
-
+    this.tipoBusqueda == 'Envia' ? this.isHidden = false : this.isHidden = true;
     //ejecutamos el servicio
     this._traspasoService.getTraspasos(this.tipoBusqueda,this.search,str_datInicial,str_datFinal).subscribe(
       response =>{
