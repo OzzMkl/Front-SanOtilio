@@ -9,7 +9,10 @@ export class Caja_movimientos{//Modelo de la tabla cajas
         public cambioCliente:number,
         public idOrigen: number,
         public autoriza: any,
-        public observaciones: string
+        public observaciones: string,
+
+        // extra
+        public saldo_restante: number
 
     ){}
 }

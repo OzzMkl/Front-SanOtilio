@@ -78,6 +78,7 @@ import { CotizacionGuard } from './guards/cotizacion.guard';
 import { ClienteGuard } from './guards/cliente.guard';
 import { ProductosGuard } from './guards/productos.guard';
 import { RequisicionGuard } from './guards/requisicion.guard';
+import { CajasGuard } from './guards/cajas.guard';
 
 
 
@@ -143,7 +144,7 @@ const routes: Routes = [
         {path:'entregas-agregar',component: EntregasAgregarComponent},
         {path:'entregas-pendientes',component: EntregasPendientesComponent}
       ]},
-  {path:'caja-modulo', component: CajaModuloComponent,
+  {path:'caja-modulo', component: CajaModuloComponent,canActivate:[CajasGuard],
       children:
       [
         {path:'notas-por-cobrar',component: NotasPorCobrarComponent},

@@ -25,17 +25,24 @@ export class CajasService {
     let params = 'json='+json;
     return this._http.put(this.url+'cajas/cierreCaja',params,{headers:this.headers})
   }
-  cobroVenta(idVenta:number,venta:any):Observable<any>{
-    let json = JSON.stringify(venta);
+  cobroVenta(idVenta:number,venta:any, isSaldo:boolean, idempleado:number, tieneAbono:boolean):Observable<any>{
+    let combinado = {...venta, isSaldo: isSaldo, idEmpleado:idempleado, tieneAbono: tieneAbono};
+    let json = JSON.stringify(combinado);
     let params = 'json='+json;
     return this._http.post(this.url+'cajas/cobroVenta/'+idVenta,params,{headers:this.headers});
   }
   verificaSesionCaja():Observable<any>{
     return this._http.get(this.url+'cajas/verificaSesionesCaja',{headers:this.headers})
   }
+  
   movimientosSesionCaja(idCaja:any):Observable<any>{
     return this._http.get(this.url+'cajas/movimientosSesionCaja/'+idCaja,{headers:this.headers})
   }
+
+  abonosVentasg(idVenta:number):Observable<any>{
+    return this._http.get(this.url+'cajas/abonos_ventas/'+idVenta, { headers:this.headers});
+  }
+
   // getTipoMovimiento():Observable<any>{
   //   return this._http.get(this.url+'cajas/indexTipoMovimiento',{headers:this.headers});
   // }

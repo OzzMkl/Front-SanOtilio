@@ -1,12 +1,32 @@
-<div class="container">
+<p-toast></p-toast>
+<div class="container-fluid">
     <br>
     <div class="row justify-content-between">
         <div class="col-5">
             <h2>Modulo de cajas</h2>
         </div>
         <div class="col-auto">
-            <button type="button"  class="btn btn-primary me-md-2" [routerLink]="['notas-por-cobrar']" style="box-sizing: border-box;" ngbTooltip="NOTAS POR COBRAR"><i class="bi bi-search"></i><br></button>
-            <button type="button"  class="btn btn-secondary me-md-2" [routerLink]="['notas-a-credito']" style="box-sizing: border-box;" ngbTooltip="NOTAS A CREDITO"><i class="bi bi-search"></i><br></button>
+
+                <button class="p-button-rounded me-md-2"
+                        pButton 
+                        pRipple 
+                        type="button"  
+                        icon="pi pi-search"
+                        [routerLink]="['notas-por-cobrar']" 
+                        *ngIf="userPermisos.ver == 1" 
+                        pTooltip="Notas por cobrar" 
+                        tooltipPosition="top">
+                </button>
+            
+                <button class="p-button-rounded p-button-help me-md-2" icon="pi pi-search"
+                        pButton 
+                        pRipple 
+                        type="button" 
+                        [routerLink]="['notas-a-credito']" 
+                        *ngIf="userPermisos.ver == 1" 
+                        pTooltip="Notas a credito" 
+                        tooltipPosition="left">
+                </button>
         </div>
     </div>
 </div>
