@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 //Servicios
 import { VentasService } from 'src/app/services/ventas.service';
 import { EmpleadoService } from 'src/app/services/empleado.service';
+import { CajasService } from 'src/app/services/cajas.service';
 //NGBOOTSTRAP-modal
 import { NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
 //primeng
@@ -47,8 +48,11 @@ export class VentasRealizadasComponent implements OnInit {
   counter: number = 5;
   timerId:any;
 
+  public idVentaMdlMotivo: number = 0;
+  public nombreClienteMdlMotivo: string = '';
 
-  constructor( private _ventasService: VentasService, 
+  constructor( private _ventasService: VentasService,
+                private _cajaService: CajasService,
                 private modalService: NgbModal, 
                 private _empleadoService: EmpleadoService,
                 private messageService: MessageService,
@@ -115,18 +119,36 @@ export class VentasRealizadasComponent implements OnInit {
     this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title', size: 'xl'});
   }
   //Abre motal de motivo de cancelacion
-  openModalMotivo(content:any){
+  openModalMotivo(content:any,idVenta:number,nombreCliente:string){
+    this.idVentaMdlMotivo = 0;
+    this.nombreClienteMdlMotivo ='';
+    this.idVentaMdlMotivo = idVenta;
+    this.nombreClienteMdlMotivo = nombreCliente;
     this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title', size: 'md', backdrop:'static'});
   }
 
   almacenaMotivo(){
+    let abonos_ventas: any;
+    let total_abono: number;
     if(this.motivoCancelacion.length >= 10){
+      // revisamos si tiene abonos
+      abonos_ventas = this._cajaService.abonosVentasg(this.idVentaMdlMotivo).subscribe(
+        response =>{
+            abonos_ventas = response.abonos;
+            total_abono = response.total_abono;
+
+            if(abonos_ventas.length > 0){
+              this.confirmCancelacionAbono(this.idVentaMdlMotivo, abonos_ventas.length,total_abono,this.nombreClienteMdlMotivo);
+            } else{
+              //segudo cuadro de confirmacion
+              this.confirmCancelacion();
+            }
+        });
+        
       //notificamos
       this.messageService.add({severity:'success', summary:'Realizado', detail: 'El motivo fue capturado.'});
-      //segudo cuadro de confirmacion
-      this.confirmCancelacion();
     } else {
-      this.messageService.add({severity:'error', summary:'Advertencia', detail: 'El motivo de modificacón tiene que contener minimo 10 caracteres.'});
+      this.messageService.add({severity:'error', summary:'Advertencia', detail: 'El motivo de cancelación tiene que contener minimo 10 caracteres.'});
     }
   }
 
@@ -136,24 +158,7 @@ export class VentasRealizadasComponent implements OnInit {
         header: 'Advertencia',
         icon: 'pi pi-exclamation-triangle',
         accept: () => {
-            //Sustituimos todos los permisos por solo los permisos del modulo
-            //Esto con la finalidad de no enviar informacion innecesaria
-            let identityMod ={
-              ... this.identity,
-              'permisos': this.userPermisos
-            }
-
-            this._ventasService.cancelaVenta(this.detallesVenta[0].idVenta, identityMod, this.motivoCancelacion).subscribe(
-              response =>{
-                if(response.status == 'success'){
-                  this.messageService.add({severity:'success', summary:'Exito', detail:response.message});
-                  this.modalService.dismissAll();
-                  this.getVentas();
-                }
-                //console.log(response);
-              }, error =>{
-                console.log(error)
-              });
+            this.cancelaVenta();
         },
         reject: (type:any) => {
             switch(type) {
@@ -166,6 +171,50 @@ export class VentasRealizadasComponent implements OnInit {
             }
         }
     });
-}
+  }
+
+  confirmCancelacionAbono(idVentaMotivo:number, lengthAbono:number, total_abono:number,nombreClienteMotivo:string){
+    this._confirmationService.confirm({
+      message: 'La venta '+idVentaMotivo+' tiene '+lengthAbono+' abono(s). <br>'+
+                'Se sumara como credito disponible la cantidad de <strong>$'+total_abono+'</strong>'+ 
+                ' al cliente <strong>'+nombreClienteMotivo+'</strong><br>'+
+                '¿Esta seguro(a) que desea continuar?',
+      header: 'Advertencia',
+      icon: 'pi pi-exclamation-triangle',
+      accept: () => {
+          this.cancelaVenta();
+      },
+      reject: (type:any) => {
+          switch(type) {
+              case ConfirmEventType.REJECT:
+                  this.messageService.add({severity:'warn', summary:'Cancelado', detail:'Confirmacion de cancelacion cancelada.'});
+              break;
+              case ConfirmEventType.CANCEL:
+                  this.messageService.add({severity:'warn', summary:'Cancelado', detail:'Confirmacion de cancelacion cancelada.'});
+              break;
+          }
+      }
+    });
+  }
+
+  cancelaVenta(){
+    //Sustituimos todos los permisos por solo los permisos del modulo
+    //Esto con la finalidad de no enviar informacion innecesaria
+    let identityMod ={
+      ... this.identity,
+      'permisos': this.userPermisos
+    }
+    this._ventasService.cancelaVenta(this.detallesVenta[0].idVenta, identityMod, this.motivoCancelacion).subscribe(
+      response =>{
+        if(response.status == 'success'){
+          this.messageService.add({severity:'success', summary:'Exito', detail:response.message});
+          this.modalService.dismissAll();
+          this.getVentas();
+        }
+        //console.log(response);
+      }, error =>{
+        console.log(error)
+      });
+  }
 
 }
