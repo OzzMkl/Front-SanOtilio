@@ -80,7 +80,7 @@
                                 [routerLink]="['../../punto-de-venta-editar',v.idVenta]" (click)="modal.dismiss('Cross click')">
                         <i class="bi bi-pencil-square" ></i><br>
                     </button>
-                    <button *ngIf="userPermisos.cancelar == 1" type="button" class="btn btn-danger me-md-2" (click)="openModalMotivo(mMotivoCancelacion)" ngbTooltip="CANCELAR"><i class="bi bi-trash3" ></i><br></button>
+                    <button *ngIf="userPermisos.cancelar == 1" type="button" class="btn btn-danger me-md-2" (click)="openModalMotivo(mMotivoCancelacion,v.idVenta,v.nombreCliente)" ngbTooltip="CANCELAR"><i class="bi bi-trash3" ></i><br></button>
                 </div>
             </div>
             <div class="row">
@@ -106,31 +106,33 @@
                 </div>
             </div>
             <hr>
-            <table class="table table-dark table-hover">
-                <thead>
-                    <tr>
-                        <th scope="col">CLAVE EXTERNA</th>
-                        <th scope="col">DESCRIPCION</th>
-                        <th scope="col">MEDIDA</th>
-                        <th scope="col">CANTIDAD</th>
-                        <th scope="col">PRECIO</th>
-                        <th scope="col">DESCUENTO</th>
-                        <th scope="col">SUBTOTAL</th>
-                    </tr>
-                </thead>
-                <tbody *ngFor="let pdv of productosDVenta | paginate:{id:'mProductosDVenta',itemsPerPage: 4, currentPage: mpageActual}">
-                    <tr>
-                        <th scope="row">{{pdv.claveEx}}</th>
-                        <th scope="row">{{pdv.descripcion}}</th>
-                        <th scope="row">{{pdv.nombreMedida}}</th>
-                        <th scope="row">{{pdv.cantidad}}</th>
-                        <th scope="row">{{pdv.precio | currency}}</th>
-                        <th scope="row">{{pdv.descuento | currency}}</th>
-                        <th scope="row">{{pdv.total | currency}}</th>
-                    </tr>
-                </tbody>
-            </table>
-            <pagination-controls id="mProductosDVenta" (pageChange)="mpageActual = $event"></pagination-controls>
+                <div class="table-responsive">
+                    <table class="table table-dark table-hover">
+                        <thead>
+                            <tr>
+                                <th scope="col">CLAVE EXTERNA</th>
+                                <th scope="col">DESCRIPCION</th>
+                                <th scope="col">MEDIDA</th>
+                                <th scope="col">CANTIDAD</th>
+                                <th scope="col">PRECIO</th>
+                                <th scope="col">DESCUENTO</th>
+                                <th scope="col">SUBTOTAL</th>
+                            </tr>
+                        </thead>
+                        <tbody *ngFor="let pdv of productosDVenta | paginate:{id:'mProductosDVenta',itemsPerPage: 4, currentPage: mpageActual}">
+                            <tr>
+                                <th scope="row">{{pdv.claveEx}}</th>
+                                <th scope="row">{{pdv.descripcion}}</th>
+                                <th scope="row">{{pdv.nombreMedida}}</th>
+                                <th scope="row">{{pdv.cantidad}}</th>
+                                <th scope="row">{{pdv.precio | currency}}</th>
+                                <th scope="row">{{pdv.descuento | currency}}</th>
+                                <th scope="row">{{pdv.total | currency}}</th>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <pagination-controls id="mProductosDVenta" (pageChange)="mpageActual = $event"></pagination-controls>
+                </div>
             <hr>
             <div class="row" *ngIf="v.observaciones.length > 2">
                 <div class="col">
@@ -144,7 +146,7 @@
 <!-- Modal Motivo Cncelacion -->
 <ng-template #mMotivoCancelacion let-modal>
     <div class="modal-header">
-        <h4>Ingresa el motivo de modificacion</h4>
+        <h4>Ingresa el motivo de cancelacion</h4>
         <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
     </div>
     <div class="modal-body">
@@ -155,7 +157,7 @@
     </div>
     <div class="modal-footer">
         <div class="col">
-            <button class="btn btn-danger form-control" >Cancelar</button>
+            <button class="btn btn-danger form-control" (click)="modal.dismiss()">Cancelar</button>
         </div>
         <div class="col">
             <button class="btn btn-success form-control" (click)="almacenaMotivo()" >Guardar</button>
