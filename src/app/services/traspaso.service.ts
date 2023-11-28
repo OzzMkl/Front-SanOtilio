@@ -64,6 +64,19 @@ export class TraspasoService {
     return this._http.post(this.url+'traspasos/cancelarTraspaso',params, {headers:this.headers} );
   }
 
+  updateTraspaso(traspaso:any,tipoTraspaso:string,lista_producto_traspaso:any,identity:any):Observable<any>{
+    const combinado = {
+      'traspaso': traspaso,
+      'tipoTraspaso':tipoTraspaso,
+      'lista_producto_traspaso':lista_producto_traspaso,
+      'identity':identity
+    };
+    let json = JSON.stringify(combinado);
+    let params = 'json='+json;
+    return this._http.post(this.url+'traspasos/updateTraspaso',params, {headers:this.headers} );
+
+  }
+
 
 
 

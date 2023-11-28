@@ -1,6 +1,6 @@
 <p-toast></p-toast>
 <div class="container">
-    <form class="form-group" #FormTrasp="ngForm" (keydown)="omitirEnter($event)"  (ngSubmit)="agregarTraspaso(FormTrasp)">
+    <form class="form-group" #FormTrasp="ngForm" (keydown)="omitirEnter($event)"  (ngSubmit)="updateTraspaso(FormTrasp)">
         <!-- SUCURSALES / TIPO -->
         <div class="">
             <h2 class="text-center">EDITAR TRASPASO N° {{detallesTraspaso.idTraspaso}}</h2>
@@ -112,7 +112,7 @@
                         <th scope="col">IMPORTE</th>
                     </tr>
                 </thead>
-                <tbody *ngFor="let prod of productosDT | paginate:{ id: 'pcEdit3', itemsPerPage: 5, currentPage: pageActualLista}">
+                <tbody *ngFor="let prod of lista_producto_traspaso | paginate:{ id: 'pcEdit3', itemsPerPage: 5, currentPage: pageActualLista}">
                     <tr (click)="editarProducto(prod)">
                     <th scope="row">{{prod.claveEx}}</th>
                     <th scope="row">{{prod.descripcion}}</th>

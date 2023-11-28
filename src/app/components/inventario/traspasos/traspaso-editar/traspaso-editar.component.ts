@@ -29,7 +29,6 @@ export class TraspasoEditarComponent implements OnInit {
   public empresaSesion: Empresa = new Empresa(0,'','','','','','','','','','','','','','');
   //Datos de traspaso
   public detallesTraspaso:any = '';
-  public productosDT:any;
   public producto_traspaso = new Producto_traspaso(0,0,'','',0,0,0,0,0,null,'');
   public lista_producto_traspaso: Array<Producto_traspaso> = [];
 
@@ -116,10 +115,10 @@ export class TraspasoEditarComponent implements OnInit {
         // console.log(response);
         if(response.status == 'success'){
           this.detallesTraspaso = response.traspaso[0]; 
-          this.productosDT = response.productos;
+          this.lista_producto_traspaso = response.productos;
           console.log('traspaso',this.detallesTraspaso);
           console.log('sucursalEN',this.detallesTraspaso.sucursalEN);
-          console.log('productos',this.productosDT);
+          console.log('productos',this.lista_producto_traspaso);
           this.tipoTraspaso = tipoTraspaso;
 
         }else{ console.log('Algo salio mal'); }
@@ -228,7 +227,7 @@ export class TraspasoEditarComponent implements OnInit {
   }
 
   //Envio de formulario
-  agregarTraspaso(form:any){//Enviar Form insertar en DB
+  updateTraspaso(form:any){//Enviar Form insertar en DB
     this.detallesTraspaso.idEmpleado = this.identity['sub'];//asginamos id de Empleado
 
     if(this.detallesTraspaso.folio == 0 && this.tipoTraspaso == 'Recibe'){
@@ -240,7 +239,7 @@ export class TraspasoEditarComponent implements OnInit {
     else
     {
       console.log(this.detallesTraspaso);
-      this._traspasoService.registerTraspaso(this.detallesTraspaso,this.tipoTraspaso,this.lista_producto_traspaso,this.identity).subscribe(
+      this._traspasoService.updateTraspaso(this.detallesTraspaso,this.tipoTraspaso,this.lista_producto_traspaso,this.identity).subscribe(
         response =>{
           if(response.status == 'success'){
             this.messageService.add({severity:'success', summary:'Éxito', detail:'Traspaso registrado'});
@@ -552,12 +551,12 @@ export class TraspasoEditarComponent implements OnInit {
       this.producto_traspaso.idProdMedida = parseInt(this.medidaActualizada.idProdMedida);
       this.producto_traspaso.nombreMedida = this.medidaActualizada.nombreMedida;
 
-      this.productosDT.push({...this.producto_traspaso}); 
+      this.lista_producto_traspaso.push({...this.producto_traspaso}); 
       //Reset variables
       this.resetVariables(); 
 
     }
-    console.log('lista de produstos traspaso',this.productosDT);
+    console.log('lista de produstos traspaso',this.lista_producto_traspaso);
     
   }
 
@@ -588,7 +587,7 @@ export class TraspasoEditarComponent implements OnInit {
   editarProducto(lpo:any){//metodo para editar la lista de productos
     console.log('editarProducto',lpo);
 
-    this.productosDT = this.productosDT.filter((item:any) => item.idProducto !== lpo.idProducto);//eliminamos el producto
+    this.lista_producto_traspaso = this.lista_producto_traspaso.filter((item:any) => item.idProducto !== lpo.idProducto);//eliminamos el producto
     //consultamos la informacion para motrar el producto nuevamente
     this.getProd(lpo);
     //this.isSearch = false;
