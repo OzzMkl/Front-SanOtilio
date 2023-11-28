@@ -22,6 +22,9 @@ export class VentasRealizadasComponent implements OnInit {
   public detallesVenta:any;
   public productosDVenta:any;
   public userPermisos:any//loaduser
+  public abonos_ventas:any; //getAbonosVentasg
+  public total_abono:number = 0;
+  public total_actualizado: number = 0;
   //spinner de carga
   public isLoading:boolean = false;
   //
@@ -76,7 +79,7 @@ export class VentasRealizadasComponent implements OnInit {
       }
     )
   }
-  getDetallesVenta(idVenta:any){
+  getDetallesVenta(idVenta:number){
     this._ventasService.getDetallesVenta(idVenta).subscribe(
       response =>{
         if(response.status == 'success'){
@@ -86,9 +89,20 @@ export class VentasRealizadasComponent implements OnInit {
         }
       },error =>{
         console.log(error);
-      }
-    )
+      });
+      this.getAbonosVentasg(idVenta);
   }
+
+  getAbonosVentasg(idVenta:number){
+    this._cajaService.abonosVentasg(idVenta).subscribe(
+      response =>{
+          this.abonos_ventas = response.abonos;
+          this.total_abono = response.total_abono;
+          this.total_actualizado = response.total_actualizado;
+          // console.log(this.abonos_ventas);
+      });
+  }
+
   //ponemos vacio al cambiar entre tipo de busqueda
   seleccionTipoBusqueda(e:any){
     this.buscaFolio='';
@@ -128,22 +142,15 @@ export class VentasRealizadasComponent implements OnInit {
   }
 
   almacenaMotivo(){
-    let abonos_ventas: any;
-    let total_abono: number;
     if(this.motivoCancelacion.length >= 10){
       // revisamos si tiene abonos
-      abonos_ventas = this._cajaService.abonosVentasg(this.idVentaMdlMotivo).subscribe(
-        response =>{
-            abonos_ventas = response.abonos;
-            total_abono = response.total_abono;
-
-            if(abonos_ventas.length > 0){
-              this.confirmCancelacionAbono(this.idVentaMdlMotivo, abonos_ventas.length,total_abono,this.nombreClienteMdlMotivo);
-            } else{
-              //segudo cuadro de confirmacion
-              this.confirmCancelacion();
-            }
-        });
+        console.log(this.abonos_ventas)
+        if(this.abonos_ventas.length > 0){
+          this.confirmCancelacionAbono(this.idVentaMdlMotivo, this.abonos_ventas.length,this.total_abono,this.nombreClienteMdlMotivo);
+        } else{
+          //segudo cuadro de confirmacion
+          this.confirmCancelacion();
+        }
         
       //notificamos
       this.messageService.add({severity:'success', summary:'Realizado', detail: 'El motivo fue capturado.'});
@@ -195,6 +202,32 @@ export class VentasRealizadasComponent implements OnInit {
           }
       }
     });
+  }
+
+  confirmEdicionAbono(){
+    /**
+     * cerrar modal
+     * y mandar modal que se cerro
+     * Si tiene abonos se ejecuta confirm si no
+     */
+    this._confirmationService.confirm({
+      message: '¿Esta seguro(a) que desea cancelar la venta?',
+      header: 'Advertencia',
+      icon: 'pi pi-exclamation-triangle',
+      accept: () => {
+          this.cancelaVenta();
+      },
+      reject: (type:any) => {
+          switch(type) {
+              case ConfirmEventType.REJECT:
+                  this.messageService.add({severity:'warn', summary:'Cancelado', detail:'Confirmacion de cancelacion cancelada.'});
+              break;
+              case ConfirmEventType.CANCEL:
+                  this.messageService.add({severity:'warn', summary:'Cancelado', detail:'Confirmacion de cancelacion cancelada.'});
+              break;
+          }
+      }
+  });
   }
 
   cancelaVenta(){
