@@ -263,9 +263,9 @@ export class TraspasoAgregarComponent implements OnInit {
             this.messageService.add({severity:'success', summary:'Éxito', detail:'Traspaso registrado'});
             console.log(response);
             if(this.tipoTraspaso == 'Recibe'){
-              this.createPDF(response.traspaso['idTraspasoR'],this.tipoTraspaso);
+              this.createPDF(response.traspaso,this.tipoTraspaso);
             }else if(this.tipoTraspaso == 'Envia'){
-              this.createPDF(response.traspaso['idTraspasoE'],this.tipoTraspaso);
+              this.createPDF(response.traspaso,this.tipoTraspaso);
             }else{}
             //this.createPDF();
           }else{
