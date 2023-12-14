@@ -17,15 +17,9 @@ export class TraspasoService {
   /**
    * GET
    */
-  getTraspasos(tipoTraspaso: string, traspaso: string ,datInicial:any, datFinal:any):Observable<any>{
-    const combinado = {
-      'str_traspaso': traspaso,
-      'date_inicial': datInicial,
-      'date_final': datFinal
-    };
-    let json = JSON.stringify(combinado);
-    let params = 'json='+json;
-    return this._http.post(this.url+'traspasos/index/'+tipoTraspaso, params, {headers:this.headers});
+  getTraspasos(tipoTraspaso: string, traspaso: string ):Observable<any>{
+    let str_traspaso = traspaso == '' ? 'vacio' : traspaso;
+    return this._http.get(this.url+'traspasos/newIndex/'+tipoTraspaso+'/'+str_traspaso, {headers:this.headers});
   }
 
   getPDF(idTraspaso:number,idEmpleado:number,tipoTraspaso:any):Observable<Blob>{
