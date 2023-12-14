@@ -101,8 +101,8 @@ export class TraspasoEditarComponent implements OnInit {
       let idTraspaso:number = params['idTraspaso'];//la asignamos en una variable
       let tipoTraspaso:string = params['tipoTraspaso'];//la asignamos en una variable
       // console.log(params);
-      console.log(idTraspaso);
-      console.log(tipoTraspaso);
+      //console.log(idTraspaso);
+      //console.log(tipoTraspaso);
       this.getDetailsTraspaso(idTraspaso,tipoTraspaso);
     });
   }
@@ -116,9 +116,9 @@ export class TraspasoEditarComponent implements OnInit {
         if(response.status == 'success'){
           this.detallesTraspaso = response.traspaso[0]; 
           this.lista_producto_traspaso = response.productos;
-          console.log('traspaso',this.detallesTraspaso);
-          console.log('sucursalEN',this.detallesTraspaso.sucursalEN);
-          console.log('productos',this.lista_producto_traspaso);
+          //console.log('traspaso',this.detallesTraspaso);
+          //console.log('sucursalEN',this.detallesTraspaso.sucursalEN);
+          //console.log('productos',this.lista_producto_traspaso);
           this.tipoTraspaso = tipoTraspaso;
 
         }else{ console.log('Algo salio mal'); }
@@ -138,7 +138,7 @@ export class TraspasoEditarComponent implements OnInit {
           if(response.status == 'success'){
           this.sucursales = response.sucursales;
         }
-        console.log(this.sucursales);
+        //console.log(this.sucursales);
       }, error =>{
         console.log(error);
       });
@@ -153,7 +153,7 @@ export class TraspasoEditarComponent implements OnInit {
       response =>{
           if(response.status == 'success'){
           this.empresaSesion = response.empresa[0];
-          console.log(this.empresaSesion);
+          //console.log(this.empresaSesion);
         }
       }, error =>{
           console.log(error);
@@ -238,16 +238,17 @@ export class TraspasoEditarComponent implements OnInit {
     }
     else
     {
-      console.log(this.detallesTraspaso);
+      console.log('this.detallesTraspaso',this.detallesTraspaso);
       this._traspasoService.updateTraspaso(this.detallesTraspaso,this.tipoTraspaso,this.lista_producto_traspaso,this.identity).subscribe(
         response =>{
+          console.log('response',response);
           if(response.status == 'success'){
-            this.messageService.add({severity:'success', summary:'Éxito', detail:'Traspaso registrado'});
-            console.log(response);
+            this.messageService.add({severity:'success', summary:'Éxito', detail:'Traspaso actualizado'});
+            console.log('response.traspaso',response.traspaso);
             if(this.tipoTraspaso == 'Recibe'){
-              this.createPDF(response.traspaso['idTraspasoR'],this.tipoTraspaso);
+              this.createPDF(response.traspaso,this.tipoTraspaso);
             }else if(this.tipoTraspaso == 'Envia'){
-              this.createPDF(response.traspaso['idTraspasoE'],this.tipoTraspaso);
+              this.createPDF(response.traspaso,this.tipoTraspaso);
             }else{}
             //this.createPDF();
           }else{
