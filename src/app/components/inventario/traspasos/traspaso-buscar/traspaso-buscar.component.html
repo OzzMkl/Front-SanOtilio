@@ -13,7 +13,7 @@
         </div>
         <div class="col">
             <label class="form-label">Escribe el traspaso a buscar</label>
-            <input type="search" class="form-control" name="search" placeholder="Ingrese solo numeros" [(ngModel)]="search" (ngModelChange)="selectBusqueda()">
+            <input type="search" class="form-control" name="search" placeholder="Ingrese solo numeros" [(ngModel)]="search" (ngModelChange)="selectBusqueda()" oninput="this.value = this.value.replace(/[^0-9]/g, '');" autocomplete="off">
         </div>
         <!-- <div class="col-1 d-flex justify-content-center">
             <p-speedDial [model]="items" direction="down" showIcon="pi pi-bars" hideIcon="pi pi-times" class="p-button-rounded p-button-success me-md-2" ></p-speedDial>
@@ -54,7 +54,7 @@
                     <!-- <th scope="col"></th> -->
                 </tr>
             </thead>
-            <tbody *ngFor="let traspaso of traspasos | paginate: { itemsPerPage:itemsPerPage, currentPage: pageActual, totalItems:totalPages }">
+            <tbody *ngFor="let traspaso of traspasos | paginate: {id:'pagTraspaso', itemsPerPage:itemsPerPage, currentPage: pageActual, totalItems:totalPages }">
                 <tr  (click)="getDetailsTraspaso(traspaso.idTraspasoE ? traspaso.idTraspasoE : traspaso.idTraspasoR,tipoBusqueda)" (click)="open(content)">
                     <th scope="row">{{ traspaso.idTraspasoE ? traspaso.idTraspasoE : traspaso.idTraspasoR }}</th>
                     <th scope="row">{{traspaso.sucursalEN}}</th>
@@ -65,8 +65,11 @@
                 </tr>
             </tbody>
         </table>
-        <pagination-controls>
-
+        <pagination-controls
+            id="pagTraspaso" 
+            (pageChange)="getPage(pageActual = $event)"
+            previousLabel="Anterior"
+            nextLabel="Siguiente" >
         </pagination-controls>
     </div>
 </div>
