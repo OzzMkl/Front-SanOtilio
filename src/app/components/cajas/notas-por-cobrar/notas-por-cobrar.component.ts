@@ -207,7 +207,7 @@ export class NotasPorCobrarComponent implements OnInit {
             summary:'Movimiento invalido', 
             detail: 'No puedes cobrar sin seleccionar un metodo de pago.'
           });
-          this.isCero=true
+          this.isCero=true;
       } else{
 
         //cargamos la informacion del cobro
@@ -232,7 +232,8 @@ export class NotasPorCobrarComponent implements OnInit {
               //cerramos los dos modales
               this.modalService.dismissAll()
               //mandamos mensaje de la nota fue cobrada correctamente
-              //this.toastService.show('Nota #'+this.detallesVenta[0]['idVenta']+' cobrada correctamente',{classname: 'bg-success text-light', delay: 3000});
+              //this.toastService.show(,{classname: 'bg-success text-light', delay: 3000});
+              this.messageService.add({severity:'success', detail:'Nota #'+this.detallesVenta[0]['idVenta']+' cobrada correctamente'});
             } else{
               //si devuelve otra coosa 
               console.log('algo salio mal');
@@ -394,6 +395,11 @@ export class NotasPorCobrarComponent implements OnInit {
   }
 
   openModalCobro(content:any){
+    //Limpiamos input de cobro
+    this.tp1 = 0;
+    this.select1 = 0;
+    this.isCero=true;
+
     this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title', size: 'lg', backdropClass: ''}).result.then((result) => {
       this.closeResult = `Closed with: ${result}`;
     }, (reason) => {
