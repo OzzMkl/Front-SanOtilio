@@ -15,13 +15,14 @@ import { Component, OnInit } from '@angular/core';
 import { Empleado } from 'src/app/models/empleado';
 import { EmpleadoService } from '../../services/empleado.service';
 import { Router, ActivatedRoute} from '@angular/router';
-import { ToastService } from 'src/app/services/toast.service';
+//primeng
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
-  providers: [EmpleadoService]
+  providers: [EmpleadoService, MessageService]
 })
 export class LoginComponent implements OnInit {
 
@@ -35,7 +36,7 @@ export class LoginComponent implements OnInit {
     private _empleadoService: EmpleadoService,
     private _router: Router,
     private _route: ActivatedRoute,
-    private toastService: ToastService
+    private messageService: MessageService,
   ) { 
     
     this.empleado = new Empleado(1,'','','ROLE_USER','','','','','','','','','','',1,1,1,1,'','',1,1);
@@ -83,7 +84,11 @@ export class LoginComponent implements OnInit {
                   );
         }else{
           this.status = 'error';
-          //this.toastService.show('Email y/o contraseña incorrectos',{classname: 'bg-danger text-light', delay: 5000});
+          if(response.error == 404){
+            this.messageService.add({severity:'error', 
+                                    summary:'Acceso denegado', 
+                                    detail: response.message});
+          }
         }
       },
       error =>{
