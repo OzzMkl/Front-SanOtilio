@@ -25,7 +25,7 @@ import { InputSwitchModule } from 'primeng/inputswitch';
 import { TableModule } from 'primeng/table';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { SpeedDialModule } from 'primeng/speeddial';
-
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 
 @NgModule({
@@ -53,7 +53,8 @@ import { SpeedDialModule } from 'primeng/speeddial';
     InputSwitchModule,
     TableModule,
     ConfirmDialogModule,
-    SpeedDialModule
+    SpeedDialModule,
+    ProgressSpinnerModule
   ],
   imports: [
     CommonModule,
