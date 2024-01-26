@@ -1,5 +1,6 @@
 <p-toast></p-toast>
 <div class="container-xxl">
+    <app-loading-spinner [isLoading]="isLoadingGeneral"></app-loading-spinner>
     <!-- DATOS CLIENTE -->
     <div>
         <h4 class="text-center">DATOS DEL CLIENTE</h4>
@@ -205,9 +206,11 @@
                 <input type="search" class="form-control" name="nombreCliente" placeholder="buscar por nombre" (keyup)="searchNombreClienteS($event)">
             </div>
             <div class="text-center text-primary" *ngIf="isLoadingClientes">
-                <div class="spinner-border" role="status" >
+                <!-- <div class="spinner-border" role="status" >
                     <span class="visually-hidden">Loading...</span>
-                  </div>
+                  </div> -->
+                  <br>
+                  <p-progressSpinner [style]="{width: '50px', height: '50px'}" strokeWidth="4"></p-progressSpinner>
             </div>
             <br>
             <div *ngIf="!isLoadingClientes">
@@ -616,9 +619,11 @@
             </div>
                 <br>
                 <div class="text-center text-primary" *ngIf="isLoadingProductos">
-                    <div class="spinner-border" role="status" >
+                    <br>
+                    <p-progressSpinner [style]="{width: '50px', height: '50px'}" strokeWidth="4"></p-progressSpinner>
+                    <!-- <div class="spinner-border" role="status" >
                         <span class="visually-hidden">Loading...</span>
-                    </div>
+                    </div> -->
                 </div>
               <table *ngIf="!isLoadingProductos" class="table table-sm table-dark table-hover">
                 <thead>

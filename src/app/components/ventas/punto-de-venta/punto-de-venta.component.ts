@@ -81,6 +81,7 @@ export class PuntoDeVentaComponent implements OnInit {
   //public descuentoVenta:number = 0;
   //public subtotalVenta:number =0;
   public isSearch: boolean = true;
+  public isLoadingGeneral: boolean = false;
   public isLoadingProductos: boolean = false;
   public isLoadingClientes: boolean = false;
   //contadores para los text area
@@ -258,14 +259,16 @@ export class PuntoDeVentaComponent implements OnInit {
   seleccionarCliente(idCliente:any){
     this.ventag.cdireccion = '';
     this.seEnvia == false;
+    this.isLoadingGeneral = true;
 
-    this._clienteService.getDetallesCliente(idCliente).subscribe( 
+    this._clienteService.getDetallesCliente(idCliente).subscribe(
       response =>{
         if(response.status == 'success'){
           this.cliente = response.cliente;
           //this.dirCliente= response.cdireccion;
           this.ventag.nombreCliente = this.cliente[0]['nombre']+' '+this.cliente[0]['aPaterno']+' '+this.cliente[0]['aMaterno'];
           this.ventag.idCliente = this.cliente[0]['idCliente'];
+          this.isLoadingGeneral = false;
         }else{
           console.log('algo salio mal'+response);
         }
@@ -665,6 +668,8 @@ export class PuntoDeVentaComponent implements OnInit {
         ... this.identity,
         'permisos': this.userPermisos
       }
+      //Agregamos propiedad de envio
+      Object.assign( this.ventag, {seEnvia: this.seEnvia});
 
       this._ventasService.postVenta(this.ventag, this.lista_productoVentag, identityMod).subscribe(
         response =>{

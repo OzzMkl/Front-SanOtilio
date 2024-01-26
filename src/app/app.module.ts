@@ -103,6 +103,7 @@ import { TraspasoModuloComponent } from './components/inventario/traspasos/trasp
 import { TraspasoAgregarComponent } from './components/inventario/traspasos/traspaso-agregar/traspaso-agregar.component';
 import { TraspasoBuscarComponent } from './components/inventario/traspasos/traspaso-buscar/traspaso-buscar.component';
 import { TraspasoEditarComponent } from './components/inventario/traspasos/traspaso-editar/traspaso-editar.component';
+import { ComponentsUtilsModule } from './utils/components-utils/components-utils.component';
 
 
 
@@ -180,7 +181,8 @@ import { TraspasoEditarComponent } from './components/inventario/traspasos/trasp
     TraspasoModuloComponent,
     TraspasoAgregarComponent,
     TraspasoBuscarComponent,
-    TraspasoEditarComponent
+    TraspasoEditarComponent,
+    
   ],
   imports: [
     BrowserModule,
@@ -197,6 +199,7 @@ import { TraspasoEditarComponent } from './components/inventario/traspasos/trasp
     ToastModule,
     MessageModule,
     MessagesModule,
+    ComponentsUtilsModule
     
   ],
   providers: [EmpleadoService, MessageService],
