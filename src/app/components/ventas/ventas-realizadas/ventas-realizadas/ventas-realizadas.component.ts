@@ -69,7 +69,7 @@ export class VentasRealizadasComponent implements OnInit {
     this.isLoading = true;
     this._ventasService.getIndexVentas().subscribe(
       response =>{
-        console.log(response);
+        // console.log(response);
         if(response.status == 'success'){
           this.ventas = response.Ventas
           this.isLoading = false;
@@ -144,7 +144,7 @@ export class VentasRealizadasComponent implements OnInit {
   almacenaMotivo(){
     if(this.motivoCancelacion.length >= 10){
       // revisamos si tiene abonos
-        console.log(this.abonos_ventas)
+        // console.log(this.abonos_ventas)
         if(this.abonos_ventas.length > 0){
           this.confirmCancelacionAbono(this.idVentaMdlMotivo, this.abonos_ventas.length,this.total_abono,this.nombreClienteMdlMotivo);
         } else{
