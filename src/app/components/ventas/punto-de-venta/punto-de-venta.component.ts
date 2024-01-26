@@ -228,9 +228,11 @@ export class PuntoDeVentaComponent implements OnInit {
    * Obtener tipo de clientes al agregar uno nuevo
    */
   getTipocliente(){
+    this.isLoadingGeneral = true;
     this._clienteService.getTipocliente().subscribe(
       response =>{
         this.tipocliente = response.tipocliente;
+        this.isLoadingGeneral = false;
       },error =>{
         console.log(error);
       });
@@ -405,6 +407,7 @@ export class PuntoDeVentaComponent implements OnInit {
 
   //cargamos la informacion al modelo del producto que se selecciono con el click
   seleccionarProducto(idProducto:number){
+    this.isLoadingGeneral = true;
     //cerramos los modales abiertos
     this.modalService.dismissAll();
     
@@ -425,6 +428,7 @@ export class PuntoDeVentaComponent implements OnInit {
         //console.log(this.productos_medidas)
 
         this.isSearch=false;
+        this.isLoadingGeneral = false;
       }
     },error =>{
       console.log(error);
@@ -496,19 +500,24 @@ export class PuntoDeVentaComponent implements OnInit {
    * Agrega el producto a la lista de ventas
    */
   agregarProductoLista(){
+    this.isLoadingGeneral = true;
     //console.log('agregar producto')
     if( this.productoVentag.cantidad <= 0){
+      this.isLoadingGeneral = false;
       this.messageService.add({severity:'warn', summary:'Alerta', detail: 'No se pueden agregar productos con cantidad 0 o menor a 0'});
 
     }else if( this.productoVentag.idProducto == 0){
+      this.isLoadingGeneral = false;
       this.messageService.add({severity:'error', summary:'Error', detail: 'Ese producto no existe'});
 
     }else if (this.lista_productoVentag.find(x => x.idProducto == this.productoVentag.idProducto) &&
               this.lista_productoVentag.find(x => x.idProdMedida == this.productoVentag.idProdMedida) ){
+                this.isLoadingGeneral = false;
       //verificamos si la lista de compras ya contiene el producto buscandolo por idProducto
       this.messageService.add({severity:'warn', summary:'Alerta', detail: 'El producto ya se encuentra en la lista'});
 
     }else if(this.productoVentag.descuento < 0){
+      this.isLoadingGeneral = false;
       this.messageService.add({severity:'warn', summary:'Alerta', detail: 'No puedes agregar descuento negativo'});
 
     }else{
@@ -540,7 +549,7 @@ export class PuntoDeVentaComponent implements OnInit {
               this.isSearch = true;
 
               this.limpiaProducto();
-              
+              this.isLoadingGeneral = false;
           }
         }, error =>{
           this.messageService.add({severity:'error', summary:'Error!', detail:'Ocurrio un error al verificar la existencia'});
@@ -554,7 +563,7 @@ export class PuntoDeVentaComponent implements OnInit {
 
   //traemos la informacion del usuario logeado
   loadUser(){
-    
+    this.isLoadingGeneral = true;
     this.userPermisos = this._empleadoService.getPermisosModulo(this.mPuV.idModulo, this.mPuV.idSubModulo);
         //revisamos si el permiso del modulo esta activo si no redireccionamos
         if( this.userPermisos.agregar != 1 ){
@@ -569,6 +578,7 @@ export class PuntoDeVentaComponent implements OnInit {
         } else{
           this.identity = this._empleadoService.getIdentity();
           this.getTiposVentas();
+          this.isLoadingGeneral = false;
         }
   }
 
@@ -956,6 +966,7 @@ export class PuntoDeVentaComponent implements OnInit {
    * retornamos la consulta con las medias e imagen del producto
    */
   mostrarPrecios(idProducto:number,claveEx:string){
+    this.isLoadingGeneral = true;
     this.claveExt = claveEx;
     this._productoService.searchProductoMedida(idProducto).subscribe(
       response =>{
@@ -967,6 +978,7 @@ export class PuntoDeVentaComponent implements OnInit {
           this.imagenPM = "1650558444no-image.png";
         }
         this.idp = idProducto;
+        this.isLoadingGeneral = false;
     }, error =>{
       console.log(error);
     });
