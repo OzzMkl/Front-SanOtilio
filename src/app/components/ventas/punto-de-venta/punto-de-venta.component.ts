@@ -109,8 +109,8 @@ export class PuntoDeVentaComponent implements OnInit {
     //declaramos modelos
     this.ventag = new Ventag(0,0,1,'',1,null,0,0,0,0,'','',0);
     this.modeloCliente = new Cliente (0,'','','','','',0,1,1);
-    this.cdireccion = new Cdireccion (0,'Mexico','Puebla','','','','','','',0,'',0,1,'');
-    this.nuevaDir = new Cdireccion (0,'Mexico','Puebla','','','','','','',0,'',0,1,'');
+    this.cdireccion = new Cdireccion (0,'MEXICO','PUEBLA','','','','','','',0,'',0,1,'');
+    this.nuevaDir = new Cdireccion (0,'MEXICO','PUEBLA','','','','','','',0,'',0,1,'');
     this.productoVentag = new Producto_ventasg(0,0,'',0,0,0,0,0,'','',0,0,true,0,false);
     this.lista_productoVentag = [];
    }
@@ -243,10 +243,12 @@ export class PuntoDeVentaComponent implements OnInit {
    * @param idCliente 
    */
   getDireccionCliente(idCliente:any){
+    this.isLoadingGeneral =true;
   this._clienteService.getDireccionCliente(idCliente).subscribe( 
     response => {
       if(response.status == 'success'){
         this.listaDireccionesC = response.direccion;
+        this.isLoadingGeneral = false;
       }
       //this.listaDireccionesC = response.
     },error =>{
@@ -335,10 +337,12 @@ export class PuntoDeVentaComponent implements OnInit {
 
   //guarda una nueva direccion
   guardarNuevaDireccion(){
+    this.isLoadingGeneral = true;
     this.nuevaDir.idCliente = this.ventag.idCliente;
     this._clienteService.postNuevaDireccion(this.nuevaDir).subscribe( 
       response=>{
         if(response.status == 'success'){
+          this.isLoadingGeneral = true;
           this.messageService.add({severity:'success', summary:'Registro exitoso', detail: 'Direccion registrada correctamente'});
           this.getDireccionCliente(this.nuevaDir.idCliente);
         } else{
@@ -699,9 +703,11 @@ export class PuntoDeVentaComponent implements OnInit {
   }
 
   // Metodos del  modal
-  open(content:any) {//abrir modal aplica para la mayoria de los modales
+  open(content:any,type:number) {//abrir modal aplica para la mayoria de los modales
     this.getClientes();
-    this.getTipocliente();
+    if(type == 1){
+      this.getTipocliente();
+    }
     this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title', size: 'xl'}).result.then((result) => {
       this.closeResult = `Closed with: ${result}`;
     }, (reason) => {
@@ -741,6 +747,9 @@ export class PuntoDeVentaComponent implements OnInit {
         this.closeResult = `Closed with: ${result}`;
       }, (reason) => {
         this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+        if(this.closeResult != 'Dismissed with: row click'){
+          this.seEnvia = false;
+        }
       });
     }else{
       //si el check es falso ponemos vacia la propiedad de direccion cliente
@@ -749,6 +758,7 @@ export class PuntoDeVentaComponent implements OnInit {
   }
 
   modalAgregarDireccion(content:any){
+    this.resetNuevaDir();
     this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title', size: 'xl'}).result.then((result) => {
       this.closeResult = `Closed with: ${result}`;
     }, (reason) => {
@@ -1051,6 +1061,11 @@ export class PuntoDeVentaComponent implements OnInit {
             }
         }
     });
-}
+  }
+
+  resetNuevaDir() {
+    this.nuevaDir = new Cdireccion(0, 'MEXICO', 'PUEBLA', '', '', '', '', '', '', 0, '', 0, 1, '');
+  }
+  
   
 }

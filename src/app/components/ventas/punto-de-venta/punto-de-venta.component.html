@@ -8,13 +8,13 @@
             <div class="col-4">
                 <label class="form-label" for="">Buscar cliente</label>
                     <div class="input-group">
-                        <span class="input-group-addon" id="sizing-addon2"><i class="bi-search" style="font-size: 1.5rem; color: black; left: 0;" (click)="open(content)"></i></span>
+                        <span class="input-group-addon" id="sizing-addon2"><i class="bi-search" style="font-size: 1.5rem; color: black; left: 0;" (click)="open(content,0)"></i></span>
                         <input class="form-control" type="text" name="nomreCliente" #nombreCliente="ngModel" [(ngModel)]="ventag.nombreCliente" readonly >
                     </div>
             </div>
             <div class="col-1">
                 <br>
-                <button class="btn btn-success" (click)="open(content2)" ngbTooltip="Agregar cliente"><i class="bi bi-plus-circle-dotted" style="font-size: 1.3rem; color: rgb(255, 249, 249); left: 0;"></i></button>
+                <button class="btn btn-success" (click)="open(content2,1)" ngbTooltip="Agregar cliente"><i class="bi bi-plus-circle-dotted" style="font-size: 1.3rem; color: rgb(255, 249, 249); left: 0;"></i></button>
             </div>
             <div class="col-2" *ngFor="let c of cliente">
                 <label class="form-label">RFC</label>
@@ -487,7 +487,7 @@
                 </tr>
             </thead>
             <tbody *ngFor="let dc of listaDireccionesC">
-                <tr (click)="seleccionarDireccion(dc.estado+' '+dc.ciudad+' '+dc.colonia+',CALLE '+dc.calle+' #'+dc.numExt+' INTERIOR '+dc.numInt+'    TELEFONO: '+dc.telefono+'   REFERENCIA: '+dc.referencia)" (click)="modal.dismiss('Cross click')">
+                <tr (click)="seleccionarDireccion(dc.estado+' '+dc.ciudad+' '+dc.colonia+',CALLE '+dc.calle+' #'+dc.numExt+' INTERIOR '+dc.numInt+'    TELEFONO: '+dc.telefono+'   REFERENCIA: '+dc.referencia)" (click)="modal.dismiss('row click')">
                     <th scope="row">{{dc.estado}}, {{dc.ciudad}}, {{dc.colonia}}, CALLE {{dc.calle}}, #{{dc.numExt}} interior {{dc.numInt}}</th>
                     <th scope="row">{{dc.referencia}}</th>
                     <th scope="row">{{dc.telefono}}</th>
