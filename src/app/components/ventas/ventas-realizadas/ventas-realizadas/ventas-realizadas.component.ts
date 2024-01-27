@@ -54,6 +54,8 @@ export class VentasRealizadasComponent implements OnInit {
   public idVentaMdlMotivo: number = 0;
   public nombreClienteMdlMotivo: string = '';
 
+  public isLoadingGeneral: boolean = true;
+
   constructor( private _ventasService: VentasService,
                 private _cajaService: CajasService,
                 private modalService: NgbModal, 
@@ -73,6 +75,7 @@ export class VentasRealizadasComponent implements OnInit {
         if(response.status == 'success'){
           this.ventas = response.Ventas
           this.isLoading = false;
+          this.isLoadingGeneral = false;
         }
       }, error =>{
         console.log(error);
@@ -80,12 +83,15 @@ export class VentasRealizadasComponent implements OnInit {
     )
   }
   getDetallesVenta(idVenta:number){
+    this.isLoadingGeneral = true;
     this._ventasService.getDetallesVenta(idVenta).subscribe(
       response =>{
         if(response.status == 'success'){
+          console.log(response)
           this.detallesVenta = response.venta;
           this.productosDVenta = response.productos_ventasg;
           //console.log(this.detallesVenta[0])
+          this.isLoadingGeneral = false;
         }
       },error =>{
         console.log(error);
@@ -135,7 +141,7 @@ export class VentasRealizadasComponent implements OnInit {
   //Abre motal de motivo de cancelacion
   openModalMotivo(content:any,idVenta:number,nombreCliente:string){
     this.idVentaMdlMotivo = 0;
-    this.nombreClienteMdlMotivo ='';
+    this.motivoCancelacion ='';
     this.idVentaMdlMotivo = idVenta;
     this.nombreClienteMdlMotivo = nombreCliente;
     this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title', size: 'md', backdrop:'static'});

@@ -225,7 +225,8 @@
                     </thead>
                     <tbody *ngFor="let c of clientes | paginate:{id:'pagCliente',itemsPerPage: itemsPerPage, currentPage: pageActual, totalItems:totalPagesClientes}">
                         <tr (click)="seleccionarCliente(c.idCliente)" (click)="modal.dismiss('Cross click')">
-                            <th scope="row">{{c.nombre}} {{c.aPaterno }} {{c.aMaterno}}</th>
+                            <th scope="row">{{ c.nombreCliente.length > 40 ? (c.nombreCliente | slice:0:25) + '...' : c.nombreCliente }}</th>
+                            
                             <th scope="row">{{c.rfc}}</th>
                             <th scope="row">{{c.telefono}}</th>
                             <th scope="row">{{c.nombreTipoC}}</th>
