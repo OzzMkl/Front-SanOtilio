@@ -42,8 +42,8 @@
                 <tr (click)="open(mDetallesVenta)" (click)="getDetallesVenta(venta.idVenta)">
                     <th scope="row">{{venta.idVenta}}</th>
                     <th scope="row">{{venta.created_at | date: 'dd/MM/yyyy'}}</th>
-                    <th scope="row">{{venta.nombreCliente}}</th>
-                    <th scope="row">{{venta.nombreEmpleado}}</th>
+                    <th scope="row">{{ venta.nombreCliente.length > 40 ? (venta.nombreCliente | slice:0:25) + '...' : venta.nombreCliente }}</th>
+                    <th scope="row">{{venta.nombreEmpleado.length > 40 ? (venta.nombreEmpleado | slice:0:25) + '...' : venta.nombreEmpleado }}</th>
                     <th scope="row">{{venta.total | currency}}</th>
                 </tr>
             </tbody>
@@ -89,7 +89,7 @@
                     <label class="form-label">Fecha</label>
                     <input type="text" class="form-control" value="{{v.created_at | date: 'dd/MM/yyyy'}}" readonly>
                 </div>
-                <div class="col-2">
+                <div class="col-4">
                     <label class="form-label">Status</label>
                     <input type="text" class="form-control" value="{{v.nombreStatus}}" readonly>
                 </div>
