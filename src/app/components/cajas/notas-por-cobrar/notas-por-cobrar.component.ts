@@ -47,6 +47,7 @@ export class NotasPorCobrarComponent implements OnInit {
   public total_actualizado: number = 0;
    //spinner de carga
    public isLoading:boolean = false;
+   public isLoadingGeneral:boolean = false;
    public sesionCaja:boolean = false;
    //modal de cobrar venta
    public isTipoPago2:boolean = false;
@@ -92,19 +93,37 @@ export class NotasPorCobrarComponent implements OnInit {
 
   /***Revisamos si el usuario tiene abierto una sesion en caja*/
   verificaCaja(){
-    //console.log(this.empleado)
+    this.isLoadingGeneral = true;
     this._cajaService.verificarCaja(this.empleado['sub']).subscribe(
       response =>{
+        // console.log(this.vCaja);
         this.vCaja = response.caja;
         if(this.vCaja['horaF'] != null){
-          //this.toastService.show('Caja no iniciada', { classname: 'bg-danger  text-light', delay: 5000 });
-          
+          this.messageService.add({
+              severity:'error', 
+              summary:'Caja no iniciada'
+            });
         } else{
           this.sesionCaja = true;
         }
-        // console.log(this.vCaja)
+        this.getTipoPago();
+        this.isLoadingGeneral = false;
       }, error =>{
-        console.log(error)
+        this.isLoadingGeneral = false;
+        console.log(error);
+        if(error.error){
+          this.messageService.add({
+            severity:'warn', 
+            summary: error.error.message,
+          });
+        } else{
+          this.messageService.add({
+            severity:'error', 
+            summary: "Algo salio mal",
+            detail: "Si el problema persiste comuniquese con el departamento de sistemas",
+          });
+        }
+          
       }
     )
   }
@@ -132,7 +151,6 @@ export class NotasPorCobrarComponent implements OnInit {
         this.verificaCaja();
         this.getVentas();
         this.getDatosEmpresa();
-        this.getTipoPago();
       }
   }
 
@@ -265,11 +283,13 @@ export class NotasPorCobrarComponent implements OnInit {
   }
 
   getDetallesVenta(idVenta:number){
+    this.isLoadingGeneral = true;
     this._ventasService.getDetallesVenta(idVenta).subscribe(
       response =>{
         if(response.status == 'success'){
           this.detallesVenta = response.venta;
           this.productosDVenta = response.productos_ventasg;
+          this.isLoadingGeneral = false;
           //console.log(this.detallesVenta)
           //console.log(this.productosDVenta)
         }
@@ -292,7 +312,7 @@ export class NotasPorCobrarComponent implements OnInit {
   getTipoPago(){
     this._ventasService.getTipoPago().subscribe(
       response =>{
-        this.tipo_pago = response.tipo_pago
+        this.tipo_pago = response.tipo_pago;
       }
     )
   }
