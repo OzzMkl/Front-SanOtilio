@@ -105,9 +105,6 @@ import { TraspasoBuscarComponent } from './components/inventario/traspasos/trasp
 import { TraspasoEditarComponent } from './components/inventario/traspasos/traspaso-editar/traspaso-editar.component';
 import { ComponentsUtilsModule } from './utils/components-utils/components-utils.component';
 
-import { ReportesVentasModuloComponent } from './components/ventas/reportes/ventas/reportes-ventas-modulo/reportes-ventas-modulo.component';
-import { ReportesVentasCanceladasComponent } from './components/ventas/reportes/ventas/reportes-ventas-canceladas/reportes-ventas-canceladas.component';
-import { ReportesVentasFinalizadasComponent } from './components/ventas/reportes/ventas/reportes-ventas-finalizadas/reportes-ventas-finalizadas.component';
 
 
 
@@ -187,10 +184,6 @@ import { ReportesVentasFinalizadasComponent } from './components/ventas/reportes
     TraspasoBuscarComponent,
     TraspasoEditarComponent,
     
-    ReportesVentasModuloComponent,
-          ReportesVentasCanceladasComponent,
-          ReportesVentasFinalizadasComponent,
-    
   ],
   imports: [
     BrowserModule,
@@ -207,7 +200,7 @@ import { ReportesVentasFinalizadasComponent } from './components/ventas/reportes
     ToastModule,
     MessageModule,
     MessagesModule,
-    ComponentsUtilsModule
+    ComponentsUtilsModule,
     
   ],
   providers: [EmpleadoService, MessageService],

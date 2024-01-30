@@ -139,6 +139,7 @@ const routes: Routes = [
       {path: 'cliente-agregar',component:ClienteAgregarComponent},
       {path: 'cliente-editar/:idCliente',component: ClienteEditarComponent}
     ]},
+  { path: 'reportes-ventas', loadChildren: () => import('./components/ventas/reportes/ventas/reportes-ventas-module.component').then(m => m.ReportesVentasModule) },
   {path:'entregas-modulo',component: EntregasModuloComponent,
       children:[
         {path:'entregas-agregar',component: EntregasAgregarComponent},
