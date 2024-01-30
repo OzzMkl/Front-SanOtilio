@@ -51,6 +51,7 @@ import { PuntoDeVentaEditarComponent } from './components/ventas/punto-de-venta-
 
 import { VentasRealizadasModuloComponent } from './components/ventas/ventas-realizadas/ventas-realizadas-modulo/ventas-realizadas-modulo.component';
 import { VentasRealizadasComponent } from './components/ventas/ventas-realizadas/ventas-realizadas/ventas-realizadas.component';
+import { VentasCanceladasComponent } from './components/ventas/ventas-realizadas/ventas-canceladas/ventas-canceladas.component';
 
 import { CotizacionModuloComponent } from './components/ventas/cotizaciones/cotizacion-modulo/cotizacion-modulo.component';
 import { CotizacionBuscarComponent } from './components/ventas/cotizaciones/cotizacion-buscar/cotizacion-buscar.component';
@@ -124,7 +125,8 @@ const routes: Routes = [
   {path: 'ventas-modulo',component: VentasRealizadasModuloComponent,canActivate:[PuntoDeVentaGuard],
   children:
   [
-    {path:'ventas-realizadas-buscar',component: VentasRealizadasComponent}
+    {path:'ventas-realizadas-buscar',component: VentasRealizadasComponent},
+    {path:'ventas-canceladas-buscar',component: VentasCanceladasComponent}
   ]},
   {path: 'cotizacion-modulo', component: CotizacionModuloComponent, canActivate:[CotizacionGuard],
   children:

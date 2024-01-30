@@ -134,7 +134,12 @@ export class AppComponent implements OnInit, DoCheck{
               label:'Buscar ventas sin cobrar',
               icon:'pi pi-fw pi-search',
               routerLink:'ventas-modulo/ventas-realizadas-buscar'
-        }]},{
+            },{
+              label:'Buscar ventas sin cobrar',
+              icon:'pi pi-fw pi-search',
+              routerLink:'ventas-modulo/ventas-canceladas-buscar'
+            }]
+        },{
           label: 'Cotizaciones',
           icon: 'pi pi-fw pi-file-pdf',
           routerLink:'cotizacion-modulo/cotizacion-buscar',

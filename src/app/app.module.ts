@@ -104,6 +104,7 @@ import { TraspasoAgregarComponent } from './components/inventario/traspasos/tras
 import { TraspasoBuscarComponent } from './components/inventario/traspasos/traspaso-buscar/traspaso-buscar.component';
 import { TraspasoEditarComponent } from './components/inventario/traspasos/traspaso-editar/traspaso-editar.component';
 import { ComponentsUtilsModule } from './utils/components-utils/components-utils.component';
+import { VentasCanceladasComponent } from './components/ventas/ventas-realizadas/ventas-canceladas/ventas-canceladas.component';
 
 
 
@@ -182,6 +183,7 @@ import { ComponentsUtilsModule } from './utils/components-utils/components-utils
     TraspasoAgregarComponent,
     TraspasoBuscarComponent,
     TraspasoEditarComponent,
+    VentasCanceladasComponent,
     
   ],
   imports: [
