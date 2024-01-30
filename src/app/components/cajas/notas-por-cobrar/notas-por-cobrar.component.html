@@ -28,7 +28,7 @@
             <span class="visually-hidden">Loading...</span>
           </div>
     </div>
-    <div *ngIf="!isLoading">
+    <div class="table-responsive" *ngIf="!isLoading">
         <table class="table table-dark table-hover">
             <thead>
                 <tr>
@@ -119,7 +119,7 @@
                             icon="bi bi-file-earmark-pdf"
                             pTooltip="PDF"
                             tooltipPosition="top"
-                            (click)="generaPDF()">
+                            (click)="generaPDF(v.idVenta)">
                     </button>
                     <button *ngIf="abonos_ventas.length > 0"
                             class="p-button-rounded p-button-info me-md-2"
@@ -152,29 +152,32 @@
                 </div>
             </div>
             <hr>
-            <table class="table table-dark table-hover text-center">
-                <thead>
-                    <tr>
-                        <th scope="col">CLAVE EXTERNA</th>
-                        <th scope="col">DESCRIPCION</th>
-                        <th scope="col">PRECIO</th>
-                        <th scope="col">CANTIDAD</th>
-                        <th scope="col">DESCUENTO</th>
-                        <th scope="col">SUBTOTAL</th>
-                    </tr>
-                </thead>
-                <tbody *ngFor="let pdv of productosDVenta | paginate:{id:'mProductosDVenta',itemsPerPage: 4, currentPage: mpageActual}">
-                    <tr>
-                        <th scope="row">{{pdv.claveEx}}</th>
-                        <th scope="row">{{pdv.descripcion}}</th>
-                        <th scope="row">{{pdv.precio | currency }}</th>
-                        <th scope="row">{{pdv.cantidad}}</th>
-                        <th scope="row">{{pdv.descuento | currency }}</th>
-                        <th scope="row">{{pdv.subtotal | currency }}</th>
-                    </tr>
-                </tbody>
-            </table>
-            <pagination-controls id="mProductosDVenta" (pageChange)="mpageActual = $event"></pagination-controls>
+            <div class="table-responsive">
+                <table class="table table-dark table-hover text-center">
+                    <thead>
+                        <tr>
+                            <th scope="col">CLAVE EXTERNA</th>
+                            <th scope="col">DESCRIPCION</th>
+                            <th scope="col">PRECIO</th>
+                            <th scope="col">CANTIDAD</th>
+                            <th scope="col">DESCUENTO</th>
+                            <th scope="col">SUBTOTAL</th>
+                        </tr>
+                    </thead>
+                    <tbody *ngFor="let pdv of productosDVenta | paginate:{id:'mProductosDVenta',itemsPerPage: 4, currentPage: mpageActual}">
+                        <tr>
+                            <th scope="row">{{pdv.claveEx}}</th>
+                            <th scope="row">{{pdv.descripcion}}</th>
+                            <th scope="row">{{pdv.precio | currency }}</th>
+                            <th scope="row">{{pdv.cantidad}}</th>
+                            <th scope="row">{{pdv.descuento | currency }}</th>
+                            <th scope="row">{{pdv.subtotal | currency }}</th>
+                        </tr>
+                    </tbody>
+                </table>
+                <pagination-controls id="mProductosDVenta" (pageChange)="mpageActual = $event"></pagination-controls>
+            </div>
+            
             <hr>
             <div class="row" *ngIf="v.observaciones.length > 2">
                 <div class="col">
@@ -287,26 +290,28 @@
             <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
         </div>
         <div class="modal-body">
-            <table class="table table-dark table-hover table-responsive text-center">
-                <thead>
-                    <tr>
-                        <th scope="col">ABONO</th>
-                        <th scope="col">TOTAL ANTERIOR</th>
-                        <th scope="col">TOTAL ACTUALIZADO</th>
-                        <th scope="col">FECHA</th>
-                        <th scope="col">REALIZO</th>
-                    </tr>
-                </thead>
-                <tbody *ngFor="let abono of abonos_ventas">
-                    <tr>
-                        <th scope="row">{{abono.abono | currency}}</th>
-                        <th scope="row">{{abono.totalAnterior | currency}}</th>
-                        <th scope="row">{{abono.totalActualizado | currency}}</th>
-                        <th scope="row">{{abono.created_at | date: 'dd/MM/yyyy'}}</th>
-                        <th scope="row">{{abono.nombreEmpleado}}</th>
-                    </tr>
-                </tbody>
-            </table>
+            <div class="table-responsive">
+                <table class="table table-dark table-hover table-responsive text-center">
+                    <thead>
+                        <tr>
+                            <th scope="col">ABONO</th>
+                            <th scope="col">TOTAL ANTERIOR</th>
+                            <th scope="col">TOTAL ACTUALIZADO</th>
+                            <th scope="col">FECHA</th>
+                            <th scope="col">REALIZO</th>
+                        </tr>
+                    </thead>
+                    <tbody *ngFor="let abono of abonos_ventas">
+                        <tr>
+                            <th scope="row">{{abono.abono | currency}}</th>
+                            <th scope="row">{{abono.totalAnterior | currency}}</th>
+                            <th scope="row">{{abono.totalActualizado | currency}}</th>
+                            <th scope="row">{{abono.created_at | date: 'dd/MM/yyyy'}}</th>
+                            <th scope="row">{{abono.nombreEmpleado}}</th>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </ng-template>

@@ -43,6 +43,10 @@ export class CajasService {
     return this._http.get(this.url+'cajas/abonos_ventas/'+idVenta, { headers:this.headers});
   }
 
+  getPDF(idVenta:number):Observable<Blob>{
+    return this._http.get(this.url+'cajas/generatePDF/'+ idVenta, {responseType:'blob'});
+  }
+
   // getTipoMovimiento():Observable<any>{
   //   return this._http.get(this.url+'cajas/indexTipoMovimiento',{headers:this.headers});
   // }
