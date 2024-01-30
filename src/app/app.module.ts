@@ -43,7 +43,6 @@ import { FilterProveedoresPipe } from './pipes/filter-proveedores.pipe';
 import { FilterProductPipe } from './pipes/filter-products.pipe';
 import { FilterProductModalPipe } from './pipes/filter-productsModal.pipe';
 
-import { ToastContainerComponent } from './components/toast/toast-container/toast-container.component';
 import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
 
 import { ClasificacionModuloComponent } from './components/inventario/taxonomia/clasificacion-modulo/clasificacion-modulo.component';
@@ -126,7 +125,6 @@ import { ComponentsUtilsModule } from './utils/components-utils/components-utils
     FilterProveedoresPipe,
     FilterProductPipe,
     FilterProductModalPipe,
-    ToastContainerComponent,
     ClasificacionModuloComponent,
     DepartamentoVerComponent,
     CategoriaVerComponent,

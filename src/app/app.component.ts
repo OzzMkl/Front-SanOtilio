@@ -169,8 +169,10 @@ export class AppComponent implements OnInit, DoCheck{
             icon:'pi pi-fw pi-shopping-cart',
             items: [{
               label:'Ventas canceladas',
+              routerLink:'reportes-ventas/ventas-canceladas'
             },{
-              label: 'Ventas finalizadas'
+              label: 'Ventas finalizadas',
+              routerLink:'reportes-ventas/ventas-finalizadas'
             }]
           }]
         }]
