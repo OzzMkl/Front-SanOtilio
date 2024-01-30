@@ -163,7 +163,16 @@ export class AppComponent implements OnInit, DoCheck{
           }]
         },{
           label: 'Reportes',
-          icon: 'pi pi-fw pi-file'
+          icon: 'pi pi-fw pi-file',
+          items: [{
+            label: 'Ventas',
+            icon:'pi pi-fw pi-shopping-cart',
+            items: [{
+              label:'Ventas canceladas',
+            },{
+              label: 'Ventas finalizadas'
+            }]
+          }]
         }]
       },{
         label: 'Entregas',

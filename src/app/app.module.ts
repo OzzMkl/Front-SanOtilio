@@ -106,6 +106,8 @@ import { TraspasoEditarComponent } from './components/inventario/traspasos/trasp
 import { ComponentsUtilsModule } from './utils/components-utils/components-utils.component';
 
 import { ReportesVentasModuloComponent } from './components/ventas/reportes/ventas/reportes-ventas-modulo/reportes-ventas-modulo.component';
+import { ReportesVentasCanceladasComponent } from './components/ventas/reportes/ventas/reportes-ventas-canceladas/reportes-ventas-canceladas.component';
+import { ReportesVentasFinalizadasComponent } from './components/ventas/reportes/ventas/reportes-ventas-finalizadas/reportes-ventas-finalizadas.component';
 
 
 
@@ -186,6 +188,8 @@ import { ReportesVentasModuloComponent } from './components/ventas/reportes/vent
     TraspasoEditarComponent,
     
     ReportesVentasModuloComponent,
+          ReportesVentasCanceladasComponent,
+          ReportesVentasFinalizadasComponent,
     
   ],
   imports: [
