@@ -6,25 +6,36 @@
             <h2>Modulo de ventas</h2>
         </div>
         <div class="col-auto">
-            <button class="p-button-rounded me-md-2"
+            <button class="p-button-rounded p-button-success me-md-2"
                         pButton 
                         pRipple 
                         type="button"  
                         icon="pi pi-plus-circle"
                         [routerLink]="['../punto-de-venta']" 
                         *ngIf="userPermisos.agregar == 1" 
-                        pTooltip="AGREGAR" 
+                        pTooltip="Realizar venta" 
                         tooltipPosition="top">
                 </button>
             
-                <button class="p-button-rounded p-button-help me-md-2" 
+                <button class="p-button-rounded me-md-2" 
                         icon="pi pi-search"
                         pButton 
                         pRipple 
                         type="button" 
                         [routerLink]="['ventas-realizadas-buscar']"
                         *ngIf="userPermisos.ver == 1" 
-                        pTooltip="BUSCAR" 
+                        pTooltip="Ventas realizadas" 
+                        tooltipPosition="top">
+                </button>
+
+                <button class="p-button-rounded p-button-danger me-md-2"
+                        pButton
+                        pRipple
+                        type="button"
+                        icon="pi pi-search"
+                        [routerLink]="['proveedorDeshabilitado']"
+                        *ngIf="userPermisos.ver == 1"
+                        pTooltip="Ventas canceladas" 
                         tooltipPosition="left">
                 </button>
         </div>
