@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { ReportesVentasModuloComponent } from './reportes-ventas-modulo/reportes-ventas-modulo.component';
-import { ReportesVentasFinalizadasComponent } from './reportes-ventas-finalizadas/reportes-ventas-finalizadas.component';
-import { ReportesVentasCanceladasComponent } from './reportes-ventas-canceladas/reportes-ventas-canceladas.component';
+import { ReportesVentasModuloComponent } from './ventas/reportes-ventas-modulo/reportes-ventas-modulo.component';
+import { ReportesVentasFinalizadasComponent } from './ventas/reportes-ventas-finalizadas/reportes-ventas-finalizadas.component';
+import { ReportesVentasCanceladasComponent } from './ventas/reportes-ventas-canceladas/reportes-ventas-canceladas.component';
 
 const routes: Routes = [
   {
