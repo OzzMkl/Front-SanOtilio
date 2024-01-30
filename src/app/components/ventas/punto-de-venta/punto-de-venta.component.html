@@ -213,7 +213,7 @@
                   <p-progressSpinner [style]="{width: '50px', height: '50px'}" strokeWidth="4"></p-progressSpinner>
             </div>
             <br>
-            <div *ngIf="!isLoadingClientes">
+            <div class="table-responsive" *ngIf="!isLoadingClientes">
                 <table class="table table-sm table-dark table-hover">
                     <thead>
                         <tr>
@@ -618,6 +618,7 @@
                     <input type="search" class="form-control" name="buscar" placeholder=" Buscar ..." [(ngModel)]="buscar" (ngModelChange)="selectBusqueda()">
                 </div>
             </div>
+            <div class="table-responsive">
                 <br>
                 <div class="text-center text-primary" *ngIf="isLoadingProductos">
                     <br>
@@ -626,33 +627,34 @@
                         <span class="visually-hidden">Loading...</span>
                     </div> -->
                 </div>
-              <table *ngIf="!isLoadingProductos" class="table table-sm table-dark table-hover">
-                <thead>
-                    <tr>
-                        <th>CLAVE EXTERNA</th>
-                        <th>CODIGO DE BARRAS</th>
-                        <th>DESCRIPCION</th>
-                        <th>MARCA</th>
-                        <th>DEPARTAMENTO</th>
-                        <!-- <th>CATEGORIA</th> -->
-                    </tr>
-                </thead>
-                <tbody *ngFor="let pr of productos | paginate:{id:'pcModal',itemsPerPage: itemsPerPage, currentPage: pageActual2, totalItems:totalPages}">
-                    <tr (click)="modalMuestraMedidas(mProdMedidas,pr.idProducto,pr.claveEx)">
-                        <th scope="row">{{pr.claveEx}}</th>
-                        <th scope="row">{{pr.cbarras}}</th>
-                        <th scope="row">{{pr.descripcion}}</th>
-                        <th scope="row">{{pr.nombreMarca}}</th>
-                        <th scope="row">{{pr.nombreDep}}</th>
-                        <!-- <th scope="row">{{pr.nombreCat}}</th> -->
-                    </tr>
-                </tbody>
-              </table>
-              <pagination-controls  id="pcModal"
-                                    (pageChange)="getPage(pageActual2 = $event)"
-                                    previousLabel="Anterior"
-                                    nextLabel="Siguiente" >
-              </pagination-controls>
+                <table *ngIf="!isLoadingProductos" class="table table-sm table-dark table-hover">
+                    <thead>
+                        <tr>
+                            <th>CLAVE EXTERNA</th>
+                            <th>CODIGO DE BARRAS</th>
+                            <th>DESCRIPCION</th>
+                            <th>MARCA</th>
+                            <th>DEPARTAMENTO</th>
+                            <!-- <th>CATEGORIA</th> -->
+                        </tr>
+                    </thead>
+                    <tbody *ngFor="let pr of productos | paginate:{id:'pcModal',itemsPerPage: itemsPerPage, currentPage: pageActual2, totalItems:totalPages}">
+                        <tr (click)="modalMuestraMedidas(mProdMedidas,pr.idProducto,pr.claveEx)">
+                            <th scope="row">{{pr.claveEx}}</th>
+                            <th scope="row">{{pr.cbarras}}</th>
+                            <th scope="row">{{pr.descripcion}}</th>
+                            <th scope="row">{{pr.nombreMarca}}</th>
+                            <th scope="row">{{pr.nombreDep}}</th>
+                            <!-- <th scope="row">{{pr.nombreCat}}</th> -->
+                        </tr>
+                    </tbody>
+                </table>
+                <pagination-controls  id="pcModal"
+                                        (pageChange)="getPage(pageActual2 = $event)"
+                                        previousLabel="Anterior"
+                                        nextLabel="Siguiente" >
+                </pagination-controls>
+            </div>
         </div>
     </div>
 </ng-template>
