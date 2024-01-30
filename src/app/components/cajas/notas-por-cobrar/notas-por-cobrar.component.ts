@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 //Servicios
 import { VentasService } from 'src/app/services/ventas.service';
-import { EmpresaService } from 'src/app/services/empresa.service';
 import { CajasService } from 'src/app/services/cajas.service';
 import { ToastService } from 'src/app/services/toast.service';
 import { EmpleadoService } from 'src/app/services/empleado.service';
@@ -72,8 +71,7 @@ export class NotasPorCobrarComponent implements OnInit {
   public caja_movimiento: Caja_movimientos = new Caja_movimientos(0,null,0,0,0,0,0,0,0,'',0);
 
   constructor(private _ventasService: VentasService, 
-              private modalService: NgbModal, 
-              private _empresaService: EmpresaService,
+              private modalService: NgbModal,
               private _cajaService: CajasService, 
               private _router: Router,
               public toastService: ToastService, 
@@ -146,7 +144,6 @@ export class NotasPorCobrarComponent implements OnInit {
         // console.log(this.empleado);
         this.verificaCaja();
         this.getVentas();
-        this.getDatosEmpresa();
       }
   }
 
@@ -293,16 +290,6 @@ export class NotasPorCobrarComponent implements OnInit {
         console.log(error);
       });
     this.getAbonosVentasg(idVenta);
-  }
-
-  getDatosEmpresa(){
-    this._empresaService.getDatosEmpresa().subscribe( 
-      response => {
-        if(response.status == 'success'){
-           this.empresa = response.empresa;
-           //console.log(this.empresa)
-        }
-      },error => {console.log(error)});
   }
   
   getTipoPago(){
