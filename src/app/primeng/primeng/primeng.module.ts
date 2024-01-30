@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { InputTextModule } from 'primeng/inputtext';
 import { PanelModule } from 'primeng/panel'
@@ -14,18 +13,19 @@ import { MenubarModule } from 'primeng/menubar';
 import { AvatarModule } from 'primeng/avatar';
 import { AvatarGroupModule } from 'primeng/avatargroup';
 import { MenuModule } from 'primeng/menu';
-// import { MessagesModule } from 'primeng/messages';
-// import { MessageModule } from 'primeng/message';
+import { MessagesModule } from 'primeng/messages';
+import { MessageModule } from 'primeng/message';
 import { FileUploadModule } from 'primeng/fileupload';
 import {ToggleButtonModule} from 'primeng/togglebutton';
 import {SelectButtonModule} from 'primeng/selectbutton';
 import {FieldsetModule} from 'primeng/fieldset';
-//import { ToastModule } from 'primeng/toast';
+import { ToastModule } from 'primeng/toast';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { TableModule } from 'primeng/table';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { SpeedDialModule } from 'primeng/speeddial';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { MessageService } from 'primeng/api';
 
 
 @NgModule({
@@ -43,13 +43,13 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
     AvatarModule,
     AvatarGroupModule,
     MenuModule,
-    // MessageModule,
-    // MessagesModule,
+    MessageModule,
+    MessagesModule,
     FileUploadModule,
     ToggleButtonModule,
     SelectButtonModule,
     FieldsetModule,
-    //ToastModule,
+    ToastModule,
     InputSwitchModule,
     TableModule,
     ConfirmDialogModule,
@@ -58,7 +58,7 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
   ],
   imports: [
     CommonModule,
-    BrowserAnimationsModule
-  ]
+  ],
+  providers: [MessageService],
 })
 export class PrimengModule { }
