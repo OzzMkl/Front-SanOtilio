@@ -684,10 +684,12 @@ export class PuntoDeVentaComponent implements OnInit {
       }
       //Agregamos propiedad de envio
       Object.assign( this.ventag, {seEnvia: this.seEnvia});
+      this.isLoadingGeneral = true;
 
       this._ventasService.postVenta(this.ventag, this.lista_productoVentag, identityMod).subscribe(
         response =>{
           if(response.status == 'success'){
+            this.isLoadingGeneral = false;
             this.messageService.add({severity:'success', summary:'Registro exitoso', detail:'Venta creada correctamente'});
             this.ventag.idCliente = 0;
             // refrescamos la pagina
