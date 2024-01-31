@@ -65,8 +65,8 @@ export class VentasService {
   }
 
   //VENTAS
-  getVentasCanceladas():Observable<any>{
-    return this._http.get(this.url+'ventas/indexVentasCanceladas',{headers:this.headers});
+  getVentasCanceladas(page: number):Observable<any>{
+    return this._http.get(this.url+'ventas/indexVentasCanceladas?page='+page,{headers:this.headers});
   }
   
   getIndexVentas():Observable<any>{

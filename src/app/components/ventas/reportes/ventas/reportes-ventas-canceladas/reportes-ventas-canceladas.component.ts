@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { HttpClient} from '@angular/common/http';
 //Servicios
 import { VentasService } from 'src/app/services/ventas.service';
 
@@ -22,20 +21,24 @@ export class ReportesVentasCanceladasComponent implements OnInit {
   public prev_page: any;
   public itemsPerPage:number=0;
   pageActual: number = 0;
+  //pipe
+  public tipoBusqueda:number = 1;
+  buscaFolio=''
+  buscaNombreCliente='';
+  buscaNombreEmpleado='';
 
   constructor(
     private _ventasService:VentasService,
     private _router:Router,
-    private _http: HttpClient
   ) { }
 
   ngOnInit(): void {
     this.getVentasCanceladas();
   }
 
-  getVentasCanceladas(){
+  getVentasCanceladas(page:number = 1){
     this.isLoadingGeneral = true;
-    this._ventasService.getVentasCanceladas().subscribe(
+    this._ventasService.getVentasCanceladas(page).subscribe(
       response =>{
         if(response.code == 200 && response.status == 'success'){
           //datos
@@ -55,33 +58,11 @@ export class ReportesVentasCanceladasComponent implements OnInit {
     )
   }
 
-  /**
-   * 
-   * @param page
-   * Es el numero de pagina a la cual se va acceder
-   * @description
-   * De acuerdo al numero de pagina recibido lo concatenamos a
-   * la direccion para "ir" a esa direccion y traer la informacion
-   * no retornamos ya que solo actualizamos las variables a mostrar
-   */
-  getPage(page:number) {
-    //mostramos el spinner
-    this.isLoadingGeneral = true;
-
-    this._http.get(this.path+'?page='+page).subscribe(
-      (response:any) => {
-        //console.log(response);
-        this.ventas_canceladas = response.ventas_canceladas.data;
-        //navegacion paginacion
-        this.totalPages = response.ventas_canceladas.total;
-        this.itemsPerPage = response.ventas_canceladas.per_page;
-        this.pageActual = response.ventas_canceladas.current_page;
-        this.next_page = response.ventas_canceladas.next_page_url;
-        this.path = response.ventas_canceladas.path;
-        
-        //una vez terminado de cargar quitamos el spinner
-        this.isLoadingGeneral = false;
-    });
+  //ponemos vacio al cambiar entre tipo de busqueda
+  seleccionTipoBusqueda(e:any){
+    this.buscaFolio='';
+    this.buscaNombreCliente='';
+    this.buscaNombreEmpleado='';
   }
 
 }
