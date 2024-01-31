@@ -5,6 +5,10 @@ import { ReportesVentasFinalizadasComponent } from './ventas/reportes-ventas-fin
 import { ReportesVentasCanceladasComponent } from './ventas/reportes-ventas-canceladas/reportes-ventas-canceladas.component';
 import { ReportesVentasRoutingModule } from './reportes-ventas-routing.module';
 
+import { ComponentsUtilsModule } from 'src/app/utils/components-utils/components-utils.component';
+
+import { PrimengModule } from 'src/app/primeng/primeng/primeng.module';
+
 @NgModule({
     declarations: [
         ReportesVentasModuloComponent,
@@ -18,7 +22,9 @@ import { ReportesVentasRoutingModule } from './reportes-ventas-routing.module';
     ],
     imports : [
         CommonModule,
-        ReportesVentasRoutingModule
+        PrimengModule,
+        ReportesVentasRoutingModule,
+        ComponentsUtilsModule
     ],
 })
 

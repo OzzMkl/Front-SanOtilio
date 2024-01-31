@@ -1,2 +1,35 @@
-<p>reportes-ventas-modulo works!</p>
+
+<p-toast></p-toast>
+<div class="container-fluid">
+    <br>
+    <div class="row justify-content-between">
+        <div class="col-5">
+            <h2>Reportes de ventas</h2>
+        </div>
+        <div class="col-auto">
+            <button class="p-button-rounded p-button-danger me-md-2"
+                        pButton 
+                        pRipple 
+                        type="button"  
+                        icon="pi pi-search"
+                        [routerLink]="['./ventas-canceladas']" 
+                        pTooltip="Ventas canceladas" 
+                        tooltipPosition="top">
+                </button>
+            
+                <button class="p-button-rounded me-md-2" 
+                        icon="pi pi-search"
+                        pButton 
+                        pRipple 
+                        type="button" 
+                        [routerLink]="['./ventas-finalizadas']"
+                        pTooltip="Ventas finalizadas" 
+                        tooltipPosition="left">
+                </button>
+
+        </div>
+    </div>
+</div>
+<hr>
+<br>
 <router-outlet></router-outlet>
