@@ -53,6 +53,9 @@ export class TraspasoBuscarComponent implements OnInit {
   public motivo:string = '';
   //Ayudantes
   public isHidden = true;
+  public isHiddenRec = true;
+
+  public isLoadingGeneral: boolean = true;
 
 
   constructor(
@@ -86,16 +89,18 @@ export class TraspasoBuscarComponent implements OnInit {
              this.messageService.add({severity:'error', summary:'Acceso denegado', detail: 'El usuario no cuenta con los permisos necesarios, redirigiendo en '+this.counter+' segundos'});
            },1000);
          } else{
+       
          this.getTrasp();
          this.menuBusqueda();
          this.identity = this._empleadoService.getIdentity();
-
+         
          }
    }
 
    getTrasp(){
     //Mostramos spinner de carga
-    this.isLoading = true;
+    // this.isLoading = true;
+    this.isLoadingGeneral =true;
     // let str_datInicial = this.datInicial.year+'-'+this.datInicial.month+'-'+this.datInicial.day;
     // let str_datFinal = this.datFinal.year+'-'+this.datFinal.month+'-'+this.datFinal.day;
     this.tipoBusqueda == 'Envia' ? this.isHidden = false : this.isHidden = true;
@@ -113,7 +118,8 @@ export class TraspasoBuscarComponent implements OnInit {
           this.path = response.traspasos.path;
 
           //quitamos spinner
-          this.isLoading = false;
+          // this.isLoading = false;
+          this.isLoadingGeneral =false;
         }
         // console.log(response)
       }, error=>{
@@ -217,8 +223,9 @@ export class TraspasoBuscarComponent implements OnInit {
         if(response.status == 'success'){
           this.detallesTraspaso = response.traspaso; 
           this.productosDT = response.productos;
-          //console.log('response',response);
-          // console.log('traspaso',this.detallesTraspaso);
+          this.isHiddenRec = (this.detallesTraspaso[0].idStatus == 50 && this.tipoBusqueda == 'Recibe' ) ? false : true;
+          //console.log('response',this.detallesTraspaso[0].idStatus);
+          //console.log('traspaso',this.detallesTraspaso);
           // console.log('productos',this.productosDT);
 
         }else{ console.log('Algo salio mal'); }
@@ -252,7 +259,7 @@ export class TraspasoBuscarComponent implements OnInit {
         icon: 'pi pi-exclamation-triangle',
         accept: () => {
           //this.messageService.add({severity:'info', summary:'Confirmado', detail:'Compra'});
-          this.cancelarCompra();
+          this.cancelarTraspaso();
         },
         reject: (type:any) => {
           switch(type) {
@@ -268,7 +275,7 @@ export class TraspasoBuscarComponent implements OnInit {
     }
   }
 
-  public cancelarCompra(){
+  public cancelarTraspaso(){
     // console.log(this.detallesCompra[0]['idCompra']);
     // console.log(this.motivo);
     // console.log(this.identity['sub']);
@@ -280,6 +287,7 @@ export class TraspasoBuscarComponent implements OnInit {
           this.messageService.add({severity:'success', summary:'Éxito', detail:'Traspaso cancelado'});
           this._modalService.dismissAll();
           this.getTrasp();
+          this.resetVariables();
         }else{
           this.messageService.add({severity:'error', summary:'Error', detail:'Fallo al cancelar el traspaso'});
         }
@@ -306,6 +314,47 @@ export class TraspasoBuscarComponent implements OnInit {
       this.messageService.add({severity:'warn', summary:'Aviso', detail:'No se puede modificar un traspaso con más de 15 días de antiguedad'});
     }
 
+  }
+
+  public recibirTraspaso(){
+    console.log('recivirTraspaso');
+    this._confirmationService.confirm({
+      message: '¿Está seguro(a) que desea ingresar el traspaso?',
+      header: 'Advertencia',
+      icon: 'pi pi-exclamation-triangle',
+      accept: () => {
+        this._traspasoService.recibirTraspaso(this.detallesTraspaso[0]['idTraspasoR'],this.identity['sub']).subscribe(
+          response =>{
+            if(response.status == 'success'){
+              console.log(response);
+              this.messageService.add({severity:'success', summary:'Éxito', detail:'Traspaso ingresado'});
+              this._modalService.dismissAll();
+              this.getTrasp();
+              this.resetVariables();
+            }else{
+              this.messageService.add({severity:'error', summary:'Error', detail:'Fallo al ingresar el traspaso'});
+            }
+          },
+          error =>{
+            this.messageService.add({severity:'error', summary:'Error', detail:'Fallo al ingresar el traspaso'});
+            console.log(error);
+          }
+        )
+
+        
+        
+      },
+      reject: (type:any) => {
+        switch(type) {
+            case ConfirmEventType.REJECT:
+                this.messageService.add({severity:'warn', summary:'Cancelado', detail:'Ingreso de traspaso cancelada.'});
+            break;
+            case ConfirmEventType.CANCEL:
+                this.messageService.add({severity:'warn', summary:'Cancelado', detail:'Ingreso de traspaso cancelada.'});
+            break;
+        }
+      }
+    });
   }
 
 }

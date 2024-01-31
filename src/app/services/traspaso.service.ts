@@ -71,6 +71,16 @@ export class TraspasoService {
 
   }
 
+  recibirTraspaso(idTraspaso:any,idEmpleado:any):Observable<any>{
+    let combinado = {'idTraspaso':idTraspaso,
+                     'idEmpleado':idEmpleado
+    };
+    let json = JSON.stringify(combinado);
+    let params = 'json='+json;
+    //console.log('combinado',combinado);
+    //console.log('json',json);
+    return this._http.post(this.url+'traspasos/recibirTraspaso',params, {headers:this.headers} );
+  }
 
 
 
