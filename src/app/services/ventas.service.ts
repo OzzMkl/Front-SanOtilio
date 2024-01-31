@@ -65,6 +65,10 @@ export class VentasService {
   }
 
   //VENTAS
+  getVentasCanceladas(page: number):Observable<any>{
+    return this._http.get(this.url+'ventas/indexVentasCanceladas?page='+page,{headers:this.headers});
+  }
+  
   getIndexVentas():Observable<any>{
     return this._http.get(this.url+'ventas/indexVentas', {headers:this.headers} );
   }

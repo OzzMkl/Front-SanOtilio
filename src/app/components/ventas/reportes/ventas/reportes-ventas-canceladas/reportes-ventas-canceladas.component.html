@@ -1,1 +1,54 @@
-<p>reportes-ventas-canceladas works!</p>
+<p-toast></p-toast>
+<app-loading-spinner [isLoading]="isLoadingGeneral"></app-loading-spinner>
+<div class="container-fluid">
+    <h3>Ventas canceladas</h3>
+    <div class="input-group mb-2">
+        <div class="col-2">
+            <select class="form-select" name="tipoBusqueda" [(ngModel)]="tipoBusqueda" (ngModelChange)="seleccionTipoBusqueda($event)">
+                <option value="1" selected># Folio</option>
+                <option value="2">Cliente</option>
+                <option value="3">Vendedor</option>
+            </select>
+        </div>
+        <div class="col" *ngIf="tipoBusqueda == 1">
+            <input class="form-control" type="text" name="buscaFolio" placeholder="Buscar . . ." [(ngModel)]="buscaFolio" pattern="[0-9]+">
+        </div>
+        <div class="col" *ngIf="tipoBusqueda == 2">
+            <input class="form-control" type="text" name="buscaNombreCliente" placeholder="Buscar . . ." [(ngModel)]="buscaNombreCliente" >
+        </div>
+        <div class="col" *ngIf="tipoBusqueda == 3">
+            <input class="form-control" type="text" name="buscaNombreEmpleado" placeholder="Buscar . . ." [(ngModel)]="buscaNombreEmpleado">
+        </div>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-dark table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">FOLIO</th>
+                    <th scope="col">FECHA</th>
+                    <th scope="col">CLIENTE</th>
+                    <th scope="col">VENDEDOR</th>
+                    <th scope="col">TIPO VENTA</th>
+                    <th scope="col">TOTAL</th>
+                </tr>
+            </thead>                           <!-- Se agrega filtro de cotizaciones para clientes-->
+            <tbody *ngFor="let venta of ventas_canceladas | paginate: { id:'paginationVentasCanceladas',itemsPerPage:itemsPerPage, currentPage: pageActual, totalItems:totalPages }">
+                <tr >
+                    <th scope="row">{{venta.idVenta}}</th>
+                    <th scope="row">{{venta.created_at | date: 'dd/MM/yyyy'}}</th>
+                    <!-- <th scope="row">{{venta.nombreCliente}}</th> -->
+                    <th scope="row">{{ venta.nombreCliente.length > 40 ? (venta.nombreCliente | slice:0:25) + '...' : venta.nombreCliente }}</th>
+                    <th scope="row">{{venta.nombreEmpleadoGenera.length > 40 ? (venta.nombreEmpleadoGenera | slice:0:25) + '...' : venta.nombreEmpleadoGenera }}</th>
+                    <th scope="row">{{venta.nombreTipoventa}}</th>
+                    <th scope="row">{{venta.total | currency}}</th>
+                </tr>
+            </tbody>
+        </table>
+        <pagination-controls 
+            id="paginationVentasCanceladas"
+            (pageChange)="getVentasCanceladas(pageActual = $event)" 
+            previousLabel="Anterior"
+            nextLabel="Siguiente">
+        </pagination-controls>
+    </div>
+</div>

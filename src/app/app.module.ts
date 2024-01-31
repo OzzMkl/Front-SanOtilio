@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
@@ -18,10 +19,10 @@ import { NgxBarcodeModule } from 'ngx-barcode';
 ///primeng
 import { PrimengModule } from './primeng/primeng/primeng.module';
 //Pertenecen a primeng y se declaran afuera para poder ocuparlos anivel raiz!!
-import { ToastModule } from 'primeng/toast';
-import { MessagesModule } from 'primeng/messages';
-import { MessageModule } from 'primeng/message';
-import { MessageService } from 'primeng/api';
+// import { ToastModule } from 'primeng/toast';
+// import { MessagesModule } from 'primeng/messages';
+// import { MessageModule } from 'primeng/message';
+// import { MessageService } from 'primeng/api';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -184,6 +185,7 @@ import { ComponentsUtilsModule } from './utils/components-utils/components-utils
     
   ],
   imports: [
+    PrimengModule,
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
@@ -194,14 +196,14 @@ import { ComponentsUtilsModule } from './utils/components-utils/components-utils
     NgxPaginationModule,
     // AngularFileUploaderModule,
     NgxBarcodeModule,
-    PrimengModule,
-    ToastModule,
-    MessageModule,
-    MessagesModule,
+    // ToastModule,
+    // MessageModule,
+    // MessagesModule,
     ComponentsUtilsModule,
+    BrowserAnimationsModule
     
   ],
-  providers: [EmpleadoService, MessageService],
+  providers: [EmpleadoService,],
   bootstrap: [AppComponent],
   exports: [
     CategoriaVerComponent    
