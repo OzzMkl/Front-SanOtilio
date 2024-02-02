@@ -101,7 +101,7 @@ export class CotizacionEditarComponent implements OnInit {
                 private modalService: NgbModal, private _http: HttpClient, 
                 private messageService: MessageService, private _router: Router,
                 private _modulosService: ModulosService ) {
-                 this.cotizacion_editada = new Ventag(0,0,2,'',1,null,0,0,0,0,'','',0);
+                 this.cotizacion_editada = new Ventag(0,0,2,'',1,0,null,0,0,0,0,'','',0);
                  this.productos_cotizacion_e = [];
                  this.modeloCliente = new Cliente (0,'','','','','',0,1,1);
                  this.cdireccion = new Cdireccion (0,'Mexico','Puebla','','','','','','',0,'',0,1,'');
