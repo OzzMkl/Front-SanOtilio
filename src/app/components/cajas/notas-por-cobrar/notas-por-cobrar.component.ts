@@ -187,6 +187,9 @@ export class NotasPorCobrarComponent implements OnInit {
       });
       this.isCero=true
     } else{
+      this.saldo_restante = 0;
+      this.cambio= 0;
+
       if(this.abonos_ventas.length > 0){
         this.cambio = this.total_actualizado - this.tp1;
       } else{
@@ -224,7 +227,7 @@ export class NotasPorCobrarComponent implements OnInit {
         //cargamos la informacion del cobro
         this.caja_movimiento.idCaja = this.vCaja['idCaja'];
         this.caja_movimiento.totalNota = this.detallesVenta[0]['total'];
-        this.caja_movimiento.idTipoMov = 2;
+        this.caja_movimiento.idTipoMov = this.saldo_restante > 0 ? 2: 1;
         this.caja_movimiento.idTipoPago = this.select1;
         this.caja_movimiento.pagoCliente = this.tp1;
         this.caja_movimiento.cambioCliente = this.cambio;
