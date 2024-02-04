@@ -306,9 +306,9 @@ export class NotasPorCobrarComponent implements OnInit {
   getAbonosVentasg(idVenta:number){
     this._cajaService.abonosVentasg(idVenta).subscribe(
       response =>{
-          this.abonos_ventas = response.abonos;
-          this.total_abono = response.total_abono;
-          this.total_actualizado = response.total_actualizado;
+          this.abonos_ventas = response.abonos ?? null;
+          this.total_abono = response.total_abono ?? null;
+          this.total_actualizado = response.total_actualizado ?? null;
           // console.log(this.abonos_ventas);
       });
   }
