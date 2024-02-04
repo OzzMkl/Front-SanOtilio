@@ -66,7 +66,7 @@ export class ReportesVentasCanceladasComponent implements OnInit {
     )
   }
 
-    /**
+  /**
    * @description
    * Obtiene la informacion del input y busca
    */

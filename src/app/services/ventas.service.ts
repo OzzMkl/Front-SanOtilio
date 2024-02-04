@@ -114,5 +114,13 @@ export class VentasService {
   getDetallesVentaCancelada(idVenta:number):Observable<any>{
     return this._http.get(this.url+'ventas/getDetallesVentaCancelada/'+idVenta,{headers:this.headers});
   }
+
+  getVentasFinalizadas(page: number,type: number, search: string):Observable<any>{
+    return this._http.get(this.url+'ventas/indexVentasFinalizadas/'+type+'/'+search+'?page='+page,{headers:this.headers});
+  }
+
+  getDetallesVentaFinalizada(idVenta:number):Observable<any>{
+    return this._http.get(this.url+'ventas/getDetallesVentaFinalizada/'+idVenta,{headers:this.headers});
+  }
 }
 
