@@ -107,7 +107,7 @@ export class PuntoDeVentaComponent implements OnInit {
     private _confirmationService: ConfirmationService,
     private messageService: MessageService ) {
     //declaramos modelos
-    this.ventag = new Ventag(0,0,1,'',1,null,0,0,0,0,'','',0);
+    this.ventag = new Ventag(0,0,1,'',1,0,null,0,0,0,0,'','',0);
     this.modeloCliente = new Cliente (0,'','','','','',0,1,1);
     this.cdireccion = new Cdireccion (0,'MEXICO','PUEBLA','','','','','','',0,'',0,1,'');
     this.nuevaDir = new Cdireccion (0,'MEXICO','PUEBLA','','','','','','',0,'',0,1,'');

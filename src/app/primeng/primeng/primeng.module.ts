@@ -26,6 +26,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { SpeedDialModule } from 'primeng/speeddial';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { MessageService } from 'primeng/api';
+import { DialogModule } from 'primeng/dialog';
 
 
 @NgModule({
@@ -54,7 +55,8 @@ import { MessageService } from 'primeng/api';
     TableModule,
     ConfirmDialogModule,
     SpeedDialModule,
-    ProgressSpinnerModule
+    ProgressSpinnerModule,
+    DialogModule
   ],
   imports: [
     CommonModule,

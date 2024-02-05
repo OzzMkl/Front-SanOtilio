@@ -116,7 +116,7 @@ export class PuntoDeVentaEditarComponent implements OnInit {
   private _route: ActivatedRoute,) { 
 
     //declaramos modelos
-    this.ventag = new Ventag(0,0,1,'',1,null,0,0,0,0,'','',0);
+    this.ventag = new Ventag(0,0,1,'',1,0,null,0,0,0,0,'','',0);
     this.modeloCliente = new Cliente (0,'','','','','',0,1,1);
     this.cdireccion = new Cdireccion (0,'Mexico','Puebla','','','','','','',0,'',0,1,'');
     this.nuevaDir = new Cdireccion (0,'Mexico','Puebla','','','','','','',0,'',0,1,'');
@@ -1080,7 +1080,8 @@ export class PuntoDeVentaEditarComponent implements OnInit {
             this.ventag.idEmpleado = response.venta[0]['idEmpleado'];
             this.ventag.cdireccion = response.venta[0]['cdireccion'];
             this.ventag.observaciones = response.venta[0]['observaciones'];
-            this.ventag.idStatus = response.venta[0]['idStatus'];
+            this.ventag.idStatusCaja = response.venta[0]['idStatusCaja'];
+            this.ventag.idStatusEntregas = response.venta[0]['idStatusEntregas'];
             this.ventag.subtotal = response.venta[0]['subtotal'];
             this.ventag.descuento = response.venta[0]['descuento'];
             this.ventag.total = response.venta[0]['total'];

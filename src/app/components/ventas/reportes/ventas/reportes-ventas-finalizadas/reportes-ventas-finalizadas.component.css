@@ -1,0 +1,12 @@
+.my-pagination ::ng-deep .ngx-pagination .current {
+    background: rgb(0, 119, 255);
+}
+.my-pagination ::ng-deep .ngx-pagination .disabled {
+    color: rgb(170, 170, 170);
+}
+.my-pagination ::ng-deep .ngx-pagination a {
+    color: white;
+}
+.my-pagination ::ng-deep .ngx-pagination a:hover {
+    color: black;
+}

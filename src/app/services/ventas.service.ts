@@ -65,10 +65,6 @@ export class VentasService {
   }
 
   //VENTAS
-  getVentasCanceladas(page: number):Observable<any>{
-    return this._http.get(this.url+'ventas/indexVentasCanceladas?page='+page,{headers:this.headers});
-  }
-  
   getIndexVentas():Observable<any>{
     return this._http.get(this.url+'ventas/indexVentas', {headers:this.headers} );
   }
@@ -109,6 +105,22 @@ export class VentasService {
     let json = JSON.stringify(combinado);
     let params = 'json='+json;
     return this._http.post(this.url+'ventas/cancelaVenta/'+idVenta,params, {headers:this.headers} );
+  }
+
+  getVentasCanceladas(page: number,type: number, search: string):Observable<any>{
+    return this._http.get(this.url+'ventas/indexVentasCanceladas/'+type+'/'+search+'?page='+page,{headers:this.headers});
+  }
+
+  getDetallesVentaCancelada(idVenta:number):Observable<any>{
+    return this._http.get(this.url+'ventas/getDetallesVentaCancelada/'+idVenta,{headers:this.headers});
+  }
+
+  getVentasFinalizadas(page: number,type: number, search: string):Observable<any>{
+    return this._http.get(this.url+'ventas/indexVentasFinalizadas/'+type+'/'+search+'?page='+page,{headers:this.headers});
+  }
+
+  getDetallesVentaFinalizada(idVenta:number):Observable<any>{
+    return this._http.get(this.url+'ventas/getDetallesVentaFinalizada/'+idVenta,{headers:this.headers});
   }
 }
 
