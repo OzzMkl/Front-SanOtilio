@@ -32,7 +32,7 @@
                 <label class="form-label" for="">Selecciona la fecha de recepción</label>
                 <div class="input-group">
                   <input class="form-control" placeholder="aaaa-mm-dd"
-                         name="dp" [(ngModel)]="model" ngbDatepicker [footerTemplate]="footerTemplate" #d="ngbDatepicker">
+                         name="dp" [(ngModel)]="model" ngbDatepicker  [footerTemplate]="footerTemplate" #d="ngbDatepicker">
                   <button class="btn btn-outline-secondary" (click)="d.toggle()" type="button"><i class="bi bi-calendar-date-fill"> </i> </button>
                 </div>
             </div>
@@ -92,10 +92,18 @@
                         <input class="form-control" type="text" ngbTooltip="Solo busca por clave externa" name="claveEx" #claveEx="ngModel" [(ngModel)]="producto_compra.claveexterna" readonly>
                     </div>
                 </div>
-                <div class="col-4">
+                <div class="col-1">
                     <label class="form-label" for="cantidadProducto">Cantidad</label>
                     <input class="form-control" min="0" type="number" name="cantidadProducto" id="cantidadProducto"  #cantidadProducto="ngModel" [(ngModel)]="producto_compra.cantidad" (ngModelChange)="onChangeT($event)">
                 </div>
+                <div class="col-2">
+                    <label for="medida" class="form-label">Seleccionar Medida</label>
+                    <select name="idMedida" id="idMedida" class="form-select" [(ngModel)]="producto_compra.idProdMedida">
+                        <option selected disabled value="">Abrir para seleccionar</option>
+                        <option  *ngFor="let medida of productoVerM" value={{medida.idProdMedida}} >{{medida.nombreMedida}}</option>
+                    </select>
+                </div>
+
                 <div class="col-2">
                     <label class="form-label" for="cantidadProducto">.</label>
                     <button class="btn btn-success form-control" type="button" (click)="capturar(producto_compra)" [disabled]="isSearch"><i class="bi bi-check-circle-fill"> Agregar</i>     </button>
@@ -123,13 +131,7 @@
                     <br>
                     <img src="{{url + 'productos/getImageProduc/' + prod.imagen}}" width="100px" height="100px">
                 </div>
-                <div class="col-4">
-                    <label for="medida" class="form-label">Seleccionar Medida</label>
-                    <select name="idMedida" id="idMedida" class="form-select" [(ngModel)]="producto_compra.idProdMedida">
-                        <option selected disabled value="">Abrir para seleccionar</option>
-                        <option  *ngFor="let medida of productoVerM" value={{medida.idProdMedida}} >{{medida.nombreMedida}}</option>
-                    </select>
-                </div>
+
                 <!-- <div class="col-2">
                     <label class="form-label" for="medida">Medida</label>
                     <input class="form-control" type="text" value="{{prod.nombreMedida}}" readonly>

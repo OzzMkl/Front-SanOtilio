@@ -73,6 +73,10 @@ export class RequisicionAgregarComponent implements OnInit {
   //contador para el text area
   conta: number =0;
 
+  //Imagen del producto
+  public imagenPM: string = '';
+
+
   constructor(
     private _http: HttpClient,
     private modalService: NgbModal,
@@ -142,7 +146,7 @@ export class RequisicionAgregarComponent implements OnInit {
   * @param idProducto
   * Recibimos el id del producto
   * @description
-  * Trae la informacion de uin producto en especifico
+  * Trae la informacion de un producto en especifico
   */
   getProd(idProducto:any){
     this._productoService.getProdverDos(idProducto).subscribe(
@@ -157,6 +161,11 @@ export class RequisicionAgregarComponent implements OnInit {
         console.log(this.medidasLista);
         //Si el producto tiene una sola medida se asigna directo
         //if(this.medidasLista.length == 1){ this.producto_orden.idProdMedida = this.medidasLista[0].idProdMedida }
+        console.log(this.productoVer[0]['imagen']);
+        if(this.productoVer[0]['imagen'] == "" || this.productoVer[0]['imagen'] == null){
+          this.productoVer[0]['imagen'] = "1650558444no-image.png";
+        }
+
       },error => {
         console.log(error);
       }

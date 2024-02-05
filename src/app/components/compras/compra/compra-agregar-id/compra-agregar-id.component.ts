@@ -122,6 +122,7 @@ export class CompraAgregarIdComponent implements OnInit {
 
   //contadores para los text area
   conta: number =0;
+  
 
   constructor(
     //declaracion de servicios

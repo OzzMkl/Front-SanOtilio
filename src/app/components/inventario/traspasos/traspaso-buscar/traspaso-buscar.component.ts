@@ -199,6 +199,7 @@ export class TraspasoBuscarComponent implements OnInit {
   }
 
   private getDismissReason(reason: any): string {//cierra modal con teclado ESC o al picar fuera del modal
+    
     if (reason === ModalDismissReasons.ESC) {
       return 'by pressing ESC';
     } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
@@ -206,13 +207,13 @@ export class TraspasoBuscarComponent implements OnInit {
     } else {
       return `with: ${reason}`;
     }
-    this.resetVariables();
   }
 
   resetVariables(){
     this.pageActualM = 0;
     this.detallesTraspaso = '';
     this.productosDT = '';
+    this.motivo = '';
   }
 
   getDetailsTraspaso(idTraspaso:any,tipoTraspaso:any){

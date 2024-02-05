@@ -84,19 +84,22 @@
                   </div>
                   <hr>
                   <div class="row">
-                      <div class="col-3">
+                      <div class="col-5">
                         <label for="nombreEmpleado" class="form-label">Realizo</label>
                         <input id="nombreEmpleado" type="text" class="form-control" value="{{doc.nombreEmpleado}}" readonly>
                       </div>
-                      <div class="col-3">
+                      <div class="col-2">
                         <label for="fechaAlta" class="form-label">Fecha de alta</label>
                         <input type="text" class="form-control" value="{{doc.created_at | date}}" readonly>
                       </div>
-                      <div class="col-3">
+                      <div class="col-2">
                         <label for="fechaEstimada" class="form-label">Fecha estimada</label>
                         <input id="fechaEstimada" type="text" class="form-control" value="{{doc.fecha | date}}" readonly>
                       </div>
-                      <div class="col">
+                      
+                  </div>
+                  <div class="row">
+                    <div class="col">
                         <label for="observaciones">Observaciones</label>
                         <textarea class="form-control" name="observaciones" id="observaciones" cols="30" rows="2" value="{{doc.observaciones}}" readonly></textarea>
                       </div>

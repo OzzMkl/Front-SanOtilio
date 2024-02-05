@@ -147,7 +147,8 @@ export class OrdencompraBuscarComponent implements OnInit {
     });
   }
   private getDismissReason(reason: any): string {//cierra modal con teclado ESC o al picar fuera del modal
-    this.pagina = 1;
+    
+    this.motivo = '';
     if (reason === ModalDismissReasons.ESC) {
       return 'by pressing ESC';
     } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
@@ -156,6 +157,16 @@ export class OrdencompraBuscarComponent implements OnInit {
       return `with: ${reason}`;
     }
   }
+
+  resetVariables(){
+    this.detallesOrdencompra = '';
+    this.productosDOC = '';
+    this.pagina = 1;
+    this.motivo = '';
+
+
+  }
+
   /***** */
   loadUser(){
     this.userPermisos = this._empleadoService.getPermisosModulo(this.mOrdC.idModulo, this.mOrdC.idSubModulo);
