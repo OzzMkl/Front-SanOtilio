@@ -262,6 +262,25 @@ export class NotasPorCobrarComponent implements OnInit {
   }
 
   /**
+   * 
+   */
+  guardaVentaCredito(idVenta:number){
+    //Creamos objeto con la idVenta y los permisos del modulo
+    let ventaCredito = {
+      idVenta: idVenta,
+      idEmpleado: this.empleado.sub,
+      permisos: this.userPermisos
+    }
+    this._cajaService.guardaVentaCredito(ventaCredito).subscribe(
+      response =>{
+        console.log(response);
+      }, error =>{
+        console.log(error);
+      }
+    );
+  }
+
+  /**
    * SERVICIOS
    */
   getVentas(){

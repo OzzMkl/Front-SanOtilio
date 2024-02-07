@@ -47,6 +47,12 @@ export class CajasService {
     return this._http.get(this.url+'cajas/generatePDF/'+ idVenta, {responseType:'blob'});
   }
 
+  guardaVentaCredito(objVenta:any):Observable<any>{
+    let json = JSON.stringify(objVenta);
+    let params = 'json='+json;
+    return this._http.post(this.url+'cajas/guardaVentaCredito',params,{headers: this.headers});
+  }
+
   // getTipoMovimiento():Observable<any>{
   //   return this._http.get(this.url+'cajas/indexTipoMovimiento',{headers:this.headers});
   // }
