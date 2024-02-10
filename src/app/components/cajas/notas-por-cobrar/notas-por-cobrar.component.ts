@@ -3,7 +3,6 @@ import { Router } from '@angular/router';
 //Servicios
 import { VentasService } from 'src/app/services/ventas.service';
 import { CajasService } from 'src/app/services/cajas.service';
-import { ToastService } from 'src/app/services/toast.service';
 import { EmpleadoService } from 'src/app/services/empleado.service';
 import { ModulosService } from 'src/app/services/modulos.service';
 import { MessageService, ConfirmationService, ConfirmEventType } from 'primeng/api';
@@ -74,7 +73,6 @@ export class NotasPorCobrarComponent implements OnInit {
               private modalService: NgbModal,
               private _cajaService: CajasService, 
               private _router: Router,
-              public toastService: ToastService, 
               private _empleadoService: EmpleadoService, 
               private _modulosService:ModulosService,
               private messageService: MessageService,
@@ -246,13 +244,11 @@ export class NotasPorCobrarComponent implements OnInit {
               //cerramos los dos modales
               this.modalService.dismissAll();
               //mandamos mensaje de la nota fue cobrada correctamente
-              //this.toastService.show(,{classname: 'bg-success text-light', delay: 3000});
               this.messageService.add({severity:'success', detail:'Nota #'+this.detallesVenta[0]['idVenta']+' cobrada correctamente'});
             } else{
               //si devuelve otra coosa 
               console.log('algo salio mal');
               //mostramos mensaje de error
-              //this.toastService.show('algo salio mal',{classname: 'bg-danger text-light', delay: 6000});
             }
           }, error => {
             console.log(error);
