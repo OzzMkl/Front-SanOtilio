@@ -111,7 +111,7 @@ export class ProductoAgregarComponent implements OnInit {
     private messageService: MessageService,
 
   ) {
-    this.producto = new Producto(0,0,0,0,'',0,'',0,0,'',0,'','',null,0,0);
+    this.producto = new Producto(0,0,0,1,'',0,'',0,0,'',0,'','',null,0,0);
     this.datosTab1 = new Productos_medidas(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
     this.datosTab2 = new Productos_medidas(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
     this.datosTab3 = new Productos_medidas(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
@@ -142,7 +142,7 @@ export class ProductoAgregarComponent implements OnInit {
           this.getMedida();
           this.getMarca();
           this.getDepartamentos();
-          this.getCategoria();
+          // this.getCategoria();
           this.getAlmacen();
           this.identity = this._empleadoService.getIdentity();
         }
@@ -420,19 +420,19 @@ export class ProductoAgregarComponent implements OnInit {
       }
     );
   }
-  getCategoria(){
-    this._categoriaService.getCategorias().subscribe(
-      response =>{
-        if(response.status == 'success'){
-          this.categoria = response.categoria;
+  // getCategoria(){
+  //   this._categoriaService.getCategorias().subscribe(
+  //     response =>{
+  //       if(response.status == 'success'){
+  //         this.categoria = response.categoria;
           
-        }
-      },
-      error =>{
-        console.log(error);
-      }
-    );
-  }
+  //       }
+  //     },
+  //     error =>{
+  //       console.log(error);
+  //     }
+  //   );
+  // }
   getAlmacen(){
     this._almacenService.getAlmacenes().subscribe(
       response =>{
