@@ -1,2 +1,136 @@
 <p-toast></p-toast>
 <app-loading-spinner [isLoading]="isLoadingGeneral"></app-loading-spinner>
+<div class="container-fluid">
+    <h3>Ventas a credito</h3>
+    <!--CUADRO DE BUSQUEDA-->
+    <div class="input-group mb-2">
+        <div class="col-2">
+            <select class="form-select" name="tipoBusqueda" [(ngModel)]="tipoBusqueda" (ngModelChange)="selectBusqueda()" >
+                <option value="uno">Folio</option>
+                <option value="dos">Cliente</option>
+                <option value="tres">Vendedor</option>
+            </select>
+        </div>
+        <div class="col">
+            <input type="search" class="form-control" name="search" placeholder="Buscar ..." [(ngModel)]="search" (ngModelChange)="selectBusqueda()">
+        </div>
+    </div>
+    <!--FIN CUADRO DE BUSQUEDA-->
+    <div class="table-responsive">
+        <table class="table table-dark table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">FOLIO</th>
+                    <th scope="col">FECHA DE VENTA</th>
+                    <th scope="col">CLIENTE</th>
+                    <th scope="col">VENDEDOR</th>
+                    <th scope="col">TIPO VENTA</th>
+                    <th scope="col">TOTAL</th>
+                </tr>
+            </thead>                           <!-- Se agrega filtro de cotizaciones para clientes-->
+            <tbody *ngFor="let venta of ventas_credito | paginate: { id:'paginationVentasCanceladas',itemsPerPage:itemsPerPage, currentPage: pageActual, totalItems:totalPages }">
+                <tr (click)="getDetallesVentaCredito(venta.idVenta)">
+                    <th scope="row">{{venta.idVenta}}</th>
+                    <th scope="row">{{venta.fecha | date: 'dd/MM/yyyy'}}</th>
+                    <th scope="row">{{ venta.nombreCliente.length > 40 ? (venta.nombreCliente | slice:0:25) + '...' : venta.nombreCliente }}</th>
+                    <th scope="row">{{venta.nombreEmpleadoGenera.length > 40 ? (venta.nombreEmpleadoGenera | slice:0:25) + '...' : venta.nombreEmpleadoGenera }}</th>
+                    <th scope="row">{{venta.nombreTipoventa}}</th>
+                    <th scope="row">{{venta.total | currency}}</th>
+                </tr>
+            </tbody>
+        </table>
+        <pagination-controls 
+            id="paginationVentasCanceladas"
+            (pageChange)="getVentasCredito(pageActual = $event)" 
+            previousLabel="Anterior"
+            nextLabel="Siguiente">
+        </pagination-controls>
+    </div>
+</div>
+
+<p-dialog   header="Header" [(visible)]="visible" 
+            [modal]="true" [style]="{ width: '85vw' }" 
+            [draggable]="true" [resizable]="false"
+            [position]="'top'"
+            [dismissableMask] = "true"
+            *ngFor="let venta of detalles_venta">
+
+    <ng-template pTemplate="header">
+            <h5 class="modal-title" id="modal-basic-title">Detalles venta #{{venta.idVenta}}</h5>
+    </ng-template>
+    <div class="row">
+        <div class="col-4">
+            <label class="form-label">Cliente</label>
+            <input type="text" class="form-control" value="{{venta.nombreCliente}}" readonly>
+        </div>
+        <div class="col-2">
+            <label class="form-label">Fecha</label>
+            <input type="text" class="form-control" value="{{venta.created_at | date: 'dd/MM/yyyy'}}" readonly>
+        </div>
+        <div class="col-2">
+            <label class="form-label">Status caja</label>
+            <input type="text" class="form-control" value="{{venta.nombreStatus}}" readonly>
+        </div>
+        <div class="col-2 d-none">
+            <label class="form-label">Status entregas</label>
+            <input type="text" class="form-control" value="{{venta.nombreStatusEntregas}}" readonly>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-4">
+            <label class="form-label">Vendedor</label>
+            <input type="text" class="form-control" value="{{venta.nombreEmpleado}}" readonly>
+        </div>
+        <div class="col-2">
+            <label class="form-label">Tipo venta</label>
+            <input type="text" class="form-control" value="{{venta.nombreTipoVenta}}" readonly>
+        </div>
+        <div class="col-2">
+            <label class="form-label">Subtotal</label>
+            <input type="text" class="form-control" value="{{venta.subtotal | currency}}" readonly>
+        </div>
+        <div class="col-2">
+            <label class="form-label">Descuento</label>
+            <input type="text" class="form-control" value="{{venta.descuento | currency}}" readonly>
+        </div>
+        <div class="col-2">
+            <label class="form-label">Total</label>
+            <input type="text" class="form-control" value="{{venta.total | currency}}" readonly>
+        </div>
+    </div>
+    <div class="row" *ngIf="venta.observaciones.length > 2">
+        <div class="col">
+            <label class="form-label">Observaciones</label>
+            <textarea class="form-control" rows="1" value="{{venta.observaciones}}" readonly></textarea>
+        </div>
+    </div>
+    <hr>
+    <div class="table-responsive">
+        <table class="table table-dark table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">CLAVE EXTERNA</th>
+                    <th scope="col">DESCRIPCION</th>
+                    <th scope="col">MEDIDA</th>
+                    <th scope="col">CANTIDAD</th>
+                    <th scope="col">PRECIO</th>
+                    <th scope="col">DESCUENTO</th>
+                    <th scope="col">SUBTOTAL</th>
+                </tr>
+            </thead>
+            <tbody *ngFor="let pdv of productos_venta | paginate:{id:'mProductosDVenta',itemsPerPage: 3, currentPage: mpageActual}">
+                <tr>
+                    <th scope="row">{{pdv.claveEx}}</th>
+                    <th scope="row">{{pdv.descripcion}}</th>
+                    <th scope="row">{{pdv.nombreMedida}}</th>
+                    <th scope="row">{{pdv.cantidad}}</th>
+                    <th scope="row">{{pdv.precio | currency}}</th>
+                    <th scope="row">{{pdv.descuento | currency}}</th>
+                    <th scope="row">{{pdv.total | currency}}</th>
+                </tr>
+            </tbody>
+        </table>
+        <pagination-controls class="my-pagination" id="mProductosDVenta" (pageChange)="mpageActual = $event"></pagination-controls>
+    </div>
+
+</p-dialog>

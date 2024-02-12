@@ -23,6 +23,7 @@ export class NotasACreditoComponent implements OnInit {
   timerId:any;
   //spinner de carga
   public isLoadingGeneral:boolean = false;
+  visible: boolean = false;
   //variables servicios
   public ventas_credito: Array<any> = [];
   public detalles_venta: Array<any> = [];
@@ -34,6 +35,7 @@ export class NotasACreditoComponent implements OnInit {
   public prev_page: any;
   public itemsPerPage:number=0;
   pageActual: number = 0;
+  public mpageActual:any;//para el modal
   //Buscador
   public tipoBusqueda: string = "uno";
   search='';
@@ -100,6 +102,24 @@ export class NotasACreditoComponent implements OnInit {
         console.log(error);
       }
     )
+  }
+
+  getDetallesVentaCredito(idVenta:number){
+    this.isLoadingGeneral = true;
+    this._ventasService.getDetallesVentaCredito(idVenta).subscribe(
+      response =>{
+        console.log(response);
+        if(response.status == 'success'){
+          this.detalles_venta = response.venta_credito;
+          this.productos_venta= response.productos_ventascre;
+
+          this.isLoadingGeneral = false;
+          this.visible = true;
+        }
+      }, error =>{
+        console.log(error);
+      }
+    );
   }
 
   /**

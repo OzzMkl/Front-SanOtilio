@@ -126,5 +126,9 @@ export class VentasService {
   getVentasCredito(page:number, type:number, search:string):Observable<any>{
     return this._http.get(this.url+'ventas/indexVentasCredito/'+type+'/'+search+'?page='+page,{headers:this.headers});
   }
+
+  getDetallesVentaCredito(idVenta:number):Observable<any>{
+    return this._http.get(this.url+'ventas/getDetallesVentaCredito/'+idVenta,{headers:this.headers});
+  }
 }
 
