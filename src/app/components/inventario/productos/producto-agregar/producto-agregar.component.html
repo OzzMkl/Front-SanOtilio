@@ -48,6 +48,17 @@
         </div>
       </div> -->
 
+      <div class="col-3">
+        <label for="almacen" class="form-label">Almacen *</label>
+        <select id="almacen" class="form-select" name="idAlmacen" #idAlmacen="ngModel" [(ngModel)]="producto.idAlmacen" required>
+          <option value="" selected>Seleccione una opción</option>
+          <option  *ngFor="let a of almacenes" value={{a.idAlmacen}} >{{a.nombre}}</option>
+        </select>
+        <div [hidden]="idAlmacen.valid || idAlmacen.pristine" class="alert alert-danger">
+          CAMPO REQUERIDO 
+        </div>
+      </div>
+
       <div class="col-6">
         <label for="descripcion" class="form-label">Descripcion *</label>
         <textarea class="form-control" id="descripcion" rows="2" maxlength="254" 
@@ -86,20 +97,11 @@
         
       </div>
 
-      <div class="col-1">
-          <img src="{{url + 'productos/getImageProduc/' + producto.imagen}}" width="100px" height="100px">
+      <div class="col-2">
+          <img src="{{url + 'productos/getImageProduc/' + producto.imagen}}" width="90px" height="90px">
       </div>
 
-      <div class="col-3">
-        <label for="almacen" class="form-label">Almacen *</label>
-        <select id="almacen" class="form-select" name="idAlmacen" #idAlmacen="ngModel" [(ngModel)]="producto.idAlmacen" required>
-          <option value="" selected>Seleccione una opción</option>
-          <option  *ngFor="let a of almacenes" value={{a.idAlmacen}} >{{a.nombre}}</option>
-        </select>
-        <div [hidden]="idAlmacen.valid || idAlmacen.pristine" class="alert alert-danger">
-          CAMPO REQUERIDO 
-        </div>
-      </div>
+      
 
       <div class="col-3">
         <label for="tentrega" class="form-label">Tiempo de entrega (Proveedor) *</label>
@@ -142,7 +144,7 @@
         </div>
       </div>
 
-      <div class="col-1">
+      <div class="col-2">
         <label for="stockmin" class="form-label">Stock Min *</label>
         <input type="number" class="form-control" id="stockmin" name="stockMin" #stockMin="ngModel" [(ngModel)]="producto.stockMin" pattern="^[0-9]{1,6}" min="1" required>
         <div [hidden]="stockMin.valid || stockMin.pristine" class="alert alert-danger">
@@ -150,7 +152,7 @@
         </div>
       </div>
 
-      <div class="col-1">
+      <div class="col-2">
         <label for="stockmax" class="form-label">Stock Max *</label>
         <input type="number" class="form-control" id="stockmax" name="stockMax" #stockMax="ngModel" [(ngModel)]="producto.stockMax" pattern="^[0-9]{1,6}" min="1" required>
         <div [hidden]="stockMax.valid || stockMax.pristine" class="alert alert-danger">

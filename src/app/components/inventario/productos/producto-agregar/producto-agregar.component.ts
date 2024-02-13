@@ -242,7 +242,11 @@ export class ProductoAgregarComponent implements OnInit {
       }
 
     } else{
-      this._productoService.registerProducto(this.producto,this.listaProdMedida,this.identity).subscribe(
+      let identityMod = {
+        'sub': this.identity.sub,
+        'permisos': this.userPermisos
+      }
+      this._productoService.registerProducto(this.producto,this.listaProdMedida,identityMod).subscribe(
         response =>{
            //console.log('asdasdasd :',response);
            if(response.status == 'success'){
