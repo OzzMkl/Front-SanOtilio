@@ -10,6 +10,10 @@ export class ModulosService {
                   idModulo: 2,
                   idSubModulo: 1
               }
+  public pCreditos: propModulo = {
+    idModulo: 2,
+    idSubModulo: 22
+  }
 
   public pInv: propModulo ={
                 idModulo: 5,
@@ -52,6 +56,10 @@ export class ModulosService {
 
   modsCaja(){
     return this.pCaja;
+  }
+
+  modsCreditos(){
+    return this.pCreditos;
   }
 
   modsInventario(){

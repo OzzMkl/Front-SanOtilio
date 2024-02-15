@@ -22,31 +22,15 @@ export class ProductoService{
      * @returns 
      */
     registerProducto(producto:any,listaProdMedida:any,empleado:any):Observable<any>{
-            let combinado = {...producto, ...empleado};
+            let combinado = {
+                'producto': producto,
+                'empleado': empleado,
+                'lista_productosMedida':listaProdMedida
+            };
             let json = JSON.stringify(combinado);
             let params = 'json='+json;
-            // console.log(params);
-            // return combinado;
 
-            let combinado2 = {...listaProdMedida, ...empleado}
-            let json2 = JSON.stringify(combinado2);
-            let params2 = 'json='+json2;
-
-            return this._http.post(this.url+'productos/register',params, {headers:this.headers} ).pipe(
-                concatMap( (response:any) =>{
-                    //console.log('response service: ',response['status']);
-                    if(response.status = 'success'){
-                        return this._http.post(this.url+'productos/registraPrecioProducto',params2, {headers:this.headers} );
-                    } else{
-                        return throwError('Ocurrio un error al registrar producto');
-                    }
-                }),
-                catchError( error =>{
-                    console.log('Error:', error);
-                    return throwError('Fallo al registrar el producto Error: '+error.error.error.errorInfo['2']);
-                })
-            );
-            //return forkJoin([r1,r2]);
+            return this._http.post(this.url+'productos/register',params,{headers:this.headers});
     }
 
     /**
@@ -117,12 +101,21 @@ export class ProductoService{
      * @param empleado Empleado
      * @returns Observable
      */
-    updateProducto( producto:any, listaProdMedida:any,empleado:any):Observable<any>{
-        let combinado = {...producto, ...empleado};
+    updateProducto( producto:any, listaProdMedida:any,idEmpleado:any, sucUpdate:any):Observable<any>{
+        let combinado = {
+            producto: producto,
+            idEmpleado: idEmpleado, 
+            sucursales: sucUpdate
+        };
         let json = JSON.stringify(combinado);
         let params = 'json='+json;
 
-        let combinado2 = {...listaProdMedida, ...empleado}
+        let combinado2 = {
+            lista_productoMed:listaProdMedida,
+            idEmpleado:idEmpleado,
+            sucursales: sucUpdate
+        };
+
         let json2 = JSON.stringify(combinado2);
         let params2 = 'json='+json2;
 
@@ -145,8 +138,12 @@ export class ProductoService{
      * @param empleado Empleado
      * @returns 
      */
-    putProducto(producto:any, empleado:any):Observable<any>{
-        let combinado = {...producto, ...empleado};
+    putProducto(producto:any, idEmpleado:any, sucUpdate:any):Observable<any>{
+        let combinado = {
+            producto: producto,
+            idEmpleado: idEmpleado, 
+            sucursales: sucUpdate
+        };
         let json = JSON.stringify(combinado);
         let params = 'json='+json;
 
