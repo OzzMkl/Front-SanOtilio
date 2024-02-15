@@ -45,6 +45,18 @@ export class TraspasoService {
     return this._http.post(this.url+'traspasos/registerTraspaso',params, {headers:this.headers} );
   }
 
+  registerTraspasoUsoInterno(traspaso:any,tipoTraspaso:string,lista_producto_traspaso:any,identity:any):Observable<any>{
+    const combinado = {
+      'traspaso': traspaso,
+      'tipoTraspaso':tipoTraspaso,
+      'lista_producto_traspaso':lista_producto_traspaso,
+      'identity':identity
+    };
+    let json = JSON.stringify(combinado);
+    let params = 'json='+json;
+    return this._http.post(this.url+'traspasos/registerTraspasoUsoInterno',params, {headers:this.headers} );
+  }
+
   cancelarTraspaso(idTraspaso:any,tipoTraspaso:any,motivo:any,idEmpleado:any):Observable<any>{
     let combinado = {'idTraspaso':idTraspaso,
                      'tipoTraspaso':tipoTraspaso,
@@ -81,6 +93,7 @@ export class TraspasoService {
     //console.log('json',json);
     return this._http.post(this.url+'traspasos/recibirTraspaso',params, {headers:this.headers} );
   }
+
 
 
 

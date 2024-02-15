@@ -254,32 +254,47 @@ export class TraspasoAgregarComponent implements OnInit {
     else if(this.lista_producto_traspaso.length == 0){
       this.messageService.add({severity:'error', summary:'Error', detail:'La lista de traspaso está vacía'});
     }
-    else 
-    {
+    else{
       console.log(this.traspaso);
-      this._traspasoService.registerTraspaso(this.traspaso,this.tipoTraspaso,this.lista_producto_traspaso,this.identity).subscribe(
-        response =>{
-          if(response.status == 'success'){
-            this.messageService.add({severity:'success', summary:'Éxito', detail:'Traspaso registrado'});
-            console.log(response);
-            if(this.tipoTraspaso == 'Recibe'){
+      if(this.tipoTraspaso == 'Uso interno'){
+        this._traspasoService.registerTraspasoUsoInterno(this.traspaso,this.tipoTraspaso,this.lista_producto_traspaso,this.identity).subscribe(
+          response =>{
+            if(response.status == 'success'){
+              this.messageService.add({severity:'success', summary:'Éxito', detail:'Traspaso registrado'});
+              console.log(response);
               this.createPDF(response.traspaso,this.tipoTraspaso);
-            }else if(this.tipoTraspaso == 'Envia'){
-              this.createPDF(response.traspaso,this.tipoTraspaso);
-            }else{}
-            //this.createPDF();
-          }else{
-            //IMPRIMIR RESPONSE.DATA
+              //this.createPDF();
+            }else{
+              //IMPRIMIR RESPONSE.DATA
+            }
+          },error =>{
+            console.log(<any>error);
+            console.log(error.error.message);
+            this.messageService.add({severity:'error', summary:'Error', detail:error.error.message});
           }
-
-        },error =>{
-          console.log(<any>error);
-          console.log(error.error.message);
-          this.messageService.add({severity:'error', summary:'Error', detail:error.error.message});
-        }
-      );
-
-
+        );
+      }else{
+        this._traspasoService.registerTraspaso(this.traspaso,this.tipoTraspaso,this.lista_producto_traspaso,this.identity).subscribe(
+          response =>{
+            if(response.status == 'success'){
+              this.messageService.add({severity:'success', summary:'Éxito', detail:'Traspaso registrado'});
+              console.log(response);
+              if(this.tipoTraspaso == 'Recibe'){
+                this.createPDF(response.traspaso,this.tipoTraspaso);
+              }else if(this.tipoTraspaso == 'Envia'){
+                this.createPDF(response.traspaso,this.tipoTraspaso);
+              }else{}
+              //this.createPDF();
+            }else{
+              //IMPRIMIR RESPONSE.DATA
+            }
+          },error =>{
+            console.log(<any>error);
+            console.log(error.error.message);
+            this.messageService.add({severity:'error', summary:'Error', detail:error.error.message});
+          }
+        );
+      }
     }
   }
 
