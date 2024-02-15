@@ -101,12 +101,21 @@ export class ProductoService{
      * @param empleado Empleado
      * @returns Observable
      */
-    updateProducto( producto:any, listaProdMedida:any,empleado:any):Observable<any>{
-        let combinado = {...producto, ...empleado};
+    updateProducto( producto:any, listaProdMedida:any,idEmpleado:any, sucUpdate:any):Observable<any>{
+        let combinado = {
+            producto: producto,
+            idEmpleado: idEmpleado, 
+            sucursales: sucUpdate
+        };
         let json = JSON.stringify(combinado);
         let params = 'json='+json;
 
-        let combinado2 = {...listaProdMedida, ...empleado}
+        let combinado2 = {
+            lista_productoMed:listaProdMedida,
+            idEmpleado:idEmpleado,
+            sucursales: sucUpdate
+        };
+
         let json2 = JSON.stringify(combinado2);
         let params2 = 'json='+json2;
 
@@ -129,8 +138,12 @@ export class ProductoService{
      * @param empleado Empleado
      * @returns 
      */
-    putProducto(producto:any, empleado:any):Observable<any>{
-        let combinado = {...producto, ...empleado};
+    putProducto(producto:any, idEmpleado:any, sucUpdate:any):Observable<any>{
+        let combinado = {
+            producto: producto,
+            idEmpleado: idEmpleado, 
+            sucursales: sucUpdate
+        };
         let json = JSON.stringify(combinado);
         let params = 'json='+json;
 

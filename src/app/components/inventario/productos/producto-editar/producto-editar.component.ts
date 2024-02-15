@@ -11,11 +11,13 @@ import { AlmacenService } from 'src/app/services/almacen.service';
 import { EmpleadoService } from 'src/app/services/empleado.service';
 import { ModulosService } from 'src/app/services/modulos.service';
 import { global } from 'src/app/services/global';
+import { Sucursal } from 'src/app/models/sucursal';
 /*Modelos */
 import { Producto} from 'src/app/models/producto';
 import { Productos_medidas } from 'src/app/models/productos_medidas';
 /*NGBOOTSTRAP */
 import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { SucursalService } from 'src/app/services/sucursal.service';
 
 
 @Component({
@@ -23,7 +25,7 @@ import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
   templateUrl: './producto-editar.component.html',
   styleUrls: ['./producto-editar.component.css'],
   providers: [MedidaService, MarcaService,DepartamentoService,
-    CategoriaService, AlmacenService, ProductoService, MessageService]
+    CategoriaService, AlmacenService, ProductoService, MessageService,]
 })
 export class ProductoEditarComponent implements OnInit {
 
@@ -42,8 +44,6 @@ export class ProductoEditarComponent implements OnInit {
   //contadores para los text area
   conta: number =0;
   contaUbi: number =0;
-  //spinner
-  public isLoading: boolean = false;
   //PAGINATOR
   public totalPages: any;
   public path: any;
@@ -83,6 +83,15 @@ export class ProductoEditarComponent implements OnInit {
  counter: number = 5;
  timerId:any;
 
+ //spiner decarga
+ isLoadingGeneral: boolean = false;
+
+ //modal
+ confirmSucursales = false;
+ public sucursales: Array<any> = [];
+ public empresa:any;
+ public isAllSuc: boolean = false;
+
  ////
  public preciosIncorrectos: { [key:string]: string } = {};
 
@@ -99,6 +108,7 @@ export class ProductoEditarComponent implements OnInit {
     private _router: Router,
     private _route: ActivatedRoute,
     private messageService: MessageService,
+    private _sucursalService: SucursalService
   ){
     this.producto = new Producto(0,0,0,1,'',0,'',0,0,'',0,'','',null,0,0);
     this.datosTab1 = new Productos_medidas(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
@@ -117,7 +127,7 @@ export class ProductoEditarComponent implements OnInit {
    */
   getIdProduct(){
     //mostramos el spinner
-    this.isLoading = true;
+    this.isLoadingGeneral = true;
     //Obtener el id del producto a modificar de la URL
     this._route.params.subscribe(params => {
      let id = + params['idProducto'];
@@ -247,7 +257,7 @@ export class ProductoEditarComponent implements OnInit {
           }
          }
          //una vez terminado de cargar quitamos el spinner
-          this.isLoading = false;
+          this.isLoadingGeneral = false;
        }//fin if
      },//fin response
      error =>{
@@ -543,12 +553,13 @@ export class ProductoEditarComponent implements OnInit {
      * 
      * @param form 
      */
-    submit(form:any){
-      
+    submit(){
+      this.confirmSucursales = false
+      this.isLoadingGeneral = true;
       this.insertaListaProdM();
-      //console.log(this.producto, this.listaProdMedida)
+      // console.log(this.producto, this.listaProdMedida)
 
-      //Revisamo si quieren actualizar precios
+      // Revisamo si quieren actualizar precios
       if(this.checkMuestraPrecios){
         // Si actualiza preios entra la validacion
         if(this.verificaPreciosSubmit()){
@@ -572,11 +583,12 @@ export class ProductoEditarComponent implements OnInit {
           }
 
         } else{
-          this._productoService.updateProducto(this.producto,this.listaProdMedida,this.identity).subscribe(
+          this._productoService.updateProducto(this.producto,this.listaProdMedida,this.identity.sub,this.sucursales).subscribe(
             response =>{
               //console.log('asdasdasd :',response);
               if(response.status == 'success'){
-  
+
+                this.isLoadingGeneral =false;
                  this._router.navigate(['./producto-modulo/producto-buscar']);
                  this.messageService.add({severity:'success', summary:'Alerta', detail:'Producto '+this.producto.claveEx+' actualizado correctamente'});
                }
@@ -590,9 +602,10 @@ export class ProductoEditarComponent implements OnInit {
         
       } //si no solo se guarda la informacion del producto
         else{
-          this._productoService.putProducto(this.producto,this.identity).subscribe(
+          this._productoService.putProducto(this.producto,this.identity.sub,this.sucursales).subscribe(
             response =>{
               if(response.status == 'success'){
+                this.isLoadingGeneral =false;
                 this._router.navigate(['./producto-modulo/producto-buscar']);
                 this.messageService.add({severity:'success', summary:'Alerta', detail:'Producto '+this.producto.claveEx+' actualizado correctamente'});
               }
@@ -1227,7 +1240,41 @@ export class ProductoEditarComponent implements OnInit {
 
       }
     }
-  
+
+    getSucursales(){
+      this._sucursalService.getSucursales().subscribe(
+        response =>{
+          if(response.status == 'success'){
+            this.sucursales = response.sucursales;
+            this.empresa = response.empresa;
+            // Filtrar la lista para eliminar elementos con propiedad connection vacía
+            this.sucursales = this.sucursales.filter(sucursal => sucursal.connection !== null);
+            //Eliminamos a la empresa
+            this.sucursales = this.sucursales.filter(sucursal => sucursal.idSuc !== this.empresa.idSuc);
+          }
+          // console.log(this.sucursales);
+          // console.log(this.empresa);
+        }, error =>{
+          console.log(error);
+        });
+    }
+
+    confirmUpdate(){
+      this.getSucursales();
+      this.confirmSucursales = true;
+    }
+
+    //Marca todos los check de la tabla
+    toggleAllSuc(){
+      for(let suc of this.sucursales){
+        suc.isSelected = this.isAllSuc;
+      }
+    }
+
+    //Al desmarcar algun checke de la tabla, desmarcamos el check del header
+    toggleSucursalSelection() {
+      this.isAllSuc = this.sucursales.every(suc => suc.isSelected);
+    }
   
     /******************** TAB1 ********************/
   

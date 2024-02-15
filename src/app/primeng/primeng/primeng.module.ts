@@ -27,6 +27,7 @@ import { SpeedDialModule } from 'primeng/speeddial';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { MessageService } from 'primeng/api';
 import { DialogModule } from 'primeng/dialog';
+import { CheckboxModule } from 'primeng/checkbox';
 
 
 @NgModule({
@@ -56,7 +57,8 @@ import { DialogModule } from 'primeng/dialog';
     ConfirmDialogModule,
     SpeedDialModule,
     ProgressSpinnerModule,
-    DialogModule
+    DialogModule,
+    CheckboxModule,
   ],
   imports: [
     CommonModule,
