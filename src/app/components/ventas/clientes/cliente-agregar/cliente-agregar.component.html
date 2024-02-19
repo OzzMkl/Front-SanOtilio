@@ -47,12 +47,22 @@
             </ng-template>
             
             <div class="col-4">
-                <label class="form-label" for="">Correo *</label>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="isEmail" [(ngModel)]="isEmail" id="flexCheckDefault4">
+                <label class="form-label" for="">Correo</label>
+              </div>
+              <div *ngIf="isEmail == true; else Emailgeneric">
                 <input class="form-control"  type="email" name="correo" #correo="ngModel" maxlength="80"
                         [(ngModel)]="cliente.correo" ngModel pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" required>
                 <div [hidden]="correo.valid || correo.pristine" class="alert alert-danger">
                   CAMPO REQUERIDO EN FORMATO : correo@domino.com
                 </div>
+              </div>
+              <ng-template #Emailgeneric>
+                <div>
+                  <input class="form-control" value="correo@domino.com" readonly>
+                </div>
+              </ng-template>
             </div>
             <div class="col-3">
                 <label class="form-label" for="">Tipo cliente *</label>

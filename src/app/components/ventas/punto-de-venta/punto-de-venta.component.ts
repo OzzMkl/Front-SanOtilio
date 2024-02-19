@@ -8,6 +8,7 @@ import { VentasService } from 'src/app/services/ventas.service';
 import { EmpleadoService } from 'src/app/services/empleado.service';
 import { ModulosService } from 'src/app/services/modulos.service';
 import { global } from 'src/app/services/global';
+import { SharedMessage } from 'src/app/services/sharedMessage';
 //modelos
 import { Ventag } from 'src/app/models/ventag';
 import { Cliente } from 'src/app/models/cliente';
@@ -105,7 +106,9 @@ export class PuntoDeVentaComponent implements OnInit {
     private _router:Router,
     private _http: HttpClient,
     private _confirmationService: ConfirmationService,
-    private messageService: MessageService ) {
+    private messageService: MessageService,
+    private _sharedMessage: SharedMessage,
+    ) {
     //declaramos modelos
     this.ventag = new Ventag(0,0,1,'',1,0,null,0,0,0,0,'','',0);
     this.modeloCliente = new Cliente (0,'','','','','',0,1,1);
@@ -116,7 +119,14 @@ export class PuntoDeVentaComponent implements OnInit {
    }
 
   ngOnInit(): void { 
-  this.loadUser();
+    this.loadUser();
+    this._sharedMessage.messages$.subscribe(
+      messages =>{
+        if(messages){
+          this.messageService.add(messages[0]);
+        }
+      }
+    )
   }
 
   

@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { ClientesService } from 'src/app/services/clientes.service';
 import { EmpleadoService } from 'src/app/services/empleado.service';
 import { ModulosService } from 'src/app/services/modulos.service';
+import { SharedMessage } from 'src/app/services/sharedMessage';
 //modelo
 import { Cliente } from 'src/app/models/cliente';
 import { Cdireccion} from 'src/app/models/cdireccion'
@@ -26,6 +27,7 @@ export class ClienteAgregarComponent implements OnInit {
   public isCompany: boolean = false;
   public isCredito: boolean = false;
   public isRFC: boolean = false;
+  public isEmail: boolean = false;
   public checkDireccion: boolean = false;
   //modelo
   public cliente: Cliente;
@@ -45,7 +47,9 @@ export class ClienteAgregarComponent implements OnInit {
                private _modulosService: ModulosService,
                private modalService:NgbModal,
                private messageService: MessageService,
-               private _router: Router ) { 
+               private _router: Router,
+               private _sharedMessage:SharedMessage,
+              ) { 
 
     this.cliente = new Cliente (0,'','','','','',0,1,1);
     this.cdireccion = new Cdireccion (0,'Mexico','Puebla','','','','','','',0,'',0,1,'');
@@ -54,7 +58,6 @@ export class ClienteAgregarComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadUser();
-    
   }
 
   /**
@@ -97,27 +100,36 @@ export class ClienteAgregarComponent implements OnInit {
     if(this.isRFC == false){
       this.cliente.rfc ='XAXX010101000';
     }
+    if(this.isEmail == false){
+      this.cliente.correo ='correo@domino.com';
+    }
     
     this._clienteService.postCliente(this.cliente,identity).subscribe( 
       response =>{
 
         //console.log(this.cliente)
         if(response.status == 'success'){
-          this.messageService.add({severity:'success', summary:'Registro exitoso', detail: 'Cliente registrado correctamente', sticky: true});
+          let message = {severity:'success', summary:'Registro exitoso', detail: 'Cliente registrado correctamente'}
+          this._sharedMessage.addMessages(message);
+          this.messageService.add(message);
+          this.modalService.dismissAll();
 
           if(this.checkDireccion == true && this.cdireccion.ciudad != '' && this.cdireccion.colonia != '' && this.cdireccion.calle != ''
           && this.cdireccion.numExt != '' && this.cdireccion.cp != 0 && this.cdireccion.referencia != '' && this.cdireccion.telefono != 0){
 
             this._clienteService.postCdireccion(this.cdireccion,identity).subscribe( 
               response=>{
-                //console.log(response);
-                this.messageService.add({severity:'success', summary:'Registro exitoso', detail:'La direccion se registro correctamente', sticky: true});
+                let messageCdir = {severity:'success', summary:'Registro exitoso', detail:'La direccion se registro correctamente'};
+                this._sharedMessage.addMessages(messageCdir);
+                this.messageService.add(messageCdir);
               },error=>{
                 console.log(error);
                 this.messageService.add({severity:'error', summary:'Algo salio mal', detail:error.error.message, sticky: true});
               });
           } else{
-            this.messageService.add({severity:'warn', summary:'Advertencia', detail:'No se registro ninguna direccion', sticky: true});
+            let messageCdir = {severity:'warn', summary:'Advertencia', detail:'No se registro ninguna direccion'}
+            this._sharedMessage.addMessages(messageCdir);
+            this.messageService.add(messageCdir);
           }
             
         }else{
