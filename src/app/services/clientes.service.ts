@@ -33,7 +33,7 @@ export class ClientesService {
   * @returns 
   */
  postCliente(cliente:any,empleado:any):Observable<any>{
-  let combinado = {...cliente, sub: empleado.sub};
+  let combinado = {...cliente, idEmpleado: empleado.sub};
   let json = JSON.stringify(combinado);
   let params = 'json='+json;
   return this._http.post(this.url+'clientes/register',params, {headers:this.headers} );
@@ -46,7 +46,7 @@ export class ClientesService {
   * @returns 
   */
  postCdireccion(cdireccion:any,empleado:any):Observable<any>{
-  let combinado = {...cdireccion,...empleado};
+  let combinado = {...cdireccion, idEmpleado:empleado};
   let json = JSON.stringify(combinado);
   let params = 'json='+json;
   return this._http.post(this.url+'clientes/registerCdireccion',params, {headers:this.headers} );

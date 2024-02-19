@@ -135,8 +135,16 @@
 <ng-template #content let-modal>
     <form #FormCdireccion="ngForm">
     <div>
-        <div class="modal-header">
-            <h4 class="modal-title" id="modal-basic-title">Agregar direccion</h4>
+          <div class="modal-header">
+            <table>
+              <tr>
+                <th><h4 class="modal-title" id="modal-basic-title">Agregar direccion</h4></th>
+              </tr>
+              <tr>
+                <th><p>(Todos los campos con * son abligatorios)</p></th>
+              </tr>
+            </table>
+            
             <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
           </div>
           <div class="modal-body">
@@ -204,17 +212,19 @@
 
                   <div class="col-3">
                     <label class="form-label" for="">Codigo postal *</label>
-                    <input class="form-control" type="number" pattern="^[0-9]{1,5}" min="0"
-                            name="cp" #cp="ngModel" [(ngModel)]="cdireccion.cp" required >
+                    <input class="form-control" type="text" maxlength="5" pattern="^[0-9]{5}"
+                            name="cp" #cp="ngModel" [(ngModel)]="cdireccion.cp" required 
+                            oninput="this.value = this.value.replace(/[^0-9]/g, '');" autocomplete="off">
                     <div [hidden]="cp.valid || cp.pristine" class="alert alert-danger">
-                      SOLO INGRESAR DE 1 HASTA 5 NUMEROS
+                      INGRESA UN CODIGO POSTAL VALIDO
                     </div> 
                   </div>
 
                   <div class="col-3">
                     <label class="form-label" for="">Telefono *</label>
-                    <input class="form-control" type="number" maxlength="10" min="0" pattern="^[0-9]{1,10}"
-                            name="telefono" #telefono="ngModel" [(ngModel)]="cdireccion.telefono" required >
+                    <input class="form-control" type="text" maxlength="10" min="0" pattern="^[0-9]{10}"
+                            name="telefono" #telefono="ngModel" [(ngModel)]="cdireccion.telefono" required 
+                            oninput="this.value = this.value.replace(/[^0-9]/g, '');" autocomplete="off">
                     <div [hidden]="telefono.valid || telefono.pristine" class="alert alert-danger">
                       CAMPO REQUERIDO
                       SOLO INGRESAR HASTA 10 NUMEROS

@@ -13,9 +13,6 @@ interface Message {
 
 export class SharedMessage {
 
-  
-  
-
   private messageSubject = new BehaviorSubject<Message[]>([]);
 
   messages$ = this.messageSubject.asObservable();

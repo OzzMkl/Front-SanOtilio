@@ -117,7 +117,7 @@ export class ClienteAgregarComponent implements OnInit {
           if(this.checkDireccion == true && this.cdireccion.ciudad != '' && this.cdireccion.colonia != '' && this.cdireccion.calle != ''
           && this.cdireccion.numExt != '' && this.cdireccion.cp != 0 && this.cdireccion.referencia != '' && this.cdireccion.telefono != 0){
 
-            this._clienteService.postCdireccion(this.cdireccion,identity).subscribe( 
+            this._clienteService.postCdireccion(this.cdireccion,identity.sub).subscribe( 
               response=>{
                 let messageCdir = {severity:'success', summary:'Registro exitoso', detail:'La direccion se registro correctamente'};
                 this._sharedMessage.addMessages(messageCdir);
@@ -141,10 +141,6 @@ export class ClienteAgregarComponent implements OnInit {
     });
   }
 
-  capturarDireccion(){
-    //console.log(this.cdireccion);
-  }
-
   // Modal
   open(content:any) {//abre modal
     if(this.checkDireccion == true){
@@ -165,5 +161,8 @@ export class ClienteAgregarComponent implements OnInit {
       return `with: ${reason}`;
     }
   }
+
+  validateFormCdireccion(){
+
+  }
 }
-/*** */
