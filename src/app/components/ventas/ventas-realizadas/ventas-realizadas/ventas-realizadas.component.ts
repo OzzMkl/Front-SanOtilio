@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { VentasService } from 'src/app/services/ventas.service';
 import { EmpleadoService } from 'src/app/services/empleado.service';
 import { CajasService } from 'src/app/services/cajas.service';
+import { SharedMessage } from 'src/app/services/sharedMessage';
 //NGBOOTSTRAP-modal
 import { NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
 //primeng
@@ -62,10 +63,22 @@ export class VentasRealizadasComponent implements OnInit {
                 private _empleadoService: EmpleadoService,
                 private messageService: MessageService,
                 private _confirmationService: ConfirmationService,
-                private _router:Router,) { }
+                private _router:Router,
+                private _sharedMessage: SharedMessage,
+                ) { }
 
   ngOnInit(): void {
     this.loadUser();
+    setTimeout(()=>{
+      this._sharedMessage.messages$.subscribe(
+        messages =>{
+          if(messages){
+            this.messageService.add(messages[0]); // Agregar el mensaje al servicio de mensajes de PrimeNG
+          }
+        }
+      )
+    },500);
+    
   }
   getVentas(){
     this.isLoading = true;
@@ -87,7 +100,7 @@ export class VentasRealizadasComponent implements OnInit {
     this._ventasService.getDetallesVenta(idVenta).subscribe(
       response =>{
         if(response.status == 'success'){
-          console.log(response)
+          // console.log(response);
           this.detallesVenta = response.venta;
           this.productosDVenta = response.productos_ventasg;
           //console.log(this.detallesVenta[0])
