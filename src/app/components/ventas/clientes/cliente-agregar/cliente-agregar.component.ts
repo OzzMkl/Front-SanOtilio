@@ -111,8 +111,6 @@ export class ClienteAgregarComponent implements OnInit {
         if(response.status == 'success'){
           let message = {severity:'success', summary:'Registro exitoso', detail: 'Cliente registrado correctamente'}
           this._sharedMessage.addMessages(message);
-          this.messageService.add(message);
-          this.modalService.dismissAll();
 
           if(this.checkDireccion == true && this.cdireccion.ciudad != '' && this.cdireccion.colonia != '' && this.cdireccion.calle != ''
           && this.cdireccion.numExt != '' && this.cdireccion.cp != 0 && this.cdireccion.referencia != '' && this.cdireccion.telefono != 0){
@@ -121,7 +119,8 @@ export class ClienteAgregarComponent implements OnInit {
               response=>{
                 let messageCdir = {severity:'success', summary:'Registro exitoso', detail:'La direccion se registro correctamente'};
                 this._sharedMessage.addMessages(messageCdir);
-                this.messageService.add(messageCdir);
+                this.modalService.dismissAll();
+
               },error=>{
                 console.log(error);
                 this.messageService.add({severity:'error', summary:'Algo salio mal', detail:error.error.message, sticky: true});
@@ -129,7 +128,7 @@ export class ClienteAgregarComponent implements OnInit {
           } else{
             let messageCdir = {severity:'warn', summary:'Advertencia', detail:'No se registro ninguna direccion'}
             this._sharedMessage.addMessages(messageCdir);
-            this.messageService.add(messageCdir);
+            this.modalService.dismissAll();
           }
             
         }else{
