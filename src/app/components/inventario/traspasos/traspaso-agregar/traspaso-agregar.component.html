@@ -51,14 +51,14 @@
                 </div>
                 <div class="col-2">
                     <label for="medida" class="form-label">Seleccionar Medida</label>
-                    <select name="idMedida" id="idMedida" class="form-select" [(ngModel)]="producto_traspaso.idProdMedida">
+                    <select name="idMedida" id="idMedida" class="form-select" [(ngModel)]="producto_traspaso.idProdMedida" (change)="asignaPrecioCompra()">
                         <option selected disabled value="">Abrir para seleccionar</option>
                         <option  *ngFor="let medida of productoVerM" value={{medida.idProdMedida}} >{{medida.nombreMedida}}</option>
                     </select>
                 </div>
                 <div class="col-2">
                     <label for="precio" class="form-label"> Precio</label>
-                    <input type="number" min="0" name="precioProducto" class="form-control" id="precioProducto" #precioProducto="ngModel" [(ngModel)]="producto_traspaso.precio" (ngModelChange)="onChangeT($event)" >
+                    <input type="number" min="0" name="precioProducto" class="form-control" id="precioProducto" #precioProducto="ngModel" [(ngModel)]="producto_traspaso.precio" (ngModelChange)="onChangeT($event)" value="{{producto_traspaso.precio}}"  readonly>
                     <br>
                 </div>
                 <div class="col-2">
@@ -71,19 +71,19 @@
                     <label for="descipcion" class="form-label">Descripcion</label>
                     <input type="text" name="descipcion" class="form-control" value="{{prod.descripcion}}" readonly>
                 </div>
-                <div class="col-3">
+                <div class="col-3" hidden>
                     <label for="marca" class="form-label">Marca</label>
                     <input type="text" name="marca" class="form-control" value="{{prod.nombreMarca}}" readonly>
                 </div>
-                <div class="col-3">
+                <div class="col-3" hidden>
                     <label for="departamento" class="form-label">Departamento</label>
                     <input type="text" name="departamento" class="form-control" value="{{prod.nombreDep}}" readonly>
                 </div>
-                <div class="col-4">
+                <div class="col-4" hidden>
                     <label for="categoria" class="form-label">Categoria</label>
                     <input type="text" name="categoria" class="form-control" value="{{prod.nombreCat}}" readonly>
                 </div>
-                <div class="col-2">
+                <div class="col-2" hidden>
                     <label for="imagen" class="form-label">Imagen</label>
                     <br>
                     <img src="{{url + 'productos/getImageProduc/' + prod.imagen}}" width="100px" height="100px">
@@ -94,7 +94,7 @@
                     <input class="form-control" type="text" value="{{prod.nombreMedida}}" readonly>
                 </div> -->
                 
-                <div class="col-2">
+                <div class="col-2" hidden>
                     <label for="subtotalP" class="form-label"> Subtotal</label>
                     <input class="form-control" type="number" min="0" name="subtotalP" value="{{producto_traspaso.cantidad * producto_traspaso.precio }}" id="subtotalP" #subtotalP="ngModel" 
                         [(ngModel)]="producto_traspaso.subtotal" readonly> 

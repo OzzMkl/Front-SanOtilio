@@ -597,6 +597,8 @@ export class TraspasoAgregarComponent implements OnInit {
 
 
 
+
+
   /**EVENTOS */
   onChangeT(subtotal:any){//Recalcula el subtotal al hacer un cambio dentro del formulario de productos
     this.producto_traspaso.subtotal = this.producto_traspaso.cantidad * this.producto_traspaso.precio;
@@ -641,5 +643,19 @@ export class TraspasoAgregarComponent implements OnInit {
       //console.log('prevented');
      }
    }
+  
+
+  /**
+   * Asigna precio de producto en función de la medida proporcionada por el usuario
+   */
+  asignaPrecioCompra(){
+    //console.log(this.producto_traspaso.idProdMedida);
+    //Buscar por idProdMedida
+      var med = this.productoVerM.find((x: { idProdMedida: number; }) => x.idProdMedida == this.producto_traspaso.idProdMedida);
+    //console.log(med);
+    //Asignar valor
+      this.producto_traspaso.precio = med.precio1;
+    //console.log(this.producto_traspaso.precio);    
+  }
 
 }
