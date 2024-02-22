@@ -9,6 +9,7 @@ import { EmpleadoService } from 'src/app/services/empleado.service';
 import { ModulosService } from 'src/app/services/modulos.service';
 import { global } from 'src/app/services/global';
 import { SharedMessage } from 'src/app/services/sharedMessage';
+import { MdlProductoService } from 'src/app/services/mdlProductoService';
 //modelos
 import { Ventag } from 'src/app/models/ventag';
 import { Cliente } from 'src/app/models/cliente';
@@ -98,6 +99,8 @@ export class PuntoDeVentaComponent implements OnInit {
   public modoEdicion: boolean = false;
   public motivoEdicion: string = "";
   @ViewChild('mMotivoEdicion',{static:true}) mitempalte!: TemplateRef<any>;
+  //modales
+  public mdlProductos: boolean = false;
 
 
   constructor( 
@@ -114,6 +117,7 @@ export class PuntoDeVentaComponent implements OnInit {
     private messageService: MessageService,
     private _sharedMessage: SharedMessage,
     private _route: ActivatedRoute,
+    private _mdlProductoService: MdlProductoService,
     ) {
     //declaramos modelos
     this.ventag = new Ventag(0,0,1,'',1,0,null,0,0,0,0,'','',0);
@@ -792,12 +796,13 @@ export class PuntoDeVentaComponent implements OnInit {
   }
 
   modalBuscarProducto(content:any){
-    this.getProductos();
-    this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title', size: 'xl'}).result.then((result) => {
-      this.closeResult = `Closed with: ${result}`;
-    }, (reason) => {
-      this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-    });
+    this.mdlProductos = true;
+    // this.getProductos();
+    // this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title', size: 'xl'}).result.then((result) => {
+    //   this.closeResult = `Closed with: ${result}`;
+    // }, (reason) => {
+    //   this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+    // });
   }
 
   modalAlertaExistencia(content:any){
@@ -1208,5 +1213,9 @@ export class PuntoDeVentaComponent implements OnInit {
         console.log(error)
       }
     );
+  }
+
+  openMdlProductos():void{
+    this._mdlProductoService.openMdlProductosDialog();
   }
 }

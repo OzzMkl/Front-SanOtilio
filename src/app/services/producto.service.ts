@@ -40,6 +40,10 @@ export class ProductoService{
     getProductos():Observable<any>{
         return this._http.get(this.url+'productos/index', {headers:this.headers} );
     }
+
+    getProductosNewIndex(page: number,type: number, search: string):Observable<any>{
+        return this._http.get(this.url+'productos/newIndex/'+type+'/'+search+'?page='+page,{headers:this.headers});
+    }
     
     /**
      * Listado de prodcutos para punto de venta

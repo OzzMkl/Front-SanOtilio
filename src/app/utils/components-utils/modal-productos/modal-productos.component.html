@@ -1,0 +1,127 @@
+
+<app-loading-spinner [isLoading]="isLoadingGeneral"></app-loading-spinner>
+
+<!-- modal productos -->
+<p-dialog
+    header="Header" [(visible)]="mdlProductos"
+    [modal]="true" [style]="{ width: '85vw' }" 
+    [draggable]="true" [resizable]="false"
+    [position]="'top'"
+    [dismissableMask] = "true"
+>
+    <ng-template pTemplate="header">
+        <h5 class="modal-title" id="modal-basic-title">Buscar producto</h5>
+    </ng-template>
+    <div>
+        <p-dropdown 
+            [options]="optionsSelect"
+            [(ngModel)]="selectedOpt"
+            optionLabel="name"
+            [showClear]="true"
+            placeholder="Selecciona una opcion"
+            [style]="{ width: '30%' }"
+        ></p-dropdown>
+        <input type="text" pInputText [(ngModel)]="valSearch" [style]="{ width: '70%' }">
+    </div>
+    <p-table
+        [value]="productos"
+        selectionMode="single"
+        [(selection)]="selectedProduct"
+        dataKey="idProducto"
+        styleClass="p-datatable-sm p-datatable-striped"
+        (onRowSelect)="onSelectionChange()"
+    >
+        <ng-template pTemplate="header">
+            <tr>
+                <th style="width:15%">Clave externa</th>
+                <th style="width:15%">Codigo de barras</th>
+                <th style="width:40%">Descripcion</th>
+                <th style="width:15%">Marca</th>
+                <th style="width:15%">Departamento</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-productos>
+            <tr [pSelectableRow]="productos">
+                <td>{{ productos.claveEx }}</td>
+                <td>{{ productos.cbarras }}</td>
+                <td>{{ productos.descripcion }}</td>
+                <td>{{ productos.nombreMarca }}</td>
+                <td>{{ productos.nombreDep }}</td>
+            </tr>
+        </ng-template>
+    </p-table>
+    <p-paginator
+        (onPageChange)="onPageChange($event)"
+        [rows]="5" 
+        [totalRecords]="totalPages" 
+        >
+    </p-paginator>
+</p-dialog>
+
+<!-- modal medidas -->
+<p-dialog
+    header="Header" [(visible)]="mdlMedidas"
+    [modal]="true" [style]="{ width: '50vw' }" 
+    [draggable]="false" [resizable]="false"
+    [position]="'top'"
+    [dismissableMask] = "true"
+    >
+    <ng-template pTemplate="header">
+        <h5 class="modal-title" id="modal-basic-title">Medidas del producto: {{selectedProduct.claveEx}}</h5>
+    </ng-template>
+    <p-table
+        [value]="medidas"
+        styleClass="p-datatable-sm p-datatable-striped text-center"
+    >
+        <ng-template pTemplate="header" >
+            <tr>
+                <th>MED.</th>
+                <th>P1</th>
+                <th>P2</th>
+                <th>P3</th>
+                <th>P4</th>
+                <th>P5</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-medida>
+            <tr>
+                <td>{{ medida.nombreMedida}}</td>
+                <td>{{ medida.precio1 | currency}}</td>
+                <td>{{ medida.precio2 | currency}}</td>
+                <td>{{ medida.precio3 | currency}}</td>
+                <td>{{ medida.precio4 | currency}}</td>
+                <td>{{ medida.precio5 | currency}}</td>
+            </tr>
+        </ng-template>
+    </p-table>
+    <div style="display: flex; align-items: center; justify-content: space-around;">
+        <img src="{{url + 'productos/getImageProduc/' + this.img}}" [style]="{width: '90px'}">
+        <p-table
+            [value]="existencias"
+            [style]="{ width: '100%' }"
+            styleClass="p-datatable-sm p-datatable-striped text-center"
+        >
+            <ng-template pTemplate="header" >
+                <tr>
+                    <th>EXISTENCIA</th>
+                    <th>MEDIDA</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-existencia>
+                <tr>
+                    <td>
+                        <div [ngClass]="{'outofstock': existencia.exisCal < 0, 'lowstock': existencia.exisCal === 0,'instock': existencia.exisCal > 0}">
+                            {{ existencia.exisCal}}
+                        </div>
+                    </td>
+                    <td>{{ existencia.nombreMedida}}</td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+
+    <ng-template pTemplate="footer">
+        <button>a</button>
+        <button>b</button>
+    </ng-template>
+</p-dialog>

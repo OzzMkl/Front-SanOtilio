@@ -28,6 +28,7 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { MessageService } from 'primeng/api';
 import { DialogModule } from 'primeng/dialog';
 import { CheckboxModule } from 'primeng/checkbox';
+import { PaginatorModule } from 'primeng/paginator';
 
 
 @NgModule({
@@ -59,6 +60,7 @@ import { CheckboxModule } from 'primeng/checkbox';
     ProgressSpinnerModule,
     DialogModule,
     CheckboxModule,
+    PaginatorModule,
   ],
   imports: [
     CommonModule,

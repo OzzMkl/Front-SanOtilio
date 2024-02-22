@@ -50,7 +50,7 @@
         <div class="col-2">
             <label class="form-label" for="">Buscar producto</label>
                 <div class="input-group">
-                    <span class="input-group-addon" id="sizing-addon2" (click)="modalBuscarProducto(mBuscarProducto)" ><i class="bi-search" style="font-size: 1.5rem; color: black; left: 0;"></i></span>
+                    <span class="input-group-addon" id="sizing-addon2" (click)="openMdlProductos()" ><i class="bi-search" style="font-size: 1.5rem; color: black; left: 0;"></i></span>
                     <input class="form-control" type="text" name="claveEx" #claveEx="ngModel" [(ngModel)]="productoVentag.claveEx" readonly>
                 </div>
         </div>
@@ -455,10 +455,10 @@
     </div>
     <div class="modal-body">
         <div class=" row justify-content-center">
-            <div class="col-2">
-                <img src="{{url + 'productos/getImageProduc/' + this.imagenPM}}" width="100px">
+            <div class="col-sm-12 col-lg-2">
+                <img src="{{url + 'productos/getImageProduc/' + this.imagenPM}}" width="90px">
             </div>
-            <div class="col-5 text-center">
+            <div class="col-sm-12 col-lg-5 text-center">
                 <table class="table table-secondary table-sm">
                     <thead  >
                         <!-- <tr>
@@ -494,7 +494,7 @@
                 </table>
             </div>
             <!-- TABLA EXISTENCIA -->
-            <div class="col-auto text-center">
+            <div class="col-sm-12 col-lg-5 text-center">
                 <table class="table table-sm table-secondary">
                     <thead>
                         <tr>
@@ -564,4 +564,7 @@
     </div>
 </ng-template>
 
+
+<!-- Nuevo modal productos -->
+<app-modal-productos></app-modal-productos>
 

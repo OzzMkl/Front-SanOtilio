@@ -1,0 +1,15 @@
+.outofstock {
+    font-weight: 700;
+    color: #ff5252;
+    text-decoration: line-through;
+}
+
+.lowstock {
+    font-weight: 700;
+    color: #ffa726;
+}
+
+.instock {
+    font-weight: 700;
+    color: #66bb6a;
+}
