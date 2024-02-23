@@ -2,16 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { ProductoService } from 'src/app/services/producto.service';
 import { global } from 'src/app/services/global';
 import { MdlProductoService } from 'src/app/services/mdlProductoService';
+import { SharedMessage } from 'src/app/services/sharedMessage';
 
 interface selectBusqueda {
   id: number;
   name: string;
 }
-interface RowData {
-  MED: string;
-  [key: string]: string | number; // Permitimos cualquier clave que sea string y su valor puede ser string o número
-}
-
 
 @Component({
   selector: 'app-modal-productos',
@@ -40,21 +36,28 @@ export class ModalProductosComponent implements OnInit {
   //modales
   public mdlMedidas: boolean = false;
   public mdlProductos: boolean = false;
+  isOpenMdlMedidas: boolean = false;
 
   constructor(
     private _productoService:ProductoService,
     private _mdlProductoService: MdlProductoService,
+    private _sharedMessage: SharedMessage,
   ) { }
 
   ngOnInit(): void {
     
-    this._mdlProductoService.openMdlProductosDialog$.subscribe(() => {
+    this._mdlProductoService.openMdlProductosDialog$.subscribe((openMdlMedidas: boolean) => {
+      this.isOpenMdlMedidas = openMdlMedidas;
       this.mdlProductos = true;
       this.setOptionsSelect();
       this.getProductos();
     });
   }
 
+  /**
+   * @description
+   * Carga el array a mostrar del dropdown
+   */
   setOptionsSelect(){
     this.optionsSelect = [
       {id:1, name:'Clave externa'},
@@ -99,25 +102,64 @@ export class ModalProductosComponent implements OnInit {
    * exitencia calculada e imagen
    */
   onSelectionChange() {
-    //Mostramos spinner
-    this.isLoadingGeneral = true;
 
-    this._productoService.searchProductoMedida(this.selectedProduct.idProducto).subscribe(
-      response =>{
-        // console.log(response);
-        if(response.code == 200 && response.status == 'success'){
-          //Asignamos valores
-          this.existencias = response.existencia_por_med;
-          this.medidas = response.productoMedida;
-          this.img = response.imagen ? response.imagen : "1650558444no-image.png";
-          //Mostramos modal
-          this.mdlMedidas = true;
-          //Ocultamos spinner
-          this.isLoadingGeneral = false;
+    if(this.isOpenMdlMedidas){
+      //Mostramos spinner
+      this.isLoadingGeneral = true;
+
+      this._productoService.searchProductoMedida(this.selectedProduct.idProducto).subscribe(
+        response =>{
+          // console.log(response);
+          if(response.code == 200 && response.status == 'success'){
+            //Asignamos valores
+            this.existencias = response.existencia_por_med;
+            this.medidas = response.productoMedida;
+            this.img = response.imagen ? response.imagen : "1650558444no-image.png";
+            //Mostramos modal
+            this.mdlMedidas = true;
+            //Ocultamos spinner
+            this.isLoadingGeneral = false;
+          }
+        }, error =>{
+          console.log(error);
         }
-      }, error =>{
-        console.log(error);
+      )
+    } else{
+      this.onSelect();
+    }
+    
+  }
+
+  onSelect():void{
+    this._mdlProductoService.sendSelectedValue(this.selectedProduct);
+    this.mdlMedidas = false;
+    this.mdlProductos = false;
+  }
+
+  /**
+   * Busqueda
+   */
+  onSearch(){
+    if(this.selectedOpt){
+      if(this.valSearch == "" || null){
+        this.getProductos();
+      } else{
+        switch(this.selectedOpt.id){
+          case 1 : //ClaveExter
+            this.getProductos(1,this.selectedOpt.id,this.valSearch);
+            break;
+          case 2 ://Descripcion
+            this.getProductos(1,this.selectedOpt.id,this.valSearch);
+            break;
+          case 3 : //codigodebarras
+            this.getProductos(1,this.selectedOpt.id,this.valSearch);
+            break;
+        }
       }
-    )
-  }  
+    } else{
+      //cargamos mensaje
+      let message = {severity:'warn', summary:'Alerta', detail:'Favor de seleccionar una opcion para buscar'};
+      this._sharedMessage.addMessages(message);
+    }
+  }
 }

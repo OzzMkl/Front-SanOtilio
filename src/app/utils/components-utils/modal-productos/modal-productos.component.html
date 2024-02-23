@@ -20,8 +20,9 @@
             [showClear]="true"
             placeholder="Selecciona una opcion"
             [style]="{ width: '30%' }"
+            (ngModelChange)="onSearch()"
         ></p-dropdown>
-        <input type="text" pInputText [(ngModel)]="valSearch" [style]="{ width: '70%' }">
+        <input type="text" pInputText [(ngModel)]="valSearch" [style]="{ width: '70%' }" (ngModelChange)="onSearch()">
     </div>
     <p-table
         [value]="productos"
@@ -120,8 +121,25 @@
         </p-table>
     </div>
 
-    <ng-template pTemplate="footer">
-        <button>a</button>
-        <button>b</button>
-    </ng-template>
+    <hr>
+    <div style="display: flex; align-items: center; justify-content: space-around;">
+        <button class="p-button-rounded p-button-danger"
+            pButton
+            pRipple
+            type="button"
+            label="Cancelar"
+            icon="pi pi-times"
+            (click)="mdlMedidas = false"
+        ></button>
+        <button class="p-button-rounded p-button-success"
+            pButton
+            pRipple
+            type="button"
+            label="Agregar"
+            icon="pi pi-check"
+            (click)="onSelect()"
+        ></button>
+    </div>
+    
+        
 </p-dialog>

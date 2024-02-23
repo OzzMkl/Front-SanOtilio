@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router, ActivatedRoute } from '@angular/router';
+import { Subscription } from 'rxjs';
 //servicio
 import { ClientesService } from 'src/app/services/clientes.service';
 import { ProductoService } from 'src/app/services/producto.service';
@@ -102,6 +103,8 @@ export class PuntoDeVentaComponent implements OnInit {
   //modales
   public mdlProductos: boolean = false;
 
+  selectedValue: any;
+  private subscription: Subscription;
 
   constructor( 
     //declaramos servicios
@@ -126,6 +129,10 @@ export class PuntoDeVentaComponent implements OnInit {
     this.nuevaDir = new Cdireccion (0,'MEXICO','PUEBLA','','','','','','',0,'',0,1,'');
     this.productoVentag = new Producto_ventasg(0,0,'',0,0,0,0,0,'','',0,0,true,0,false);
     this.lista_productoVentag = [];
+    this.subscription = this._mdlProductoService.selectedValue$.subscribe(
+      value =>{
+        this.seleccionarProducto(value.idProducto);
+      });
    }
 
   ngOnInit(): void { 
@@ -1216,6 +1223,6 @@ export class PuntoDeVentaComponent implements OnInit {
   }
 
   openMdlProductos():void{
-    this._mdlProductoService.openMdlProductosDialog();
+    this._mdlProductoService.openMdlProductosDialog(true);
   }
 }
