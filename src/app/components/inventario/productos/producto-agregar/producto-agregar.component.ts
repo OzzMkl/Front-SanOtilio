@@ -19,7 +19,6 @@ import { MedidaService } from 'src/app/services/medida.service';
 import { MarcaService } from 'src/app/services/marca.service';
 import { DepartamentoService } from 'src/app/services/departamento.service';
 import { CategoriaService } from 'src/app/services/categoria.service';
-import { SubCategoriaService } from 'src/app/services/subcategoria.service';
 import { AlmacenService } from 'src/app/services/almacen.service';
 import { ProductoService } from 'src/app/services/producto.service';
 import { EmpleadoService } from 'src/app/services/empleado.service';
@@ -40,7 +39,7 @@ import { Router } from '@angular/router';
   templateUrl: './producto-agregar.component.html',
   styleUrls: ['./producto-agregar.component.css'],
   providers: [MedidaService, MarcaService,DepartamentoService,
-  CategoriaService, SubCategoriaService, AlmacenService,
+  CategoriaService, AlmacenService,
   ProductoService, MessageService]
 })
 export class ProductoAgregarComponent implements OnInit {
