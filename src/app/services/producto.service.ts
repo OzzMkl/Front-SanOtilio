@@ -258,4 +258,8 @@ export class ProductoService{
     searchProductoMedidaI(idProducto:number):Observable<any>{
         return this._http.get(this.url+'productos/searchProductoMedidaI/'+idProducto,{headers:this.headers});
     }
+
+    getExistenciaMultiSucursal(idProducto:number):Observable<any>{
+        return this._http.get(this.url+'productos/getExistenciaMultiSucursal/'+idProducto,{headers:this.headers});
+    }
 }

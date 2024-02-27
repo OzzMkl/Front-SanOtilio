@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ProductoService } from 'src/app/services/producto.service';
 import { global } from 'src/app/services/global';
 import { MdlProductoService } from 'src/app/services/mdlProductoService';
 import { SharedMessage } from 'src/app/services/sharedMessage';
+import { OverlayPanel } from 'primeng/overlaypanel';
 
 interface selectBusqueda {
   id: number;
@@ -19,10 +20,14 @@ export class ModalProductosComponent implements OnInit {
 
   //Spinner
   public isLoadingGeneral: boolean = false;
+  public isLoadingExistencia: boolean = false;
   //Servicios
   public productos:Array<any> = [];//getProductos
   public existencias:Array<any> = [];//onSelectionChange
   public medidas:Array<any> = [];//onSelectionChange
+
+  public sucursales:Array<any> = [];//onSelectionChange
+  public existenciaSucursales:Array<any> = [];//onSelectionChange
   //Paginator
   public totalPages: any;
   pageActual: number = 1;
@@ -37,6 +42,7 @@ export class ModalProductosComponent implements OnInit {
   public mdlMedidas: boolean = false;
   public mdlProductos: boolean = false;
   isOpenMdlMedidas: boolean = false;
+  @ViewChild('panelMedidasMultiSuc') panelMedidasMultiSuc!: OverlayPanel;
 
   constructor(
     private _productoService:ProductoService,
@@ -65,9 +71,20 @@ export class ModalProductosComponent implements OnInit {
       {id:3, name:'Codigo de barras'},
     ];
 
+    //Seleccionamos por defecto la primera opcion
     this.selectedOpt = this.optionsSelect[0];
   }
 
+  /**
+   * 
+   * @param page number default 1
+   * @param type number default 0
+   * @param search string default null
+   * 
+   * @description
+   * Servicio trae la informacion de los productos paginados por la api
+   * Tambien busca la informacion
+   */
   getProductos(page:number = 1, type:number = 0, search:string = 'null'){
     //mostramos el spinner
     this.isLoadingGeneral=true;
@@ -90,6 +107,12 @@ export class ModalProductosComponent implements OnInit {
     )
   }
 
+  /**
+   * 
+   * @param event 
+   * @description
+   * Cambio de pagina
+   */
   onPageChange(event:any) {
     this.getProductos(event.page + 1);
   }
@@ -130,6 +153,10 @@ export class ModalProductosComponent implements OnInit {
     
   }
 
+  /**
+   * @description
+   * Cierra modales y manda el valor seleccionado
+   */
   onSelect():void{
     this._mdlProductoService.sendSelectedValue(this.selectedProduct);
     this.mdlMedidas = false;
@@ -161,5 +188,38 @@ export class ModalProductosComponent implements OnInit {
       let message = {severity:'warn', summary:'Alerta', detail:'Favor de seleccionar una opcion para buscar'};
       this._sharedMessage.addMessages(message);
     }
+  }
+
+  /**
+   * 
+   * @param event 
+   * Obtiene las existencias de las sucursales disponibles
+   * y crea las tablas de acuerdo a la cantidad de sucursales
+   */
+  getExistenciaMultiSucursal(event:any){
+    //Iniciamos spinner
+    this.isLoadingExistencia = true;
+    //Abrimos el panel
+    this.panelMedidasMultiSuc.show(event);
+    //Vaciaoms el array
+    this.existenciaSucursales = [];
+    //iniciamos servicio
+    this._productoService.getExistenciaMultiSucursal(this.selectedProduct.idProducto).subscribe(
+      response =>{
+        // console.log(response);
+        if(response.code == 200 && response.status == 'success'){
+          //asignamos a variable
+          this.sucursales = response.sucursales
+          //recorremos y creamos nuevo array
+          this.sucursales.forEach(sucursal => {
+            const existencias = response.existencias[sucursal.connection]?.original.existencia_por_med;
+            if (existencias) {
+              this.existenciaSucursales[sucursal.connection] = existencias;
+            }
+          });
+
+          this.isLoadingExistencia = false;
+        }
+      });
   }
 }

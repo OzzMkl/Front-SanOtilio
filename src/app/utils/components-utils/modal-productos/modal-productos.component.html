@@ -95,8 +95,9 @@
             </tr>
         </ng-template>
     </p-table>
+    <!-- IMG STOCK MEDIDAS -->
     <div style="display: flex; align-items: center; justify-content: space-around;">
-        <img src="{{url + 'productos/getImageProduc/' + this.img}}" [style]="{width: '90px'}">
+        <img src="{{url + 'productos/getImageProduc/' + this.img}}" [style]="{width: '100px'}">
         <p-table
             [value]="existencias"
             [style]="{ width: '100%' }"
@@ -106,6 +107,19 @@
                 <tr>
                     <th>EXISTENCIA</th>
                     <th>MEDIDA</th>
+                    <th>
+                        <button class="p-button-sm p-button-rounded"
+                            pButton
+                            pRipple
+                            type="button"
+                            icon="pi pi-question"
+                            pTooltip="Consultar en otras sucursales"
+                            tooltipPosition="top"
+                            size="small"
+                            (click)="getExistenciaMultiSucursal($event)"
+                            
+                        ></button>
+                    </th>
                 </tr>
             </ng-template>
             <ng-template pTemplate="body" let-existencia>
@@ -122,6 +136,7 @@
     </div>
 
     <hr>
+    <!-- Footer -->
     <div style="display: flex; align-items: center; justify-content: space-around;">
         <button class="p-button-rounded p-button-danger"
             pButton
@@ -143,3 +158,43 @@
     
         
 </p-dialog>
+
+<!-- Tabla de existencias dinamica -->
+<p-overlayPanel #panelMedidasMultiSuc [showCloseIcon]="true">
+    <ng-template pTemplate="content">
+        <div *ngIf="!isLoadingExistencia; else elseLoading" style="display: flex;">
+            <ng-container *ngFor="let sucursal of sucursales">
+                <div style="margin-right: 20px;">
+                    <h6>{{ sucursal.nombre }}</h6>
+                    <p-table [value]="existenciaSucursales[sucursal.connection]" 
+                            [style]="{ width: '100%' }" 
+                            styleClass="p-datatable-sm p-datatable-striped">
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th>EXISTENCIA</th>
+                                <th>MEDIDA</th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-existencia_med>
+                            <tr>
+                                <td>
+                                    <div [ngClass]="{'outofstock': existencia_med.exisCal < 0, 'lowstock': existencia_med.exisCal === 0,'instock': existencia_med.exisCal > 0}">
+                                        {{existencia_med.exisCal}}
+                                    </div>
+                                </td>
+                                <td>{{existencia_med.nombreMedida}}</td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                </div>
+            </ng-container>
+        </div>
+        <ng-template #elseLoading>
+            <p-progressSpinner 
+                [style]="{width: '50px', height: '50px'}" 
+                strokeWidth="4"
+            ></p-progressSpinner>
+        </ng-template>
+    </ng-template>
+</p-overlayPanel>
+<!-- Fin tabla de existencias dinamica-->

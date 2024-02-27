@@ -29,6 +29,7 @@ import { MessageService } from 'primeng/api';
 import { DialogModule } from 'primeng/dialog';
 import { CheckboxModule } from 'primeng/checkbox';
 import { PaginatorModule } from 'primeng/paginator';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
 
 
 @NgModule({
@@ -61,6 +62,7 @@ import { PaginatorModule } from 'primeng/paginator';
     DialogModule,
     CheckboxModule,
     PaginatorModule,
+    OverlayPanelModule,
   ],
   imports: [
     CommonModule,
