@@ -77,9 +77,8 @@ export class ProductoService{
     }
 
     ///////////////////////////////////////////////////////////////////////
-    getProdclaveex(claveEx:any):Observable<any>{
-        let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');
-        return this._http.get(this.url+'productos/searchclaveEx/'+claveEx, {headers:headers} );
+    getIdProductByClaveEx(claveEx:string):Observable<any>{
+        return this._http.get(this.url+'productos/getIdProductByClaveEx/'+claveEx, {headers:this.headers} );
     }
     //////////////////////////////////////////////////////////////////////
 

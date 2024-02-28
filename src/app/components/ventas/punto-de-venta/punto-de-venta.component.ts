@@ -102,6 +102,8 @@ export class PuntoDeVentaComponent implements OnInit {
   @ViewChild('mMotivoEdicion',{static:true}) mitempalte!: TemplateRef<any>;
   //modales
   public mdlProductos: boolean = false;
+  //input de busqueda claveex
+  public idProducto?: number;
 
   selectedValue: any;
   private subscription: Subscription;
@@ -1224,5 +1226,14 @@ export class PuntoDeVentaComponent implements OnInit {
 
   openMdlProductos():void{
     this._mdlProductoService.openMdlProductosDialog(true);
+  }
+
+  // Función que maneja el evento 'idProductoObtenido' emitido por el componente hijo
+  handleIdProductoObtenido(idProducto: number) {
+    if(idProducto){
+      this.seleccionarProducto(idProducto);
+    } else{
+      this.limpiaProducto();
+    }
   }
 }
