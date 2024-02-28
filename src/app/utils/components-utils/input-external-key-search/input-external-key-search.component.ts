@@ -1,6 +1,7 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { ProductoService } from 'src/app/services/producto.service';
 import { SharedMessage } from 'src/app/services/sharedMessage';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-input-external-key-search',
@@ -8,9 +9,11 @@ import { SharedMessage } from 'src/app/services/sharedMessage';
   styleUrls: ['./input-external-key-search.component.css'],
   providers: [ProductoService]
 })
-export class InputExternalKeySearchComponent implements OnInit {
+export class InputExternalKeySearchComponent implements OnInit, OnDestroy {
 
   public idProducto?: number;
+  //El ! indica que serea inicializado antes de usarse
+  private sub_productoService!: Subscription;
   
   @Output() idProductoObtenido: EventEmitter<number> = new EventEmitter<number>();
 
@@ -32,7 +35,7 @@ export class InputExternalKeySearchComponent implements OnInit {
         //Comprobamos que no venga vacio
         if(valInput){
           //Ejecutamos servicio
-          this._productoService.getIdProductByClaveEx(valInput).subscribe(
+          this.sub_productoService =this._productoService.getIdProductByClaveEx(valInput).subscribe(
             response =>{
               // console.log(response);
               if(response.code == 200 && response.status == 'success'){
@@ -54,5 +57,9 @@ export class InputExternalKeySearchComponent implements OnInit {
         }//ofvalinput
       }//ifkbEnter
   }//fin fn()
+
+  ngOnDestroy(): void {
+    this.sub_productoService.unsubscribe();
+  }
 
 }

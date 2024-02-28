@@ -1,9 +1,10 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { ProductoService } from 'src/app/services/producto.service';
 import { global } from 'src/app/services/global';
 import { MdlProductoService } from 'src/app/services/mdlProductoService';
 import { SharedMessage } from 'src/app/services/sharedMessage';
 import { OverlayPanel } from 'primeng/overlaypanel';
+import { Subscription } from 'rxjs';
 
 interface selectBusqueda {
   id: number;
@@ -16,7 +17,7 @@ interface selectBusqueda {
   styleUrls: ['./modal-productos.component.css'],
   providers: [ProductoService]
 })
-export class ModalProductosComponent implements OnInit {
+export class ModalProductosComponent implements OnInit, OnDestroy {
 
   //Spinner
   public isLoadingGeneral: boolean = false;
@@ -44,6 +45,10 @@ export class ModalProductosComponent implements OnInit {
   isOpenMdlMedidas: boolean = false;
   @ViewChild('panelMedidasMultiSuc') panelMedidasMultiSuc!: OverlayPanel;
 
+  //Subscriptions
+  private sub_mdlProductoService!: Subscription;
+  private sub_productoService!: Subscription;
+
   constructor(
     private _productoService:ProductoService,
     private _mdlProductoService: MdlProductoService,
@@ -52,7 +57,7 @@ export class ModalProductosComponent implements OnInit {
 
   ngOnInit(): void {
     
-    this._mdlProductoService.openMdlProductosDialog$.subscribe((openMdlMedidas: boolean) => {
+    this.sub_mdlProductoService = this._mdlProductoService.openMdlProductosDialog$.subscribe((openMdlMedidas: boolean) => {
       this.isOpenMdlMedidas = openMdlMedidas;
       this.mdlProductos = true;
       this.setOptionsSelect();
@@ -89,7 +94,7 @@ export class ModalProductosComponent implements OnInit {
     //mostramos el spinner
     this.isLoadingGeneral=true;
     //Ejecutamos servicio
-    this._productoService.getProductosNewIndex(page,type,search).subscribe(
+    this.sub_productoService = this._productoService.getProductosNewIndex(page,type,search).subscribe(
       response =>{
         // console.log(response);
         if(response.code == 200 && response.status == 'success'){
@@ -130,7 +135,7 @@ export class ModalProductosComponent implements OnInit {
       //Mostramos spinner
       this.isLoadingGeneral = true;
 
-      this._productoService.searchProductoMedida(this.selectedProduct.idProducto).subscribe(
+      this.sub_productoService = this._productoService.searchProductoMedida(this.selectedProduct.idProducto).subscribe(
         response =>{
           // console.log(response);
           if(response.code == 200 && response.status == 'success'){
@@ -204,7 +209,7 @@ export class ModalProductosComponent implements OnInit {
     //Vaciaoms el array
     this.existenciaSucursales = [];
     //iniciamos servicio
-    this._productoService.getExistenciaMultiSucursal(this.selectedProduct.idProducto).subscribe(
+    this.sub_productoService = this._productoService.getExistenciaMultiSucursal(this.selectedProduct.idProducto).subscribe(
       response =>{
         // console.log(response);
         if(response.code == 200 && response.status == 'success'){
@@ -221,5 +226,10 @@ export class ModalProductosComponent implements OnInit {
           this.isLoadingExistencia = false;
         }
       });
+  }
+
+  ngOnDestroy(): void {
+    this.sub_mdlProductoService.unsubscribe();
+    this.sub_productoService.unsubscribe();
   }
 }
