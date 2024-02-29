@@ -46,8 +46,8 @@ export class ModalProductosComponent implements OnInit, OnDestroy {
   @ViewChild('panelMedidasMultiSuc') panelMedidasMultiSuc!: OverlayPanel;
 
   //Subscriptions
-  private sub_mdlProductoService!: Subscription;
-  private sub_productoService!: Subscription;
+  private sub_mdlProductoService: Subscription = new Subscription();
+  private sub_productoService: Subscription = new Subscription();
 
   constructor(
     private _productoService:ProductoService,

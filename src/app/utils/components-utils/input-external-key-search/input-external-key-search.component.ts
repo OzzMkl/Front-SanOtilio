@@ -14,7 +14,7 @@ export class InputExternalKeySearchComponent implements OnInit, OnDestroy {
   //Valor del producto buscado en getIdProductByEventEnter
   public idProducto?: number;
   //El ! indica que serea inicializado antes de usarse
-  private sub_productoService!: Subscription;
+  private sub_productoService: Subscription = new Subscription();
   //Variable encargada de enviar el valor del id
   @Output() idProductoObtenido: EventEmitter<number> = new EventEmitter<number>();
   //Variable encargada de recibir el valor de claveEx desde el componente padre
