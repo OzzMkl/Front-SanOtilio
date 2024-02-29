@@ -51,7 +51,8 @@
             <label class="form-label" for="">Buscar producto</label>
                 <div class="input-group">
                     <app-input-external-key-search
-                        (idProductoObtenido)="handleIdProductoObtenido($event)">
+                        (idProductoObtenido)="handleIdProductoObtenido($event)"
+                        [claveExterna]="productoVentag.claveEx">
                         <span class="input-group-addon" id="sizing-addon2" (click)="openMdlProductos()" ><i class="bi-search" style="font-size: 1.5rem; color: black; left: 0;"></i></span>
                     </app-input-external-key-search>
                     <input class="d-none" type="text" name="claveEx" #claveEx="ngModel" [(ngModel)]="productoVentag.claveEx">

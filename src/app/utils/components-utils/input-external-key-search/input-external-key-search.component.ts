@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter, OnDestroy } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, OnDestroy, Input } from '@angular/core';
 import { ProductoService } from 'src/app/services/producto.service';
 import { SharedMessage } from 'src/app/services/sharedMessage';
 import { Subscription } from 'rxjs';
@@ -14,8 +14,10 @@ export class InputExternalKeySearchComponent implements OnInit, OnDestroy {
   public idProducto?: number;
   //El ! indica que serea inicializado antes de usarse
   private sub_productoService!: Subscription;
-  
+  //Variable encargada de enviar el valor del id
   @Output() idProductoObtenido: EventEmitter<number> = new EventEmitter<number>();
+  //Variable encargada de recibir el valor de claveEx desde el componente padre
+  @Input() claveExterna?: string;
 
   constructor(
     private _productoService: ProductoService,
