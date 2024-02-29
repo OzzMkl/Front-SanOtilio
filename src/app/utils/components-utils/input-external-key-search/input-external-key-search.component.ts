@@ -11,6 +11,7 @@ import { Subscription } from 'rxjs';
 })
 export class InputExternalKeySearchComponent implements OnInit, OnDestroy {
 
+  //Valor del producto buscado en getIdProductByEventEnter
   public idProducto?: number;
   //El ! indica que serea inicializado antes de usarse
   private sub_productoService!: Subscription;
@@ -27,6 +28,13 @@ export class InputExternalKeySearchComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
   }
 
+  /**
+   * 
+   * @param event type Event
+   * @description
+   * Obtenemos el idProducto al escribir la claveEx del producto
+   * en el input y dar "Enter"
+   */
   getIdProductByEventEnter(event: Event){
     //Convertimos el evento a KevyboardEvent
     const kbEvent = event as KeyboardEvent;
