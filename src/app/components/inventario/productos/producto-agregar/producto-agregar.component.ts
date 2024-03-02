@@ -18,7 +18,6 @@ import { global } from 'src/app/services/global';
 import { MedidaService } from 'src/app/services/medida.service';
 import { MarcaService } from 'src/app/services/marca.service';
 import { DepartamentoService } from 'src/app/services/departamento.service';
-import { CategoriaService } from 'src/app/services/categoria.service';
 import { AlmacenService } from 'src/app/services/almacen.service';
 import { ProductoService } from 'src/app/services/producto.service';
 import { EmpleadoService } from 'src/app/services/empleado.service';
@@ -38,9 +37,9 @@ import { Router } from '@angular/router';
   selector: 'app-producto-agregar',
   templateUrl: './producto-agregar.component.html',
   styleUrls: ['./producto-agregar.component.css'],
-  providers: [MedidaService, MarcaService,DepartamentoService,
-  CategoriaService, AlmacenService,
-  ProductoService, MessageService]
+  providers: [MedidaService, MarcaService,
+    DepartamentoService, AlmacenService,
+    ProductoService, MessageService]
 })
 export class ProductoAgregarComponent implements OnInit {
 
@@ -101,7 +100,6 @@ export class ProductoAgregarComponent implements OnInit {
     private _medidaService: MedidaService,
     private _marcaService: MarcaService,
     private _departamentosService: DepartamentoService,
-    private _categoriaService: CategoriaService,
     private _almacenService: AlmacenService,
     public _empleadoService : EmpleadoService,
     private _modulosService: ModulosService,
@@ -423,19 +421,7 @@ export class ProductoAgregarComponent implements OnInit {
       }
     );
   }
-  // getCategoria(){
-  //   this._categoriaService.getCategorias().subscribe(
-  //     response =>{
-  //       if(response.status == 'success'){
-  //         this.categoria = response.categoria;
-          
-  //       }
-  //     },
-  //     error =>{
-  //       console.log(error);
-  //     }
-  //   );
-  // }
+  
   getAlmacen(){
     this._almacenService.getAlmacenes().subscribe(
       response =>{

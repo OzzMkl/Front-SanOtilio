@@ -410,34 +410,6 @@ export class PuntoDeVentaComponent implements OnInit {
     });
   }
 
-  /**
-   * 
-   * @param page
-   * Es el numero de pagina a la cual se va acceder
-   * @description
-   * De acuerdo al numero de pagina recibido lo concatenamos a
-   * la direccion para "ir" a esa direccion y traer la informacion
-   * no retornamos ya que solo actualizamos las variables a mostrar
-   */
-  getPage(page:number) {
-    //mostramos spinner
-    this.isLoadingProductos = true;
-
-    this._http.get(this.path+'?page='+page).subscribe(
-      (response:any) => {
-        //console.log(response);
-        this.productos = response.productos.data;
-        //navegacion paginacion
-        this.totalPages = response.productos.total;
-        this.itemsPerPage = response.productos.per_page;
-        this.pageActual = response.productos.current_page;
-        this.next_page = response.productos.next_page_url;
-        this.path = response.productos.path  
-        
-        this.isLoadingProductos = false;
-    })
-  }
-
   //cargamos la informacion al modelo del producto que se selecciono con el click
   seleccionarProducto(idProducto:number){
     this.isLoadingGeneral = true;
@@ -804,16 +776,6 @@ export class PuntoDeVentaComponent implements OnInit {
     });
   }
 
-  modalBuscarProducto(content:any){
-    this.mdlProductos = true;
-    // this.getProductos();
-    // this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title', size: 'xl'}).result.then((result) => {
-    //   this.closeResult = `Closed with: ${result}`;
-    // }, (reason) => {
-    //   this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-    // });
-  }
-
   modalAlertaExistencia(content:any){
     
     let encontrado = this.lista_productoVentag.find(x => x.tieneStock == false);
@@ -830,153 +792,7 @@ export class PuntoDeVentaComponent implements OnInit {
 
     
   }
-
-  modalMuestraMedidas(content:any,idProducto:number,claveEx:string){
-    this.mostrarPrecios(idProducto,claveEx);
-    this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title', size: 'lg'});
-  }
   
-  /**
-  * 
-  * @param descripcion 
-  * Recibimos el evento del input
-  * @description
-  * Recibe los valores del Keyup, luego buscamos y actualizamos
-  * los datos que se muestran en la tabla
-  */
-  getSearchDescripcion(descripcion:string){
-   
-     //mostramos el spinner
-     this.isLoadingProductos = true;
-
-     //llamamos al servicio
-     this._productoService.searchDescripcion(descripcion).subscribe(
-       response =>{
-           if(response.status == 'success'){
-             //asignamos datos a varibale para poder mostrarla en la tabla
-             this.productos = response.productos.data;
-             //console.log(this.productos)
-
-             //navegacion paginacion
-             this.totalPages = response.productos.total;
-             this.itemsPerPage = response.productos.per_page;
-             this.pageActual = response.productos.current_page;
-             this.next_page = response.productos.next_page_url;
-             this.path = response.productos.path
-             
-             //una ves terminado de cargar quitamos el spinner
-             this.isLoadingProductos = false;
-           }
-       }, error => {
-         console.log(error)
-       }
-     )
-  }
-   
-    /**
-   * 
-   * @param codbar 
-   * Recibimos el evento del input
-   * @description
-   * Recibe los valores del evento keyup, luego busca y actualiza
-   * los datos que se muestran en la tabla
-   */
-  getSearchCodbar(codbar:number){
-
-    //mostramos el spinner
-    this.isLoadingProductos = true;
-
-    //llamamos al servicio
-    this._productoService.searchCodbar(codbar).subscribe(
-      response =>{
-          if(response.status == 'success'){
-            //asignamos datos a varibale para poder mostrarla en la tabla
-            this.productos = response.productos.data;
-            //console.log(this.productos)
-
-            //navegacion paginacion
-            this.totalPages = response.productos.total;
-            this.itemsPerPage = response.productos.per_page;
-            this.pageActual = response.productos.current_page;
-            this.next_page = response.productos.next_page_url;
-            this.path = response.productos.path
-            
-            //una ves terminado de cargar quitamos el spinner
-            this.isLoadingProductos = false;
-          }
-      }, error => {
-        console.log(error)
-      }
-    )
-  }
-
-  /**
-   * 
-   * @param claveExterna 
-   * Recibimos el evento del input
-   * @description
-   * Recibe los valores del evento keyUp, luego busca y actualiza
-   * los datos de la tabla
-   */
-  getSearch(claveExterna:string){
-
-    //mostramos el spinner 
-    this.isLoadingProductos = true;
-
-    //generamos consulta
-    this._productoService.searchClaveExterna(claveExterna).subscribe(
-      response =>{
-          if(response.status == 'success'){
-
-            //asignamos datos a varibale para poder mostrarla en la tabla
-            this.productos = response.productos.data;
-            //console.log(this.productos)
-
-            //navegacion paginacion
-            this.totalPages = response.productos.total;
-            this.itemsPerPage = response.productos.per_page;
-            this.pageActual = response.productos.current_page;
-            this.next_page = response.productos.next_page_url;
-            this.path = response.productos.path
-            
-            //una ves terminado de cargar quitamos el spinner
-            this.isLoadingProductos = false;
-        }
-      }, error =>{
-          console.log(error)
-      }
-    )
-  }
-  
-/**
- * @description
- * Obtiene la informacion del input y busca
- */
-  selectBusqueda(){
-  
-    if(this.buscar == "" || null){
-     
-      this.getProductos();
-   } else{
-     
-     switch(this.seleccionado){
-       case "uno":
-            this.getSearchDescripcion(this.buscar);
-         break;
-       case "dos":
-            this.getSearch(this.buscar);
-         break;
-       case "tres":
-            this.getSearchCodbar(parseInt(this.buscar));
-         break;
-       default:
-         console.log('default tp'+this.seleccionado)
-          break;
-      }
-    }//finelse
-    
- }//finFunction
-
   /**
    * @description
    * Pone a default las propiedades de los ojetos
@@ -1006,31 +822,6 @@ export class PuntoDeVentaComponent implements OnInit {
 
     this.isModificaPrecio = false;
 
-  }
-
-  /**
-   * Recibimos el id y lo buscamos en el servicio
-   * @param idProducto
-   * 
-   * retornamos la consulta con las medias e imagen del producto
-   */
-  mostrarPrecios(idProducto:number,claveEx:string){
-    this.isLoadingGeneral = true;
-    this.claveExt = claveEx;
-    this._productoService.searchProductoMedida(idProducto).subscribe(
-      response =>{
-        //console.log(response)
-        this.prod_med = response.productoMedida;
-        this.existenciasPorMed = response.existencia_por_med;
-        this.imagenPM = response.imagen;
-        if(this.imagenPM == "" || this.imagenPM == null){
-          this.imagenPM = "1650558444no-image.png";
-        }
-        this.idp = idProducto;
-        this.isLoadingGeneral = false;
-    }, error =>{
-      console.log(error);
-    });
   }
 
   habilitaInputPrecio(e:any){
@@ -1224,11 +1015,20 @@ export class PuntoDeVentaComponent implements OnInit {
     );
   }
 
+  /**
+   * @description
+   * Funcion que abre el modal de productos del componente externo
+   */
   openMdlProductos():void{
     this._mdlProductoService.openMdlProductosDialog(true);
   }
 
-  // Función que maneja el evento 'idProductoObtenido' emitido por el componente hijo
+  /**
+   * 
+   * @param idProducto 
+   * @description
+   * Función que maneja el evento 'idProductoObtenido' emitido por el componente hijo
+   */
   handleIdProductoObtenido(idProducto: number) {
     if(idProducto){
       this.seleccionarProducto(idProducto);
