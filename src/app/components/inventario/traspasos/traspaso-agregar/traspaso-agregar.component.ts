@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { Subscription } from 'rxjs';
 //Services
 import { SucursalService } from 'src/app/services/sucursal.service';
 import { EmpresaService } from 'src/app/services/empresa.service';
@@ -7,6 +8,8 @@ import { global } from 'src/app/services/global';
 import { HttpClient} from '@angular/common/http';
 import { EmpleadoService } from 'src/app/services/empleado.service';
 import { TraspasoService } from 'src/app/services/traspaso.service';
+import { SharedMessage } from 'src/app/services/sharedMessage'; 
+import { MdlProductoService } from 'src/app/services/mdlProductoService';
 //Modelos
 import { Traspaso } from 'src/app/models/traspaso';
 import { Empresa } from 'src/app/models/empresa';
@@ -39,6 +42,7 @@ export class TraspasoAgregarComponent implements OnInit {
   public productos: any;
   public url: string = global.url;
   public identity: any;
+  public Empresa: Array<any> = [];
   //Ayudantes
   public tipoTraspaso: string = '';
   public classSelect: string = 'col-5';
@@ -66,7 +70,12 @@ export class TraspasoAgregarComponent implements OnInit {
   //Contadores para los text area
   conta: number =0;
 
+  //Input de busqueda
+  public idProducto ? : number;
 
+  //Modal productos
+  public selectedValue : any;
+  private subscription : Subscription;
   
 
   constructor(
@@ -79,13 +88,27 @@ export class TraspasoAgregarComponent implements OnInit {
     private _http: HttpClient,
     private _traspasoService: TraspasoService,
     private modalService: NgbModal,
-    public _router: Router
-    ) { }
+    public _router: Router,
+    private _sharedMessage: SharedMessage,
+    private _mdlProductoService: MdlProductoService
+    ) {
+        this.subscription = _mdlProductoService.selectedValue$.subscribe(
+          value => [this.getProd(value)]
+        )
+     }
 
   ngOnInit(): void {
     this.getSucursales();
     this.getEmpresa();
     this.loadUser();
+    this._sharedMessage.messages$.subscribe(
+      messages => { 
+        if(messages){
+          this.messageService.add(messages[0]);
+        }
+
+      }
+    )
   }
 
   //Getters
@@ -103,8 +126,9 @@ export class TraspasoAgregarComponent implements OnInit {
       response =>{
         if(response.status == 'success'){
           this.sucursales = response.sucursales;
+          
         }
-        console.log(this.sucursales);
+        console.log(response);
       }, error =>{
         console.log(error);
       });
@@ -119,7 +143,7 @@ export class TraspasoAgregarComponent implements OnInit {
       response =>{
         if(response.status == 'success'){
           this.empresaSesion = response.empresa[0];
-          console.log(this.empresaSesion);
+          // console.log(this.empresaSesion);
         }
       }, error =>{
         console.log(error);
@@ -311,6 +335,18 @@ export class TraspasoAgregarComponent implements OnInit {
     );
   }
 
+  handleIdProductoObtenido(idProducto:any){
+    
+    if(idProducto){
+      this.getProd(idProducto);
+    }else{
+      this.resetVariables();
+    }
+   }
+    
+    openMdlProductos():void{
+      this._mdlProductoService.openMdlProductosDialog(true);
+    }
 
 
 
@@ -546,30 +582,41 @@ export class TraspasoAgregarComponent implements OnInit {
   }
 
   getProd(lpo:any){//consultar producto y rellenar el formulario de producto
-    console.log('getProd(lpo)',lpo);
+    // console.log('getProd(lpo)',lpo);
     this.resetVariables();
     this._productoService.getProdverDos(lpo.idProducto).subscribe(
       response =>{
         this.productoVer = response.producto;//informacion completa del producto para recorrerlo atraves del html
-        console.log('productoVer',this.productoVer);
+        // console.log('productoVer',this.productoVer);
         this.producto_traspaso.descripcion = this.productoVer[0]['descripcion'];//asignamos variables
         this.producto_traspaso.claveEx = this.productoVer[0]['claveEx'];
         this.producto_traspaso.idProducto = this.productoVer[0]['idProducto'];
-        this.producto_traspaso.cantidad = lpo.cantidad;
+        this.producto_traspaso.cantidad = lpo.cantidad ?? 0;
         this.productoVerM = response.productos_medidas;//informacion completa de productos_medidas para recorrerlo atraves del html
-        console.log('productoVerM',this.productoVerM);
-        //obtener idProdMedida actualizado y asignarlo
-        //buscar lpo.nombreMedida en productoVerM, regresar y asignar this.producto_traspaso.idProdMedida, this.producto_compra.nombreMedida
-        this.medidaActualizada = this.productoVerM.find( (x:any) => x.nombreMedida == lpo.nombreMedida);
-        if(this.medidaActualizada == undefined ){
+        // console.log('productoVerM',this.productoVerM);
 
+        if(lpo.nombreMedida){
+          // console.log('CON NOMBREMEDIDA');
+          //obtener idProdMedida actualizado y asignarlo
+          //buscar lpo.nombreMedida en productoVerM, regresar y asignar this.producto_traspaso.idProdMedida, this.producto_compra.nombreMedida
+          this.medidaActualizada = this.productoVerM.find( (x:any) => x.nombreMedida == lpo.nombreMedida);
+          if(this.medidaActualizada == undefined ){
+
+          }else{
+            // console.log('medidaActualizada',this.medidaActualizada);
+            this.producto_traspaso.idProdMedida = parseInt(this.medidaActualizada.idProdMedida);
+            this.producto_traspaso.nombreMedida = this.medidaActualizada.nombreMedida;
+          }
         }else{
-          console.log('medidaActualizada',this.medidaActualizada);
-          this.producto_traspaso.idProdMedida = parseInt(this.medidaActualizada.idProdMedida);
-          this.producto_traspaso.nombreMedida = this.medidaActualizada.nombreMedida;
+          // console.log('SIN NOMBREMEDIDA');
+          //console.log(this.productoVerM[0]['idProdMedida']);
+          this.producto_traspaso.idProdMedida = this.productoVerM[0]['idProdMedida'];
+          this.producto_traspaso.nombreMedida = this.productoVerM[0]['nombreMedida'];
+
         }
         
-        console.log('producto_traspaso',this.producto_traspaso)
+        this.asignaPrecioCompra();
+        // console.log('producto_traspaso',this.producto_traspaso);
         
       },error => {
         //console.log(error);

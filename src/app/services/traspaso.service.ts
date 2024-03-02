@@ -83,9 +83,10 @@ export class TraspasoService {
 
   }
 
-  recibirTraspaso(idTraspaso:any,idEmpleado:any):Observable<any>{
+  recibirTraspaso(idTraspaso:any,idEmpleado:any,observaciones:any):Observable<any>{
     let combinado = {'idTraspaso':idTraspaso,
-                     'idEmpleado':idEmpleado
+                     'idEmpleado':idEmpleado,
+                     'observaciones':observaciones
     };
     let json = JSON.stringify(combinado);
     let params = 'json='+json;

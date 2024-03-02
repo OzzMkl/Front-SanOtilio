@@ -10,7 +10,10 @@
                     <label class="form-label" for="">Envia</label>
                     <select class="form-select" name="sucEnv" id="sucEnv" [(ngModel)]="traspaso.sucursalE" (change)="changeTipoTraspaso()"  required>
                         <option value="0" selected>Selecciona una sucursal</option>
-                        <option *ngFor="let sucEnv of sucursales" [value]="sucEnv.idSuc" >{{sucEnv.nombre}}</option>
+                        <ng-container *ngFor="let sucEnv of sucursales">
+                            <option  *ngIf="!sucEnv.connection" [value]="sucEnv.idSuc" >{{sucEnv.nombre}}</option>
+                            <option  *ngIf="sucEnv.idSuc == empresaSesion.idSuc" [value]="sucEnv.idSuc" >{{sucEnv.nombre}}</option>
+                        </ng-container>
                     </select>
                 </div>
                 <div class="col-1 text-center align-self-center">
@@ -41,8 +44,13 @@
                 <div class="col-4">
                     <label class="form-label" for="">Buscar producto</label>
                     <div class="input-group">
-                        <span class="input-group-addon" id="sizing-addon2"><i class="bi-search" style="font-size: 1.5rem; color: black; left: 0;" (click)="open(content)"></i> </span>
-                        <input class="form-control" type="text" ngbTooltip="Solo busca por clave externa" name="claveEx" #claveEx="ngModel" [(ngModel)]="producto_traspaso.claveEx" readonly>
+                        <app-input-external-key-search
+                            (idProductoObtenido)="handleIdProductoObtenido($event)"
+                            [claveExterna]="producto_traspaso.claveEx">
+                            <span class="input-group-addon" id="sizing-addon2"><i class="bi-search" style="font-size: 1.5rem; color: black; left: 0;" (click)="openMdlProductos()"></i> </span>
+
+                        </app-input-external-key-search>
+                        <input class="form-control d-none" type="text" ngbTooltip="Solo busca por clave externa" name="claveEx" #claveEx="ngModel" [(ngModel)]="producto_traspaso.claveEx" readonly>
                     </div>
                 </div>
                 <div class="col-1">
@@ -215,3 +223,5 @@
       <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Guardar</button>
     </div> -->
 </ng-template>
+
+<app-modal-productos></app-modal-productos>

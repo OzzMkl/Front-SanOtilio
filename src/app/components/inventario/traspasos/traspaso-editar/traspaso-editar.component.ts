@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Subscription } from 'rxjs';
 //Servicios
 import { SucursalService } from 'src/app/services/sucursal.service';
 import { EmpresaService } from 'src/app/services/empresa.service';
@@ -8,6 +9,8 @@ import { HttpClient} from '@angular/common/http';
 import { ProductoService } from 'src/app/services/producto.service';
 import { global } from 'src/app/services/global';
 import { EmpleadoService } from 'src/app/services/empleado.service';
+import { SharedMessage } from 'src/app/services/sharedMessage'; 
+import { MdlProductoService } from 'src/app/services/mdlProductoService';
 //Modelos
 import { Empresa } from 'src/app/models/empresa';
 import { Producto_traspaso } from 'src/app/models/producto_traspaso';
@@ -66,6 +69,13 @@ export class TraspasoEditarComponent implements OnInit {
     buscarProducto = '';
     buscarProductoCE = '';
     buscarProductoCbar : number = 0 ;
+
+    //Input de busqueda
+  public idProducto ? : number;
+
+  //Modal productos
+  public selectedValue : any;
+  private subscription : Subscription;
   
     
 
@@ -80,15 +90,29 @@ export class TraspasoEditarComponent implements OnInit {
     private modalService: NgbModal,
     public _empleadoService : EmpleadoService,
     private _productoService: ProductoService,
-    public _router: Router
+    public _router: Router,
+    private _sharedMessage: SharedMessage,
+    private _mdlProductoService: MdlProductoService
 
-  ) { }
+  ) {
+      this.subscription = _mdlProductoService.selectedValue$.subscribe(
+        value => [this.getProd(value)]
+      )
+   }
 
   ngOnInit(): void {
     this.getDatosRuta();
     this.loadUser();
     this.getSucursales();
     this.getEmpresa();
+    this._sharedMessage.messages$.subscribe(
+      messages => { 
+        if(messages){
+          this.messageService.add(messages[0]);
+        }
+
+      }
+    )
     // this.getDetailsTraspaso(3,'Envia');
   }
 
@@ -504,16 +528,28 @@ export class TraspasoEditarComponent implements OnInit {
         this.producto_traspaso.cantidad = lpo.cantidad;
         this.productoVerM = response.productos_medidas;//informacion completa de productos_medidas para recorrerlo atraves del html
         console.log('productoVerM',this.productoVerM);
-        //obtener idProdMedida actualizado y asignarlo
-        //buscar lpo.nombreMedida en productoVerM, regresar y asignar this.producto_traspaso.idProdMedida, this.producto_compra.nombreMedida
-        this.medidaActualizada = this.productoVerM.find( (x:any) => x.nombreMedida == lpo.nombreMedida);
-        if(this.medidaActualizada == undefined ){
 
+        if(lpo.nombreMedida){
+          // console.log('CON NOMBREMEDIDA');
+          //obtener idProdMedida actualizado y asignarlo
+          //buscar lpo.nombreMedida en productoVerM, regresar y asignar this.producto_traspaso.idProdMedida, this.producto_compra.nombreMedida
+          this.medidaActualizada = this.productoVerM.find( (x:any) => x.nombreMedida == lpo.nombreMedida);
+          if(this.medidaActualizada == undefined ){
+
+          }else{
+            // console.log('medidaActualizada',this.medidaActualizada);
+            this.producto_traspaso.idProdMedida = parseInt(this.medidaActualizada.idProdMedida);
+            this.producto_traspaso.nombreMedida = this.medidaActualizada.nombreMedida;
+          }
         }else{
-          console.log('medidaActualizada',this.medidaActualizada);
-          this.producto_traspaso.idProdMedida = parseInt(this.medidaActualizada.idProdMedida);
-          this.producto_traspaso.nombreMedida = this.medidaActualizada.nombreMedida;
+          // console.log('SIN NOMBREMEDIDA');
+          //console.log(this.productoVerM[0]['idProdMedida']);
+          this.producto_traspaso.idProdMedida = this.productoVerM[0]['idProdMedida'];
+          this.producto_traspaso.nombreMedida = this.productoVerM[0]['nombreMedida'];
+
         }
+        
+        this.asignaPrecioCompra();
         
         console.log('producto_traspaso',this.producto_traspaso)
         
@@ -572,6 +608,33 @@ export class TraspasoEditarComponent implements OnInit {
 
 
   }
+
+  handleIdProductoObtenido(idProducto:any){
+    
+    if(idProducto){
+      this.getProd(idProducto);
+    }else{
+      this.resetVariables();
+    }
+  }
+    
+  openMdlProductos():void{
+      this._mdlProductoService.openMdlProductosDialog(true);
+  }
+
+  /**
+   * Asigna precio de producto en función de la medida proporcionada por el usuario
+  */
+  asignaPrecioCompra(){
+    //console.log(this.producto_traspaso.idProdMedida);
+    //Buscar por idProdMedida
+      var med = this.productoVerM.find((x: { idProdMedida: number; }) => x.idProdMedida == this.producto_traspaso.idProdMedida);
+    //console.log(med);
+    //Asignar valor
+      this.producto_traspaso.precio = med.precio1;
+    //console.log(this.producto_traspaso.precio);    
+  }
+
 
   //-----------------------------------------------------Eventos-----------------------------------------------------
   
