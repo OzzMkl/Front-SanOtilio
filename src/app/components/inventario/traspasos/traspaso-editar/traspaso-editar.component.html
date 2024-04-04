@@ -14,12 +14,16 @@
                     <i class="pi pi-arrow-right" style="font-size: 2rem"></i>
                 </div>
                 <div [ngClass]="classSelect">
+                    <label class="form-label" for="">Envia</label>
+                        <input id="sucursalEN" type="text" class="form-control" value="{{detallesTraspaso.sucursalRN}}" readonly>
+                </div>
+                <!-- <div [ngClass]="classSelect">
                     <label class="form-label" for="">Recibe</label>
                     <select class="form-select" name="sucRec" id="sucRec" [(ngModel)]="detallesTraspaso.sucursalR" (change)="changeTipoTraspaso()" required>
                         <option value="0" selected>Selecciona una sucursal</option>
                         <option *ngFor="let sucRec of sucursales" [value]="sucRec.idSuc" >{{sucRec.nombre}}</option>
                     </select>
-                </div>
+                </div> -->
                 <div [ngClass]="classInput">
                     <label class="form-label" for="">Tipo</label>
                     <input class="form-control" type="text" value="{{tipoTraspaso}}" name="" id="" readonly>
@@ -34,8 +38,13 @@
                 <div class="col-4">
                     <label class="form-label" for="">Buscar producto</label>
                     <div class="input-group">
-                        <span class="input-group-addon" id="sizing-addon2"><i class="bi-search" style="font-size: 1.5rem; color: black; left: 0;" (click)="open(content)"></i> </span>
-                        <input class="form-control" type="text" ngbTooltip="Solo busca por clave externa" name="claveEx" #claveEx="ngModel" [(ngModel)]="producto_traspaso.claveEx" readonly>
+                        <app-input-external-key-search
+                            (idProductoObtenido)="handleIdProductoObtenido($event)"
+                            [claveExterna]="producto_traspaso.claveEx">
+                            <span class="input-group-addon" id="sizing-addon2"><i class="bi-search" style="font-size: 1.5rem; color: black; left: 0;" (click)="openMdlProductos()"></i> </span>
+
+                        </app-input-external-key-search>
+                        <input class="form-control d-none" type="text" ngbTooltip="Solo busca por clave externa" name="claveEx" #claveEx="ngModel" [(ngModel)]="producto_traspaso.claveEx" readonly>
                     </div>
                 </div>
                 <div class="col-1">
@@ -44,7 +53,7 @@
                 </div>
                 <div class="col-2">
                     <label for="medida" class="form-label">Seleccionar Medida</label>
-                    <select name="idMedida" id="idMedida" class="form-select" [(ngModel)]="producto_traspaso.idProdMedida">
+                    <select name="idMedida" id="idMedida" class="form-select" [(ngModel)]="producto_traspaso.idProdMedida" (change)="asignaPrecioCompra()">
                         <option selected disabled value="">Abrir para seleccionar</option>
                         <option  *ngFor="let medida of productoVerM" value={{medida.idProdMedida}} >{{medida.nombreMedida}}</option>
                     </select>
@@ -208,3 +217,5 @@
       <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Guardar</button>
     </div> -->
 </ng-template>
+
+<app-modal-productos></app-modal-productos>

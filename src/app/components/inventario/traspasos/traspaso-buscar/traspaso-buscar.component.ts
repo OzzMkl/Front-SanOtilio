@@ -57,6 +57,9 @@ export class TraspasoBuscarComponent implements OnInit {
 
   public isLoadingGeneral: boolean = true;
 
+  //Observaciones
+  public observaciones:any = '';
+
 
   constructor(
     private _empleadoService: EmpleadoService,
@@ -225,8 +228,9 @@ export class TraspasoBuscarComponent implements OnInit {
           this.detallesTraspaso = response.traspaso; 
           this.productosDT = response.productos;
           this.isHiddenRec = (this.detallesTraspaso[0].idStatus == 50 && this.tipoBusqueda == 'Recibe' ) ? false : true;
+          this.observaciones = this.detallesTraspaso[0].observaciones;
           //console.log('response',this.detallesTraspaso[0].idStatus);
-          //console.log('traspaso',this.detallesTraspaso);
+          console.log('traspaso',this.detallesTraspaso);
           // console.log('productos',this.productosDT);
 
         }else{ console.log('Algo salio mal'); }
@@ -318,13 +322,14 @@ export class TraspasoBuscarComponent implements OnInit {
   }
 
   public recibirTraspaso(){
-    console.log('recivirTraspaso');
+    console.log('recibirTraspaso');
     this._confirmationService.confirm({
       message: '¿Está seguro(a) que desea ingresar el traspaso?',
       header: 'Advertencia',
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
-        this._traspasoService.recibirTraspaso(this.detallesTraspaso[0]['idTraspasoR'],this.identity['sub']).subscribe(
+        this.detallesTraspaso[0].observaciones = this.observaciones;
+        this._traspasoService.recibirTraspaso(this.detallesTraspaso[0]['idTraspasoR'],this.identity['sub'],this.detallesTraspaso[0].observaciones).subscribe(
           response =>{
             if(response.status == 'success'){
               console.log(response);
