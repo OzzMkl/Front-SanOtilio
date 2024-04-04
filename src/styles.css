@@ -1,6 +1,12 @@
 /* You can add global styles to this file, and also import other style files */
 @import "~bootstrap-icons/font/bootstrap-icons.css";
 
+:root {
+  --dev-danger-color:#ff5252;
+  --dev-success-color:#66bb6a;
+  --dev-warn-color:#ffa726;
+}
+
 .spinner-backdrop {
     position: fixed;
     top: 0;
