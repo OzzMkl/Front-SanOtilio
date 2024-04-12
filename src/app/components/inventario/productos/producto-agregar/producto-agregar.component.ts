@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
 import { global } from 'src/app/services/global';
 
 /*****SERVICIOS*/
@@ -15,7 +16,6 @@ import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 /*MODELOS */
 import { Producto} from 'src/app/models/producto';
 import { Productos_medidas_new } from 'src/app/models/productos_medidas_new';
-import { Router } from '@angular/router';
 
 
 
@@ -70,6 +70,8 @@ export class ProductoAgregarComponent implements OnInit {
   public sucursales_guardadas: Array<any> = [];
   public sucursales_fallidas: Array<any> = [];
 
+  public modoEdicion: boolean = false;
+
   constructor(
     private _productoService: ProductoService,
     private _medidaService: MedidaService,
@@ -81,6 +83,7 @@ export class ProductoAgregarComponent implements OnInit {
     public _router: Router,
     private messageService: MessageService,
     private _confirmationService: ConfirmationService,
+    private _route: ActivatedRoute,
 
   ) {
     this.producto = new Producto(0,0,0,1,'',0,'',0,0,'',0,'','',null,1,0);
@@ -106,6 +109,11 @@ export class ProductoAgregarComponent implements OnInit {
             this.messageService.add({severity:'error', summary:'Acceso denegado', detail: 'El usuario no cuenta con los permisos necesarios, redirigiendo en '+this.counter+' segundos'});
           },1000);
         } else{
+          this._route.params.subscribe( params =>{
+            if(params['idProducto']){
+              this.getDatosProducto(params['idProducto']);
+            }
+          });
           this.getMedida();
           this.getMarca();
           this.getDepartamentos();
@@ -372,8 +380,6 @@ export class ProductoAgregarComponent implements OnInit {
       return `with: ${reason}`;
     }
   }
-
-  /*********************************************************************************************************** */
 
    /**
    * Funcion para el select de no. de medidas
@@ -698,5 +704,83 @@ export class ProductoAgregarComponent implements OnInit {
     }
 
   }
+
+  aumentar_disminuir_precio(){
+    
+  }
   
+  /**
+   * 
+   * @param idProducto 
+   * @description
+   * Obtiene la ingormacion del producto de la url
+   */
+  getDatosProducto(idProducto:number){
+    this.isLoadingGeneral = true;
+    
+    this._productoService.getProdverDos(idProducto).subscribe(
+      response =>{
+        this.isLoadingGeneral = false;
+        this.producto = response.producto[0];
+        this.noMedida = response.productos_medidas.length;
+        
+        //Limpiamos a tabsPrice
+        this.tabsPrice = [];
+
+        if(this.noMedida > 0){
+          //Iteramos sobre el response de productos_medidas para asignarlos a tabsPrice
+          for(let i = 0; i < this.noMedida; i++){
+            const prodMedida = response.productos_medidas[i];
+            const produtoMedidaNew = new Productos_medidas_new(
+              i+1,
+              prodMedida.idProdMedida,
+              prodMedida.idProducto,
+              prodMedida.idMedida,
+              prodMedida.unidad,
+              prodMedida.precioCompra,
+
+              prodMedida.porcentaje1,
+              prodMedida.precio1,
+              (prodMedida.precio1 && prodMedida.porcentaje1) ? true : false,
+              
+              prodMedida.porcentaje2,
+              prodMedida.precio2,
+              (prodMedida.precio2 && prodMedida.porcentaje2) ? true : false,
+              
+              prodMedida.porcentaje3,
+              prodMedida.precio3,
+              (prodMedida.precio3 && prodMedida.porcentaje1) ? true : false,
+              
+              prodMedida.porcentaje4,
+              prodMedida.precio4,
+              (prodMedida.precio4 && prodMedida.porcentaje4) ? true : false,
+              
+              prodMedida.porcentaje5,
+              prodMedida.precio5,
+              (prodMedida.precio5 && prodMedida.porcentaje1) ? true : false,
+
+              prodMedida.idStatus,
+            );
+            this.tabsPrice.push(produtoMedidaNew);
+          }
+          //Recorremos el primer elemento para obtener los checks de los precios
+          for(let i = 0; i < 1; i++ ){
+            //Recorremos los 5 cheks de los precios
+            for(let j = 1; j <= 5; j++){
+              //Creamos la propiedad a buscar
+              const isSelected = (this.tabsPrice[i] as any)['isSelected_precio'+j];
+              //Si el resultado es true
+              if(isSelected){
+                //asignamos objeto al array
+                this.arrChecksPrecios.push({ nivel: j, nombre: 'precio' + j });
+              }
+            }
+          }
+          console.log(this.arrChecksPrecios)
+        }
+      }, error =>{
+        console.log(error);
+      }
+    );
+  }
 }
