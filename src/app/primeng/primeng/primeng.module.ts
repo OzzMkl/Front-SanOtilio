@@ -30,6 +30,7 @@ import { DialogModule } from 'primeng/dialog';
 import { CheckboxModule } from 'primeng/checkbox';
 import { PaginatorModule } from 'primeng/paginator';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { RadioButtonModule } from 'primeng/radiobutton';
 
 
 @NgModule({
@@ -63,6 +64,7 @@ import { OverlayPanelModule } from 'primeng/overlaypanel';
     CheckboxModule,
     PaginatorModule,
     OverlayPanelModule,
+    RadioButtonModule,
   ],
   imports: [
     CommonModule,

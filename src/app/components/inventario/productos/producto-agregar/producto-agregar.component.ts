@@ -71,6 +71,8 @@ export class ProductoAgregarComponent implements OnInit {
   public sucursales_fallidas: Array<any> = [];
 
   public modoEdicion: boolean = false;
+  public mdl_Mantener: boolean = false;
+  public accionModificacionPrecio: string = "mantenerPrecio";
 
   constructor(
     private _productoService: ProductoService,
@@ -112,6 +114,7 @@ export class ProductoAgregarComponent implements OnInit {
           this._route.params.subscribe( params =>{
             if(params['idProducto']){
               this.getDatosProducto(params['idProducto']);
+              this.modoEdicion = true;
             }
           });
           this.getMedida();
@@ -728,6 +731,8 @@ export class ProductoAgregarComponent implements OnInit {
         this.tabsPrice = [];
 
         if(this.noMedida > 0){
+          //asignamos precio compra
+          this.precioCompraForm = response.productos_medidas[0].preciocompra;
           //Iteramos sobre el response de productos_medidas para asignarlos a tabsPrice
           for(let i = 0; i < this.noMedida; i++){
             const prodMedida = response.productos_medidas[i];
@@ -776,11 +781,61 @@ export class ProductoAgregarComponent implements OnInit {
               }
             }
           }
-          console.log(this.arrChecksPrecios)
         }
       }, error =>{
         console.log(error);
       }
     );
+  }
+
+  /**
+   * 
+   * @param event 
+   * @description
+   * Nos permite visualizar el modal el cual pregunta que hacer cuando el precio
+   * a sido modificado
+   */
+  mdlMantenerPrecio_MantenerPorcentaje(event: Event){
+    if(this.modoEdicion){
+      this.mdl_Mantener = true;
+    }
+  }
+
+  /**
+   * @description
+   * - Recalcula todos los precios de las tablas activos cuando se modifica el precio compra en modo edicion
+   * 
+   */
+  fnMantenerPrecio_MantenerPorcentaje(){
+    this.mdl_Mantener = false;
+    if(this.precioCompraForm > 0){
+      switch(this.accionModificacionPrecio){
+        //Recalculamos todos los porcentajes de todas las tablas con el nuevo
+        //precio compra ingresado y los precios ya registrados
+        case "mantenerPrecio":
+            for(let i = 0; i < this.arrChecksPrecios.length; i++){
+              for(let j = 0; j < this.tabsPrice.length; j++){
+                this.calcularPorcentajeGanancia(this.tabsPrice[j], this.arrChecksPrecios[i].nivel)
+              }
+            }
+          break;
+        
+        //Recalculamos todos los precios de todas las tablas con el nuevo
+        //precio compra ingresado y los porcentajes que ya tiene ingresado
+        case "mantenerPorcentaje":
+            for(let i = 0; i < this.arrChecksPrecios.length; i++){
+              for(let j = 0; j < this.tabsPrice.length; j++){
+                this.calcularPrecio(this.tabsPrice[j], this.arrChecksPrecios[i].nivel);
+              }
+            }
+          break;
+
+      }
+    } else{
+      this.messageService.add({
+                    severity:'warn', 
+                    detail:'El precio compra no pueeder ser cero.'
+                });
+    }
   }
 }

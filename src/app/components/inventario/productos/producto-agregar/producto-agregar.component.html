@@ -148,10 +148,7 @@
           <input type="text" class="form-control" autocomplete="off" id="precioCompraPrincipal"
                   oninput="this.value = this.value.replace(/[^\d.]/g, '').replace(/(\..*)\./g, '$1');"
                   name="precioCompraForm" [(ngModel)]="precioCompraForm" required
-                  (ngModelChange)="asignaPrecioCompra($event)">
-          <!-- <div [hidden]="precioCompraForm.valid || precioCompraForm.pristine" class="alert alert-danger">
-            CAMPO REQUERIDO | INGRESE SOLO NUMEROS MAYOR A 0 Y MAXIMO 9999999
-          </div> -->
+                  (ngModelChange)="asignaPrecioCompra($event); mdlMantenerPrecio_MantenerPorcentaje($event);">
         </div>
       </div>
       <!-- ClaveSat -->
@@ -510,4 +507,30 @@
       </tbody>
     </table>
   </div>
+</p-dialog>
+
+<!-- Modal Pregunta MantenerPrecio MantenerPorcentaje -->
+<p-dialog
+  header="Header"
+  [(visible)]="mdl_Mantener"
+  [modal]="true"
+  [closable]="false"
+  [style]="{ width:'30vw' }"
+  position="top">
+  <ng-template pTemplate="header">
+    <h5>El precio se ah modificado que desea hacer</h5>
+  </ng-template>
+  <div class="row justify-content-between">
+    <div class="col">
+      <p-radioButton name="accionModificacionPrecio" value="mantenerPrecio" [(ngModel)]="accionModificacionPrecio" inputId="accionModificacionPrecio1"></p-radioButton>
+      <label for="accionModificacionPrecio1" styleClass="ml-2">Mantener Precio</label>
+    </div>
+    <div class="col">
+      <p-radioButton name="accionModificacionPrecio" value="mantenerPorcentaje" [(ngModel)]="accionModificacionPrecio" inputId="accionModificacionPrecio2"></p-radioButton>
+      <label for="accionModificacionPrecio2" class="ml-2">Mantener Porcentaje</label>
+    </div>
+  </div>
+  <ng-template pTemplate="footer">
+    <p-button icon="pi pi-check" (click)="fnMantenerPrecio_MantenerPorcentaje()" label="Ok"></p-button>
+  </ng-template>
 </p-dialog>
