@@ -174,8 +174,18 @@
           CAMPO REQUERIDO 
         </div>
       </div>
-
-
+    </div>
+    <div class="row justify-content-center">
+      <div class="col-4 text-center">
+        <label for="inputAmount" class="form-label">Aumentar o disminuir precio</label>
+        <div class="input-group mb-3">
+          <button class="btn btn-outline-danger" type="button" id="button-addon1" (click)="aumentar_disminuir_precio('restar')" ><i class="pi pi-minus"></i></button>
+          <input type="number" class="form-control" placeholder="Ingresa el monto" 
+                  oninput="this.value = this.value.replace(/[^\d.]/g, '').replace(/(\..*)\./g, '$1');"
+                  name="inputAmount" id="inputAmount" [(ngModel)]="inputAmount">
+          <button class="btn btn-outline-success" type="button" id="button-addon2" (click)="aumentar_disminuir_precio('sumar')" ><i class="pi pi-plus"></i></button>
+        </div>
+      </div>
     </div>
 
     <!-- TABLAS DE PRECIOS dinamicas-->

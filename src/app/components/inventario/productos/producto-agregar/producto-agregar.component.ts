@@ -73,6 +73,7 @@ export class ProductoAgregarComponent implements OnInit {
   public modoEdicion: boolean = false;
   public mdl_Mantener: boolean = false;
   public accionModificacionPrecio: string = "mantenerPrecio";
+  public inputAmount: number | null = null;
 
   constructor(
     private _productoService: ProductoService,
@@ -708,8 +709,47 @@ export class ProductoAgregarComponent implements OnInit {
 
   }
 
-  aumentar_disminuir_precio(){
-    
+  /**
+   * 
+   * @param motivo 
+   * @description
+   * Suma o resta a la tabla 1 el numero ingresado
+   * Calcula sobre la primera tabla por el precio y en las restantes por el porcentaje
+   */
+  aumentar_disminuir_precio(motivo:string){
+    //Verificamos que estamos en modo edicion y que el valor ingresado no sea null y que sea mayor a cero
+    if(this.modoEdicion && this.inputAmount != null && this.inputAmount > 0){
+      //recorremos el array de precios activos
+      for(let i = 0; i < this.arrChecksPrecios.length; i++){
+        //Asignamos la propiedad a buscar
+        const propertyName = this.arrChecksPrecios[i].nombre;
+        //asignamos el monto ingresado
+        let amount = this.inputAmount
+        //verificamos si el motivo es restar convertirmos el valor ingresado en negativo
+        if(motivo == "restar" ){
+          amount = -amount;
+        }
+        //Unicamente a nuestra tabla1 realizamos la suma del valor ingresado
+        (this.tabsPrice[0] as any)[propertyName] = parseFloat((this.tabsPrice[0] as any)[propertyName]) + amount ; 
+
+        //Recorremos las tablas para recalcular porcentajes y precios de ganancia
+        for(let j = 0; j < this.tabsPrice.length; j++){
+          //Unicamente para la tabla1 se realiza calculo por precio
+          if(j == 0){
+            this.calcularPorcentajeGanancia(this.tabsPrice[j], this.arrChecksPrecios[i].nivel)
+          } else{
+            //En las restantes calculamos por el porcentaje que tienen
+            this.calcularPrecio(this.tabsPrice[j],this.arrChecksPrecios[i].nivel);
+          }
+        }
+        
+      }
+    } else{
+      this.messageService.add({
+        severity:'warn', 
+        detail:'La cantidad a sumar o restar no puede cero o vacio.'
+    });
+    }
   }
   
   /**
