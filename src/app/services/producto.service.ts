@@ -41,6 +41,15 @@ export class ProductoService{
         return this._http.get(this.url+'productos/index', {headers:this.headers} );
     }
 
+    /**
+     * 
+     * @param page - number - pagina a buscar
+     * @param type - number - tipo de busqueda ( 1 = claveEx, 2 = descripcion, 3 = codbar)
+     * @param search - string -  cadena a buscar
+     * @returns 
+     * @description
+     * Funcion que nos permite buscar en el catalogo de productos y retornamos el resultado paginado por 10 elementos
+     */
     getProductosNewIndex(page: number,type: number, search: string):Observable<any>{
         return this._http.get(this.url+'productos/newIndex/'+type+'/'+search+'?page='+page,{headers:this.headers});
     }
@@ -76,11 +85,16 @@ export class ProductoService{
         return this._http.get(this.url+'productos/showTwo/'+idProducto, {headers:this.headers} );
     }
 
-    ///////////////////////////////////////////////////////////////////////
+    /**
+     * 
+     * @param claveEx 
+     * @returns 
+     * @description
+     * Servicio para el componente de input-external-key-search
+     */
     getIdProductByClaveEx(claveEx:string):Observable<any>{
         return this._http.get(this.url+'productos/getIdProductByClaveEx/'+claveEx, {headers:this.headers} );
     }
-    //////////////////////////////////////////////////////////////////////
 
     /**
      * Actualza unicamente el status
@@ -106,51 +120,16 @@ export class ProductoService{
      */
     updateProducto( producto:any, listaProdMedida:any,idEmpleado:any, sucUpdate:any):Observable<any>{
         let combinado = {
-            producto: producto,
-            idEmpleado: idEmpleado, 
-            sucursales: sucUpdate
-        };
-        let json = JSON.stringify(combinado);
-        let params = 'json='+json;
-
-        let combinado2 = {
-            lista_productoMed:listaProdMedida,
-            idEmpleado:idEmpleado,
-            sucursales: sucUpdate
-        };
-
-        let json2 = JSON.stringify(combinado2);
-        let params2 = 'json='+json2;
-
-        return this._http.put(this.url + 'productos/updateProduct/'+producto.idProducto,params,{headers:this.headers}).pipe(
-            concatMap( (response:any) =>{
-                if(response.status == 'success'){
-                    return this._http.put(this.url+'productos/updatePrecioProducto/'+producto.idProducto,params2, {headers:this.headers} );
-                } else {
-                    return throwError('Ocurrio un error al registrar producto');
-                }
-            }),catchError( error =>{
-                console.log('Error:', error);
-                return throwError('Fallo al actualizar el producto Error: '+error.error.error.errorInfo['2']);
-            }));
-    }
-
-    /**
-     * Actualiza unicamente la informacion del producto
-     * @param producto Producto
-     * @param empleado Empleado
-     * @returns 
-     */
-    putProducto(producto:any, idEmpleado:any, sucUpdate:any):Observable<any>{
-        let combinado = {
-            producto: producto,
-            idEmpleado: idEmpleado, 
-            sucursales: sucUpdate
-        };
+            'producto': producto,
+            'idEmpleado': idEmpleado,
+            'lista_productosMedida': listaProdMedida,
+            'sucursales': sucUpdate
+        }
         let json = JSON.stringify(combinado);
         let params = 'json='+json;
 
         return this._http.put(this.url+'productos/updateProduct/'+producto.idProducto,params,{headers:this.headers});
+        // return this._http.put(this.url+'productos/updateProduct/'+producto.idProducto,params,{headers:this.headers});
     }
     
     /**
