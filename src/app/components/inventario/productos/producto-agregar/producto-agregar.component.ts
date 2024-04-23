@@ -16,7 +16,7 @@ import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 /*MODELOS */
 import { Producto} from 'src/app/models/producto';
 import { Productos_medidas_new } from 'src/app/models/productos_medidas_new';
-
+import { SucursalService } from 'src/app/services/sucursal.service';
 
 
 @Component({
@@ -74,6 +74,10 @@ export class ProductoAgregarComponent implements OnInit {
   public mdl_Mantener: boolean = false;
   public accionModificacionPrecio: string = "mantenerPrecio";
   public inputAmount: number | null = null;
+  public mdl_ConfirmSucursales: boolean = false;
+  public sucursales: Array<any> = [];
+  public empresa:any;
+  public isAllSuc: boolean = false;
 
   constructor(
     private _productoService: ProductoService,
@@ -87,6 +91,7 @@ export class ProductoAgregarComponent implements OnInit {
     private messageService: MessageService,
     private _confirmationService: ConfirmationService,
     private _route: ActivatedRoute,
+    private _sucursalService: SucursalService,
 
   ) {
     this.producto = new Producto(0,0,0,1,'',0,'',0,0,'',0,'','',null,1,0);
@@ -285,6 +290,10 @@ export class ProductoAgregarComponent implements OnInit {
           detail:'Favor de verificar los precios', 
       });
     } else{
+      //Limpiamos variables
+      this.sucursales_guardadas = [];
+      this.sucursales_fallidas = [];
+      //Creamos identity
       let identityMod = {
         'sub': this.identity.sub,
         'permisos': this.userPermisos
@@ -363,6 +372,22 @@ export class ProductoAgregarComponent implements OnInit {
         console.log(error);
       }
     );
+  }
+  getSucursales(){
+    this._sucursalService.getSucursales().subscribe(
+      response =>{
+        if(response.status == 'success'){
+          this.sucursales = response.sucursales;
+          this.empresa = response.empresa;
+          //Filtrar la lista para eliminar elementos con propiedad connection vacia
+          this.sucursales = this.sucursales.filter(sucursal => sucursal.connection !== null);
+          //Eliminamos a la misma sucursal para que no salga en la lista
+          this.sucursales = this.sucursales.filter(sucursal => sucursal.idSuc !== this.empresa.idSuc);
+        }
+      }, error =>{
+        console.log(error);
+      }
+    )
   }
 
   //MODAL
@@ -609,33 +634,46 @@ export class ProductoAgregarComponent implements OnInit {
     // console.log(this.arrChecksPrecios)
   }
 
-  confirmSubmit(){
-    this._confirmationService.confirm({
-      message: '¿Esta seguro(a) que desea guardar el producto?',
-      header: 'Advertencia',
-      icon: 'pi pi-exclamation-triangle',
-      accept: () => {
-        this.submit();
-      },
-      reject: (type:any) => {
-        switch(type) {
-            case ConfirmEventType.REJECT:
-                this.messageService.add({
-                    severity:'warn', 
-                    summary:'Cancelado', 
-                    detail:'Confirmacion cancelada.'
-                });
-            break;
-            case ConfirmEventType.CANCEL:
-                this.messageService.add({
-                    severity:'warn', 
-                    summary:'Cancelado', 
-                    detail:'Confirmacion cancelada.'
-                });
-            break;
-        }
+  /**
+   * 
+   * @param isUpdate 
+   * Abre modal de confirmacion de guardado de producto
+   */
+  confirmSubmit(isUpdate: boolean = false){
+    if(isUpdate){
+      this.confirmUpdate();
+    } else {
+      this._confirmationService.confirm({
+        message: '¿Esta seguro(a) que desea guardar el producto?',
+        header: 'Advertencia',
+        icon: 'pi pi-exclamation-triangle',
+        accept: () => {
+          if(this.modoEdicion){
+            this.updateProducto();
+          } else{
+            this.submit();
+          }
+        },
+        reject: (type:any) => {
+          switch(type) {
+              case ConfirmEventType.REJECT:
+                  this.messageService.add({
+                      severity:'warn', 
+                      summary:'Cancelado', 
+                      detail:'Confirmacion cancelada.'
+                  });
+              break;
+              case ConfirmEventType.CANCEL:
+                  this.messageService.add({
+                      severity:'warn', 
+                      summary:'Cancelado', 
+                      detail:'Confirmacion cancelada.'
+                  });
+              break;
+          }
+      }
+      });
     }
-    });
   }
 
   /**
@@ -878,4 +916,73 @@ export class ProductoAgregarComponent implements OnInit {
                 });
     }
   }
+
+  /**
+   * Abre modal de seleccion de sucursales en donde se actualizara el producto
+   */
+  confirmUpdate(){
+    this.getSucursales();
+    this.mdl_ConfirmSucursales = true;
+  }
+
+  /**
+   * @description
+   * Submit de actualizacion del producto
+   */
+  updateProducto(){
+    this.isLoadingGeneral = true;
+    this.sucursales_guardadas = [];
+    this.sucursales_fallidas = [];
+
+    if(this.verificaPreciosSubmit()){
+      this.isLoadingGeneral = false;
+      this.messageService.add({
+          severity:'error', 
+          summary:'Alerta', 
+          detail:'Favor de verificar los precios', 
+      });
+    } else{
+      this._productoService.updateProducto(this.producto,this.tabsPrice,this.identity.sub,this.sucursales).subscribe(
+        response =>{
+          if(response.status =='success'){
+            this.sucursales_guardadas = response.data_productosMulti.sucursales_guardadas;
+            this.sucursales_fallidas = response.data_productosMulti.sucursales_fallidas;
+            
+            this.isLoadingGeneral = false;
+            this.mdl_ConfirmSucursales = false;
+
+            this.mdl_SubmitProd =true;
+          }
+          // console.log(response);
+        }, error =>{
+          this.messageService.add({
+            severity:'error', 
+            summary:'Alerta', 
+            detail:'Algo salio mal: '+error
+          });
+          console.log(error);
+        }
+      )
+    }
+  }
+
+  /**
+   * @description
+   * Marca todas los check de las sucursales a actualizar
+   */
+  toggleAllSuc(){
+    for(let suc of this.sucursales){
+      suc.isSelected = this.isAllSuc;
+    }
+  }
+
+  /**
+   * @description
+   * Al desmarcar algun check de la tabla, desmarcamos el check del header
+   */
+  toggleSucursalSelection() {
+    this.isAllSuc = this.sucursales.every(suc => suc.isSelected);
+  }
+
+  
 }

@@ -1,7 +1,7 @@
 <p-toast></p-toast>
 <div class="container">
   <app-loading-spinner [isLoading]="isLoadingGeneral"></app-loading-spinner>
-  <form class="form-group" #aProd="ngForm" (ngSubmit)="confirmSubmit()" (keydown.enter)="$event.preventDefault()">
+  <form class="form-group" #aProd="ngForm" (ngSubmit)="confirmSubmit(modoEdicion)" (keydown.enter)="$event.preventDefault()">
     
     <!-- DATOS PRINCIPALES -->
     <div>
@@ -175,8 +175,9 @@
         </div>
       </div>
     </div>
+    <!-- SECCION PARA SUMAR O RESTAR PRECIO A LA PRIMERA MEDIDA -->
     <div class="row justify-content-center">
-      <div class="col-4 text-center">
+      <div class="col-4 col-sm-12 text-center">
         <label for="inputAmount" class="form-label">Aumentar o disminuir precio</label>
         <div class="input-group mb-3">
           <button class="btn btn-outline-danger" type="button" id="button-addon1" (click)="aumentar_disminuir_precio('restar')" ><i class="pi pi-minus"></i></button>
@@ -432,8 +433,6 @@
     </div>
     <!-- FIN TABLAS DE PRECIOS -->
 
-    
-
     <div class="d-grid gap-2 d-md-flex justify-content-md-end">
         <button type="submit" class="btn btn-primary mx-2"  [disabled]="aProd.invalid || isPrecioCorrecto">enviar</button>
     </div>
@@ -493,11 +492,13 @@
     header="Header"
     [(visible)]="mdl_SubmitProd"
     [modal]="true"
-    [style]="{ width:'25vw' }"
+    [style]="{ width:'35vw' }"
     position="top"
     [dismissableMask]="true">
   <ng-template pTemplate="header">
-    <h5 class="modal-title" id="modal-title-suc">El producto se registro en:</h5>
+    <h5 class="modal-title" id="modal-title-suc">
+      {{modoEdicion ? 'El producto se actualizo en:': 'El producto se registro en:'}}
+      </h5>
   </ng-template>
   <div>
     <table>
@@ -505,7 +506,8 @@
         <tr *ngFor="let rb of sucursales_guardadas">
           <td class="branch_letter">
             {{rb.nombre_sucursal.toUpperCase()}}  
-            <i class="pi pi-check branch_icon_success ps-1"></i>
+            <i class="pi pi-check ps-1" [ngClass]="{'branch_icon_success':rb.isSelected, 'branch_icon_warn': !rb.isSelected}"
+                pTooltip="{{rb.isSelected ? 'Producto guardado correctamente' : 'El producto no se modifico en esta sucursal'}}" tooltipPosition="top"></i>
           </td>
         </tr>
         <tr *ngFor="let rb of sucursales_fallidas">
@@ -543,4 +545,42 @@
   <ng-template pTemplate="footer">
     <p-button icon="pi pi-check" (click)="fnMantenerPrecio_MantenerPorcentaje()" label="Ok"></p-button>
   </ng-template>
+</p-dialog>
+
+<p-dialog
+  header="Header"
+  [(visible)]="mdl_ConfirmSucursales"
+  [modal]="true"
+  [style]="{ width:'35vw'}"
+  [draggable]="true"
+  [resizable]="false"
+  position="top"
+  [dismissableMask]="true">
+  <ng-template pTemplate="header">
+    <h5 class="modal-title" id="modal-title-update-suc">¿Donde desea actualizar el producto?</h5>
+  </ng-template>
+  <div class="table-responsive">
+    <table class="table table-dark table-hover text-venter">
+      <thead>
+        <tr>
+          <th>
+            <p-checkbox [(ngModel)]="isAllSuc" inputId="checkAllSuc" [binary]="true" (onChange)="toggleAllSuc()"></p-checkbox>
+          </th>
+          <th>Sucursal</th>
+        </tr>
+      </thead>
+      <tbody *ngFor="let suc of sucursales">
+        <tr>
+          <th>
+            <p-checkbox [(ngModel)]="suc.isSelected" inputId="checkSuc_{{suc.nombre}}" [binary]="true" (onChange)="toggleSucursalSelection()"></p-checkbox>
+          </th>
+          <th>{{suc.nombre}}</th>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <ng-template pTemplate="footer">
+    <p-button icon="pi pi-check" (click)="confirmSubmit()" label="Ok"></p-button>
+  </ng-template>
+
 </p-dialog>
