@@ -601,19 +601,19 @@ export class ProductoEditarComponent implements OnInit {
         }
         
       } //si no solo se guarda la informacion del producto
-        else{
-          this._productoService.putProducto(this.producto,this.identity.sub,this.sucursales).subscribe(
-            response =>{
-              if(response.status == 'success'){
-                this.isLoadingGeneral =false;
-                this._router.navigate(['./producto-modulo/producto-buscar']);
-                this.messageService.add({severity:'success', summary:'Alerta', detail:'Producto '+this.producto.claveEx+' actualizado correctamente'});
-              }
-            }, error =>{
-              console.log(error)
-              this.messageService.add({severity:'error', summary:'Error', detail:error.message});
-            });
-        }
+        // else{
+        //   this._productoService.putProducto(this.producto,this.identity.sub,this.sucursales).subscribe(
+        //     response =>{
+        //       if(response.status == 'success'){
+        //         this.isLoadingGeneral =false;
+        //         this._router.navigate(['./producto-modulo/producto-buscar']);
+        //         this.messageService.add({severity:'success', summary:'Alerta', detail:'Producto '+this.producto.claveEx+' actualizado correctamente'});
+        //       }
+        //     }, error =>{
+        //       console.log(error)
+        //       this.messageService.add({severity:'error', summary:'Error', detail:error.message});
+        //     });
+        // }
     }
   
     /**
