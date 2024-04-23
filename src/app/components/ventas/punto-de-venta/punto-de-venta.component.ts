@@ -383,33 +383,6 @@ export class PuntoDeVentaComponent implements OnInit {
     });
   }
 
-  //obtenemos todos los productos
-  getProductos(){
-    //mostramos el spinner
-    this.isLoadingProductos=true;
-    //ejeecutamos servicio
-    this._productoService.getProductosPV().subscribe( 
-      response => {
-        if(response.status == 'success'){
-
-          //asignamos a variable para mostrar
-          this.productos = response.productos.data;
-          //console.log(response);
-
-          //navegacion de paginacion
-          this.totalPages = response.productos.total;
-          this.itemsPerPage = response.productos.per_page;
-          this.pageActual2 = response.productos.current_page;
-          this.path = response.productos.path;
-
-          //una vez cargada la informacion quitamos el spinner
-          this.isLoadingProductos = false;
-        }
-      }, error =>{
-      console.log(error);
-    });
-  }
-
   //cargamos la informacion al modelo del producto que se selecciono con el click
   seleccionarProducto(idProducto:number){
     this.isLoadingGeneral = true;
