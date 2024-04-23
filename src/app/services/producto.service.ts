@@ -70,12 +70,6 @@ export class ProductoService{
         return this._http.get(this.url+'productos/productosDes', {headers:this.headers} );
     }
 
-    ///////////////revisar si se ocupa
-    getLastPro():Observable<any>{
-        return this._http.get(this.url+'productos/getlastproduct', {headers:this.headers} );
-    }
-    /////////////////////////////////////////
-
     /**
      * Trae todos los detalles del producto
      * @param idProducto number
