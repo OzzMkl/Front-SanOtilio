@@ -670,14 +670,15 @@ export class PuntoDeVentaComponent implements OnInit {
 
       this._ventasService.postVenta(this.ventag, this.lista_productoVentag, identityMod).subscribe(
         response =>{
+          console.log(response)
           if(response.status == 'success'){
+            //desactivamos spinner
             this.isLoadingGeneral = false;
-            this.messageService.add({severity:'success', summary:'Registro exitoso', detail:'Venta creada correctamente'});
-            this.ventag.idCliente = 0;
-            // refrescamos la pagina
-            setTimeout(()=>{
-              window.location.reload();
-            },2000);
+            //generamos mensaje
+            let message = {severity:'success', summary:'Venta #'+response.idVenta, detail:'La venta se registro correctamente',sticky:true};
+            this._sharedMessage.addMessages(message);
+            //mandamos a indexventas
+            this._router.navigate(['./ventas-modulo/ventas-realizadas-buscar']);
           }
         }, error =>{
           this.messageService.add({severity:'error', summary:'Error', detail:'Algo salio mal al crear la venta'});
