@@ -28,8 +28,14 @@ export class VentasService {
     return this._http.get(this.url+'cotizaciones/indexCotizaciones', {headers:this.headers} );
   }
 
-  postCotizaciones(cotizacion:any):Observable<any>{
-    let json = JSON.stringify(cotizacion);
+  postCotizaciones(cotizacion:any, lista_productoVentag:Array<any>, identity: Array<any>):Observable<any>{
+    const combinado = {
+      'ventasg' : cotizacion,
+      'lista_productoVentag': lista_productoVentag,
+      'identity': identity
+    }
+
+    let json = JSON.stringify(combinado);
     let params = 'json='+json;    
     return this._http.post(this.url+'cotizaciones/guardarCotizacion',params, {headers:this.headers} );
   }

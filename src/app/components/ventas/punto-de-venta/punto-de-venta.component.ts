@@ -92,12 +92,14 @@ export class PuntoDeVentaComponent implements OnInit {
   //PERMISOS
   public userPermisos:any = [];
   public mPuV = this._modulosService.modsPuntodeVenta();
+  public mCoti = this._modulosService.modsCotizaciones();
   //contador para redireccion al no tener permisos
   counter: number = 5;
   timerId:any;
 
   /***Motivo de edicion */
   public modoEdicion: boolean = false;
+  public modoEdicionCotizacion: boolean = false;
   public motivoEdicion: string = "";
   @ViewChild('mMotivoEdicion',{static:true}) mitempalte!: TemplateRef<any>;
   //modales
@@ -542,30 +544,84 @@ export class PuntoDeVentaComponent implements OnInit {
   //traemos la informacion del usuario logeado
   loadUser(){
     this.isLoadingGeneral = true;
-    this.userPermisos = this._empleadoService.getPermisosModulo(this.mPuV.idModulo, this.mPuV.idSubModulo);
-        //revisamos si el permiso del modulo esta activo si no redireccionamos
-        if( this.userPermisos.agregar != 1 ){
-          this.timerId = setInterval(()=>{
-            this.counter--;
-            if(this.counter === 0){
-              clearInterval(this.timerId);
-              this._router.navigate(['./']);
-            }
-            this.messageService.add({severity:'error', summary:'Acceso denegado', detail: 'El usuario no cuenta con los permisos necesarios, redirigiendo en '+this.counter+' segundos'});
-          },1000);
-        } else{
+    this._route.params.subscribe(params =>{ 
+      
+      if(params['idVenta']){
+        this.verificaPermisos("edit_venta",params['idVenta']);
+      } else if(params['idCotiza']){
+        this.verificaPermisos("edit_cotizacion",params['idCotiza']);
+      } else{
+        this.verificaPermisos("new_venta",null);
+      }
+    });   
+  }
 
-          this._route.params.subscribe(params =>{
-            if(params['idVenta']){
+  verificaPermisos(typeAction: string, idParam: number | null){
+    switch(typeAction){
+      case "edit_venta":
+            this.userPermisos = this._empleadoService.getPermisosModulo(this.mPuV.idModulo, this.mPuV.idSubModulo);
+            //revisamos si el permiso del modulo esta activo si no redireccionamos
+            if( this.userPermisos.agregar != 1 ){
+              this.timerId = setInterval(()=>{
+                this.counter--;
+                if(this.counter === 0){
+                  clearInterval(this.timerId);
+                  this._router.navigate(['./']);
+                }
+                this.messageService.add({
+                    severity:'error', 
+                    summary:'Acceso denegado', 
+                    detail: 'El usuario no cuenta con los permisos necesarios, redirigiendo en '+this.counter+' segundos'});
+              },1000);
+            } else{
               this.openModalMotivo();
               this.modoEdicion = true;
+            }
+        break;
+      case "edit_cotizacion":
+            this.userPermisos = this._empleadoService.getPermisosModulo(this.mCoti.idModulo, this.mCoti.idSubModulo);
+            if( this.userPermisos.editar != 1 ){
+              this.timerId = setInterval(()=>{
+                this.counter--;
+                if(this.counter === 0){
+                  clearInterval(this.timerId);
+                  this._router.navigate(['./']);
+                }
+                this.messageService.add({
+                    severity:'error', 
+                    summary:'Acceso denegado', 
+                    detail: 'El usuario no cuenta con los permisos necesarios, redirigiendo en '+this.counter+' segundos'});
+              },1000);
+            } else{
+              this.identity = this._empleadoService.getIdentity();
+              this.modoEdicionCotizacion = true;
+              this.getTiposVentas();
+              this.getDetallesCotizacion(idParam ?? 0);
+              this.isLoadingGeneral = false;
+            }
+        break;
+      case "new_venta":
+            this.userPermisos = this._empleadoService.getPermisosModulo(this.mPuV.idModulo, this.mPuV.idSubModulo);
+            //revisamos si el permiso del modulo esta activo si no redireccionamos
+            if( this.userPermisos.agregar != 1 ){
+              this.timerId = setInterval(()=>{
+                this.counter--;
+                if(this.counter === 0){
+                  clearInterval(this.timerId);
+                  this._router.navigate(['./']);
+                }
+                this.messageService.add({
+                    severity:'error', 
+                    summary:'Acceso denegado', 
+                    detail: 'El usuario no cuenta con los permisos necesarios, redirigiendo en '+this.counter+' segundos'});
+              },1000);
             } else{
               this.identity = this._empleadoService.getIdentity();
               this.getTiposVentas();
               this.isLoadingGeneral = false;
             }
-          });
-        }
+        break;
+    }
   }
 
   //evitamod que den enter en el textarea de observaciones
@@ -589,39 +645,40 @@ export class PuntoDeVentaComponent implements OnInit {
 
   //guardamos cotizacion en DB
   creaCotizacion(){
-
+    this.isLoadingGeneral = true;
     //asignamos id del empleado
     this.ventag.idEmpleado = this.identity['sub'];
-    if(this.lista_productoVentag.length == 0){
-      this.messageService.add({severity:'warn', summary:'Alerta', detail:'No puedes generar una cotizacion sin productos!'});
 
-    }else if(this.ventag.idCliente == 0){
-      this.messageService.add({severity:'warn', summary:'Alerta', detail:'No puedes generar una cotizacion sin cliente!'});
+    if(!this.validacionSubmit()){
+      
+      let identityMod = {
+        ... this.identity,
+        'permisos': this.userPermisos
+      }
 
-    }else{
-      this._ventasService.postCotizaciones(this.ventag).subscribe( response=>{
-          //console.log("response cotizacion");
-          //console.log(response);
-        if(response.status == 'success'){
-          this._ventasService.postProductosCotiza(this.lista_productoVentag).subscribe( response =>{
-              //console.log("response productos cotizacion");
-              //console.log(response);
-            if(response.status == 'success'){
-              this.messageService.add({severity:'success', summary:'Registro exitoso', detail:'Cotizacion creada exitosamente!'});
-              this.obtenerUltimaCotiza();
-              //console.log(response);
-            }
-          },error=>{
-            console.log(error);
-          });
-        }
-      },error =>{
-        console.log(error);
-      });
+      this.ventag.seEnviap = this.seEnvia;
+      this._ventasService.postCotizaciones(this.ventag, this.lista_productoVentag, identityMod).subscribe( 
+        response=>{
+          if(response.status == 'success'){
+
+            this.isLoadingGeneral = false;
+            let message = {
+                severity:'success', 
+                summary:'Cotizacion #' + response.idCotiza, 
+                detail:'La cotizacion se registro correctamente', 
+                sticky: true,
+            };
+            this._sharedMessage.addMessages(message);
+            
+            this.generaPDF(response.idCotiza);
+
+          }
+        },error =>{
+          console.log(error);
+        });
+    } else{
+      this.isLoadingGeneral = false;
     }
-
-    //console.log(this.ventag);
-    //console.log(this.lista_productoVentag);
   }
 
   //Obtener detalles de cotizacion registrada
@@ -644,6 +701,7 @@ export class PuntoDeVentaComponent implements OnInit {
         const blob = new Blob([pdf], {type: 'application/pdf'});
         const url = window.URL.createObjectURL(blob);
         window.open(url);
+        this._router.navigate(['./cotizacion-modulo/cotizacion-buscar']);
       }
     );
   }
@@ -651,13 +709,10 @@ export class PuntoDeVentaComponent implements OnInit {
   creaVenta(){
     //asignamos id del empleado
     this.ventag.idEmpleado = this.identity['sub'];
-    if(this.lista_productoVentag.length == 0){
-      this.messageService.add({severity:'warn', summary:'Alerta', detail:'No puedes generar una venta sin productos!'});
+    if(!this.validacionSubmit()){
+      
+      this.isLoadingGeneral = true;
 
-    }else if(this.ventag.idCliente == 0){
-      this.messageService.add({severity:'warn', summary:'Alerta', detail:'No puedes generar una venta sin cliente!'});
-
-    }else{
       //Sustituimos todos los permisos por solo los permisos del modulo
       //Esto con la finalidad de no enviar informacion innecesaria
       let identityMod = {
@@ -666,11 +721,10 @@ export class PuntoDeVentaComponent implements OnInit {
       }
       //Agregamos propiedad de envio
       Object.assign( this.ventag, {seEnvia: this.seEnvia});
-      this.isLoadingGeneral = true;
 
       this._ventasService.postVenta(this.ventag, this.lista_productoVentag, identityMod).subscribe(
         response =>{
-          console.log(response)
+          // console.log(response)
           if(response.status == 'success'){
             //desactivamos spinner
             this.isLoadingGeneral = false;
@@ -683,7 +737,7 @@ export class PuntoDeVentaComponent implements OnInit {
         }, error =>{
           this.messageService.add({severity:'error', summary:'Error', detail:'Algo salio mal al crear la venta'});
           console.log(error);
-        });
+      });
     }
   }
 
@@ -881,7 +935,7 @@ export class PuntoDeVentaComponent implements OnInit {
    * cierra modal, notifica que fue capturado el motivo y 
    * comienza a cargar la informacion de la venta
    */
-   almacenaMotivo(){
+  almacenaMotivo(){
     if(this.motivoEdicion.length >= 10){
       //cerramos modal
       this.modalService.dismissAll();
@@ -1009,5 +1063,42 @@ export class PuntoDeVentaComponent implements OnInit {
     } else{
       this.limpiaProducto();
     }
+  }
+
+  validacionSubmit(): boolean{
+    let validate = false;
+
+    if(this.lista_productoVentag.length == 0){
+        validate = true;
+        this.messageService.add({
+          severity:'warn', 
+          summary:'Alerta', 
+          detail:'No puedes generar una venta sin productos!'
+        });
+
+    }else if(this.ventag.idCliente == 0){
+        validate = true;
+        this.messageService.add({
+          severity:'warn', 
+          summary:'Alerta', 
+          detail:'No puedes generar una venta sin cliente!'
+        });
+    }
+
+    return validate;
+  }
+
+  getDetallesCotizacion(idCotiza:number){
+    this._ventasService.getDetallesCotiza(idCotiza).subscribe(
+      response =>{
+        console.log(response.Cotizacion)
+        if(response.status == 'success'){
+          this.ventag = response.Cotizacion[0];
+
+        }
+      }, error =>{
+        console.log(error)
+      }
+    )
   }
 }
