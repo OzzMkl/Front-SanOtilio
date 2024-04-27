@@ -97,7 +97,6 @@ import { RequisicionModuloComponent } from './components/compras/requisiciones/r
 import { RequisicionAgregarComponent } from './components/compras/requisiciones/requisicion-agregar/requisicion-agregar.component';
 import { RequisicionBuscarComponent } from './components/compras/requisiciones/requisicion-buscar/requisicion-buscar.component';
 import { RequisicionEditarComponent } from './components/compras/requisiciones/requisicion-editar/requisicion-editar.component';
-import { PuntoDeVentaEditarComponent } from './components/ventas/punto-de-venta-editar/punto-de-venta-editar.component';
 import { OrdencompraBuscarComponent } from './components/compras/ordenes-compras/ordencompra-buscar/ordencompra-buscar.component';
 import { TraspasoModuloComponent } from './components/inventario/traspasos/traspaso-modulo/traspaso-modulo.component';
 import { TraspasoAgregarComponent } from './components/inventario/traspasos/traspaso-agregar/traspaso-agregar.component';
@@ -176,7 +175,6 @@ import { ComponentsUtilsModule } from './utils/components-utils/components-utils
     RequisicionAgregarComponent,
     RequisicionBuscarComponent,
     RequisicionEditarComponent,
-    PuntoDeVentaEditarComponent,
     OrdencompraBuscarComponent,
     TraspasoModuloComponent,
     TraspasoAgregarComponent,

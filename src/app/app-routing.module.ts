@@ -47,7 +47,6 @@ import { TraspasoEditarComponent } from './components/inventario/traspasos/trasp
 import { ClasificacionModuloComponent } from './components/inventario/taxonomia/clasificacion-modulo/clasificacion-modulo.component';
 
 import { PuntoDeVentaComponent } from './components/ventas/punto-de-venta/punto-de-venta.component';
-// import { PuntoDeVentaEditarComponent } from './components/ventas/punto-de-venta-editar/punto-de-venta-editar.component';
 
 import { VentasRealizadasModuloComponent } from './components/ventas/ventas-realizadas/ventas-realizadas-modulo/ventas-realizadas-modulo.component';
 import { VentasRealizadasComponent } from './components/ventas/ventas-realizadas/ventas-realizadas/ventas-realizadas.component';
@@ -130,7 +129,7 @@ const routes: Routes = [
   children:
   [
     {path: 'cotizacion-buscar', component: CotizacionBuscarComponent},
-    {path: 'cotizacion-editar/:idCotiza', component: CotizacionEditarComponent}
+    {path: 'cotizacion-editar/:idCotiza', component: PuntoDeVentaComponent}
   ]},
   {path: 'cliente-modulo',component: ClienteModuloComponent,canActivate:[ClienteGuard],
       children:
