@@ -54,45 +54,45 @@
 </div>
 <!-- MODALAS DETALLES -->
 <ng-template #mDetallesCotiza let-modal>
-    <div *ngFor="let dc of detallesCotiza">
+    <div >
         <div class="modal-header">
-            <h4 class="modal-title" id="modal-basic-title">Detalles cotizacion #{{dc.idCotiza}}</h4>
+            <h4 class="modal-title" id="modal-basic-title">Detalles cotizacion #{{detallesCotiza.idCotiza}}</h4>
             <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
         </div>
         <div class="modal-body">
             <div class="row">
                 <div class="col-4">
                     <label class="form-label">Vendedor</label>
-                    <input class="form-control" type="text" value="{{dc.nombreEmpleado}}" readonly>
+                    <input class="form-control" type="text" value="{{detallesCotiza.nombreEmpleado}}" readonly>
                 </div>
                 <div class="col-3">
                     <label class="form-label">Fecha</label>
-                    <input class="form-control" type="text" value="{{dc.created_at | date}}" readonly>
+                    <input class="form-control" type="text" value="{{detallesCotiza.created_at | date}}" readonly>
                 </div>
                 <div class="col">
-                    <button *ngIf="userPermisos.pdf == 1" type="button" class="btn btn-secondary me-md-2" style="box-sizing: border-box;" (click)="generaPDF(dc.idCotiza)"><i class="bi bi-file-earmark-pdf" ngbTooltip="PDF"></i><br></button>
-                    <button *ngIf="userPermisos.editar == 1" type="button" class="btn btn-warning me-md-2" [routerLink]="['../cotizacion-editar',dc.idCotiza]" (click)="modal.dismiss('Cross click')" ngbTooltip="EDITAR"><i class="bi bi-pencil-square" ></i><br></button>
+                    <button *ngIf="userPermisos.pdf == 1" type="button" class="btn btn-secondary me-md-2" style="box-sizing: border-box;" (click)="generaPDF(detallesCotiza.idCotiza)"><i class="bi bi-file-earmark-pdf" ngbTooltip="PDF"></i><br></button>
+                    <button *ngIf="userPermisos.editar == 1" type="button" class="btn btn-warning me-md-2" [routerLink]="['../cotizacion-editar',detallesCotiza.idCotiza]" (click)="modal.dismiss('Cross click')" ngbTooltip="EDITAR"><i class="bi bi-pencil-square" ></i><br></button>
                 </div>
             </div>
             <hr>
             <div class="row">
                 <div class="col-5">
                     <label class="form-label">Cliente</label>
-                    <input class="form-control" type="text" value="{{dc.nombreCliente}}" readonly>
+                    <input class="form-control" type="text" value="{{detallesCotiza.nombreCliente}}" readonly>
                 </div>
                 <div class="col-3">
                     <label class="form-label">Email</label>
-                    <input class="form-control" type="text" value="{{dc.clienteCorreo}}" readonly>
+                    <input class="form-control" type="text" value="{{detallesCotiza.clienteCorreo}}" readonly>
                 </div>
                 <div class="col-3">
                     <label class="form-label">RFC</label>
-                    <input class="form-control" type="text" value="{{dc.clienteRFC}}" readonly>
+                    <input class="form-control" type="text" value="{{detallesCotiza.clienteRFC}}" readonly>
                 </div>
             </div>
-            <div class="row" *ngIf="dc.cdireccion != null">
+            <div class="row" *ngIf="detallesCotiza.cdireccion != null">
                 <div class="col">
                     <label class="form-label">Direccion</label>
-                    <textarea class="form-control" rows="2" value="{{dc.cdireccion}}" readonly></textarea>
+                    <textarea class="form-control" rows="2" value="{{detallesCotiza.cdireccion}}" readonly></textarea>
                     
                 </div>
             </div>
@@ -124,10 +124,10 @@
             </table>
             <pagination-controls id="mProductosCotiza" (pageChange)="mpageActual = $event"></pagination-controls>
             <hr>
-            <div class="row" *ngIf="dc.observaciones.length > 2">
+            <div class="row" *ngIf="detallesCotiza.observaciones.length > 2">
                 <div class="col">
                     <label class="form-label">Observaciones</label>
-                    <textarea class="form-control" rows="2" value="{{dc.observaciones}}" readonly></textarea>
+                    <textarea class="form-control" rows="2" value="{{detallesCotiza.observaciones}}" readonly></textarea>
                     
                 </div>
             </div>

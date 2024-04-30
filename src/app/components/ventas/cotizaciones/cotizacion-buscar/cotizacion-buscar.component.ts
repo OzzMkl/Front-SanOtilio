@@ -6,6 +6,7 @@ import { VentasService } from 'src/app/services/ventas.service';
 import { EmpleadoService } from 'src/app/services/empleado.service';
 import { ModulosService } from 'src/app/services/modulos.service';
 import { global } from 'src/app/services/global';
+import { SharedMessage } from 'src/app/services/sharedMessage';
 //NGBOOTSTRAP-modal
 import { NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
 //primeng
@@ -50,12 +51,21 @@ export class CotizacionBuscarComponent implements OnInit {
                 private modalService: NgbModal,
                 private messageService: MessageService,
                 private _http: HttpClient,
-                private _router: Router) {
-
-                 }
+                private _router: Router,
+                private _sharedMessage: SharedMessage,
+              ) {}
 
   ngOnInit(): void {
-    this.loadUser()
+    this.loadUser();
+    setTimeout(()=>{
+      this._sharedMessage.messages$.subscribe(
+        messages =>{
+          if(messages){
+            this.messageService.add(messages[0]); // Agregar el mensaje al servicio de mensajes de PrimeNG
+          }
+        }
+      )
+    },500);
   }
 
   /**
