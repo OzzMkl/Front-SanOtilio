@@ -85,7 +85,6 @@ export class PuntoDeVentaComponent implements OnInit {
   //public subtotalVenta:number =0;
   public isSearch: boolean = true;
   public isLoadingGeneral: boolean = false;
-  public isLoadingProductos: boolean = false;
   public isLoadingClientes: boolean = false;
   //contadores para los text area
   contador: number =0;
@@ -293,7 +292,7 @@ export class PuntoDeVentaComponent implements OnInit {
    */
   seleccionarCliente(idCliente:any){
     this.ventag.cdireccion = '';
-    this.seEnvia == false;
+    this.seEnvia = false;
     this.isLoadingGeneral = true;
 
     this._clienteService.getDetallesCliente(idCliente).subscribe(
@@ -561,7 +560,7 @@ export class PuntoDeVentaComponent implements OnInit {
       case "edit_venta":
             this.userPermisos = this._empleadoService.getPermisosModulo(this.mPuV.idModulo, this.mPuV.idSubModulo);
             //revisamos si el permiso del modulo esta activo si no redireccionamos
-            if( this.userPermisos.agregar != 1 ){
+            if( this.userPermisos.editar != 1 ){
               this.timerId = setInterval(()=>{
                 this.counter--;
                 if(this.counter === 0){
@@ -597,7 +596,6 @@ export class PuntoDeVentaComponent implements OnInit {
               this.modoEdicionCotizacion = true;
               this.getTiposVentas();
               this.getDetallesCotizacion(idParam ?? 0);
-              this.isLoadingGeneral = false;
             }
         break;
       case "new_venta":
@@ -1035,7 +1033,7 @@ export class PuntoDeVentaComponent implements OnInit {
           this._router.navigate(['./ventas-modulo/ventas-realizadas-buscar']);
           
         }
-        console.log(response);
+        // console.log(response);
       }, error =>{
         this.messageService.add({severity:'error', summary:'Alerta', detail:error.error.message});
         console.log(error)
@@ -1091,14 +1089,57 @@ export class PuntoDeVentaComponent implements OnInit {
   getDetallesCotizacion(idCotiza:number){
     this._ventasService.getDetallesCotiza(idCotiza).subscribe(
       response =>{
-        console.log(response.Cotizacion)
+        // console.log(response)
         if(response.status == 'success'){
-          this.ventag = response.Cotizacion[0];
-
+          
+          this.ventag = response.Cotizacion;
+          //asignamos datos del cliente para mostrar
+          this.cliente = [{'rfc':response.Cotizacion.clienteRFC,'nombreTipoC':response.Cotizacion.tipocliente}];
+          this.seEnvia = this.ventag.cdireccion ? true : false;
+          this.lista_productoVentag = response.productos_cotiza;
+          this.isLoadingGeneral = false;
         }
       }, error =>{
+
+        let msg = {
+          severity:'error', 
+          summary:'Error', 
+          detail:'Ocurrio un error al buscar la cotizacion',
+          sticky: true,
+        }
+        this._sharedMessage.addMessages(msg);
+        this._router.navigate(['./cotizacion-modulo/cotizacion-buscar']);
+
         console.log(error)
       }
     )
+  }
+
+  updateCotizacion(){
+    this.isLoadingGeneral = true;
+
+    let identityMod = {
+      ... this.identity,
+      'permisos': this.userPermisos,
+    }
+
+    this._ventasService.putCotizacion(this.ventag.idCotiza, this.ventag, this.lista_productoVentag, identityMod).subscribe(
+      response =>{
+        if(response.status == 'success'){
+          //desactivamos spinner
+          this.isLoadingGeneral = false;
+          //cargamos mensaje
+          let message = {severity:'success', summary:'Alerta', detail:response.message, sticky:true};
+          this._sharedMessage.addMessages(message);
+          //mandamos a indexventas
+          this._router.navigate(['./cotizacion-modulo/cotizacion-buscar']);
+          
+        }
+        console.log(response);
+      }, error =>{
+        this.messageService.add({severity:'error', summary:'Alerta', detail:error.error.message});
+        console.log(error);
+      }
+    );
   }
 }

@@ -40,12 +40,6 @@ export class VentasService {
     return this._http.post(this.url+'cotizaciones/guardarCotizacion',params, {headers:this.headers} );
   }
 
-  postProductosCotiza(productosCotiza:any):Observable<any>{
-    let json = JSON.stringify(productosCotiza);
-    let params = 'json='+json;
-    return this._http.post(this.url+'cotizaciones/guardarProductosCotiza',params, {headers:this.headers} );
-  }
-
   getLastCotiza():Observable<any>{
     return this._http.get(this.url+'cotizaciones/consultaUltimaCotiza', {headers:this.headers} );
   }
@@ -54,16 +48,16 @@ export class VentasService {
     return this._http.get(this.url+'cotizaciones/detallesCotizacion/'+idCotiza, {headers:this.headers} );
   }
 
-  putCotizacion(idCotiza:any, cotizacion:any):Observable<any>{
-    let json = JSON.stringify(cotizacion);
-    let params = 'json='+json;
-    return this._http.put(this.url+'cotizaciones/actualizaCotizacion/'+idCotiza,params, {headers:this.headers} );
-  }
+  putCotizacion(idCotiza:number, cotizacion:any, lista_productoVentag: Array<any>, identity: Array<any>,):Observable<any>{
+    const combinado = {
+      'cotizacion': cotizacion,
+      'lista_productoVentag': lista_productoVentag,
+      'identity': identity,
+    };
 
-  putProductosCotiza(idCotiza:any, productosCotiza:any):Observable<any>{
-    let json = JSON.stringify(productosCotiza);
+    let json = JSON.stringify(combinado);
     let params = 'json='+json;
-    return this._http.put(this.url+'cotizaciones/actualizaProductosCotizacion/'+idCotiza,params, {headers:this.headers} );
+    return this._http.put(this.url+'cotizaciones/updateCotizacion/'+idCotiza,params, {headers:this.headers} );
   }
 
   getPDF(idCotiza:number):Observable<Blob>{

@@ -99,12 +99,21 @@
             <label class="" for="">Descripcion</label>
             <input type="text" class="form-control" name="descripcion" #descripcion="ngModel" [(ngModel)]="productoVentag.descripcion" readonly>
         </div>
-        <div class="col-2">
+        <div class="col-2 d-flex justify-content-center">
             <!-- <label class="form-label">.</label> -->
             <br>
-            <button class="btn btn-success form-control" type="button" [disabled]="isSearch" (click)="agregarProductoLista()">
-                <i class="bi bi-check-circle-fill" > Agregar</i>
-            </button>
+            
+            <button class="p-button-rounded p-button-success mt-3 w-75"
+                        pButton
+                        pRipple
+                        type="button"
+                        severity="secondary"
+                        icon="pi pi-check-circle"
+                        [disabled]="isSearch"
+                        (click)="agregarProductoLista()"
+                        label="Agregar">
+
+                </button>
         </div>
     </div>
     <hr>
@@ -179,13 +188,31 @@
             </div>
         </div>
         <div class="col-2">
-            <div class="col">
-                <button class="btn btn-secondary form-control" (click)="modalAlertaExistencia(mAlertaExistencia)"><i class="bi bi-file-earmark-medical"></i> Cotizacion</button>
+            
+            <div class="col d-flex justify-content-center">
+                
+                <button class="p-button-rounded p-button-secondary mt-3 w-75"
+                        pButton
+                        pRipple
+                        type="button"
+                        severity="secondary"
+                        icon="pi pi-file-pdf"
+                        (click)="modoEdicionCotizacion ? updateCotizacion() : modalAlertaExistencia(mAlertaExistencia) "
+                        label="Cotizacion">
+                </button>
             </div>
-            <br>
             <p-confirmDialog [style]="{width: '50vw'}" [baseZIndex]="10000" acceptLabel="Si" rejectButtonStyleClass="p-button-text"></p-confirmDialog>
-            <div class="col">
-                <button class="btn btn-success form-control" (click)="confirmVenta()"><i class="bi bi-receipt-cutoff"> </i> Ticket</button>
+            <br>
+            <div class="col d-flex justify-content-center">
+                <button class="p-button-rounded p-button-success w-75"
+                        pButton
+                        pRipple
+                        type="button"
+                        icon="bi bi-receipt-cutoff"
+                        severity="success"
+                        (click)="confirmVenta()"
+                        label="Ticket">
+                </button>
             </div>
             <br>
             <div class="col d-none">
