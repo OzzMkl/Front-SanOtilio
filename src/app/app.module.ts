@@ -54,7 +54,6 @@ import { MedidaVerComponent } from './components/inventario/taxonomia/medidas/me
 import { AlmacenVerComponent } from './components/inventario/taxonomia/almacenes/almacen-ver/almacen-ver.component';
 import { ProductoVerComponent } from './components/inventario/productos/producto-ver/producto-ver.component';
 import { ProductoDeshabilitadosComponent } from './components/inventario/productos/producto-deshabilitados/producto-deshabilitados.component';
-import { ProductoEditarComponent } from './components/inventario/productos/producto-editar/producto-editar.component';
 import { CompraModuloComponent } from './components/compras/compra/compra-modulo/compra-modulo.component';
 import { CompraBuscarComponent } from './components/compras/compra/compra-buscar/compra-buscar.component';
 import { CompraVerComponent } from './components/compras/compra/compra-ver/compra-ver.component';
@@ -132,7 +131,6 @@ import { ComponentsUtilsModule } from './utils/components-utils/components-utils
     AlmacenVerComponent,
     ProductoVerComponent,
     ProductoDeshabilitadosComponent,
-    ProductoEditarComponent,
     CompraModuloComponent,
     CompraBuscarComponent,
     CompraVerComponent,
