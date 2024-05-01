@@ -73,7 +73,9 @@
                 <input class="offset-md-1 form-check-input" type="checkbox" pTooltip="Modificar precio" tooltipPosition="top" [(ngModel)]="isModificaPrecio" (ngModelChange)="habilitaInputPrecio($event)">
             <div *ngIf="isModificaPrecio == false; else blockModificaPrecio">
                 <select class="form-select" name="precio" id="precio" #precio="ngModel" [(ngModel)]="productoVentag.precio" (change)="calculaSubtotalPP()">
-                    <option *ngFor="let precio of preciosArray" value="{{precio}}">{{precio}}</option>
+                    <ng-container *ngFor="let precio of preciosArray">
+                        <option  *ngIf="precio != null" [value]="precio">{{precio}}</option>
+                    </ng-container>
                 </select>
             </div>
 
