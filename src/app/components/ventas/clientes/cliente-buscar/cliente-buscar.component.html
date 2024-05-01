@@ -26,7 +26,7 @@
                 <tr (click)="open(content)" (click)="seleccionarCliente(c.idCliente)">
                     <th scope="row">{{c.nombre}} {{c.aPaterno }} {{c.aMaterno}}</th>
                     <th scope="row">{{c.rfc}}</th>
-                    <th scope="row">{{c.credito | currency}}</th>
+                    <th scope="row">{{c.credito | currency:'MXN'}}</th>
                     <th scope="row">{{c.nombreTipoC}}</th>
                 </tr>
             </tbody>
@@ -59,7 +59,7 @@
                     </div>
                     <div class="col-2">
                         <label class="form-label">CREDITO</label>
-                        <input class="form-control" type="text" value="{{c.credito | currency}}" readonly>
+                        <input class="form-control" type="text" value="{{c.credito | currency:'MXN'}}" readonly>
                     </div>
                     <div class="col-3">
                         <label class="form-label">TIPO CLIENTE</label>

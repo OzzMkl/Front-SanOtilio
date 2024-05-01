@@ -45,7 +45,7 @@
                     <th scope="row">{{venta.created_at | date: 'dd/MM/yyyy'}}</th>
                     <th scope="row">{{ venta.nombreCliente.length > 40 ? (venta.nombreCliente | slice:0:25) + '...' : venta.nombreCliente }}</th>
                     <th scope="row">{{venta.nombreEmpleado.length > 40 ? (venta.nombreEmpleado | slice:0:25) + '...' : venta.nombreEmpleado }}</th>
-                    <th scope="row">{{venta.total | currency}}</th>
+                    <th scope="row">{{venta.total | currency:'MXN'}}</th>
                 </tr>
             </tbody>
         </table>
@@ -141,15 +141,15 @@
                 </div>
                 <div class="col-2">
                     <label class="form-label">Subtotal</label>
-                    <input type="text" class="form-control" value="{{v.subtotal | currency}}" readonly>
+                    <input type="text" class="form-control" value="{{v.subtotal | currency:'MXN'}}" readonly>
                 </div>
                 <div class="col-2">
                     <label class="form-label">Descuento</label>
-                    <input type="text" class="form-control" value="{{v.descuento | currency}}" readonly>
+                    <input type="text" class="form-control" value="{{v.descuento | currency:'MXN'}}" readonly>
                 </div>
                 <div class="col-2">
                     <label class="form-label">Total</label>
-                    <input type="text" class="form-control" value="{{v.total | currency}}" readonly>
+                    <input type="text" class="form-control" value="{{v.total | currency:'MXN'}}" readonly>
                 </div>
             </div>
             <hr>
@@ -169,10 +169,10 @@
                         <tr>
                             <th scope="row">{{pdv.claveEx}}</th>
                             <th scope="row">{{pdv.descripcion}}</th>
-                            <th scope="row">{{pdv.precio | currency }}</th>
+                            <th scope="row">{{pdv.precio | currency:'MXN' }}</th>
                             <th scope="row">{{pdv.cantidad}}</th>
-                            <th scope="row">{{pdv.descuento | currency }}</th>
-                            <th scope="row">{{pdv.subtotal | currency }}</th>
+                            <th scope="row">{{pdv.descuento | currency:'MXN' }}</th>
+                            <th scope="row">{{pdv.subtotal | currency:'MXN' }}</th>
                         </tr>
                     </tbody>
                 </table>
@@ -231,9 +231,9 @@
                                     </thead>
                                     <tbody *ngFor="let abono of abonos_ventas">
                                         <tr>
-                                            <th scope="row">{{abono.abono | currency}}</th>
-                                            <th scope="row">{{abono.totalAnterior | currency}}</th>
-                                            <th scope="row">{{abono.totalActualizado | currency}}</th>
+                                            <th scope="row">{{abono.abono | currency:'MXN'}}</th>
+                                            <th scope="row">{{abono.totalAnterior | currency:'MXN'}}</th>
+                                            <th scope="row">{{abono.totalActualizado | currency:'MXN'}}</th>
                                             <th scope="row">{{abono.created_at | date: 'dd/MM/yyyy'}}</th>
                                             <!-- <th scope="row">{{abono.nombreEmpleado}}</th> -->
                                         </tr>
@@ -246,28 +246,28 @@
                         <h6 class="text-center">OPERACIONES</h6>
                         <div class="col">
                             <label class="form-label" for="">TOTAL NOTA:</label>  
-                            <input class="form-control" type="text" value="{{v.total | currency}}" disabled>
+                            <input class="form-control" type="text" value="{{v.total | currency:'MXN'}}" disabled>
                         </div>
                         <div class="col" *ngIf="abonos_ventas.length > 0">
                             <label class="form-label">TOTAL ABONOS:</label>
-                            <input class="form-control" type="text" value="{{total_abono | currency}}" disabled>
+                            <input class="form-control" type="text" value="{{total_abono | currency:'MXN'}}" disabled>
                         </div>
                         <div class="col" *ngIf="abonos_ventas.length > 0">
                             <label class="form-label">SALDO ACTUAL:</label>
-                            <input class="form-control" type="text" value="{{total_actualizado | currency}}" disabled>
+                            <input class="form-control" type="text" value="{{total_actualizado | currency:'MXN'}}" disabled>
                         </div>
                         <div class="col">
                             <label class="form-label" for="">PAGO:</label>
-                            <input class="form-control" type="text" value="{{tp1 | currency}}"  disabled>
+                            <input class="form-control" type="text" value="{{tp1 | currency:'MXN'}}"  disabled>
                         </div>
                         <div class="col" *ngIf="!isSaldo ; else elseResta">
                             <label class="form-label" for="">CAMBIO:</label>
-                            <input class="form-control" type="text" value="{{cambio | currency}}"  disabled>
+                            <input class="form-control" type="text" value="{{cambio | currency:'MXN'}}"  disabled>
                         </div>
                         <ng-template #elseResta>
                             <div class="col">
                                 <label class="form-label" for="">RESTA:</label>
-                                <input class="form-control" type="text" value="{{saldo_restante | currency}}"  disabled>
+                                <input class="form-control" type="text" value="{{saldo_restante | currency:'MXN'}}"  disabled>
                             </div>
                         </ng-template>
                     </div>
@@ -304,9 +304,9 @@
                     </thead>
                     <tbody *ngFor="let abono of abonos_ventas">
                         <tr>
-                            <th scope="row">{{abono.abono | currency}}</th>
-                            <th scope="row">{{abono.totalAnterior | currency}}</th>
-                            <th scope="row">{{abono.totalActualizado | currency}}</th>
+                            <th scope="row">{{abono.abono | currency:'MXN'}}</th>
+                            <th scope="row">{{abono.totalAnterior | currency:'MXN'}}</th>
+                            <th scope="row">{{abono.totalActualizado | currency:'MXN'}}</th>
                             <th scope="row">{{abono.created_at | date: 'dd/MM/yyyy'}}</th>
                             <th scope="row">{{abono.nombreEmpleado}}</th>
                         </tr>

@@ -87,11 +87,11 @@
         <ng-template pTemplate="body" let-medida>
             <tr>
                 <td>{{ medida.nombreMedida}}</td>
-                <td>{{ medida.precio1 | currency}}</td>
-                <td>{{ medida.precio2 | currency}}</td>
-                <td>{{ medida.precio3 | currency}}</td>
-                <td>{{ medida.precio4 | currency}}</td>
-                <td>{{ medida.precio5 | currency}}</td>
+                <td>{{ medida.precio1 | currency:'MXN'}}</td>
+                <td>{{ medida.precio2 | currency:'MXN'}}</td>
+                <td>{{ medida.precio3 | currency:'MXN'}}</td>
+                <td>{{ medida.precio4 | currency:'MXN'}}</td>
+                <td>{{ medida.precio5 | currency:'MXN'}}</td>
             </tr>
         </ng-template>
     </p-table>

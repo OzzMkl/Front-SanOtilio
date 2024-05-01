@@ -93,11 +93,11 @@
                     <tbody *ngFor="let pm of productosMedida" >
                         <tr>
                             <th>{{pm.nombreMedida}}</th>
-                            <th>{{pm.precio1 | currency}}</th>
-                            <th>{{pm.precio2 | currency}}</th>
-                            <th>{{pm.precio3 | currency}}</th>
-                            <th>{{pm.precio4 | currency}}</th>
-                            <th>{{pm.precio5 | currency}}</th>
+                            <th>{{pm.precio1 | currency:'MXN'}}</th>
+                            <th>{{pm.precio2 | currency:'MXN'}}</th>
+                            <th>{{pm.precio3 | currency:'MXN'}}</th>
+                            <th>{{pm.precio4 | currency:'MXN'}}</th>
+                            <th>{{pm.precio5 | currency:'MXN'}}</th>
                         </tr>
                     </tbody>
                 </table>

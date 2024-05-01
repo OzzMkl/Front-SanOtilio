@@ -38,7 +38,7 @@
                     <th scope="row">{{venta.nombreEmpleadoGenera.length > 40 ? (venta.nombreEmpleadoGenera | slice:0:25) + '...' : venta.nombreEmpleadoGenera }}</th>
                     <th scope="row">{{venta.nombreEmpleadoCancela.length > 40 ? (venta.nombreEmpleadoCancela | slice:0:25) + '...' : venta.nombreEmpleadoCancela }}</th>
                     <th scope="row">{{venta.nombreTipoventa}}</th>
-                    <th scope="row">{{venta.total | currency}}</th>
+                    <th scope="row">{{venta.total | currency:'MXN'}}</th>
                 </tr>
             </tbody>
         </table>
@@ -90,15 +90,15 @@
         </div>
         <div class="col-2">
             <label class="form-label">Subtotal</label>
-            <input type="text" class="form-control" value="{{venta.subtotal | currency}}" readonly>
+            <input type="text" class="form-control" value="{{venta.subtotal | currency:'MXN'}}" readonly>
         </div>
         <div class="col-2">
             <label class="form-label">Descuento</label>
-            <input type="text" class="form-control" value="{{venta.descuento | currency}}" readonly>
+            <input type="text" class="form-control" value="{{venta.descuento | currency:'MXN'}}" readonly>
         </div>
         <div class="col-2">
             <label class="form-label">Total</label>
-            <input type="text" class="form-control" value="{{venta.total | currency}}" readonly>
+            <input type="text" class="form-control" value="{{venta.total | currency:'MXN'}}" readonly>
         </div>
     </div>
     <div class="row" *ngIf="venta.observaciones.length > 2">
@@ -127,9 +127,9 @@
                     <th scope="row">{{pdv.descripcion}}</th>
                     <th scope="row">{{pdv.nombreMedida}}</th>
                     <th scope="row">{{pdv.cantidad}}</th>
-                    <th scope="row">{{pdv.precio | currency}}</th>
-                    <th scope="row">{{pdv.descuento | currency}}</th>
-                    <th scope="row">{{pdv.total | currency}}</th>
+                    <th scope="row">{{pdv.precio | currency:'MXN'}}</th>
+                    <th scope="row">{{pdv.descuento | currency:'MXN'}}</th>
+                    <th scope="row">{{pdv.total | currency:'MXN'}}</th>
                 </tr>
             </tbody>
         </table>
