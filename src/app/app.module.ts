@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, LOCALE_ID } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CommonModule } from '@angular/common';
@@ -6,11 +6,10 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import {NgxPaginationModule} from 'ngx-pagination'; // <-- import the module
-/****pasar pipes a espanol****/
-//import {LOCALE_ID } from '@angular/core';
-//import localeEs from '@angular/common/locales/es';
-//import { registerLocaleData } from '@angular/common';
-//registerLocaleData(localeEs, 'es');
+
+import localeEsMX from '@angular/common/locales/es-MX';
+import { registerLocaleData } from '@angular/common';
+registerLocaleData(localeEsMX);
 /*************************** */
 
 // import { AngularFileUploaderModule } from "angular-file-uploader";
@@ -199,7 +198,7 @@ import { ComponentsUtilsModule } from './utils/components-utils/components-utils
     BrowserAnimationsModule
     
   ],
-  providers: [EmpleadoService,],
+  providers: [EmpleadoService,{provide: LOCALE_ID, useValue: 'es-MX'}],
   bootstrap: [AppComponent],
   exports: [
     CategoriaVerComponent    
