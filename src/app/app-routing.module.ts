@@ -37,7 +37,6 @@ import { ProductoAgregarComponent } from './components/inventario/productos/prod
 import { ProductoBuscarComponent } from './components/inventario/productos/producto-buscar/producto-buscar.component';
 import { ProductoVerComponent } from './components/inventario/productos/producto-ver/producto-ver.component';
 import { ProductoDeshabilitadosComponent } from './components/inventario/productos/producto-deshabilitados/producto-deshabilitados.component';
-import { ProductoEditarComponent } from './components/inventario/productos/producto-editar/producto-editar.component';
 
 import { TraspasoModuloComponent } from './components/inventario/traspasos/traspaso-modulo/traspaso-modulo.component';
 import { TraspasoBuscarComponent } from './components/inventario/traspasos/traspaso-buscar/traspaso-buscar.component';
@@ -53,7 +52,6 @@ import { VentasRealizadasComponent } from './components/ventas/ventas-realizadas
 
 import { CotizacionModuloComponent } from './components/ventas/cotizaciones/cotizacion-modulo/cotizacion-modulo.component';
 import { CotizacionBuscarComponent } from './components/ventas/cotizaciones/cotizacion-buscar/cotizacion-buscar.component';
-import { CotizacionEditarComponent } from './components/ventas/cotizaciones/cotizacion-editar/cotizacion-editar.component';
 
 import { ClienteModuloComponent } from './components/ventas/clientes/cliente-modulo/cliente-modulo.component';
 import { ClienteBuscarComponent } from './components/ventas/clientes/cliente-buscar/cliente-buscar.component';
