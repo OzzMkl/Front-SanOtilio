@@ -39,6 +39,7 @@ export class ModalProductosComponent implements OnInit, OnDestroy {
   selectedProduct:any;
   public url:string = global.url;//
   public img: string = '';//
+  public tblHeaders: Array<any> = []
   //modales
   public mdlMedidas: boolean = false;
   public mdlProductos: boolean = false;
@@ -134,6 +135,7 @@ export class ModalProductosComponent implements OnInit, OnDestroy {
     if(this.isOpenMdlMedidas){
       //Mostramos spinner
       this.isLoadingGeneral = true;
+      this.tblHeaders = [];
 
       this.sub_productoService = this._productoService.searchProductoMedida(this.selectedProduct.idProducto).subscribe(
         response =>{
@@ -145,6 +147,14 @@ export class ModalProductosComponent implements OnInit, OnDestroy {
             this.img = response.imagen ? response.imagen : "1650558444no-image.png";
             //Mostramos modal
             this.mdlMedidas = true;
+            
+            for(let i = 1; i <= 5; i++){
+              const precioKey = `precio${i}`;
+              if(this.medidas[0][precioKey] != null){
+                this.tblHeaders.push(`P${i}`);
+              }
+            }
+            console.log(this.tblHeaders);
             //Ocultamos spinner
             this.isLoadingGeneral = false;
           }

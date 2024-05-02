@@ -77,21 +77,19 @@
         <ng-template pTemplate="header" >
             <tr>
                 <th>MED.</th>
-                <th>P1</th>
-                <th>P2</th>
-                <th>P3</th>
-                <th>P4</th>
-                <th>P5</th>
+                <th *ngFor="let tblHead of tblHeaders">
+                    {{tblHead}}
+                </th>
             </tr>
         </ng-template>
         <ng-template pTemplate="body" let-medida>
-            <tr>
+            <tr class="text-center">
                 <td>{{ medida.nombreMedida}}</td>
-                <td>{{ medida.precio1 | currency:'MXN'}}</td>
-                <td>{{ medida.precio2 | currency:'MXN'}}</td>
-                <td>{{ medida.precio3 | currency:'MXN'}}</td>
-                <td>{{ medida.precio4 | currency:'MXN'}}</td>
-                <td>{{ medida.precio5 | currency:'MXN'}}</td>
+                <td [ngClass]="medida.precio1 ? '':'d-none'" >{{ medida.precio1 | currency:'MXN'}}</td>
+                <td [ngClass]="medida.precio2 ? '':'d-none'" >{{ medida.precio2 | currency:'MXN'}}</td>
+                <td [ngClass]="medida.precio3 ? '':'d-none'" >{{ medida.precio3 | currency:'MXN'}}</td>
+                <td [ngClass]="medida.precio4 ? '':'d-none'" >{{ medida.precio4 | currency:'MXN'}}</td>
+                <td [ngClass]="medida.precio5 ? '':'d-none'" >{{ medida.precio5 | currency:'MXN'}}</td>
             </tr>
         </ng-template>
     </p-table>
@@ -108,14 +106,13 @@
                     <th>EXISTENCIA</th>
                     <th>MEDIDA</th>
                     <th>
-                        <button class="p-button-sm p-button-rounded"
+                        <button class="p-button-sm p-button-rounded p-button-text p-button-info"
                             pButton
                             pRipple
                             type="button"
                             icon="pi pi-question"
                             pTooltip="Consultar en otras sucursales"
                             tooltipPosition="top"
-                            size="small"
                             (click)="getExistenciaMultiSucursal($event)"
                             
                         ></button>
