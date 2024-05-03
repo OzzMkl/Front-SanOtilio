@@ -65,28 +65,38 @@
                     <label class="form-label">Vendedor</label>
                     <input class="form-control" type="text" value="{{detallesCotiza.nombreEmpleado}}" readonly>
                 </div>
-                <div class="col-3">
+                <div class="col-2">
                     <label class="form-label">Fecha</label>
                     <input class="form-control" type="text" value="{{detallesCotiza.created_at | date}}" readonly>
                 </div>
-                <div class="col">
+                <div class="col d-flex justify-content-center align-items-center">
                     <button *ngIf="userPermisos.pdf == 1" type="button" class="btn btn-secondary me-md-2" style="box-sizing: border-box;" (click)="generaPDF(detallesCotiza.idCotiza)"><i class="bi bi-file-earmark-pdf" ngbTooltip="PDF"></i><br></button>
                     <button *ngIf="userPermisos.editar == 1" type="button" class="btn btn-warning me-md-2" [routerLink]="['../cotizacion-editar',detallesCotiza.idCotiza]" (click)="modal.dismiss('Cross click')" ngbTooltip="EDITAR"><i class="bi bi-pencil-square" ></i><br></button>
                 </div>
             </div>
             <hr>
             <div class="row">
-                <div class="col-5">
+                <div class="col-4">
                     <label class="form-label">Cliente</label>
                     <input class="form-control" type="text" value="{{detallesCotiza.nombreCliente}}" readonly>
                 </div>
-                <div class="col-3">
+                <div class="col-2">
                     <label class="form-label">Email</label>
                     <input class="form-control" type="text" value="{{detallesCotiza.clienteCorreo}}" readonly>
                 </div>
-                <div class="col-3">
-                    <label class="form-label">RFC</label>
-                    <input class="form-control" type="text" value="{{detallesCotiza.clienteRFC}}" readonly>
+                <div class="col-2">
+                    <!-- <label class="form-label">RFC</label>
+                    <input class="form-control" type="text" value="{{detallesCotiza.clienteRFC}}" readonly> -->
+                    <label class="form-label" for="">Subtotal</label>
+                    <input class="form-control" type="text" value="{{detallesCotiza.subtotal | currency:'MXN'}}" readonly>
+                </div>
+                <div class="col-2">
+                    <label class="form-label" for="">Descuento</label>
+                    <input class="form-control" type="text" value="{{detallesCotiza.descuento | currency:'MXN'}}" readonly>
+                </div>
+                <div class="col-2">
+                    <label class="form-label" for="">Total</label>
+                    <input class="form-control" type="text" value="{{detallesCotiza.total | currency:'MXN'}}" readonly>
                 </div>
             </div>
             <div class="row" *ngIf="detallesCotiza.cdireccion != null">
