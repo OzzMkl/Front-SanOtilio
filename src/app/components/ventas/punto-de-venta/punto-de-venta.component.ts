@@ -1097,6 +1097,7 @@ export class PuntoDeVentaComponent implements OnInit, OnDestroy {
         if(response.status == 'success'){
           
           this.ventag = response.Cotizacion;
+          this.ventag.idTipoVenta = 1;
           //asignamos datos del cliente para mostrar
           this.cliente = [{'rfc':response.Cotizacion.clienteRFC,'nombreTipoC':response.Cotizacion.tipocliente}];
           this.seEnvia = this.ventag.cdireccion ? true : false;
