@@ -176,8 +176,8 @@
       </div>
     </div>
     <!-- SECCION PARA SUMAR O RESTAR PRECIO A LA PRIMERA MEDIDA -->
-    <div class="row justify-content-center">
-      <div class="col-4 col-sm-12 text-center">
+    <div class="row justify-content-center" [ngClass]="modoEdicion ? '' : 'd-none'">
+      <div class="col-4 text-center">
         <label for="inputAmount" class="form-label">Aumentar o disminuir precio</label>
         <div class="input-group mb-3">
           <button class="btn btn-outline-danger" type="button" id="button-addon1" (click)="aumentar_disminuir_precio('restar')" ><i class="pi pi-minus"></i></button>
@@ -506,7 +506,7 @@
         <tr *ngFor="let rb of sucursales_guardadas">
           <td class="branch_letter">
             {{rb.nombre_sucursal.toUpperCase()}}  
-            <i class="pi pi-check ps-1" [ngClass]="{'branch_icon_success':rb.isSelected, 'branch_icon_warn': !rb.isSelected}"
+            <i class="pi pi-check ps-1" [ngClass]="{'branch_icon_success': !modoEdicion || rb.isSelected, 'branch_icon_warn': !rb.isSelected && modoEdicion}"
                 pTooltip="{{rb.isSelected ? 'Producto guardado correctamente' : 'El producto no se modifico en esta sucursal'}}" tooltipPosition="top"></i>
           </td>
         </tr>
@@ -547,6 +547,7 @@
   </ng-template>
 </p-dialog>
 
+<!-- Modal de donde actualizaar el producto -->
 <p-dialog
   header="Header"
   [(visible)]="mdl_ConfirmSucursales"
