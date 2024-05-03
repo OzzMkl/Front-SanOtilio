@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
+import { Component, OnInit, ViewChild, TemplateRef, OnDestroy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -27,7 +27,7 @@ import { MessageService, ConfirmationService, ConfirmEventType } from 'primeng/a
   styleUrls: ['./punto-de-venta.component.css'],
   providers:[ProductoService, MessageService, ConfirmationService]
 })
-export class PuntoDeVentaComponent implements OnInit {
+export class PuntoDeVentaComponent implements OnInit, OnDestroy {
   //cerrar modal
   closeResult = '';
   //variable de servicios
@@ -107,7 +107,11 @@ export class PuntoDeVentaComponent implements OnInit {
   public idProducto?: number;
 
   selectedValue: any;
-  private subscription: Subscription;
+  //subscriptions
+  private sub_producto: Subscription;
+  private sub_whatever?: Subscription;
+  private sub_cliente?: Subscription;
+  private sub_venta?: Subscription;
 
   constructor( 
     //declaramos servicios
@@ -132,7 +136,7 @@ export class PuntoDeVentaComponent implements OnInit {
     this.nuevaDir = new Cdireccion (0,'MEXICO','PUEBLA','','','','','','',0,'',0,1,'');
     this.productoVentag = new Producto_ventasg(0,0,'',0,0,0,0,0,'','',0,0,true,0,false);
     this.lista_productoVentag = [];
-    this.subscription = this._mdlProductoService.selectedValue$.subscribe(
+    this.sub_producto = this._mdlProductoService.selectedValue$.subscribe(
       value =>{
         this.seleccionarProducto(value.idProducto);
       });
@@ -140,7 +144,7 @@ export class PuntoDeVentaComponent implements OnInit {
 
   ngOnInit(): void { 
     this.loadUser();
-    this._sharedMessage.messages$.subscribe(
+    this.sub_whatever = this._sharedMessage.messages$.subscribe(
       messages =>{
         if(messages){
           this.messageService.add(messages[0]);
@@ -152,7 +156,7 @@ export class PuntoDeVentaComponent implements OnInit {
   
 
   getTiposVentas(){
-    this._ventasService.getTipoVenta().subscribe(
+    this.sub_venta = this._ventasService.getTipoVenta().subscribe(
       response =>{
         if(response.status == 'success'){
           this.tipo_venta = response.tipo_venta;
@@ -170,7 +174,7 @@ export class PuntoDeVentaComponent implements OnInit {
     //iniciamos spinner
     this.isLoadingClientes = true;
     //ejecutamosservicio
-    this._clienteService.getAllClientes().subscribe( 
+    this.sub_cliente = this._clienteService.getAllClientes().subscribe( 
       response =>{
         if(response.status == 'success'){
 
@@ -205,7 +209,7 @@ export class PuntoDeVentaComponent implements OnInit {
     //iniciamos spinner
     this.isLoadingClientes = true;
 
-    this._http.get(this.path+'?page='+page).subscribe(
+    this.sub_whatever = this._http.get(this.path+'?page='+page).subscribe(
       (response:any) => {
         //console.log(response);
         this.clientes = response.clientes.data;
@@ -235,7 +239,7 @@ export class PuntoDeVentaComponent implements OnInit {
       let nomCliente = nombreCliente.target.value;
 
       //generamos conulta
-      this._clienteService.searchNombreCliente(nomCliente).subscribe(
+      this.sub_cliente = this._clienteService.searchNombreCliente(nomCliente).subscribe(
         response => {
           if(response.status == 'success'){
             this.clientes = response.clientes.data;
@@ -259,7 +263,7 @@ export class PuntoDeVentaComponent implements OnInit {
    */
   getTipocliente(){
     this.isLoadingGeneral = true;
-    this._clienteService.getTipocliente().subscribe(
+    this.sub_cliente = this._clienteService.getTipocliente().subscribe(
       response =>{
         this.tipocliente = response.tipocliente;
         this.isLoadingGeneral = false;
@@ -274,7 +278,7 @@ export class PuntoDeVentaComponent implements OnInit {
    */
   getDireccionCliente(idCliente:any){
     this.isLoadingGeneral =true;
-  this._clienteService.getDireccionCliente(idCliente).subscribe( 
+    this.sub_cliente = this._clienteService.getDireccionCliente(idCliente).subscribe( 
     response => {
       if(response.status == 'success'){
         this.listaDireccionesC = response.direccion;
@@ -295,7 +299,7 @@ export class PuntoDeVentaComponent implements OnInit {
     this.seEnvia = false;
     this.isLoadingGeneral = true;
 
-    this._clienteService.getDetallesCliente(idCliente).subscribe(
+    this.sub_cliente = this._clienteService.getDetallesCliente(idCliente).subscribe(
       response =>{
         if(response.status == 'success'){
           this.cliente = response.cliente;
@@ -335,7 +339,7 @@ export class PuntoDeVentaComponent implements OnInit {
       if(this.isRFC == false){
         this.modeloCliente.rfc = 'XAXX010101000';
       }
-      this._clienteService.postCliente(this.modeloCliente,identity).subscribe( 
+      this.sub_cliente = this._clienteService.postCliente(this.modeloCliente,identity).subscribe( 
         response =>{
           if(response.status == 'success'){
             this.messageService.add({severity:'success', summary:'Registro exitoso', detail: 'Cliente registrado correctamente'});
@@ -343,7 +347,7 @@ export class PuntoDeVentaComponent implements OnInit {
             if(this.checkDireccion == true && this.cdireccion.ciudad != '' && this.cdireccion.colonia != '' && this.cdireccion.calle != ''
                 && this.cdireccion.numExt != '' && this.cdireccion.cp != 0 && this.cdireccion.referencia != '' && this.cdireccion.telefono != 0){
 
-              this._clienteService.postCdireccion(this.cdireccion,identity).subscribe( 
+                this.sub_cliente = this._clienteService.postCdireccion(this.cdireccion,identity).subscribe( 
                 response=>{
                   this.messageService.add({severity:'success', summary:'Registro exitoso', detail:'La direccion se registro correctamente'});
                   //console.log(response);
@@ -369,7 +373,7 @@ export class PuntoDeVentaComponent implements OnInit {
   guardarNuevaDireccion(){
     this.isLoadingGeneral = true;
     this.nuevaDir.idCliente = this.ventag.idCliente;
-    this._clienteService.postNuevaDireccion(this.nuevaDir).subscribe( 
+    this.sub_cliente = this._clienteService.postNuevaDireccion(this.nuevaDir).subscribe( 
       response=>{
         if(response.status == 'success'){
           this.isLoadingGeneral = true;
@@ -393,7 +397,7 @@ export class PuntoDeVentaComponent implements OnInit {
     this.limpiaProducto();
 
     //console.log(idProducto);
-    this._productoService.getProdverDos(idProducto).subscribe( response => {
+    this.sub_producto = this._productoService.getProdverDos(idProducto).subscribe( response => {
       //console.log(response);
       if(response.status == 'success'){
 
@@ -501,7 +505,7 @@ export class PuntoDeVentaComponent implements OnInit {
 
     }else{
       //revisamos la existencia del producto
-      this._productoService.getExistenciaG(this.productoVentag.idProducto, this.productoVentag.idProdMedida, this.productoVentag.cantidad).subscribe(
+      this.sub_producto = this._productoService.getExistenciaG(this.productoVentag.idProducto, this.productoVentag.idProdMedida, this.productoVentag.cantidad).subscribe(
         response =>{
 
           //this.productoEG = response.producto;
@@ -543,7 +547,7 @@ export class PuntoDeVentaComponent implements OnInit {
   //traemos la informacion del usuario logeado
   loadUser(){
     this.isLoadingGeneral = true;
-    this._route.params.subscribe(params =>{ 
+    this.sub_whatever = this._route.params.subscribe(params =>{ 
       
       if(params['idVenta']){
         this.verificaPermisos("edit_venta",params['idVenta']);
@@ -655,7 +659,7 @@ export class PuntoDeVentaComponent implements OnInit {
       }
 
       this.ventag.seEnviap = this.seEnvia;
-      this._ventasService.postCotizaciones(this.ventag, this.lista_productoVentag, identityMod).subscribe( 
+      this.sub_venta = this._ventasService.postCotizaciones(this.ventag, this.lista_productoVentag, identityMod).subscribe( 
         response=>{
           if(response.status == 'success'){
 
@@ -681,7 +685,7 @@ export class PuntoDeVentaComponent implements OnInit {
 
   //Obtener detalles de cotizacion registrada
   obtenerUltimaCotiza(){
-    this._ventasService.getLastCotiza().subscribe(
+    this.sub_venta = this._ventasService.getLastCotiza().subscribe(
       response =>{
         
         if(response.status == 'success'){
@@ -694,7 +698,7 @@ export class PuntoDeVentaComponent implements OnInit {
   }
 
   generaPDF(idCotiza:number){
-    this._ventasService.getPDF(idCotiza).subscribe(
+    this.sub_venta = this._ventasService.getPDF(idCotiza).subscribe(
       (pdf: Blob) => {
         const blob = new Blob([pdf], {type: 'application/pdf'});
         const url = window.URL.createObjectURL(blob);
@@ -720,7 +724,7 @@ export class PuntoDeVentaComponent implements OnInit {
       //Agregamos propiedad de envio
       Object.assign( this.ventag, {seEnvia: this.seEnvia});
 
-      this._ventasService.postVenta(this.ventag, this.lista_productoVentag, identityMod).subscribe(
+      this.sub_venta = this._ventasService.postVenta(this.ventag, this.lista_productoVentag, identityMod).subscribe(
         response =>{
           // console.log(response)
           if(response.status == 'success'){
@@ -968,11 +972,11 @@ export class PuntoDeVentaComponent implements OnInit {
     //notificamos que la inforamcion se esta cargando
     this.messageService.add({severity:'warn', summary:'Cargando', detail: 'Cargando informacion de la venta.'});
     //obtenemos el id de la ruta
-    this._route.params.subscribe( params =>{
+    this.sub_whatever = this._route.params.subscribe( params =>{
       //la asignamos
       let idVenta = + params['idVenta'];
       //ejecutamos servicio que trae la informacion
-      this._ventasService.getDetallesVenta(idVenta).subscribe(
+      this.sub_venta = this._ventasService.getDetallesVenta(idVenta).subscribe(
         response =>{
           if(response.status == 'success'){
 
@@ -1021,7 +1025,7 @@ export class PuntoDeVentaComponent implements OnInit {
       'permisos': this.userPermisos
     }
 
-    this._ventasService.putVenta(this.ventag.idVenta, this.ventag, this.lista_productoVentag, identityMod, this.motivoEdicion).subscribe(
+    this.sub_venta = this._ventasService.putVenta(this.ventag.idVenta, this.ventag, this.lista_productoVentag, identityMod, this.motivoEdicion).subscribe(
       response =>{
         if(response.status == 'success'){
           //desactivamos spinner
@@ -1087,7 +1091,7 @@ export class PuntoDeVentaComponent implements OnInit {
   }
 
   getDetallesCotizacion(idCotiza:number){
-    this._ventasService.getDetallesCotiza(idCotiza).subscribe(
+    this.sub_venta = this._ventasService.getDetallesCotiza(idCotiza).subscribe(
       response =>{
         // console.log(response)
         if(response.status == 'success'){
@@ -1123,7 +1127,7 @@ export class PuntoDeVentaComponent implements OnInit {
       'permisos': this.userPermisos,
     }
 
-    this._ventasService.putCotizacion(this.ventag.idCotiza, this.ventag, this.lista_productoVentag, identityMod).subscribe(
+    this.sub_venta = this._ventasService.putCotizacion(this.ventag.idCotiza, this.ventag, this.lista_productoVentag, identityMod).subscribe(
       response =>{
         if(response.status == 'success'){
           //desactivamos spinner
@@ -1141,5 +1145,12 @@ export class PuntoDeVentaComponent implements OnInit {
         console.log(error);
       }
     );
+  }
+
+  ngOnDestroy(): void {
+    this.sub_producto.unsubscribe();
+    this.sub_whatever?.unsubscribe();
+    this.sub_cliente?.unsubscribe();
+    this.sub_venta?.unsubscribe();
   }
 }
