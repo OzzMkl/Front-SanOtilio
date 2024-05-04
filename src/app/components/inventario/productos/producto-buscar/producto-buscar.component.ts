@@ -21,7 +21,7 @@ import { Router } from '@angular/router';
 import { EmpleadoService } from 'src/app/services/empleado.service';
 import { ModulosService } from 'src/app/services/modulos.service';
 //primeng
-import { MessageService } from 'primeng/api';
+import { MenuItem, MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-producto-buscar',
@@ -56,6 +56,9 @@ export class ProductoBuscarComponent implements OnInit {
   //contador para redireccion al no tener permisos
   counter: number = 5;
   timerId:any;
+  //Menu
+  public menuItems: MenuItem[] =[];
+  public idProductoMenu?: number;
 
   constructor(
     private _productoService: ProductoService,
@@ -87,6 +90,7 @@ export class ProductoBuscarComponent implements OnInit {
           },1000);
         } else{
           this.getProd();
+          this.add_optMenu();
         }
   }
 
@@ -132,7 +136,7 @@ export class ProductoBuscarComponent implements OnInit {
    * retornamos la consulta con las medias e imagen del producto
    */
   mostrarPrecios(idProducto:number){
-    
+    this.idProductoMenu = idProducto;
     this._productoService.searchProductoMedida(idProducto).subscribe(
       response =>{
         if(response.status == 'success'){
@@ -317,4 +321,41 @@ export class ProductoBuscarComponent implements OnInit {
      }//finelse
      
   }//finFunction
+
+  add_optMenu(){
+
+    // Inicializa el arreglo si está vacío
+    if (this.menuItems.length === 0) {
+      this.menuItems.push({ label: 'Opciones', items: [] });
+    }
+
+    if(this.userPermisos.ver == 1){
+      this.menuItems[0].items?.push({
+          label: 'Ver',
+          icon: 'pi pi-eye',
+          command: () => {
+            this._router.navigate(['./producto-modulo/producto-ver/'+this.idProductoMenu]);
+          }
+      })
+    }
+
+    if(this.userPermisos.editar == 1){
+      this.menuItems[0].items?.push({
+          label: 'Editar',
+          icon: 'pi pi-file-edit',
+          command: () => {
+            this._router.navigate(['./producto-modulo/producto-editar/'+this.idProductoMenu]);
+          }
+      })
+    }
+
+    this.menuItems[0].items?.push({
+        label: 'Historial',
+        icon: 'pi pi-history',
+        // command: () => {
+        //   this._router.navigate(['./producto-modulo/producto-ver/'+this.idProductoMenu]);
+        // }
+    });
+  }
+
 }

@@ -49,11 +49,9 @@
                     <th scope="row">{{pr.nombreDep}}</th> 
                     <th scope="row">{{pr.nombreCat}}</th>
                     <th scope="row"> 
-                        <i *ngIf="userPermisos.ver ==1" class="pi pi-eye p-1" pTooltip="Ver" tooltipPosition="top" 
-                            [routerLink]="['../producto-ver',pr.idProducto]">
-                        </i>
-                        <i *ngIf="userPermisos.editar ==1" class="pi pi-file-edit p-1" pTooltip="Editar" tooltipPosition="top"
-                            [routerLink]="['../producto-editar',pr.idProducto]"></i>
+                        <button pButton class="p-button-rounded p-button-text p-button-plain" icon="pi pi-cog" (click)="menu.toggle($event)">
+                        </button>
+                        <p-menu #menu id="config_menu" [model]="menuItems" [popup]="true"></p-menu>
                     </th>
                 </tr>
             </tbody>
