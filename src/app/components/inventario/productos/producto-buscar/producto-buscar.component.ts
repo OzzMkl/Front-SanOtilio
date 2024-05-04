@@ -78,6 +78,7 @@ export class ProductoBuscarComponent implements OnInit {
    */
   loadUser(){
     this.userPermisos = this._empleadoService.getPermisosModulo(this.mInv.idModulo, this.mInv.idSubModulo);
+    
         //revisamos si el permiso del modulo esta activo si no redireccionamos
         if( this.userPermisos.ver != 1 ){
           this.timerId = setInterval(()=>{
@@ -326,13 +327,14 @@ export class ProductoBuscarComponent implements OnInit {
 
     // Inicializa el arreglo si está vacío
     if (this.menuItems.length === 0) {
-      this.menuItems.push({ label: 'Opciones', items: [] });
+      this.menuItems.push({ label: 'Opciones', styleClass:'text-white', items: [] });
     }
 
     if(this.userPermisos.ver == 1){
       this.menuItems[0].items?.push({
           label: 'Ver',
-          icon: 'pi pi-eye',
+          styleClass: 'text-white',
+          icon: 'pi pi-eye text-white',
           command: () => {
             this._router.navigate(['./producto-modulo/producto-ver/'+this.idProductoMenu]);
           }
@@ -342,7 +344,8 @@ export class ProductoBuscarComponent implements OnInit {
     if(this.userPermisos.editar == 1){
       this.menuItems[0].items?.push({
           label: 'Editar',
-          icon: 'pi pi-file-edit',
+          styleClass: 'text-white',
+          icon: 'pi pi-file-edit text-white',
           command: () => {
             this._router.navigate(['./producto-modulo/producto-editar/'+this.idProductoMenu]);
           }
@@ -351,7 +354,8 @@ export class ProductoBuscarComponent implements OnInit {
 
     this.menuItems[0].items?.push({
         label: 'Historial',
-        icon: 'pi pi-history',
+        styleClass: 'text-white',
+        icon: 'pi pi-history text-white',
         // command: () => {
         //   this._router.navigate(['./producto-modulo/producto-ver/'+this.idProductoMenu]);
         // }
