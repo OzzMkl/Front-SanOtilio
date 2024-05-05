@@ -53,6 +53,7 @@ export class ProductoBuscarComponent implements OnInit {
   //PERMISOS
   public userPermisos:any = [];
   public mInv = this._modulosService.modsInventario();
+  public sucursal_now: any = this._empleadoService.getSucursalSesion();
   //contador para redireccion al no tener permisos
   counter: number = 5;
   timerId:any;
@@ -323,8 +324,11 @@ export class ProductoBuscarComponent implements OnInit {
      
   }//finFunction
 
+  /**
+   * @description
+   * Agrega los elementos al menu deacuerdo a los permisos del usuario
+   */
   add_optMenu(){
-
     // Inicializa el arreglo si está vacío
     if (this.menuItems.length === 0) {
       this.menuItems.push({ label: 'Opciones', styleClass:'text-white', items: [] });
@@ -347,7 +351,7 @@ export class ProductoBuscarComponent implements OnInit {
           styleClass: 'text-white',
           icon: 'pi pi-file-edit text-white',
           command: () => {
-            this._router.navigate(['./producto-modulo/producto-editar/'+this.idProductoMenu]);
+            this.optEditarMenu()
           }
       })
     }
@@ -362,4 +366,11 @@ export class ProductoBuscarComponent implements OnInit {
     });
   }
 
+  optEditarMenu(){
+    if(this.sucursal_now && this.sucursal_now.idSuc == 1){
+      return this._router.navigate(['./producto-modulo/producto-ver/'+this.idProductoMenu]);
+    } else{
+      return this.messageService.add({severity:'success',detail:'gggg'});
+    }
+  }
 }
