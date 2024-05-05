@@ -40,7 +40,6 @@ export class PuntoDeVentaComponent implements OnInit, OnDestroy {
   public productos_medidas: Array<any> = [];//seleccionarProducto
   public preciosArray: Array<any> = [];//muestraPrecios
   public identity: any;//loadUser
-  public UltimaCotizacion: number = 0;//obtenerultimacotiza
   public tipo_venta: Array<any> = []; //getTiposVentas
   public productoEG:any;
   public claveExt : string = '';//mostrarPrecios
@@ -683,20 +682,6 @@ export class PuntoDeVentaComponent implements OnInit, OnDestroy {
     }
   }
 
-  //Obtener detalles de cotizacion registrada
-  obtenerUltimaCotiza(){
-    this.sub_venta = this._ventasService.getLastCotiza().subscribe(
-      response =>{
-        
-        if(response.status == 'success'){
-          this.UltimaCotizacion = response.Cotizacion;
-          this.generaPDF(this.UltimaCotizacion);
-        }
-      },error =>{
-        console.log(error);
-      });
-  }
-
   generaPDF(idCotiza:number){
     this.sub_venta = this._ventasService.getPDF(idCotiza).subscribe(
       (pdf: Blob) => {
@@ -931,6 +916,7 @@ export class PuntoDeVentaComponent implements OnInit, OnDestroy {
     this.isLoadingGeneral = false;
     //console.log(this.mAlertaExistencia)
   }
+
    /**
    * @description
    * Revisa que el motivo tenga mas de 10 caracteres, si es asi
@@ -1016,6 +1002,10 @@ export class PuntoDeVentaComponent implements OnInit, OnDestroy {
     })
   }
 
+  /**
+   * @description
+   * Metodo que actualiza una venta
+   */
   updateVenta(){
     this.isLoadingGeneral = true;
     //Sustituimos todos los permisos por solo los permisos del modulo
@@ -1067,6 +1057,13 @@ export class PuntoDeVentaComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * 
+   * @returns boolean
+   * @description
+   * Valida que la laista de productos no este vacia
+   * Valida que se tenga un cliente (idCliente)
+   */
   validacionSubmit(): boolean{
     let validate = false;
 
@@ -1090,6 +1087,12 @@ export class PuntoDeVentaComponent implements OnInit, OnDestroy {
     return validate;
   }
 
+  /**
+   * 
+   * @param idCotiza 
+   * @description
+   * Trae los detalles de la cotizacion
+   */
   getDetallesCotizacion(idCotiza:number){
     this.sub_venta = this._ventasService.getDetallesCotiza(idCotiza).subscribe(
       response =>{
@@ -1120,6 +1123,10 @@ export class PuntoDeVentaComponent implements OnInit, OnDestroy {
     )
   }
 
+  /**
+   * @description
+   * Metodo que actualiza la cotizacion
+   */
   updateCotizacion(){
     this.isLoadingGeneral = true;
 
@@ -1140,7 +1147,7 @@ export class PuntoDeVentaComponent implements OnInit, OnDestroy {
           this._router.navigate(['./cotizacion-modulo/cotizacion-buscar']);
           
         }
-        console.log(response);
+        // console.log(response);
       }, error =>{
         this.messageService.add({severity:'error', summary:'Alerta', detail:error.error.message});
         console.log(error);
@@ -1148,6 +1155,10 @@ export class PuntoDeVentaComponent implements OnInit, OnDestroy {
     );
   }
 
+  /**
+   * @description
+   * Destruimos todos los subscriptions
+   */
   ngOnDestroy(): void {
     this.sub_producto.unsubscribe();
     this.sub_whatever?.unsubscribe();
