@@ -8,6 +8,7 @@ import { global } from "./global";
 export class EmpleadoService{
     public url: string;//declaramos la url publica a usar para todas las peticiones
     public identity: any;
+    public sucursal?: Array<any>;
     public token: any;
     /****** */
     public permisos: any;
@@ -67,9 +68,22 @@ export class EmpleadoService{
         let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');
         return this._http.get(this.url+'PermissionsByRol/'+idRol+'/'+idModulo+'/'+idSubModulo, {headers:headers});
     }
+
     getRolesBySubmodulo(idSubModulo:any):Observable<any>{
         let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');
         return this._http.get(this.url+'RolesBySubmodulo/'+idSubModulo, {headers:headers} );
+    }
+
+    /**
+     * @description
+     * Obtenemos la informacion de la sucural en la que estamos logueados
+     */
+    getSucursalSesion(){
+        let identity = JSON.parse(localStorage.getItem('identity') || '{}');
+        if(identity && identity != "undefined"){
+            this.sucursal = identity.empresa;
+        }
+        return this.sucursal;
     }
 
 }
