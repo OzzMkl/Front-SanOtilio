@@ -3,17 +3,17 @@
     <h3 class="text-center">Buscar Productos</h3>
 </div>
     <!--CUADRO DE BUSQUEDA-->
-    <div class="input-group mb-2">
-        <div class="col-2">
-            <select class="form-select" name="tipoBusqueda" [(ngModel)]="tipoBusqueda" (ngModelChange)="selectBusqueda()" >
-                <option value="uno">Clave externa</option>
-                <option value="dos">Codigo de barras</option>
-                <option value="tres">Descripcion</option>
-            </select>
-        </div>
-        <div class="col">
-            <input type="search" class="form-control" name="search" placeholder="Buscar ..." [(ngModel)]="search" (ngModelChange)="selectBusqueda()">
-        </div>
+    <div class="container-fluid">
+        <p-dropdown 
+            [options]="optionsSelect"
+            [(ngModel)]="selectedOpt"
+            optionLabel="name"
+            [showClear]="true"
+            placeholder="Selecciona una opcion"
+            [style]="{ width: '25%' }"
+            (ngModelChange)="onSearch()"
+        ></p-dropdown>
+        <input type="text" pInputText [(ngModel)]="valSearch" [style]="{ width: '75%' }" (ngModelChange)="onSearch()">
     </div>
     <!--FIN CUADRO DE BUSQUEDA-->
     <br>
@@ -36,7 +36,6 @@
                     <th scope="col">DESCRIPCION</th>
                     <th scope="col">MARCA</th>
                     <th scope="col">DEPARTAMENTO</th> 
-                    <th scope="col">CATEGORIA</th> 
                     <th scope="col">ACCION</th>
                 </tr>
             </thead>
@@ -47,7 +46,6 @@
                     <th scope="row">{{pr.descripcion}}</th>
                     <th scope="row">{{pr.nombreMarca}}</th>
                     <th scope="row">{{pr.nombreDep}}</th> 
-                    <th scope="row">{{pr.nombreCat}}</th>
                     <th scope="row"> 
                         <button pButton class="p-button-rounded p-button-text p-button-plain" icon="pi pi-cog text-white" (click)="menu.toggle($event)">
                         </button>
@@ -59,7 +57,7 @@
         <!-- FIN TABLA -->
         <!-- CONTROLES DE PAGINACION -->
         <pagination-controls 
-            (pageChange)="getPage(pageActual = $event)"
+            (pageChange)="onPageChange($event)"
             previousLabel="Anterior"
             nextLabel="Siguiente" >
         </pagination-controls>
@@ -67,10 +65,16 @@
     </div>
 
     <!-- tabla precios por medida -->
-    <div class="container">
-        <div class=" row justify-content-center">
+    <div class="container" *ngIf="productosMedida.length > 0">
+        <!-- SPINNER  -->
+        <div class="text-center text-primary" *ngIf="isLoadingPrecios">
+            <div class="spinner-border" role="status" >
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+        <div class=" row justify-content-center" *ngIf="!isLoadingPrecios">
             <div class="col-2">
-                <img src="{{url + 'productos/getImageProduc/' + this.imagenPM}}" width="150px">
+                <img src="{{url + 'productos/getImageProduc/' + this.imagenPM}}" [style]="{width: '100px'}">
             </div>
             <!-- TABLA DE PRECIOS -->
             <div class="col-5 text-center">
@@ -81,21 +85,19 @@
                         </tr>
                         <tr>
                             <th scope="col">MEDIDA</th>
-                            <th scope="col">PRECIO 1</th>
-                            <th scope="col">PRECIO 2</th>
-                            <th scope="col">PRECIO 3</th>
-                            <th scope="col">PRECIO 4</th>
-                            <th scope="col">PRECIO 5</th>
+                            <th scope="col" *ngFor="let tblHead of tblHeaders">
+                                {{tblHead}}
+                            </th>
                         </tr>
                     </thead>
                     <tbody *ngFor="let pm of productosMedida" >
                         <tr>
                             <th>{{pm.nombreMedida}}</th>
-                            <th>{{pm.precio1 | currency:'MXN'}}</th>
-                            <th>{{pm.precio2 | currency:'MXN'}}</th>
-                            <th>{{pm.precio3 | currency:'MXN'}}</th>
-                            <th>{{pm.precio4 | currency:'MXN'}}</th>
-                            <th>{{pm.precio5 | currency:'MXN'}}</th>
+                            <th [ngClass]="pm.precio1 ? '':'d-none'" >{{pm.precio1 | currency:'MXN'}}</th>
+                            <th [ngClass]="pm.precio2 ? '':'d-none'" >{{pm.precio2 | currency:'MXN'}}</th>
+                            <th [ngClass]="pm.precio3 ? '':'d-none'" >{{pm.precio3 | currency:'MXN'}}</th>
+                            <th [ngClass]="pm.precio4 ? '':'d-none'" >{{pm.precio4 | currency:'MXN'}}</th>
+                            <th [ngClass]="pm.precio5 ? '':'d-none'" >{{pm.precio5 | currency:'MXN'}}</th>
                         </tr>
                     </tbody>
                 </table>

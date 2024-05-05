@@ -1,27 +1,14 @@
-/**
- *  @fileoverview Logica del componente producto-buscar
- *                muestra campo para buscar productos
- *                muestra tabla con los productos paginados
- * 
- *  @version 1.0
- * 
- *  @autor Oziel pacheco<ozielpacheco.m@gmail.com>
- *  @copyright Materiales San Otilio
- * 
- *  @History
- * 
- *  -Primera version escrita por Oziel Pacheco
- * 
- */
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ProductoService } from 'src/app/services/producto.service';
-import { HttpClient} from '@angular/common/http';
 import { global } from 'src/app/services/global';
 import { Router } from '@angular/router';
 import { EmpleadoService } from 'src/app/services/empleado.service';
 import { ModulosService } from 'src/app/services/modulos.service';
 //primeng
 import { MenuItem, MessageService } from 'primeng/api';
+//interfaces
+import { selectBusqueda } from 'src/app/models/interfaces/selectBusqueda';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-producto-buscar',
@@ -29,27 +16,29 @@ import { MenuItem, MessageService } from 'primeng/api';
   styleUrls: ['./producto-buscar.component.css'],
   providers: [ProductoService, EmpleadoService, MessageService]
 })
-export class ProductoBuscarComponent implements OnInit {
-  
+export class ProductoBuscarComponent implements OnInit, OnDestroy {
+
+  //Spinners
+  public isLoading:boolean = false;//table
+  public isLoadingPrecios:boolean = false;//mostrarPrecios
+  //Servicios
+  //paginator
+  //Models
+  optionsSelect!: selectBusqueda[];
+  selectedOpt!: selectBusqueda;
+  valSearch: string = '';
+  public tblHeaders: Array<any> = []
   public url:string = global.url;
   public productos: Array<any> = [];
   public productosMedida: Array<any> = [];
   public existenciasPorMed: Array<any> = [];
-  public imagenPM: string = '';
+  public imagenPM: string = "1650558444no-image.png";
   public claveExt: string ='';
   public isShow: boolean = false;
   /**PAGINATOR */
   public totalPages: any;
-  public path: any;
-  public next_page: any;
-  public prev_page: any;
   public itemsPerPage:number=0;
   pageActual: number = 0;
-  //
-  search='';
-  public tipoBusqueda: string = "uno";
-  //spinner
-  public isLoading:boolean = false;
   //PERMISOS
   public userPermisos:any = [];
   public mInv = this._modulosService.modsInventario();
@@ -60,6 +49,8 @@ export class ProductoBuscarComponent implements OnInit {
   //Menu
   public menuItems: MenuItem[] =[];
   public idProductoMenu?: number;
+  //subscriptions
+  private sub_producto?: Subscription;
 
   constructor(
     private _productoService: ProductoService,
@@ -67,7 +58,6 @@ export class ProductoBuscarComponent implements OnInit {
     private messageService: MessageService,
     private _modulosService: ModulosService,
     private _router: Router,
-    private _http: HttpClient
   ) { }
 
   ngOnInit(): void {
@@ -91,35 +81,53 @@ export class ProductoBuscarComponent implements OnInit {
             this.messageService.add({severity:'error', summary:'Acceso denegado', detail: 'El usuario no cuenta con los permisos necesarios, redirigiendo en '+this.counter+' segundos'});
           },1000);
         } else{
-          this.getProd();
+          this.setOptionsSelect();
+          this.getProductos();
           this.add_optMenu();
         }
   }
 
   /**
-   * Trae todos los productos con su paginacion
-   * para mostrar en la tabla
+  * @description
+  * Carga el array a mostrar del dropdown de busqueda
+  */
+  setOptionsSelect(){
+    this.optionsSelect = [
+      {id:1, name:'Clave externa'},
+      {id:2, name:'Descripcion'},
+      {id:3, name:'Codigo de barras'},
+    ];
+    //Seleccionamos por defecto la primera opcion
+    this.selectedOpt = this.optionsSelect[0];
+  }
+
+  /**
+   * 
+   * @param page number default 1
+   * @param type number default 0
+   * @param search string default null
+   * 
+   * @description
+   * Servicio trae la informacion de los productos paginados por la api
+   * Tambien busca la informacion
    */
-  getProd(){
+  getProductos(page:number = 1, type:number = 0, search:string = 'null'){
 
     //mostramos el spinner
     this.isLoading = true;
 
     //ejecutamos el servicio
-    this._productoService.getProductos().subscribe(
+    this.sub_producto = this._productoService.getProductosNewIndex(page,type,search).subscribe(
       response =>{
-        if(response.status == 'success'){
+        if(response.status == 'success' && response.code == 200){
 
           //asignamos a varibale para mostrar
           this.productos = response.productos.data;
-          //console.log(this.productos)
 
           //navegacion paginacion
           this.totalPages = response.productos.total;
           this.itemsPerPage = response.productos.per_page;
           this.pageActual = response.productos.current_page;
-          this.next_page = response.productos.next_page_url;
-          this.path = response.productos.path
           
           //una vez terminado de cargar quitamos el spinner
           this.isLoading = false;
@@ -130,6 +138,15 @@ export class ProductoBuscarComponent implements OnInit {
       }
     );
   }
+  /**
+   * 
+   * @param event 
+   * @description
+   * Cambio de pagina
+   */
+  onPageChange(event:any) {
+    this.getProductos(event);
+  }
 
   /**
    * Recinimos el id y lo buscamos en el sewrvicio
@@ -138,192 +155,60 @@ export class ProductoBuscarComponent implements OnInit {
    * retornamos la consulta con las medias e imagen del producto
    */
   mostrarPrecios(idProducto:number){
+    this.isLoadingPrecios = true;
     this.idProductoMenu = idProducto;
-    this._productoService.searchProductoMedida(idProducto).subscribe(
+    this.tblHeaders = [];
+    this.sub_producto = this._productoService.searchProductoMedida(idProducto).subscribe(
       response =>{
         if(response.status == 'success'){
           this.claveExt = response.Producto_cl;
           this.productosMedida = response.productoMedida;
           this.existenciasPorMed = response.existencia_por_med;
-          this.imagenPM = response.imagen;
-          if(this.imagenPM == "" || this.imagenPM == null){
-            this.imagenPM = "1650558444no-image.png";
+          this.imagenPM = response.imagen ? response.imagen : "1650558444no-image.png";
+          //creamos lista de headers de la tabla de precios
+          for(let i = 1; i <= 5; i++){
+            const precioKey = `precio${i}`;
+            if(this.productosMedida[0][precioKey] != null){
+              this.tblHeaders.push(`P${i}`);
+            }
           }
-        } else{
 
+          this.isLoadingPrecios = false;
         }
-        
     }, error =>{
       console.log(error);
     });
   }
 
   /**
-   * 
-   * @param page
-   * Es el numero de pagina a la cual se va acceder
-   * @description
-   * De acuerdo al numero de pagina recibido lo concatenamos a
-   * la direccion para "ir" a esa direccion y traer la informacion
-   * no retornamos ya que solo actualizamos las variables a mostrar
+   * Busqueda
    */
-  getPage(page:number) {
-    //mostramos el spinner
-    this.isLoading = true;
-
-    this._http.get(this.path+'?page='+page).subscribe(
-      (response:any) => {
-        //console.log(response);
-        this.productos = response.productos.data;
-        //navegacion paginacion
-        this.totalPages = response.productos.total;
-        this.itemsPerPage = response.productos.per_page;
-        this.pageActual = response.productos.current_page;
-        this.next_page = response.productos.next_page_url;
-        this.path = response.productos.path
-        
-        //una vez terminado de cargar quitamos el spinner
-        this.isLoading = false;
-    })
-  }
-
-  /**
-   * 
-   * @param claveExterna 
-   * Recibimos el evento del input
-   * @description
-   * Recibe los valores del evento keyUp, luego busca y actualiza
-   * los datos de la tabla
-   */
-  getSearch(claveExterna:string){
-    //mostramos el spinner 
-    this.isLoading = true;
-
-    //generamos consulta
-    this._productoService.searchClaveExterna(claveExterna).subscribe(
-      response =>{
-          if(response.status == 'success'){
-
-            //asignamos datos a varibale para poder mostrarla en la tabla
-            this.productos = response.productos.data;
-            //console.log(this.productos)
-
-            //navegacion paginacion
-            this.totalPages = response.productos.total;
-            this.itemsPerPage = response.productos.per_page;
-            this.pageActual = response.productos.current_page;
-            this.next_page = response.productos.next_page_url;
-            this.path = response.productos.path
-            
-            //una ves terminado de cargar quitamos el spinner
-            this.isLoading = false;
+  onSearch(){
+    if(this.selectedOpt){
+      if(this.valSearch == "" || null){
+        this.getProductos();
+      } else{
+        switch(this.selectedOpt.id){
+          case 1 : //ClaveExter
+            this.getProductos(1,this.selectedOpt.id,this.valSearch);
+            break;
+          case 2 ://Descripcion
+            this.getProductos(1,this.selectedOpt.id,this.valSearch);
+            break;
+          case 3 : //codigodebarras
+            this.getProductos(1,this.selectedOpt.id,this.valSearch);
+            break;
         }
-      }, error =>{
-          console.log(error)
       }
-    )
-  }
-
-  /**
-   * 
-   * @param codbar 
-   * Recibimos el evento del input
-   * @description
-   * Recibe los valores del evento keyup, luego busca y actualiza
-   * los datos que se muestran en la tabla
-   */
-  getSearchCodbar(codbar:number){
-    //mostramos el spinner
-    this.isLoading = true;
-
-    //llamamos al servicio
-    this._productoService.searchCodbar(codbar).subscribe(
-      response =>{
-          if(response.status == 'success'){
-            //asignamos datos a varibale para poder mostrarla en la tabla
-            this.productos = response.productos.data;
-            //console.log(this.productos)
-
-            //navegacion paginacion
-            this.totalPages = response.productos.total;
-            this.itemsPerPage = response.productos.per_page;
-            this.pageActual = response.productos.current_page;
-            this.next_page = response.productos.next_page_url;
-            this.path = response.productos.path
-            
-            //una ves terminado de cargar quitamos el spinner
-            this.isLoading = false;
-          }
-      }, error => {
-        console.log(error)
-      }
-    )
-  }
-
-  /**
-   * 
-   * @param descripcion 
-   * Recibimos el evento del input
-   * @description
-   * Recibe los valores del Keyup, luego buscamos y actualizamos
-   * los datos que se muestran en la tabla
-   */
-  getSearchDescripcion(descripcion:string){
-    //mostramos el spinner
-    this.isLoading = true;
-    //llamamos al servicio
-    this._productoService.searchDescripcion(descripcion).subscribe(
-      response =>{
-          if(response.status == 'success'){
-            //asignamos datos a varibale para poder mostrarla en la tabla
-            this.productos = response.productos.data;
-            //console.log(this.productos)
-
-            //navegacion paginacion
-            this.totalPages = response.productos.total;
-            this.itemsPerPage = response.productos.per_page;
-            this.pageActual = response.productos.current_page;
-            this.next_page = response.productos.next_page_url;
-            this.path = response.productos.path
-            
-            //una ves terminado de cargar quitamos el spinner
-            this.isLoading = false;
-          }
-      }, error => {
-        console.log(error)
-      }
-    )
-  }
-
-  /**
-   * @description
-   * Obtiene la informacion del input y busca
-   */
-  selectBusqueda(){
-    
-     if(this.search == "" || null){
-      
-       this.getProd();
     } else{
-      
-      switch(this.tipoBusqueda){
-        case "uno":
-            this.getSearch(this.search);
-          break;
-        case "dos":
-            this.getSearchCodbar(parseInt(this.search));
-          break;
-        case "tres":
-            this.getSearchDescripcion(this.search);
-          break;
-        default:
-          console.log('default tp'+this.tipoBusqueda)
-           break;
-       }
-     }//finelse
-     
-  }//finFunction
-
+      //cargamos mensaje
+      this.messageService.add({
+        severity:'warn', 
+        summary:'Alerta', 
+        detail:'Favor de seleccionar una opcion para buscar'
+      });
+    }
+  }
   /**
    * @description
    * Agrega los elementos al menu deacuerdo a los permisos del usuario
@@ -368,9 +253,13 @@ export class ProductoBuscarComponent implements OnInit {
 
   optEditarMenu(){
     if(this.sucursal_now && this.sucursal_now.idSuc == 1){
-      return this._router.navigate(['./producto-modulo/producto-ver/'+this.idProductoMenu]);
+      return this._router.navigate(['./producto-modulo/producto-editar/'+this.idProductoMenu]);
     } else{
       return this.messageService.add({severity:'success',detail:'gggg'});
     }
+  }
+
+  ngOnDestroy(): void {
+    this.sub_producto?.unsubscribe();
   }
 }

@@ -154,7 +154,7 @@ export class ModalProductosComponent implements OnInit, OnDestroy {
                 this.tblHeaders.push(`P${i}`);
               }
             }
-            console.log(this.tblHeaders);
+            // console.log(this.tblHeaders);
             //Ocultamos spinner
             this.isLoadingGeneral = false;
           }
