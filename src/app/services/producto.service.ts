@@ -53,14 +53,6 @@ export class ProductoService{
     getProductosNewIndex(page: number,type: number, search: string):Observable<any>{
         return this._http.get(this.url+'productos/newIndex/'+type+'/'+search+'?page='+page,{headers:this.headers});
     }
-    
-    /**
-     * Listado de prodcutos para punto de venta
-     * @returns 
-     */
-    getProductosPV():Observable<any>{
-        return this._http.get(this.url+'productos/indexPV', {headers:this.headers} );
-    }
 
     /**
      * Listado de prodcutos deshabilitados (general)
@@ -133,10 +125,6 @@ export class ProductoService{
      */
     getExistenciaG(idProducto:number, idProdMedida:number, cantidad:number):Observable<any>{
         return this._http.get(this.url+'productos/getExistenciaG/'+ idProducto+ '/'+ idProdMedida+ '/'+ cantidad,{headers:this.headers} );
-    }
-
-    getExistenciaPorMed(idProducto:Number){
-        return this._http.get(this.url+'productos/existencia/'+ idProducto,{headers:this.headers});
     }
     
     /**
