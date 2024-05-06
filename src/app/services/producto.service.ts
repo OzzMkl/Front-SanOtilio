@@ -222,4 +222,8 @@ export class ProductoService{
     getExistenciaMultiSucursal(idProducto:number):Observable<any>{
         return this._http.get(this.url+'productos/getExistenciaMultiSucursal/'+idProducto,{headers:this.headers});
     }
+
+    getProductoNUBE(idProducto:number):Observable<any>{
+        return this._http.get(this.url+'productos/getProductoNUBE/'+idProducto,{headers:this.headers});
+    }
 }

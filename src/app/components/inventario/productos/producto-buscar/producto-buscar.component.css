@@ -1,4 +1,4 @@
-.p-button:active {
+.p-button-icon-mov:active {
     transition: transform 0.3s ease ; /* Agrega una transición suave */
     transform: rotate(90deg) ; /* Rota el icono 90 grados cuando se hace clic */
 }

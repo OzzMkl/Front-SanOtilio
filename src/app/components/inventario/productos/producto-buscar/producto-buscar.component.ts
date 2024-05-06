@@ -35,6 +35,7 @@ export class ProductoBuscarComponent implements OnInit, OnDestroy {
   public imagenPM: string = "1650558444no-image.png";
   public claveExt: string ='';
   public isShow: boolean = false;
+  public valRadioButton: string = 'nube';
   /**PAGINATOR */
   public totalPages: any;
   public itemsPerPage:number=0;
@@ -51,6 +52,8 @@ export class ProductoBuscarComponent implements OnInit, OnDestroy {
   public idProductoMenu?: number;
   //subscriptions
   private sub_producto?: Subscription;
+  //Modales
+  public mdl_update: boolean = false;
 
   constructor(
     private _productoService: ProductoService,
@@ -236,7 +239,11 @@ export class ProductoBuscarComponent implements OnInit, OnDestroy {
           styleClass: 'text-white',
           icon: 'pi pi-file-edit text-white',
           command: () => {
-            this.optEditarMenu()
+            if(this.sucursal_now && this.sucursal_now.idSuc == 1){
+              return this._router.navigate(['./producto-modulo/producto-editar/'+this.idProductoMenu]);
+            } else{
+              return this.mdl_update = true;
+            }
           }
       })
     }
@@ -251,11 +258,14 @@ export class ProductoBuscarComponent implements OnInit, OnDestroy {
     });
   }
 
-  optEditarMenu(){
-    if(this.sucursal_now && this.sucursal_now.idSuc == 1){
-      return this._router.navigate(['./producto-modulo/producto-editar/'+this.idProductoMenu]);
-    } else{
-      return this.messageService.add({severity:'success',detail:'gggg'});
+  selectedOptEdit() {
+    switch(this.valRadioButton){
+      case 'manual':
+          this._router.navigate(['./producto-modulo/producto-editar/'+this.idProductoMenu]);
+        break;
+      case 'nube':
+
+        break;
     }
   }
 
