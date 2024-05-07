@@ -280,10 +280,13 @@ export class ProductoBuscarComponent implements OnInit, OnDestroy {
           this._router.navigate(['./producto-modulo/producto-editar/'+this.idProductoMenu]);
         break;
       case 'nube':
+          //Activamos el spinner
           this.isLoadingGeneral = true;
+          //Reseteamos variables
           this.tblHeadersNUBE = [];
           this.viewProducto = undefined;
           this.viewProductoMedidas = undefined;
+          //Ejecutamos el servicio
           this.sub_producto = this._productoService.getProductoNUBE(this.idProductoMenu!).subscribe(
             response => {
               // console.log(response);
@@ -317,12 +320,13 @@ export class ProductoBuscarComponent implements OnInit, OnDestroy {
    * Mandamos la actualizacion del producto
    */
   confirmUpdateByNUBE(){
-    this.mdl_viewProduct = false;
+    
     this._confirmationService.confirm({
       message:'¿Esta seguro(a) que desea actualizar el producto?',
       header: 'Advertencia',
       icon: 'pi pi-exclamation-triangle',
       accept: () =>{
+        this.mdl_viewProduct = false;//ocultamos el modal
         this.sub_producto = this._productoService.updateProducto(this.viewProducto,this.viewProductoMedidas, this.identity.sub,[],true).subscribe(
           response =>{
             if(response.status == 'success' && response.code == 200){
@@ -344,11 +348,13 @@ export class ProductoBuscarComponent implements OnInit, OnDestroy {
       reject: (type:any) =>{
         switch(type) {
           case ConfirmEventType.REJECT:
+              this.mdl_viewProduct = false;
               this.messageService.add({severity:'warn', summary:'Cancelado', detail:'Confirmacion de actualizacion de producto cancelada.'});
-          break;
+            break;
           case ConfirmEventType.CANCEL:
+              this.mdl_viewProduct = false;
               this.messageService.add({severity:'warn', summary:'Cancelado', detail:'Confirmacion de actualizacion de producto cancelada.'});
-          break;
+            break;
         }
       }
     });
