@@ -104,18 +104,19 @@ export class ProductoService{
      * @param empleado Empleado
      * @returns Observable
      */
-    updateProducto( producto:any, listaProdMedida:any,idEmpleado:any, sucUpdate:any):Observable<any>{
+    updateProducto( producto:any, listaProdMedida:any,idEmpleado:any, sucUpdate:any, local:boolean = false):Observable<any>{
         let combinado = {
             'producto': producto,
             'idEmpleado': idEmpleado,
             'lista_productosMedida': listaProdMedida,
-            'sucursales': sucUpdate
+            'sucursales': sucUpdate,
+            'update_local': local,
         }
         let json = JSON.stringify(combinado);
         let params = 'json='+json;
 
         return this._http.put(this.url+'productos/updateProduct/'+producto.idProducto,params,{headers:this.headers});
-        // return this._http.put(this.url+'productos/updateProduct/'+producto.idProducto,params,{headers:this.headers});
+        
     }
     
     /**
