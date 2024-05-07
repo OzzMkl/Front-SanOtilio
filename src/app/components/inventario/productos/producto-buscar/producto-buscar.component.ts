@@ -5,29 +5,36 @@ import { Router } from '@angular/router';
 import { EmpleadoService } from 'src/app/services/empleado.service';
 import { ModulosService } from 'src/app/services/modulos.service';
 //primeng
-import { MenuItem, MessageService } from 'primeng/api';
+import { MenuItem, MessageService, ConfirmationService, ConfirmEventType } from 'primeng/api';
 //interfaces
 import { selectBusqueda } from 'src/app/models/interfaces/selectBusqueda';
 import { Subscription } from 'rxjs';
+import { Producto } from 'src/app/models/producto';
+import { Productos_medidas_new } from 'src/app/models/productos_medidas_new';
 
 @Component({
   selector: 'app-producto-buscar',
   templateUrl: './producto-buscar.component.html',
   styleUrls: ['./producto-buscar.component.css'],
-  providers: [ProductoService, EmpleadoService, MessageService]
+  providers: [ProductoService, EmpleadoService, MessageService, ConfirmationService]
 })
 export class ProductoBuscarComponent implements OnInit, OnDestroy {
 
   //Spinners
   public isLoading:boolean = false;//table
   public isLoadingPrecios:boolean = false;//mostrarPrecios
+  public isLoadingGeneral:boolean = false;//selectedOptEdit
   //Servicios
   //paginator
   //Models
+  public identity: any;
   optionsSelect!: selectBusqueda[];
   selectedOpt!: selectBusqueda;
   valSearch: string = '';
-  public tblHeaders: Array<any> = []
+  public viewProducto?: Producto;
+  public viewProductoMedidas?: Array<Productos_medidas_new>;
+  public tblHeadersNUBE: Array<any> = [];
+  public tblHeaders: Array<any> = [];
   public url:string = global.url;
   public productos: Array<any> = [];
   public productosMedida: Array<any> = [];
@@ -54,6 +61,7 @@ export class ProductoBuscarComponent implements OnInit, OnDestroy {
   private sub_producto?: Subscription;
   //Modales
   public mdl_update: boolean = false;
+  public mdl_viewProduct: boolean = false;
 
   constructor(
     private _productoService: ProductoService,
@@ -61,6 +69,7 @@ export class ProductoBuscarComponent implements OnInit, OnDestroy {
     private messageService: MessageService,
     private _modulosService: ModulosService,
     private _router: Router,
+    private _confirmationService: ConfirmationService,
   ) { }
 
   ngOnInit(): void {
@@ -84,6 +93,7 @@ export class ProductoBuscarComponent implements OnInit, OnDestroy {
             this.messageService.add({severity:'error', summary:'Acceso denegado', detail: 'El usuario no cuenta con los permisos necesarios, redirigiendo en '+this.counter+' segundos'});
           },1000);
         } else{
+          this.identity = this._empleadoService.getIdentity();
           this.setOptionsSelect();
           this.getProductos();
           this.add_optMenu();
@@ -240,6 +250,7 @@ export class ProductoBuscarComponent implements OnInit, OnDestroy {
           icon: 'pi pi-file-edit text-white',
           command: () => {
             if(this.sucursal_now && this.sucursal_now.idSuc == 1){
+              
               return this._router.navigate(['./producto-modulo/producto-editar/'+this.idProductoMenu]);
             } else{
               return this.mdl_update = true;
@@ -258,15 +269,89 @@ export class ProductoBuscarComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * De acuerdo a la actualizacion seleccionada
+   * rutemos a componente de edicion o actualizamos desde el catalago en la nube
+   */
   selectedOptEdit() {
     switch(this.valRadioButton){
       case 'manual':
+          this.mdl_update = false;
           this._router.navigate(['./producto-modulo/producto-editar/'+this.idProductoMenu]);
         break;
       case 'nube':
-
+          this.isLoadingGeneral = true;
+          this.tblHeadersNUBE = [];
+          this.viewProducto = undefined;
+          this.viewProductoMedidas = undefined;
+          this.sub_producto = this._productoService.getProductoNUBE(this.idProductoMenu!).subscribe(
+            response => {
+              // console.log(response);
+              if(response.status == 'success' && response.code == 200){
+                //asginamos daatos
+                this.viewProducto = response.producto;
+                this.viewProductoMedidas = response.producto_medidas;
+                this.mdl_update = false;//oculta moldal de radio button
+                this.mdl_viewProduct = true;//mostramos modal de detalles del producto
+                //Creamos cabeceras de los precios
+                for(let i = 1; i <= 5; i++){
+                  const precioKey = `precio${i}`;
+                  if(this.viewProductoMedidas && (this.viewProductoMedidas[0] as any)[precioKey] != null){
+                    this.tblHeadersNUBE.push(`P${i}`);
+                  }
+                }
+                this.isLoadingGeneral = false;//ocultamos el spinner
+                
+              }
+            }, errors =>{
+              this.mdl_update = false;
+              this.messageService.add({severity:'error',summary:'Error',detail:'Ocurrio un error al intentar obtener los datos.'});
+              console.log(errors);
+            }
+          )
         break;
     }
+  }
+
+  /**
+   * Mandamos la actualizacion del producto
+   */
+  confirmUpdateByNUBE(){
+    this.mdl_viewProduct = false;
+    this._confirmationService.confirm({
+      message:'¿Esta seguro(a) que desea actualizar el producto?',
+      header: 'Advertencia',
+      icon: 'pi pi-exclamation-triangle',
+      accept: () =>{
+        this.sub_producto = this._productoService.updateProducto(this.viewProducto,this.viewProductoMedidas, this.identity.sub,[],true).subscribe(
+          response =>{
+            if(response.status == 'success' && response.code == 200){
+              this.messageService.add({
+                severity:'success',
+                detail:'Producto actualizado correctamente.'
+              });
+            }
+          }, error =>{
+            this.messageService.add({
+              severity:'error',
+              summary:'Error',
+              detail:'Ocurrio un error al actualizar el producto.'
+            });
+            console.log(error);
+          }
+        )
+      },
+      reject: (type:any) =>{
+        switch(type) {
+          case ConfirmEventType.REJECT:
+              this.messageService.add({severity:'warn', summary:'Cancelado', detail:'Confirmacion de actualizacion de producto cancelada.'});
+          break;
+          case ConfirmEventType.CANCEL:
+              this.messageService.add({severity:'warn', summary:'Cancelado', detail:'Confirmacion de actualizacion de producto cancelada.'});
+          break;
+        }
+      }
+    });
   }
 
   ngOnDestroy(): void {

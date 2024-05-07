@@ -1,4 +1,5 @@
 <p-toast></p-toast>
+<app-loading-spinner [isLoading]="isLoadingGeneral"></app-loading-spinner>
 <div class="container">
     <h3 class="text-center">Buscar Productos</h3>
 </div>
@@ -173,3 +174,89 @@
         </div>
     </ng-template>
 </p-dialog>
+<!-- Modal view Producto NUBE -->
+<p-dialog
+    header="Header"
+    [(visible)]="mdl_viewProduct"
+    [modal]="true"
+    [style]="{width:'50vw'}"
+    [draggable]="true"
+    [resizable]="true"
+    position="top"
+    [dismissableMask]="true">
+    <ng-template pTemplate="header">
+        <h5 class="modal-title" id="modal-title-view-product">Detalles producto: {{viewProducto?.claveEx}}</h5>
+    </ng-template>
+    <div class="row">
+        <div class="col-4">
+            <label class="form-label" for="nombreMarca">Marca</label>
+            <input class="form-control" id="nombreMarca" type="text" [value]="viewProducto?.nombreMarca" readonly>
+        </div>
+        <div class="col-4">
+            <label class="form-label" for="nombreDep">Departamento</label>
+            <input class="form-control" id="nombreDep" type="text" [value]="viewProducto?.nombreDep" readonly>
+        </div>
+        <div class="col-4">
+            <label class="form-label" for="nombreDep">Precio compra</label>
+            <input class="form-control" id="nombreDep" type="text" [value]="" readonly>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <label class="form-label" for="descripcion">Descripcion</label>
+            <input class="form-control" id="descripcion" type="text" [value]="viewProducto?.descripcion" readonly>
+        </div>
+    </div>
+    <hr>
+        <label class="form-label" for="tblProdNUBE">Precios</label>
+        <p-table
+            id="tblProdNUBE"
+            [value]="viewProductoMedidas!"
+            styleClass="p-datatable-sm p-datatable-striped text-center">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>MED.</th>
+                    <th *ngFor="let tblHead of tblHeadersNUBE">
+                        {{tblHead}}
+                    </th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-prdMedida>
+                <tr class="text-center">
+                    <td>{{prdMedida.nombreMedida}}</td>
+                    <td [ngClass]="prdMedida.precio1 ? '':'d-none'" >{{ prdMedida.precio1 | currency:'MXN'}}</td>
+                    <td [ngClass]="prdMedida.precio2 ? '':'d-none'" >{{ prdMedida.precio2 | currency:'MXN'}}</td>
+                    <td [ngClass]="prdMedida.precio3 ? '':'d-none'" >{{ prdMedida.precio3 | currency:'MXN'}}</td>
+                    <td [ngClass]="prdMedida.precio4 ? '':'d-none'" >{{ prdMedida.precio4 | currency:'MXN'}}</td>
+                    <td [ngClass]="prdMedida.precio5 ? '':'d-none'" >{{ prdMedida.precio5 | currency:'MXN'}}</td>
+                </tr>
+            </ng-template>
+        </p-table>
+    
+    <ng-template pTemplate="footer">
+        <div class="row justify-content-between">
+            <button class="p-button-danger ms-2" 
+                    pButton
+                    pRipple
+                    type="button"
+                    icon="pi pi-times"
+                    label="Cancelar"
+                    (click)="mdl_viewProduct = false">
+            </button>
+            <button class="p-button-primary me-2"
+                    pButton 
+                    pRipple
+                    type="button"
+                    icon="pi pi-check"
+                    label="Actualizar"
+                    (click)="confirmUpdateByNUBE()">
+            </button>
+        </div>
+    </ng-template>
+</p-dialog>
+<!-- COnfirm update producto nube -->
+<p-confirmDialog
+    [style]="{width:'35vw'}"
+    accepLabel="Si"
+    rejectButtonStyleClass="p-button-text">
+</p-confirmDialog>

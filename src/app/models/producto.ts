@@ -15,6 +15,12 @@ export class Producto{//Modelo del producto
         public claveSat: string,
         public tEntrega: any,
         public idAlmacen: number,
-        public existenciaG: number
+        public existenciaG: number,
+        //Extras
+        public nombreMarca?: string | null,
+        public nombreDep?: string | null,
+        public nombreCat?: string | null,
+        public nombreStatus?: string | null,
+        public nombreAlmacen?: string | null,
     ){}
 }
