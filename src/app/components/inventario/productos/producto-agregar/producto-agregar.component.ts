@@ -71,6 +71,7 @@ export class ProductoAgregarComponent implements OnInit {
   public sucursales_fallidas: Array<any> = [];
 
   public modoEdicion: boolean = false;
+  public isUpdateLocal: boolean = false;
   public mdl_Mantener: boolean = false;
   public accionModificacionPrecio: string = "mantenerPrecio";
   public inputAmount: number | null = null;
@@ -121,6 +122,9 @@ export class ProductoAgregarComponent implements OnInit {
             if(params['idProducto']){
               this.getDatosProducto(params['idProducto']);
               this.modoEdicion = true;
+            }
+            if(params['strLocal'] == 'local'){
+              this.isUpdateLocal = true;
             }
           });
           this.getMedida();
@@ -641,7 +645,11 @@ export class ProductoAgregarComponent implements OnInit {
    */
   confirmSubmit(isUpdate: boolean = false){
     if(isUpdate){
-      this.confirmUpdate();
+      if(this.isUpdateLocal){
+        this.confirmSubmit();
+      } else{
+        this.confirmUpdate();
+      }
     } else {
       this._confirmationService.confirm({
         message: '¿Esta seguro(a) que desea guardar el producto?',
@@ -942,7 +950,7 @@ export class ProductoAgregarComponent implements OnInit {
           detail:'Favor de verificar los precios', 
       });
     } else{
-      this._productoService.updateProducto(this.producto,this.tabsPrice,this.identity.sub,this.sucursales).subscribe(
+      this._productoService.updateProducto(this.producto,this.tabsPrice,this.identity.sub,this.sucursales,this.isUpdateLocal).subscribe(
         response =>{
           if(response.status =='success'){
             this.sucursales_guardadas = response.data_productosMulti.sucursales_guardadas;
@@ -951,7 +959,15 @@ export class ProductoAgregarComponent implements OnInit {
             this.isLoadingGeneral = false;
             this.mdl_ConfirmSucursales = false;
 
-            this.mdl_SubmitProd =true;
+            if(this.isUpdateLocal){
+              this.messageService.add({
+                severity:'success',
+                summary:'Actualizacion exitosa',
+                detail:response.message,
+            })
+            } else{
+              this.mdl_SubmitProd =true;
+            }
           }
           // console.log(response);
         }, error =>{

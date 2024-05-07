@@ -277,7 +277,7 @@ export class ProductoBuscarComponent implements OnInit, OnDestroy {
     switch(this.valRadioButton){
       case 'manual':
           this.mdl_update = false;
-          this._router.navigate(['./producto-modulo/producto-editar/'+this.idProductoMenu]);
+          this._router.navigate(['./producto-modulo/producto-editar/local/'+this.idProductoMenu]);
         break;
       case 'nube':
           //Activamos el spinner

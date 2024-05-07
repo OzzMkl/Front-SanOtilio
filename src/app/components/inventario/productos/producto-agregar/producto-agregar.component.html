@@ -507,7 +507,7 @@
           <td class="branch_letter">
             {{rb.nombre_sucursal.toUpperCase()}}  
             <i class="pi pi-check ps-1" [ngClass]="{'branch_icon_success': !modoEdicion || rb.isSelected, 'branch_icon_warn': !rb.isSelected && modoEdicion}"
-                pTooltip="{{rb.isSelected ? 'Producto guardado correctamente' : 'El producto no se modifico en esta sucursal'}}" tooltipPosition="top"></i>
+                pTooltip="{{rb.isSelected || !modoEdicion ? 'Producto guardado correctamente' : 'El producto no se modifico en esta sucursal'}}" tooltipPosition="top"></i>
           </td>
         </tr>
         <tr *ngFor="let rb of sucursales_fallidas">

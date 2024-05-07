@@ -156,7 +156,8 @@ const routes: Routes = [
       {path: 'producto-buscar', component: ProductoBuscarComponent},
       {path: 'producto-deshabilitado', component: ProductoDeshabilitadosComponent},
       {path: 'producto-ver/:idProducto', component: ProductoVerComponent},
-      {path: 'producto-editar/:idProducto', component:ProductoAgregarComponent}
+      {path: 'producto-editar/:idProducto', component:ProductoAgregarComponent},
+      {path: 'producto-editar/:strLocal/:idProducto', component:ProductoAgregarComponent}
    ]},
   {path:'traspaso-modulo', component: TraspasoModuloComponent,
     children:
