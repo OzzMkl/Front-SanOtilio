@@ -20,6 +20,7 @@ import { Producto_ventasg } from 'src/app/models/productoVentag';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 //primeng
 import { MessageService, ConfirmationService, ConfirmEventType } from 'primeng/api';
+import { handleRedirect } from 'src/app/utils/fnUtils';
 
 @Component({
   selector: 'app-punto-de-venta',
@@ -564,17 +565,7 @@ export class PuntoDeVentaComponent implements OnInit, OnDestroy {
             this.userPermisos = this._empleadoService.getPermisosModulo(this.mPuV.idModulo, this.mPuV.idSubModulo);
             //revisamos si el permiso del modulo esta activo si no redireccionamos
             if( this.userPermisos.editar != 1 ){
-              this.timerId = setInterval(()=>{
-                this.counter--;
-                if(this.counter === 0){
-                  clearInterval(this.timerId);
-                  this._router.navigate(['./']);
-                }
-                this.messageService.add({
-                    severity:'error', 
-                    summary:'Acceso denegado', 
-                    detail: 'El usuario no cuenta con los permisos necesarios, redirigiendo en '+this.counter+' segundos'});
-              },1000);
+              handleRedirect(this.counter, this._router, this.messageService);
             } else{
               this.openModalMotivo();
               this.modoEdicion = true;
@@ -583,17 +574,7 @@ export class PuntoDeVentaComponent implements OnInit, OnDestroy {
       case "edit_cotizacion":
             this.userPermisos = this._empleadoService.getPermisosModulo(this.mCoti.idModulo, this.mCoti.idSubModulo);
             if( this.userPermisos.editar != 1 ){
-              this.timerId = setInterval(()=>{
-                this.counter--;
-                if(this.counter === 0){
-                  clearInterval(this.timerId);
-                  this._router.navigate(['./']);
-                }
-                this.messageService.add({
-                    severity:'error', 
-                    summary:'Acceso denegado', 
-                    detail: 'El usuario no cuenta con los permisos necesarios, redirigiendo en '+this.counter+' segundos'});
-              },1000);
+              handleRedirect(this.counter, this._router, this.messageService);
             } else{
               this.identity = this._empleadoService.getIdentity();
               this.modoEdicionCotizacion = true;

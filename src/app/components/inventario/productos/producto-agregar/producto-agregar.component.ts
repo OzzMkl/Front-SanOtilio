@@ -10,6 +10,7 @@ import { ProductoService } from 'src/app/services/producto.service';
 import { EmpleadoService } from 'src/app/services/empleado.service';
 import { ModulosService } from 'src/app/services/modulos.service';
 import { MessageService, ConfirmationService, ConfirmEventType } from 'primeng/api';
+import { SharedMessage } from 'src/app/services/sharedMessage';
 
 /*NGBOOTSTRAP */
 import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -17,6 +18,7 @@ import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Producto} from 'src/app/models/producto';
 import { Productos_medidas_new } from 'src/app/models/productos_medidas_new';
 import { SucursalService } from 'src/app/services/sucursal.service';
+import { handleRedirect } from 'src/app/utils/fnUtils';
 
 
 @Component({
@@ -37,6 +39,7 @@ export class ProductoAgregarComponent implements OnInit {
   //PERMISOS
   public userPermisos:any = [];
   public mInv = this._modulosService.modsInventario();
+  public sucursal_now: any = this._empleadoService.getSucursalSesion();
   //contador para redireccion al no tener permisos
   counter: number = 5;
   timerId:any;
@@ -93,6 +96,7 @@ export class ProductoAgregarComponent implements OnInit {
     private _confirmationService: ConfirmationService,
     private _route: ActivatedRoute,
     private _sucursalService: SucursalService,
+    private _sharedMessage: SharedMessage,
 
   ) {
     this.producto = new Producto(0,0,0,1,'',0,'',0,0,'',0,'','',null,1,0);
@@ -106,32 +110,72 @@ export class ProductoAgregarComponent implements OnInit {
   * Funcion que carga los permisos
   */
   loadUser(){
-    this.userPermisos = this._empleadoService.getPermisosModulo(this.mInv.idModulo, this.mInv.idSubModulo);
-        //revisamos si el permiso del modulo esta activo si no redireccionamos
-        if( this.userPermisos.agregar != 1 ){
-          this.timerId = setInterval(()=>{
-            this.counter--;
-            if(this.counter === 0){
-              clearInterval(this.timerId);
-              this._router.navigate(['./']);
-            }
-            this.messageService.add({severity:'error', summary:'Acceso denegado', detail: 'El usuario no cuenta con los permisos necesarios, redirigiendo en '+this.counter+' segundos'});
-          },1000);
-        } else{
-          this._route.params.subscribe( params =>{
-            if(params['idProducto']){
-              this.getDatosProducto(params['idProducto']);
-              this.modoEdicion = true;
-            }
-            if(params['strLocal'] == 'local'){
-              this.isUpdateLocal = true;
-            }
-          });
-          this.getMedida();
-          this.getMarca();
-          this.getDepartamentos();
-          this.identity = this._empleadoService.getIdentity();
-        }
+    let idProductoParam;
+    this._route.params.subscribe( params =>{
+      if(params['idProducto']){
+        this.modoEdicion = true;
+        idProductoParam = params['idProducto'];
+      }
+      if(params['strLocal'] == 'local'){
+        this.isUpdateLocal = true;
+      }
+    });
+    
+    this.verificaPermisos(idProductoParam);
+  }
+
+  verificaPermisos(idProducto?:number){
+    let isPermisosOk = false;
+    if(!this.modoEdicion && !this.isUpdateLocal && this.sucursal_now.idSuc == 1){
+
+      this.userPermisos = this._empleadoService.getPermisosModulo(this.mInv.idModulo, this.mInv.idSubModulo);
+      if(this.userPermisos.agregar == 1){
+        this.getMedida();
+        this.getMarca();
+        this.getDepartamentos();
+        this.identity = this._empleadoService.getIdentity();
+        isPermisosOk = true;
+      } else{
+        handleRedirect(this.counter,this._router,this.messageService);
+      }
+
+    } else if(this.modoEdicion && !this.isUpdateLocal && this.sucursal_now.idSuc == 1 && idProducto){
+      this.userPermisos = this._empleadoService.getPermisosModulo(this.mInv.idModulo, this.mInv.idSubModulo);
+      if(this.userPermisos.editar == 1){
+        this.getMedida();
+        this.getMarca();
+        this.getDepartamentos();
+        this.identity = this._empleadoService.getIdentity();
+        this.getDatosProducto(idProducto);
+        isPermisosOk = true;
+      } else{
+        handleRedirect(this.counter,this._router,this.messageService);
+      }
+    } else if(this.modoEdicion && this.isUpdateLocal && this.sucursal_now.idSuc != 1 && idProducto){
+      this.userPermisos = this._empleadoService.getPermisosModulo(this.mInv.idModulo, this.mInv.idSubModulo);
+      if(this.userPermisos.editar == 1){
+        this.getMedida();
+        this.getMarca();
+        this.getDepartamentos();
+        this.identity = this._empleadoService.getIdentity();
+        this.getDatosProducto(idProducto);
+        isPermisosOk = true;
+      } else{
+        handleRedirect(this.counter,this._router,this.messageService);
+      }
+    }
+
+    if(!isPermisosOk){
+      let message = {
+        severity:'error',
+        summary:'Permisos insuficientes',
+        detail: 'El usuario no cuenta con los permisos necesarios para editar/agregar un producto',
+        sticky:true,
+      }
+      
+      this._sharedMessage.addMessages(message);
+      this._router.navigate(['./']);
+    }
   }
 
   /**
