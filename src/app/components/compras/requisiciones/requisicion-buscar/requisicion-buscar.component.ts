@@ -4,8 +4,10 @@ import { ProductoService } from 'src/app/services/producto.service';
 import { MessageService } from 'primeng/api';
 import { RequisicionService } from 'src/app/services/requisicion.service';
 import { EmpleadoService } from 'src/app/services/empleado.service';
+import { ModulosService } from 'src/app/services/modulos.service';
 import { HttpClient} from '@angular/common/http'
 import { Subscription } from 'rxjs';
+import { handleRedirect } from 'src/app/utils/fnUtils';
 //NGBOOTSTRAP-modal
 import { NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
 //Router
@@ -24,7 +26,8 @@ export class RequisicionBuscarComponent implements OnInit {
 
   //Usuario
   public idUser:any;
-
+  mReq = this._modulosService.modsRequisicion();
+  public userPermisos:any;
   //Modal
   //Cerrar modal
   closeResult = ''; 
@@ -59,6 +62,9 @@ export class RequisicionBuscarComponent implements OnInit {
   //Subscripciones
   private getReqSub : Subscription = new Subscription;
 
+  //Buscador
+  public tipoBusqueda: string = 'Recibidas';
+  public search: string = '';
 
   constructor(
     private _http: HttpClient,
@@ -66,12 +72,13 @@ export class RequisicionBuscarComponent implements OnInit {
     private messageService: MessageService,
     private _requisicionservice: RequisicionService,
     public _empleadoService : EmpleadoService,
-    public _router: Router
+    public _router: Router,
+    private _modulosService: ModulosService,
   ) {}
 
   ngOnInit(): void {
     this.loadUser();
-    this.getRequisiciones();
+    
   }
 
   /**
@@ -79,8 +86,37 @@ export class RequisicionBuscarComponent implements OnInit {
    * Cargar los datos del usuario al iniciar el componente
    */
   loadUser(){
+
+
+    this.userPermisos = this._empleadoService.getPermisosModulo(this.mReq.idModulo, this.mReq.idSubModulo);
+    console.log(this.userPermisos)
+    //revisamos si el permiso del modulo esta activo si no redireccionamos
+    if( this.userPermisos.ver == 1 ){
+        this.getRequisiciones();
+      
+    } else{
+      handleRedirect(5, this._router, this.messageService);
+    }
+
+
     this.identity = this._empleadoService.getIdentity();
+
+
   }
+
+     /**
+   * @description
+   * Obtiene la informacion del input y busca
+   */
+     selectBusqueda(){
+      
+      if(this.search == "" || null){
+      
+        this.getRequisiciones();
+    } else{
+      this.getRequisiciones();
+      }//finelse
+  }//finFunction
 
   generaPDF(idReq:number){
     this._requisicionservice.getPDF(idReq, this.identity['sub']).subscribe(
@@ -97,7 +133,7 @@ export class RequisicionBuscarComponent implements OnInit {
     this.isLoading = true;
 
 
-    this.getReqSub = this._requisicionservice.getReq().subscribe(
+    this.getReqSub = this._requisicionservice.getReq(this.tipoBusqueda,this.search).subscribe(
       response =>{
         if(response.status == 'success'){
 
@@ -181,7 +217,7 @@ export class RequisicionBuscarComponent implements OnInit {
         if(response.status == 'success'){
           this.detailReq = response.requisicion; 
           this.productosdetailReq = response.productos;
-          // console.log('response',response);
+          console.log('response',response);
           // console.log('requisicion',this.detailReq);
           // console.log('productos',this.productosdetailReq);
           
@@ -214,4 +250,37 @@ export class RequisicionBuscarComponent implements OnInit {
 
   }
 
+  aceptarReq(idReq:number){
+    console.log('aceptarReq ',idReq);
+    var identity = this._empleadoService.getIdentity();
+    this._requisicionservice.aceptarReq(idReq,identity['sub']).subscribe(
+    response =>{
+      if(response.status == 'success'){
+        this.messageService.add({severity:'success', summary:'Requisición aceptada'});
+        //this._router.navigate(['./requisicion-modulo/requisicion-buscar']);
+        window.location.reload();
+        
+      }else{ this.messageService.add({severity:'success', summary:'Requisición aceptada'});}
+    }, error =>{
+      console.log(error);
+    });
+
+  }
+
+  rechazarReq(idReq:number){
+    console.log('rechazarReq ',idReq);
+    var identity = this._empleadoService.getIdentity();
+    this._requisicionservice.rechazarReq(idReq,identity['sub']).subscribe(
+    response =>{
+      if(response.status == 'success'){
+        this.messageService.add({severity:'success', summary:'Requisición rechazada'});
+        //this._router.navigate(['./requisicion-modulo/requisicion-buscar']);
+        window.location.reload();
+        
+      }else{ this.messageService.add({severity:'success', summary:'Requisición rechazada'});}
+    }, error =>{
+      console.log(error);
+    });
+
+  }
 }

@@ -1,45 +1,29 @@
 <p-toast></p-toast>
 <div class="container">
-    <h3 class="text-center">Requisiciones Recibidas</h3>
+    <h3 class="text-center">Requisiciones {{tipoBusqueda}}</h3>
 </div>
 <br>
 <div>
     <div class="container-fluid" *ngIf="requisiciones">
-        <!-- <div class="input-group mb-2">
-            <div class="col-2">
-                <select class="form-select" name="tipoBusqueda" [(ngModel)]="tipoBusqueda">
-                    <option value="1"># Compra</option>
-                    <option value="2">Proveedor</option>
-                    <option value="3"># Proveedor</option>
-                    <option value="4">Total</option>
+        <!--CUADRO DE BUSQUEDA-->
+        <div class="input-group mb-2">
+            <div class="col-3"> 
+                <label class="form-label">Selecciona el tipo de requisicion</label>
+                <select class="form-select" name="tipoBusqueda" [(ngModel)]="tipoBusqueda" (ngModelChange)="selectBusqueda()" >
+                    <option value="Recibidas" selected>Recibidas</option>
+                    <option value="Rechazadas">Rechazadas</option>
+                    <option value="Aceptadas">Aceptadas</option>
+                    <option value="Canceladas">Canceladas</option>
                 </select>
             </div>
-            <div class="col" *ngIf="tipoBusqueda == 1">
-                <input type="search" class="form-control" name="searchIdCompra" placeholder="Buscar ..." (keyup)="getSearchIdCompra($event)">
+            <div class="col">
+                <label class="form-label">Escribe la requisicion a buscar</label>
+                <input type="search" class="form-control" name="search" placeholder="Ingrese solo numeros" [(ngModel)]="search" (ngModelChange)="selectBusqueda()" oninput="this.value = this.value.replace(/[^0-9]/g, '');" autocomplete="off">
             </div>
-            <div class="col" *ngIf="tipoBusqueda == 2">
-                <input type="search" class="form-control" name="searchNombreProveedor" placeholder="Buscar ..." (keyup)="getSearchNombreProveedor($event)">
-            </div>
-            <div class="col" *ngIf="tipoBusqueda == 3">
-                <input type="search" class="form-control" name="searchFolioProveedor" placeholder="Buscar ..." (keyup)="getSearchFolioProveedor($event)">
-            </div>
-            <div class="col" *ngIf="tipoBusqueda == 4">
-                <input type="search" class="form-control" name="searchTotal" placeholder="Buscar ..." (keyup)="getSearchTotal($event)">
-            </div>
-        </div> -->
-        <!-- <div>
-            <div class="container-fluid">
-                <div class="input-group mb-2">
-                    <input type="search" class="form-control" id="agregarAOrden" name="agregarAOrden" placeholder="Para añadir varias requisiciones a orden de compra: 1 ó 1, 2, 3, 4,... ">
-                    <button type="button" class="btn btn-success" style="box-sizing: border-box;" ngbTooltip="Pasar a orden de compra"  ><i class="bi bi-arrow-up-right-square"></i><br></button>
+        </div>
 
 
 
-                </div>
-
-            </div>
-
-        </div> -->
         <br>
         <div class="text-center text-primary" *ngIf="isLoading">
             <div class="spinner-border" role="status" >
@@ -98,10 +82,20 @@
                         <div class="col-auto">
                             <button type="button" class="btn btn-danger" (click)="deshabilitarReq(datosReq.idReq)" ngbTooltip="CANCELAR"><i class="bi bi-trash3"></i><br></button>
                         </div>
+                        <div class="col-auto">
+                            <button type="button" class="btn btn-primary" (click)="aceptarReq(datosReq.idReq)" ngbTooltip="ACEPTAR"><i class="bi bi-check2"></i><br></button>
+                        </div>
+                        <div class="col-auto">
+                            <button type="button" class="btn btn-danger" (click)="rechazarReq(datosReq.idReq)" ngbTooltip="RECHAZAR"><i class="bi bi-x-lg"></i><br></button>
+                        </div>
                     </div>
                     <hr>
                     <h4 class="text-center">DATOS DE LA REQUISICION</h4>
                     <div class="row align-items-start">
+                        <div class="col-5" *ngIf="datosReq.idProveedor">
+                            <label for="nombreEmpleado" class="form-label">Proveedor</label>
+                            <input id="nombreEmpleado" type="text" class="form-control" value="{{datosReq.nombreProveedor}}" readonly>
+                        </div>
                         <div class="col-5">
                           <label for="nombreEmpleado" class="form-label">Realizo</label>
                           <input id="nombreEmpleado" type="text" class="form-control" value="{{datosReq.nombreEmpleado}}" readonly>

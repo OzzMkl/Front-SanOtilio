@@ -42,8 +42,9 @@ export class RequisicionService {
     return this._http.get(this.url+'requisicion/generatePDF/'+ idReq+'/'+idEmpleado, {responseType:'blob'});
   }
 
-  getReq():Observable<any>{
-    return this._http.get(this.url+'requisicion/listaRequisiciones', {headers:this.headers} );
+  getReq(tipoRequisicion:string, requisicion:string):Observable<any>{
+    let str_requisicion = requisicion == '' ? 'vacio' : requisicion;
+    return this._http.get(this.url+'requisicion/listaRequisiciones/'+tipoRequisicion+'/'+str_requisicion, {headers:this.headers} );
   }
 
   updateRequisicion(idReq:any,req:any):Observable<any>{
@@ -78,6 +79,16 @@ export class RequisicionService {
     // let params = 'json='+json;
     let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');//mandamos el json con las cabeceras para que obtengamos el token
     return this._http.get(this.url+'requisicion/updateidOrden',{params, headers:headers} );
+  }
+
+  aceptarReq(idReq:number,idEmpleado:number):Observable<any>{
+    let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');//mandamos el json con las cabeceras para que obtengamos el token
+    return this._http.put(this.url+'requisicion/aceptarReq/'+idReq+'/'+idEmpleado, {headers:headers} );
+  }
+
+  rechazarReq(idReq:number,idEmpleado:number):Observable<any>{
+    let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');//mandamos el json con las cabeceras para que obtengamos el token
+    return this._http.put(this.url+'requisicion/rechazarReq/'+idReq+'/'+idEmpleado, {headers:headers} );
   }
 
 }
