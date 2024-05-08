@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 //Servicios
 import { ProductoService } from 'src/app/services/producto.service';
 import { global } from 'src/app/services/global';
@@ -6,6 +6,10 @@ import { RequisicionService } from 'src/app/services/requisicion.service';
 import { EmpleadoService } from 'src/app/services/empleado.service';
 import { HttpClient} from '@angular/common/http';
 import {MessageService} from 'primeng/api';
+import { ProveedorService } from 'src/app/services/proveedor.service';
+import { SharedMessage } from 'src/app/services/sharedMessage'; 
+import { Subscription } from 'rxjs';
+import { MdlProductoService } from 'src/app/services/mdlProductoService';
 //Modelos
 import { Requisicion } from 'src/app/models/requisicion';
 import { Producto_requisicion } from 'src/app/models/producto_requisicion';
@@ -18,7 +22,7 @@ import { Router } from '@angular/router';
   selector: 'app-requisicion-agregar',
   templateUrl: './requisicion-agregar.component.html',
   styleUrls: ['./requisicion-agregar.component.css'],
-  providers:[ProductoService, RequisicionService, EmpleadoService,MessageService]
+  providers:[ProductoService, RequisicionService, EmpleadoService,MessageService,ProveedorService]
 })
 export class RequisicionAgregarComponent implements OnInit {
 
@@ -76,6 +80,16 @@ export class RequisicionAgregarComponent implements OnInit {
   //Imagen del producto
   public imagenPM: string = '';
 
+  //Servicio de proveedores
+  public proveedoresLista:any;
+  public proveedorVer:any;
+
+  //Input de busqueda
+  public idProducto ? : number;
+
+  //Modal productos
+  public selectedValue : any;
+  private subscription : Subscription;
 
   constructor(
     private _http: HttpClient,
@@ -84,17 +98,32 @@ export class RequisicionAgregarComponent implements OnInit {
     private messageService: MessageService,
     private _requisicionservice: RequisicionService,
     public _empleadoService : EmpleadoService,
-    public _router: Router
+    public _router: Router,
+    private _proveedorService: ProveedorService,
+    private _sharedMessage: SharedMessage,
+    private _mdlProductoService: MdlProductoService
     ) {
-      this.requisicion = new Requisicion(0,'',0,0,29,null);
+      this.requisicion = new Requisicion(0,0,'',0,0,0,null);
       this.producto_requisicion = new Producto_requisicion(0,0,0,0,0,null,'','','');
       this.Lista_compras = [];
       this.url = global.url;
+      this.subscription = _mdlProductoService.selectedValue$.subscribe(
+        value => [this.getProd(value.idProducto)]
+      )
     }
 
   ngOnInit(): void {
     this.getAllProducts();
     this.loadUser(); 
+    this.getProvee();
+    this._sharedMessage.messages$.subscribe(
+      messages => { 
+        if(messages){
+          this.messageService.add(messages[0]);
+        }
+
+      }
+    )
   }
 
   /**
@@ -135,6 +164,19 @@ export class RequisicionAgregarComponent implements OnInit {
     this.identity = this._empleadoService.getIdentity();
   }
 
+  getProvee(){
+    this._proveedorService.getProveedoresSelect().subscribe(
+      response => {
+        if(response.status == 'success'){
+          this.proveedoresLista = response.provedores;
+          console.log(response.provedores);
+        }
+      },
+      error =>{
+        console.log(error);
+      }
+    );
+  }
 
 
 
@@ -158,6 +200,8 @@ export class RequisicionAgregarComponent implements OnInit {
         //this.producto_orden.nombreMedida = this.productoVer[0]['nombreMedida'];
         this.medidasLista = response.productos_medidas;
         console.log(this.productoVer);
+        console.log('req');
+        console.log(this.producto_requisicion);
         console.log(this.medidasLista);
         //Si el producto tiene una sola medida se asigna directo
         //if(this.medidasLista.length == 1){ this.producto_orden.idProdMedida = this.medidasLista[0].idProdMedida }
@@ -165,7 +209,7 @@ export class RequisicionAgregarComponent implements OnInit {
         if(this.productoVer[0]['imagen'] == "" || this.productoVer[0]['imagen'] == null){
           this.productoVer[0]['imagen'] = "1650558444no-image.png";
         }
-
+        this.isSearch = false;
       },error => {
         console.log(error);
       }
@@ -247,6 +291,7 @@ export class RequisicionAgregarComponent implements OnInit {
   agregarRequisicion(form:any){//Enviar Form insertar en DB
     this.requisicion.idEmpleado = this.identity['sub'];//asginamos id de Empleado
     console.log('Requisicion',this.requisicion);
+    
     if(this.Lista_compras.length == 0){
       this.messageService.add({severity:'error', summary:'Error', detail:'No se puede crear la requisicion de compra si no tiene productos'});
     }else{
@@ -543,6 +588,19 @@ export class RequisicionAgregarComponent implements OnInit {
      }
    )
  }
+
+ handleIdProductoObtenido(idProducto:number){
+  if(idProducto){
+    this.getProd(idProducto);
+  }else{
+    this.resetVariables();
+  }
+ }
+  
+  openMdlProductos():void{
+    this._mdlProductoService.openMdlProductosDialog(true);
+  }
+
   
 
 }

@@ -3,14 +3,30 @@
     <form class="form-group" #FormReq="ngForm" (keydown)="omitirEnter($event)" (ngSubmit)="agregarRequisicion(FormReq)">
         <h3 class="text-center">AGREGAR REQUISICION</h3>
         <hr>
+        <div>
+            <h4 class="text-center">PROVEEDOR</h4>
+            <div class="col-5">
+                <label for="idProveedor" class="form-label">Seleccionar proveedor</label>
+                <select name="idProveedor" id="idProveedor" class="form-select" #idProveedor="ngModel" [(ngModel)]="requisicion.idProveedor" >
+                    <option selected disabled value="">Abrir para seleccionar</option>
+                    <option  *ngFor="let proveedor of proveedoresLista" value={{proveedor.idProveedor}}>{{proveedor.nombre}}</option>
+                </select>
+            </div>
+        </div>
+        <hr>
         <div >
             <h4 class="text-center">PRODUCTO</h4>
             <div class="row align-items-start">
                 <div class="col-4">
                     <label class="form-label" for="">Buscar producto</label>
                     <div class="input-group">
-                        <span class="input-group-addon" id="sizing-addon2"><i class="bi-search" style="font-size: 1.5rem; color: black; left: 0;" (click)="open(content)"></i> </span>
-                        <input class="form-control" type="text" ngbTooltip="Solo busca por clave externa" name="claveEx" #claveEx="ngModel" [(ngModel)]="producto_requisicion.claveEx" readonly>
+                        <app-input-external-key-search 
+                            (idProductoObtenido)="handleIdProductoObtenido($event)"
+                            [claveExterna]="producto_requisicion.claveEx">
+                            <span class="input-group-addon" id="sizing-addon2"><i class="bi-search" style="font-size: 1.5rem; color: black; left: 0;" (click)="openMdlProductos()"></i> </span>
+
+                        </app-input-external-key-search>
+                        <input class="form-control d-none" type="text" ngbTooltip="Solo busca por clave externa" name="claveEx" #claveEx="ngModel" [(ngModel)]="producto_requisicion.claveEx" readonly>
                         
                     </div>
                 </div>
@@ -156,3 +172,5 @@
       <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Guardar</button>
     </div> -->
 </ng-template>
+
+<app-modal-productos></app-modal-productos>
