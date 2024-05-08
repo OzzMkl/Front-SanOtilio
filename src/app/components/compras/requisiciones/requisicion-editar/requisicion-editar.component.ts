@@ -7,6 +7,7 @@ import { RequisicionService } from 'src/app/services/requisicion.service';
 import { EmpleadoService } from 'src/app/services/empleado.service';
 import { HttpClient} from '@angular/common/http';
 import {MessageService} from 'primeng/api';
+import { ProveedorService } from 'src/app/services/proveedor.service';
 //Modelos
 import { Requisicion } from 'src/app/models/requisicion';
 import { Producto_requisicion } from 'src/app/models/producto_requisicion';
@@ -20,7 +21,7 @@ import { timer } from 'rxjs';
   selector: 'app-requisicion-editar',
   templateUrl: './requisicion-editar.component.html',
   styleUrls: ['./requisicion-editar.component.css'],
-  providers:[ProductoService, RequisicionService, EmpleadoService,MessageService]
+  providers:[ProductoService, RequisicionService, EmpleadoService,MessageService,ProveedorService]
 })
 export class RequisicionEditarComponent implements OnInit {
 
@@ -71,6 +72,10 @@ export class RequisicionEditarComponent implements OnInit {
   //contador para el text area
   conta: number =0;
 
+  //Servicio de proveedores
+  public proveedoresLista:any;
+  public proveedorVer:any;
+
   constructor(
     private _http: HttpClient,
     private modalService: NgbModal,
@@ -79,9 +84,10 @@ export class RequisicionEditarComponent implements OnInit {
     private _requisicionservice: RequisicionService,
     public _empleadoService : EmpleadoService,
     private _route: ActivatedRoute,
+    private _proveedorService: ProveedorService,
     public _router: Router
   ) { 
-      this.requisicion = new Requisicion(0,'',0,0,29,null);
+      this.requisicion = new Requisicion(0,0,'',0,0,0,null);
       this.producto_requisicion = new Producto_requisicion(0,0,0,0,0,null,'','','');
       this.Lista_compras = [];
       this.url = global.url;
@@ -94,6 +100,8 @@ export class RequisicionEditarComponent implements OnInit {
     this._route.params.subscribe( params =>{
       let id = + params['idReq'];
       this.getDetailsReq(id);
+      this.getProvee();
+
     });//la asignamos en una variable
   }
 
@@ -309,6 +317,7 @@ export class RequisicionEditarComponent implements OnInit {
           this.detailReq = response.requisicion; 
           this.requisicion.observaciones = response.requisicion[0]['observaciones'];
           this.requisicion.idReq = response.requisicion[0]['idReq'];
+          this.requisicion.idProveedor = response.requisicion[0]['idProveedor'];
 
           
           this.productosdetailReq = response.productos;
@@ -324,6 +333,19 @@ export class RequisicionEditarComponent implements OnInit {
       });
   }
 
+  getProvee(){
+    this._proveedorService.getProveedoresSelect().subscribe(
+      response => {
+        if(response.status == 'success'){
+          this.proveedoresLista = response.provedores;
+          console.log(response.provedores);
+        }
+      },
+      error =>{
+        console.log(error);
+      }
+    );
+  }
 
 
 

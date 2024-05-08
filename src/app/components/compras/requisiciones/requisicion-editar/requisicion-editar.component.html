@@ -12,6 +12,16 @@
                           <input type="text" class="form-control" value="{{datosReq.created_at | date}}" readonly>
                         </div>
                     </div>
+                    <div>
+                        <h4 class="text-center">PROVEEDOR</h4>
+                        <div class="col-5">
+                            <label for="idProveedor" class="form-label">Seleccionar proveedor</label>
+                            <select name="idProveedor" id="idProveedor" class="form-select" #idProveedor="ngModel" [(ngModel)]="requisicion.idProveedor" >
+                                <option selected disabled value="">Abrir para seleccionar</option>
+                                <option  *ngFor="let proveedor of proveedoresLista" value={{proveedor.idProveedor}}>{{proveedor.nombre}}</option>
+                            </select>
+                        </div>
+                    </div>
     <form class="form-group" #FormReq="ngForm" (keydown)="omitirEnter($event)" (ngSubmit)="actualizarRequisicion(FormReq)">
         <hr>
         <div >
