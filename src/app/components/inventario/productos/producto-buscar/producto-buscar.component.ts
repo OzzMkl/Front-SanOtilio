@@ -43,6 +43,7 @@ export class ProductoBuscarComponent implements OnInit, OnDestroy {
   public claveExt: string ='';
   public isShow: boolean = false;
   public valRadioButton: string = 'nube';
+  public arrHistorialProducto?: Array<any>;
   /**PAGINATOR */
   public totalPages: any;
   public itemsPerPage:number=0;
@@ -62,6 +63,7 @@ export class ProductoBuscarComponent implements OnInit, OnDestroy {
   //Modales
   public mdl_update: boolean = false;
   public mdl_viewProduct: boolean = false;
+  public mdl_historialProducto: boolean = false;
 
   constructor(
     private _productoService: ProductoService,
@@ -363,9 +365,12 @@ export class ProductoBuscarComponent implements OnInit, OnDestroy {
   }
 
   getHistorialProducto(){
+    
     this.sub_producto = this._productoService.getHistorialProducto(this.idProductoMenu!).subscribe(
       response =>{
         if(response.code == 200 && response.status == 'success'){
+          this.mdl_historialProducto = true;
+          this.arrHistorialProducto = response.historial_producto;
           console.log(response)
         }
       }, error =>{

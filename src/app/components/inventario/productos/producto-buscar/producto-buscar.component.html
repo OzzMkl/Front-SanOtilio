@@ -260,3 +260,53 @@
     accepLabel="Si"
     rejectButtonStyleClass="p-button-text">
 </p-confirmDialog>
+<!-- modal historial producto -->
+<p-dialog
+    header="Header"
+    [(visible)]="mdl_historialProducto"
+    [modal]="true"
+    [style]="{width:'70vw', 'min-width': '35vw'}"
+    [draggable]="true"
+    [resizable]="true"
+    position="top"
+    [dismissableMask]="true">
+    <ng-template pTemplate="header">
+        <h5 class="modal-title" id="modal-title-update-product">Historial</h5>
+    </ng-template>
+    <div *ngFor="let producto of arrHistorialProducto">
+        <div class="row">
+            <div class="col">
+                <label class="form-label">Empleado: <strong>{{producto.nombreEmpleado}}</strong>  Fecha: <strong>{{ producto.created_at | date:'medium' }}</strong></label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-2">
+                <label for="">Clave externa: <strong>{{producto.claveEx}}</strong></label>
+            </div>
+            <div class="col-2">
+                <label for="">Codigo de barras: <strong>{{producto.cbarras}}</strong></label>
+            </div>
+            <div class="col-2">
+                <label for="">Marca: <strong>{{producto.nombreMarca}}</strong></label>
+            </div>
+            <div class="col-2">
+                <label for="">Departamento: <strong>{{producto.nombreMarca}}</strong></label>
+            </div>
+            <div class="col-1">
+                <label for="">StockMin: <strong>{{producto.stockMin}}</strong></label>
+            </div>
+            <div class="col-1">
+                <label for="">StockMax: <strong>{{producto.stockMax}}</strong></label>
+            </div>
+            <div class="col-2">
+                <label for="">Tiempo de entrega: <strong>{{producto.tEntrega}} días</strong></label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <label for="">Descripcion: <strong>{{producto.descripcion}}</strong></label>
+            </div>
+        </div>
+        <hr>
+    </div>
+</p-dialog>
