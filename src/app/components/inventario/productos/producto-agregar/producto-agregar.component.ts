@@ -675,6 +675,11 @@ export class ProductoAgregarComponent implements OnInit {
     } else{
       // Eliminar del array arrChecksPrecios si existe
       this.arrChecksPrecios = this.arrChecksPrecios.filter(item => item.nombre !== idInput);
+      //Recorremos todas las tablas de rpecios para ponerlos en null
+      this.tabsPrice.forEach(element => {
+          (element as any)['precio'+nivel] = null;
+          (element as any)['porcentaje'+nivel] = null;
+      });
     }
 
     // Ordenar el array por nivel
