@@ -360,6 +360,10 @@ export class ProductoBuscarComponent implements OnInit, OnDestroy {
     });
   }
 
+  getHistorialProducto(){
+    
+  }
+
   ngOnDestroy(): void {
     this.sub_producto?.unsubscribe();
   }

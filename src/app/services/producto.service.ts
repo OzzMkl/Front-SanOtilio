@@ -220,11 +220,42 @@ export class ProductoService{
         return this._http.get(this.url+'productos/searchProductoMedidaI/'+idProducto,{headers:this.headers});
     }
 
+    /**
+     * 
+     * @param idProducto 
+     * @returns Array
+     * @description
+     * Solicita el idProducto y e consulta en todas las sucursales disponibles
+     * No busca en la nube(hostinger)
+     */
     getExistenciaMultiSucursal(idProducto:number):Observable<any>{
         return this._http.get(this.url+'productos/getExistenciaMultiSucursal/'+idProducto,{headers:this.headers});
     }
 
+    /**
+     * 
+     * @param idProducto number
+     * @returns producto
+     * @description
+     * Se consulta el producto en el catalogo de la nube, si lo encuentra
+     * este regresa la informacion del producto y sus medidas
+     */
     getProductoNUBE(idProducto:number):Observable<any>{
         return this._http.get(this.url+'productos/getProductoNUBE/'+idProducto,{headers:this.headers});
+    }
+
+    /**
+     * 
+     * @param idProducto 
+     * @returns 
+     * @description
+     * Obtiene todas las modificaciones que se han realizado al producto
+     */
+    getHistorialProducto(idProducto:number):Observable<any>{
+        return this._http.get(this.url+'productos/getHistorialProducto/'+idProducto,{headers:this.headers});
+    }
+
+    getHistorialProductoPrecio(idProducto:number):Observable<any>{
+        return this._http.get(this.url+'productos/getHistorialProductoPrecio/'+idProducto,{headers:this.headers});
     }
 }
