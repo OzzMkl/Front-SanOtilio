@@ -168,29 +168,31 @@ export class ProductoBuscarComponent implements OnInit, OnDestroy {
    * retornamos la consulta con las medias e imagen del producto
    */
   mostrarPrecios(idProducto:number){
-    this.isLoadingPrecios = true;
-    this.idProductoMenu = idProducto;
-    this.tblHeaders = [];
-    this.sub_producto = this._productoService.searchProductoMedida(idProducto).subscribe(
-      response =>{
-        if(response.status == 'success'){
-          this.claveExt = response.Producto_cl;
-          this.productosMedida = response.productoMedida;
-          this.existenciasPorMed = response.existencia_por_med;
-          this.imagenPM = response.imagen ? response.imagen : "1650558444no-image.png";
-          //creamos lista de headers de la tabla de precios
-          for(let i = 1; i <= 5; i++){
-            const precioKey = `precio${i}`;
-            if(this.productosMedida[0][precioKey] != null){
-              this.tblHeaders.push(`P${i}`);
+    if(idProducto != this.idProductoMenu){
+      this.isLoadingPrecios = true;
+      this.idProductoMenu = idProducto;
+      this.tblHeaders = [];
+      this.sub_producto = this._productoService.searchProductoMedida(idProducto).subscribe(
+        response =>{
+          if(response.status == 'success'){
+            this.claveExt = response.Producto_cl;
+            this.productosMedida = response.productoMedida;
+            this.existenciasPorMed = response.existencia_por_med;
+            this.imagenPM = response.imagen ? response.imagen : "1650558444no-image.png";
+            //creamos lista de headers de la tabla de precios
+            for(let i = 1; i <= 5; i++){
+              const precioKey = `precio${i}`;
+              if(this.productosMedida[0][precioKey] != null){
+                this.tblHeaders.push(`P${i}`);
+              }
             }
-          }
 
-          this.isLoadingPrecios = false;
-        }
-    }, error =>{
-      console.log(error);
-    });
+            this.isLoadingPrecios = false;
+          }
+      }, error =>{
+        console.log(error);
+      });
+    }
   }
 
   /**
@@ -263,9 +265,9 @@ export class ProductoBuscarComponent implements OnInit, OnDestroy {
         label: 'Historial',
         styleClass: 'text-white',
         icon: 'pi pi-history text-white',
-        // command: () => {
-        //   this._router.navigate(['./producto-modulo/producto-ver/'+this.idProductoMenu]);
-        // }
+        command: () => {
+          this.getHistorialProducto();
+        }
     });
   }
 
@@ -361,7 +363,20 @@ export class ProductoBuscarComponent implements OnInit, OnDestroy {
   }
 
   getHistorialProducto(){
-    
+    this.sub_producto = this._productoService.getHistorialProducto(this.idProductoMenu!).subscribe(
+      response =>{
+        if(response.code == 200 && response.status == 'success'){
+          console.log(response)
+        }
+      }, error =>{
+        this.messageService.add({
+          severity:'error',
+          summary:'Error',
+          detail:'Ocurrio un error al buscar el producto.'
+        })
+        console.log(error)
+      }
+    );
   }
 
   ngOnDestroy(): void {
