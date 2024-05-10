@@ -8,6 +8,6 @@ export var global = {
     //VIVEROS
     //url: 'http://192.168.7.181/backend-Laravel/api-laravel/public/api/'
     //LP
-    url: 'http://localhost/api-laravel/public/api/'
+    url: 'http://localhost/backend-Laravel/api-laravel/public/api/'
     //
 }

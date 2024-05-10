@@ -321,15 +321,32 @@
     position="top"
     [dismissableMask]="true">
     <ng-template pTemplate="header">
-        <h5 class="modal-title" id="modal-title-update-product">Historial</h5>
+        <h5 class="modal-title" id="modal-title-update-product">Historial de precios</h5>
     </ng-template>
-    <div *ngFor="let fecha of Object.keys(arrHistorialPrecio)">
-        <h3>{{ fecha }}</h3>
-        <div *ngFor="let registro of historialProductoPrecio[fecha]">
-          <p>Id Producto: {{ registro.idProducto }}</p>
-          <p>Nombre Medida: {{ registro.nombreMedida }}</p>
-          <!-- Agrega más campos según tus necesidades -->
-        </div>
+    <div *ngFor="let fecha of fechasHistorial">
+        <table class="table table-sm table-dark">
+            <thead >
+                <tr>
+                    <th>Medida</th>
+                    <th>P1</th>
+                    <th>P2</th>
+                    <th>P3</th>
+                    <th>P4</th>
+                    <th>P5</th>
+                </tr>
+            </thead>
+            <tbody *ngFor="let precio of arrHistorialPrecio[fecha]">
+                <tr pTooltip="Usuario: {{precio.nombreEmpleado}}">
+                    <td>{{precio.nombreMedida}}</td>
+                    <td>{{ precio.precio1 ? (precio.precio1 | currency:'MXN') : 'N/A'   }}</td>
+                    <td>{{ precio.precio2 ? (precio.precio2 | currency:'MXN') : 'N/A'   }}</td>
+                    <td>{{ precio.precio3 ? (precio.precio3 | currency:'MXN') : 'N/A'   }}</td>
+                    <td>{{ precio.precio4 ? (precio.precio4 | currency:'MXN') : 'N/A'   }}</td>
+                    <td>{{ precio.precio5 ? (precio.precio5 | currency:'MXN') : 'N/A'   }}</td>
+                </tr>
+            </tbody>
+        </table>
+        <hr>
       </div>
       
 </p-dialog>

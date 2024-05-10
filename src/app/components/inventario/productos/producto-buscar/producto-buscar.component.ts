@@ -20,6 +20,7 @@ import { Productos_medidas_new } from 'src/app/models/productos_medidas_new';
 })
 export class ProductoBuscarComponent implements OnInit, OnDestroy {
 
+  fechasHistorial: any;
   //Spinners
   public isLoading:boolean = false;//table
   public isLoadingPrecios:boolean = false;//mostrarPrecios
@@ -44,7 +45,7 @@ export class ProductoBuscarComponent implements OnInit, OnDestroy {
   public isShow: boolean = false;
   public valRadioButton: string = 'nube';
   public arrHistorialProducto?: Array<any>;
-  public arrHistorialPrecio?: Array<any>;
+  public arrHistorialPrecio: any=[];
   /**PAGINATOR */
   public totalPages: any;
   public itemsPerPage:number=0;
@@ -404,6 +405,13 @@ export class ProductoBuscarComponent implements OnInit, OnDestroy {
         if(response.code == 200 && response.status == 'success'){
           console.log(response)
           this.arrHistorialPrecio = response.historial_producto_precio;
+
+           // Recorrer el objeto historial_producto_precio
+           this.fechasHistorial = Object.keys(this.arrHistorialPrecio);
+           console.log(this.fechasHistorial)
+
+
+
           this.mdl_historialProductoPrecio = true;
           this.isLoadingGeneral = false;
         }
