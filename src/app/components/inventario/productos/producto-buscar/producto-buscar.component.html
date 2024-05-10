@@ -310,3 +310,26 @@
         <hr>
     </div>
 </p-dialog>
+<!-- modal historial producto precio -->
+<p-dialog
+    header="Header"
+    [(visible)]="mdl_historialProductoPrecio"
+    [modal]="true"
+    [style]="{width:'70vw', 'min-width': '35vw'}"
+    [draggable]="true"
+    [resizable]="true"
+    position="top"
+    [dismissableMask]="true">
+    <ng-template pTemplate="header">
+        <h5 class="modal-title" id="modal-title-update-product">Historial</h5>
+    </ng-template>
+    <div *ngFor="let fecha of Object.keys(arrHistorialPrecio)">
+        <h3>{{ fecha }}</h3>
+        <div *ngFor="let registro of historialProductoPrecio[fecha]">
+          <p>Id Producto: {{ registro.idProducto }}</p>
+          <p>Nombre Medida: {{ registro.nombreMedida }}</p>
+          <!-- Agrega más campos según tus necesidades -->
+        </div>
+      </div>
+      
+</p-dialog>

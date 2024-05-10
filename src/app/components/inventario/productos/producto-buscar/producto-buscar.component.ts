@@ -44,6 +44,7 @@ export class ProductoBuscarComponent implements OnInit, OnDestroy {
   public isShow: boolean = false;
   public valRadioButton: string = 'nube';
   public arrHistorialProducto?: Array<any>;
+  public arrHistorialPrecio?: Array<any>;
   /**PAGINATOR */
   public totalPages: any;
   public itemsPerPage:number=0;
@@ -64,6 +65,7 @@ export class ProductoBuscarComponent implements OnInit, OnDestroy {
   public mdl_update: boolean = false;
   public mdl_viewProduct: boolean = false;
   public mdl_historialProducto: boolean = false;
+  public mdl_historialProductoPrecio: boolean = false;
 
   constructor(
     private _productoService: ProductoService,
@@ -263,14 +265,24 @@ export class ProductoBuscarComponent implements OnInit, OnDestroy {
       })
     }
 
-    this.menuItems[0].items?.push({
+    this.menuItems[0].items?.push(
+      {
         label: 'Historial',
         styleClass: 'text-white',
         icon: 'pi pi-history text-white',
         command: () => {
           this.getHistorialProducto();
         }
-    });
+    },
+    {
+      label:'Historial Precio',
+      styleClass:'text-white',
+      icon: 'pi pi-history text-white',
+        command: () => {
+          this.getHistorialPrecios();
+        }
+    }
+  );
   }
 
   /**
@@ -365,15 +377,38 @@ export class ProductoBuscarComponent implements OnInit, OnDestroy {
   }
 
   getHistorialProducto(){
-    
+    this.isLoadingGeneral = true;
     this.sub_producto = this._productoService.getHistorialProducto(this.idProductoMenu!).subscribe(
       response =>{
         if(response.code == 200 && response.status == 'success'){
           this.mdl_historialProducto = true;
           this.arrHistorialProducto = response.historial_producto;
-          console.log(response)
+          this.isLoadingGeneral = false;
         }
       }, error =>{
+        this.isLoadingGeneral = false;
+        this.messageService.add({
+          severity:'error',
+          summary:'Error',
+          detail:'Ocurrio un error al buscar el producto.'
+        })
+        console.log(error)
+      }
+    );
+  }
+
+  getHistorialPrecios(){
+    this.isLoadingGeneral = true;
+    this.sub_producto = this._productoService.getHistorialProductoPrecio(this.idProductoMenu!).subscribe(
+      response =>{
+        if(response.code == 200 && response.status == 'success'){
+          console.log(response)
+          this.arrHistorialPrecio = response.historial_producto_precio;
+          this.mdl_historialProductoPrecio = true;
+          this.isLoadingGeneral = false;
+        }
+      }, error =>{
+        this.isLoadingGeneral = false;
         this.messageService.add({
           severity:'error',
           summary:'Error',
