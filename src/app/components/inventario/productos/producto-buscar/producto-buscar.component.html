@@ -324,6 +324,7 @@
         <h5 class="modal-title" id="modal-title-update-product">Historial de precios</h5>
     </ng-template>
     <div *ngFor="let fecha of fechasHistorial">
+        <label for="">Realizo: <strong> {{arrHistorialPrecio[fecha][0].nombreEmpleado}}</strong> Fecha: <strong>{{arrHistorialPrecio[fecha][0].created_at | date:'medium'}}</strong></label>
         <table class="table table-sm table-dark">
             <thead >
                 <tr>
@@ -336,7 +337,7 @@
                 </tr>
             </thead>
             <tbody *ngFor="let precio of arrHistorialPrecio[fecha]">
-                <tr pTooltip="Usuario: {{precio.nombreEmpleado}}">
+                <tr>
                     <td>{{precio.nombreMedida}}</td>
                     <td>{{ precio.precio1 ? (precio.precio1 | currency:'MXN') : 'N/A'   }}</td>
                     <td>{{ precio.precio2 ? (precio.precio2 | currency:'MXN') : 'N/A'   }}</td>
