@@ -5,6 +5,8 @@ import { MdlProductoService } from 'src/app/services/mdlProductoService';
 import { SharedMessage } from 'src/app/services/sharedMessage';
 import { OverlayPanel } from 'primeng/overlaypanel';
 import { Subscription } from 'rxjs';
+import { Producto } from 'src/app/models/producto';
+import { Productos_medidas_new } from 'src/app/models/productos_medidas_new';
 
 interface selectBusqueda {
   id: number;
@@ -29,6 +31,11 @@ export class ModalProductosComponent implements OnInit, OnDestroy {
 
   public sucursales:Array<any> = [];//onSelectionChange
   public existenciaSucursales:Array<any> = [];//onSelectionChange
+
+  public tblHeadersNUBE: Array<any> = [];
+  public viewProducto?: Producto;
+  public viewProductoMedidas?: Array<Productos_medidas_new>;
+  public mdl_viewProduct: boolean = false;
   //Paginator
   public totalPages: any;
   pageActual: number = 1;
@@ -44,6 +51,7 @@ export class ModalProductosComponent implements OnInit, OnDestroy {
   public mdlMedidas: boolean = false;
   public mdlProductos: boolean = false;
   isOpenMdlMedidas: boolean = false;
+  isCatalagoNube: boolean = false;
   @ViewChild('panelMedidasMultiSuc') panelMedidasMultiSuc!: OverlayPanel;
 
   //Subscriptions
@@ -58,12 +66,18 @@ export class ModalProductosComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     
-    this.sub_mdlProductoService = this._mdlProductoService.openMdlProductosDialog$.subscribe((openMdlMedidas: boolean) => {
-      this.isOpenMdlMedidas = openMdlMedidas;
+    this.sub_mdlProductoService = this._mdlProductoService.openMdlProductosDialog$.subscribe((dialogOptions: { openMdlMedidas: boolean, isCatalagoNube: boolean }) => {
+      this.isOpenMdlMedidas = dialogOptions.openMdlMedidas;
+      this.isCatalagoNube = dialogOptions.isCatalagoNube;
       this.mdlProductos = true;
       this.setOptionsSelect();
-      this.getProductos();
+      if(this.isCatalagoNube){
+        this.getProductosNUBE();
+      } else{
+        this.getProductos();
+      }
     });
+    
   }
 
   /**
@@ -115,12 +129,74 @@ export class ModalProductosComponent implements OnInit, OnDestroy {
 
   /**
    * 
+   * @param page Number numero de pagina a buscar (paginacion)
+   * @param type Number tipo de busqueda
+   * @param search String palabra a buscar
+   * @description
+   * Servicio trae la informacion de los productos paginados por la api
+   * desde el catalago de la nube actualmente Hostinger
+   */
+  getProductosNUBE(page:number = 1, type:number = 0, search:string = 'null'){
+    this.isLoadingGeneral = true;
+    this.sub_productoService = this._productoService.getAllProductosNUBE(page, type, search).subscribe(
+      response =>{
+        // console.log(response);
+        if( response.code == 200 && response.status == 'success'){
+          this.productos = response.catalogo_nube.data;
+          //Paginacion
+          this.totalPages = response.catalogo_nube.total;
+          this.pageActual = response.catalogo_nube.current_page;
+          this.isLoadingGeneral=false;
+        }
+      }, error =>{
+        this.isLoadingGeneral = false;
+        console.log(error);
+      }
+    )
+  }
+
+  getProductoNUBE(idProducto:number){
+    this.isLoadingGeneral = true;
+    //Reseteamos variables
+    this.tblHeadersNUBE = [];
+    this.viewProducto = undefined;
+    this.viewProductoMedidas = undefined;
+    this.sub_productoService = this._productoService.getProductoNUBE(idProducto).subscribe(
+      response =>{
+        // console.log(response);
+        if(response.status == 'success' && response.code == 200){
+          //asginamos daatos
+          this.viewProducto = response.producto;
+          this.viewProductoMedidas = response.producto_medidas;
+          //Creamos cabeceras de los precios
+          for(let i = 1; i <= 5; i++){
+            const precioKey = `precio${i}`;
+            if(this.viewProductoMedidas && (this.viewProductoMedidas[0] as any)[precioKey] != null){
+              this.tblHeadersNUBE.push(`P${i}`);
+            }
+          }
+          this.mdl_viewProduct = true;
+          this.isLoadingGeneral = false;//ocultamos el spinner
+          
+        }
+      }, error =>{
+        console.log(error);
+      }
+    );
+  }
+
+  /**
+   * 
    * @param event 
    * @description
    * Cambio de pagina
    */
   onPageChange(event:any) {
-    this.getProductos(event.page + 1);
+    if(this.isCatalagoNube){
+      this.getProductosNUBE(event.page + 1);
+    } else{
+      this.getProductos(event.page + 1);
+    }
   }
 
   /**
@@ -162,6 +238,8 @@ export class ModalProductosComponent implements OnInit, OnDestroy {
           console.log(error);
         }
       )
+    } else if(this.isCatalagoNube){
+      this.getProductoNUBE(this.selectedProduct.idProducto);
     } else{
       this.onSelect();
     }
@@ -173,9 +251,18 @@ export class ModalProductosComponent implements OnInit, OnDestroy {
    * Cierra modales y manda el valor seleccionado
    */
   onSelect():void{
-    this._mdlProductoService.sendSelectedValue(this.selectedProduct);
+    if(this.isCatalagoNube){
+      const data = {
+        'Producto': this.viewProducto,
+        'Producto_medidas': this.viewProductoMedidas
+      }
+      this._mdlProductoService.sendSelectedValue(data);
+    } else{
+      this._mdlProductoService.sendSelectedValue(this.selectedProduct)
+    }
     this.mdlMedidas = false;
     this.mdlProductos = false;
+    this.mdl_viewProduct = false;
   }
 
   /**
@@ -186,16 +273,10 @@ export class ModalProductosComponent implements OnInit, OnDestroy {
       if(this.valSearch == "" || null){
         this.getProductos();
       } else{
-        switch(this.selectedOpt.id){
-          case 1 : //ClaveExter
-            this.getProductos(1,this.selectedOpt.id,this.valSearch);
-            break;
-          case 2 ://Descripcion
-            this.getProductos(1,this.selectedOpt.id,this.valSearch);
-            break;
-          case 3 : //codigodebarras
-            this.getProductos(1,this.selectedOpt.id,this.valSearch);
-            break;
+        if(this.isCatalagoNube){
+          this.getProductosNUBE(1,this.selectedOpt.id,this.valSearch);
+        } else{
+          this.getProductos(1,this.selectedOpt.id,this.valSearch);
         }
       }
     } else{
