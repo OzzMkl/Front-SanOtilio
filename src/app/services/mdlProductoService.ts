@@ -7,7 +7,7 @@ import { Subject } from 'rxjs';
 
 export class MdlProductoService {
 
-  private openMdlProductosDialogSource = new Subject<boolean>();
+  private openMdlProductosDialogSource = new Subject<{ openMdlMedidas: boolean, isCatalagoNube: boolean }>();
   private selectedValueSource = new Subject<any>();
 
   openMdlProductosDialog$ = this.openMdlProductosDialogSource.asObservable();
@@ -15,8 +15,15 @@ export class MdlProductoService {
 
   constructor() { }
 
-  openMdlProductosDialog(openMdlMedidas: boolean = false): void {
-    this.openMdlProductosDialogSource.next(openMdlMedidas);
+  /**
+   * 
+   * @param openMdlMedidas boolean open modal medidas
+   * @param isCatalagoNube boolean get catagalogo nube
+   * 
+   */
+  openMdlProductosDialog(openMdlMedidas: boolean = false,isCatalagoNube: boolean = false): void {
+    const dialogOptions = { openMdlMedidas, isCatalagoNube };
+    this.openMdlProductosDialogSource.next(dialogOptions);
   }
 
   sendSelectedValue(value: any): void {
