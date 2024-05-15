@@ -244,6 +244,21 @@ export class ProductoService{
         return this._http.get(this.url+'productos/getProductoNUBE/'+idProducto,{headers:this.headers});
     }
 
+    getAllProductosNUBE(page: number,type: number, search: string):Observable<any>{
+        return this._http.get(this.url+'productos/getAllProductoNUBE/'+type+'/'+search+'?page='+page,{headers:this.headers});
+    }
+
+    registerProductoByCatalogo(objProducto:any,idEmpleado:number):Observable<any>{
+        let combinado = {
+            'producto': objProducto.Producto,
+            'idEmpleado': idEmpleado,
+            'lista_productosMedida':objProducto.Producto_medidas
+        };
+        let json = JSON.stringify(combinado);
+        let params = 'json='+json;
+        return this._http.post(this.url+'productos/registerProductoByNUBE',params,{headers:this.headers});
+    }
+
     /**
      * 
      * @param idProducto 
