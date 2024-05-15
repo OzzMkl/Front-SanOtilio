@@ -1,9 +1,10 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
 import { ProductoService } from 'src/app/services/producto.service';
 import { global } from 'src/app/services/global';
 import { Router } from '@angular/router';
 import { EmpleadoService } from 'src/app/services/empleado.service';
 import { ModulosService } from 'src/app/services/modulos.service';
+import { SharedMessage } from 'src/app/services/sharedMessage';
 //primeng
 import { MenuItem, MessageService, ConfirmationService, ConfirmEventType } from 'primeng/api';
 //interfaces
@@ -18,7 +19,7 @@ import { Productos_medidas_new } from 'src/app/models/productos_medidas_new';
   styleUrls: ['./producto-buscar.component.css'],
   providers: [ProductoService, EmpleadoService, MessageService, ConfirmationService]
 })
-export class ProductoBuscarComponent implements OnInit, OnDestroy {
+export class ProductoBuscarComponent implements OnInit, OnDestroy, AfterViewInit {
 
   fechasHistorial: any;
   //Spinners
@@ -75,10 +76,21 @@ export class ProductoBuscarComponent implements OnInit, OnDestroy {
     private _modulosService: ModulosService,
     private _router: Router,
     private _confirmationService: ConfirmationService,
+    private _sharedMessage: SharedMessage,
   ) { }
 
   ngOnInit(): void {
     this.loadUser();
+  }
+
+  ngAfterViewInit(): void {
+    this._sharedMessage.messages$.subscribe(
+      messages =>{
+        if(messages){
+          this.messageService.add(messages[0]); // Agregar el mensaje al servicio de mensajes de PrimeNG
+        }
+      }
+    )
   }
 
   /**
