@@ -25,8 +25,14 @@ export class CajasService {
     let params = 'json='+json;
     return this._http.put(this.url+'cajas/cierreCaja',params,{headers:this.headers})
   }
-  cobroVenta(idVenta:number,venta:any, isSaldo:boolean, idempleado:number, tieneAbono:boolean):Observable<any>{
-    let combinado = {...venta, isSaldo: isSaldo, idEmpleado:idempleado, tieneAbono: tieneAbono};
+  cobroVenta(idVenta:number,venta:any, isSaldo:boolean, idempleado:number, tieneAbono:boolean, isCredito:boolean):Observable<any>{
+    let combinado = {
+        ...venta, 
+        isSaldo: isSaldo, 
+        idEmpleado:idempleado, 
+        tieneAbono: tieneAbono,
+        isCredito: isCredito,
+      };
     let json = JSON.stringify(combinado);
     let params = 'json='+json;
     return this._http.post(this.url+'cajas/cobroVenta/'+idVenta,params,{headers:this.headers});

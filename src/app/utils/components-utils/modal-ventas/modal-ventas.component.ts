@@ -14,6 +14,7 @@ import { tipo_pago } from 'src/app/models/interfaces/tipo_pago';
 import { Producto_ventasg } from 'src/app/models/productoVentag';
 import { Caja_movimientos } from 'src/app/models/caja_movimientos';
 import { dialogOptionsVentas } from 'src/app/models/interfaces/dialogOptions-ventas';
+import { propModulo } from 'src/app/models/interfaces/propModulo';
 
 @Component({
   selector: 'app-modal-ventas',
@@ -25,7 +26,7 @@ export class ModalVentasComponent implements OnInit, OnDestroy {
 
   //Permisos
   public userPermisos:any;
-  public mCaja = this._modulosService.modsCaja();
+  public mCaja?: propModulo;
   public identity: any;
   //Spinner
   public isLoadingGeneral: boolean = false;
@@ -85,9 +86,17 @@ export class ModalVentasComponent implements OnInit, OnDestroy {
   loadUser(dialogOptions:dialogOptionsVentas){
     switch(dialogOptions.modulo){
       case 'cajas':
-          this.userPermisos = this._empleadoService.getPermisosModulo(this.mCaja.idModulo,this.mCaja.idSubModulo);
-          this.identity = this._empleadoService.getIdentity();
-          this.getVenta(dialogOptions.idVenta);
+          if(dialogOptions.submodulo == 'ventas-realizadas'){
+            this.mCaja = this._modulosService.modsCaja();
+            this.userPermisos = this._empleadoService.getPermisosModulo(this.mCaja.idModulo,this.mCaja.idSubModulo);
+            this.identity = this._empleadoService.getIdentity();
+            this.getVenta(dialogOptions.idVenta);
+          } else if(dialogOptions.submodulo == 'ventas-credito'){
+            this.mCaja = this._modulosService.modsCreditos();
+            this.userPermisos = this._empleadoService.getPermisosModulo(this.mCaja.idModulo,this.mCaja.idSubModulo);
+            this.identity = this._empleadoService.getIdentity();
+            this.getVentaCredito(dialogOptions.idVenta);
+          }
         break;
       default:
         this.messageService.add({
@@ -120,6 +129,23 @@ export class ModalVentasComponent implements OnInit, OnDestroy {
       },error =>{
         console.log(error);
       });
+    this.getAbonosVentas(idVenta);
+  }
+
+  getVentaCredito(idVenta:number){
+    this.isLoadingGeneral = true;
+    this.sub_ventasService = this._ventasService.getDetallesVentaCredito(idVenta).subscribe(
+      response =>{
+        if(response.code == 200 && response.status == 'success'){
+          this.venta = response.venta_credito;
+          this.productos_venta = response.productos_ventascre;
+          this.isLoadingGeneral = false;
+          this.isMdlVenta = true;
+        }
+      }, error =>{
+        console.log(error);
+      }
+    );
     this.getAbonosVentas(idVenta);
   }
 
@@ -327,7 +353,7 @@ export class ModalVentasComponent implements OnInit, OnDestroy {
         });
         this.isCero=true;
     } else{
-      
+
       //cargamos la informacion del cobro
       this.caja_movimiento = new Caja_movimientos(
         this.dialogOptions.vCaja.idCaja,
@@ -344,8 +370,9 @@ export class ModalVentasComponent implements OnInit, OnDestroy {
       );
 
       let tieneAbono = this.arr_abonos.length > 0 ? true : false;
+      let isCredito = this.venta?.isCredito ?? false;
       // console.log(this.caja_movimiento);
-      this.sub_cajaService = this._cajaService.cobroVenta(this.venta!.idVenta, this.caja_movimiento, this.isSaldo,this.identity.sub,tieneAbono).subscribe(
+      this.sub_cajaService = this._cajaService.cobroVenta(this.venta!.idVenta, this.caja_movimiento, this.isSaldo,this.identity.sub,tieneAbono,isCredito).subscribe(
         response => {
           //si la respuesta es correcta
           if(response.status == 'success'){
@@ -378,7 +405,7 @@ export class ModalVentasComponent implements OnInit, OnDestroy {
       // idEmpleado: this.empleado.sub,
       idEmpleado: this.identity.sub,
       // permisos: this.userPermisos
-      permisos: []
+      permisos: this.userPermisos,
     }
     this.sub_cajaService = this._cajaService.guardaVentaCredito(ventaCredito).subscribe(
       response =>{

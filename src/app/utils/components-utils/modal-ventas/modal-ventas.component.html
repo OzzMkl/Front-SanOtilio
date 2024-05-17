@@ -46,7 +46,7 @@
                         (click)="openMdlCobro()">
                 </button>
                 <!-- PERMISO EDITAR PARA MOVER A CREDITO -->
-                <button *ngIf="userPermisos.editar"
+                <button *ngIf="userPermisos.editar && venta.isCredito == false"
                         class="p-button-rounded p-button-warning me-md-2"
                         pButton
                         pRipple
