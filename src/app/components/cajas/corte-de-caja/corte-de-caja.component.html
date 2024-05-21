@@ -1,75 +1,72 @@
-<div class="container">
-    <br>
-    <h2>Empleados con caja abierta</h2>
-    <br>
+<div class="container-fluid">
+    <h2 class="text-center">Empleados con caja abierta</h2>
     <div class="row">
         <div class="col" *ngFor="let sesion of sesiones">
-            <h4> <span class="badge bg-secondary" (click)="getMovSesionCaja(sesion)">{{sesion.nombreEmpleado}}<br>{{sesion.pc}}</span></h4>
+            <h4> <span class="badge bg-secondary" (click)="getMovSesionCaja(sesion)">{{sesion.empleado.nombre+' '+ sesion.empleado.aPaterno}}<br>{{sesion.pc}}</span></h4>
         </div>
     </div>
-</div>
-<hr>
-<div class="container">
-    <h3 class="text-center">Movimientos</h3>
-    <table class="table table-dark table-hover">
-        <thead>
-            <tr>
-                <th scope="col" ># movimiento</th>
-                <th scope="col" >Tipo movimiento</th>
-                <th scope="col" >origen</th>
-                <th scope="col" >total nota</th>
-                <th scope="col" >tipo pago</th>
-                <th scope="col" >pago cliente</th>
-                <th scope="col" >cambio cliente</th>
-            </tr>
-        </thead>
-        <tbody *ngFor="let mCaja of movCaja | paginate:{id:'pagination',itemsPerPage: 10, currentPage: pageActual}">
-            <tr>
-                <th scope="row">{{mCaja.idMovCaja}}</th>
-                <th scope="row">{{mCaja.nombreTipoMov}}</th>
-                <th scope="row">{{mCaja.idOrigen}}</th>
-                <th scope="row">{{mCaja.totalNota | currency:'MXN'}}</th>
-                <th scope="row">{{mCaja.nombreTipoPago}}</th>
-                <th scope="row">{{mCaja.pagoCliente | currency:'MXN'}}</th>
-                <th scope="row">{{mCaja.cambioCliente | currency:'MXN'}}</th>
-            </tr>
-        </tbody>
-    </table>
-    <pagination-controls id="pagination" (pageChange)="pageActual = $event"></pagination-controls>
-    <br>
-    <hr>
-    <br>
-    <div *ngIf="movCaja != null">
+    <div class="row">
+      <div class="col-6">
+        <h3 class="text-center">Movimientos</h3>
+        <table class="table table-dark table-hover table-responsive">
+            <thead>
+                <tr>
+                    <th scope="col" >Tipo movimiento</th>
+                    <th scope="col" >origen</th>
+                    <th scope="col" >total nota</th>
+                    <th scope="col" >tipo pago</th>
+                    <th scope="col" >pago cliente</th>
+                </tr>
+            </thead>
+            <tbody *ngFor="let mCaja of movCaja | paginate:{id:'pagination',itemsPerPage: 10, currentPage: pageActual}">
+                <tr>
+                    <th scope="row">{{mCaja.tipo_movimiento.nombre}}</th>
+                    <th scope="row">{{mCaja.idOrigen}}</th>
+                    <th scope="row">{{mCaja.totalNota | currency:'MXN'}}</th>
+                    <th scope="row">{{mCaja.tipo_pago.tipo}}</th>
+                    <th scope="row">{{mCaja.pagoCliente | currency:'MXN'}}</th>
+                </tr>
+            </tbody>
+        </table>
+        <pagination-controls id="pagination" (pageChange)="pageActual = $event"></pagination-controls>
+      </div>
+      <div class="col-6">
+
+      </div>
+      
+    </div>
+    <div class="row">
+      <div *ngIf="movCaja != null">
         <h3 class="text-center">Totales</h3>
         <form>
-            <div class="row mb-3 justify-content-between">
+            <div class="row mb-3 justify-content-center">
                 <label for="inputEfectivo" class="col-sm-2 col-form-label">EFECTIVO</label>
                 <div class="col-sm-3">
-                  <input type="text" class="form-control" id="inputEfectivo" value="{{efectivo | currency:'MXN'}}" disabled>
+                  <input type="text" class="form-control" id="inputEfectivo" value="{{totales?.total_efectivo ?? 0 | currency:'MXN'}}" disabled>
                 </div>
                 <label for="inputEfectivo" class="col-sm-2 col-form-label">TARJETA</label>
                 <div class="col-sm-3">
-                  <input type="text" class="form-control" id="inputEfectivo" value="{{tarjeta | currency:'MXN'}}" disabled>
+                  <input type="text" class="form-control" id="inputEfectivo" value="{{totales?.total_tarjeta ?? 0 | currency:'MXN'}}" disabled>
                 </div>
             </div>
-            <div class="row mb-3 justify-content-between">
+            <div class="row mb-3 justify-content-center">
                 <label for="inputEfectivo" class="col-sm-2 col-form-label">TRANSFERENCIA</label>
                 <div class="col-sm-3">
-                  <input type="text" class="form-control" id="inputEfectivo" value="{{transferencia | currency:'MXN'}}" disabled>
+                  <input type="text" class="form-control" id="inputEfectivo" value="{{totales?.total_transferencia ?? 0 | currency:'MXN'}}" disabled>
                 </div>
                 <label for="inputEfectivo" class="col-sm-2 col-form-label">CREDITO</label>
                 <div class="col-sm-3">
-                  <input type="text" class="form-control" id="inputEfectivo" value="{{credito | currency:'MXN'}}" disabled>
+                  <input type="text" class="form-control" id="inputEfectivo" value="{{totales?.total_credito ?? 0 | currency:'MXN'}}" disabled>
                 </div>
             </div>
-            <div class="row mb-3 justify-content-between">
+            <div class="row mb-3 justify-content-center">
                 <label for="inputEfectivo" class="col-sm-2 col-form-label">CHEQUE</label>
                 <div class="col-sm-3">
-                  <input type="text" class="form-control" id="inputEfectivo" value="{{cheque | currency:'MXN'}}" disabled>
+                  <input type="text" class="form-control" id="inputEfectivo" value="{{totales?.total_cheque ?? 0 | currency:'MXN'}}" disabled>
                 </div>
                 <label for="inputEfectivo" class="col-sm-2 col-form-label">DEPOSITO</label>
                 <div class="col-sm-3">
-                  <input type="text" class="form-control" id="inputEfectivo" value="{{deposito | currency:'MXN'}}" disabled>
+                  <input type="text" class="form-control" id="inputEfectivo" value="{{totales?.total_deposito ?? 0 | currency:'MXN'}}" disabled>
                 </div>
             </div>
             <div class="row mb-3 justify-content-center">
@@ -81,13 +78,13 @@
             <div class="row mb-3 ">
                 <label for="inputEfectivo" class="col-sm-2 col-form-label">TOTAL</label>
                 <div class="col-sm-7">
-                  <input type="text" class="form-control" id="inputEfectivo" value="{{total | currency:'MXN'}}" disabled>
+                  <input type="text" class="form-control" id="inputEfectivo" value="{{totales?.total_final ?? 0 | currency:'MXN'}}" disabled>
                 </div>
                 <div class="col-sm-3">
                   <button class="btn btn-success " (click)="generaCorte()">GENERAR CORTE</button>
                 </div>
             </div>
         </form>
+      </div>
     </div>
-    
 </div>

@@ -1,0 +1,17 @@
+export interface totales_caja {
+      total_cobros ?: number,
+      total_efectivo ?: number,
+      No_efectivo ?: number,
+      total_tarjeta ?: number,
+      No_tarjeta ?: number,
+      total_transferencia ?: number,
+      No_transferencia ?: number,
+      total_credito?: number,
+      No_credito?: number,
+      total_cheque? : number,
+      No_cheque? : number,
+      total_deposito? : number,
+      No_deposito? : number,
+      total_cambio? : number,
+      total_final? : number,
+  }
