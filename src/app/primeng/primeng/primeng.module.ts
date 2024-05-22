@@ -31,6 +31,7 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { PaginatorModule } from 'primeng/paginator';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { RadioButtonModule } from 'primeng/radiobutton';
+import { ChartModule } from 'primeng/chart';
 
 
 @NgModule({
@@ -65,6 +66,7 @@ import { RadioButtonModule } from 'primeng/radiobutton';
     PaginatorModule,
     OverlayPanelModule,
     RadioButtonModule,
+    ChartModule,
   ],
   imports: [
     CommonModule,
