@@ -161,16 +161,16 @@
       </div>
       <!-- NoMedidas -->
       <div class="col-4">
-        <label class="form-label" for="noMedidas">No. de medidas *</label>
-        <select class="form-select" name="noMedidas" id="totalMedidas" ngModel #noMedidas="ngModel"  (ngModelChange)="seleccionaNoMedidas($event)" required>
-          <option value="" disabled selected>Seleccione una opcion</option>
+        <label class="form-label" for="noMedida">No. de medidas *</label>
+        <select id="med" class="form-select" name="med"  #med="ngModel"  [(ngModel)]="noMedida" (ngModelChange)="seleccionaNoMedidas($event)" required>
+          <option value="" disabled >Seleccione una opcion</option>
           <option value="1">1</option>
           <option value="2">2</option>
           <option value="3">3</option>
           <option value="4">4</option>
           <option value="5">5</option>
         </select>
-        <div [hidden]="noMedidas.valid || noMedidas.pristine" class="alert alert-danger">
+        <div [hidden]="med.valid || med.pristine" class="alert alert-danger">
           CAMPO REQUERIDO 
         </div>
       </div>
