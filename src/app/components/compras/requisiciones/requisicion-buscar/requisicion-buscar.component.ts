@@ -66,6 +66,13 @@ export class RequisicionBuscarComponent implements OnInit {
   public tipoBusqueda: string = 'Recibidas';
   public search: string = '';
 
+  //controla botones
+  public pdfB:boolean = false;
+  public editarB:boolean = false;
+  public cancelarB:boolean = false;
+  public aceptarB:boolean = false;
+  public rechazarB:boolean = false;
+
   constructor(
     private _http: HttpClient,
     private _modalService: NgbModal,
@@ -93,15 +100,10 @@ export class RequisicionBuscarComponent implements OnInit {
     //revisamos si el permiso del modulo esta activo si no redireccionamos
     if( this.userPermisos.ver == 1 ){
         this.getRequisiciones();
-      
     } else{
       handleRedirect(5, this._router, this.messageService);
     }
-
-
     this.identity = this._empleadoService.getIdentity();
-
-
   }
 
      /**
@@ -155,6 +157,8 @@ export class RequisicionBuscarComponent implements OnInit {
       }
     );
   }
+
+
 
   /**
    * Destruye las subscripciones a los observables
