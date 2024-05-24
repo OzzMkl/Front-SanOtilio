@@ -382,6 +382,9 @@ export class ModalVentasComponent implements OnInit, OnDestroy {
             // this.modalService.dismissAll();
             //mandamos mensaje de la nota fue cobrada correctamente
             this.messageService.add({severity:'success', detail:'Nota #'+this.venta!.idVenta+' cobrada correctamente'});
+            this.isMdlVenta = false;
+            this.isMdlCobroVenta = false;
+            this._mdlVentaService.actualizarVentas();
           } else{
             //si devuelve otra coosa 
             console.log('algo salio mal');
