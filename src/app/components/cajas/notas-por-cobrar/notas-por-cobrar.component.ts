@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 //Servicios
 import { VentasService } from 'src/app/services/ventas.service';
@@ -10,6 +10,7 @@ import { MdlVentaService } from 'src/app/services/mdl-venta-service.service';
 //modelos
 import { Caja } from 'src/app/models/caja';
 import { dialogOptionsVentas } from 'src/app/models/interfaces/dialogOptions-ventas';
+import { Subscription } from 'rxjs';
 
 
 @Component({
@@ -18,7 +19,7 @@ import { dialogOptionsVentas } from 'src/app/models/interfaces/dialogOptions-ven
   styleUrls: ['./notas-por-cobrar.component.css'],
   providers: [MessageService]
 })
-export class NotasPorCobrarComponent implements OnInit {
+export class NotasPorCobrarComponent implements OnInit, OnDestroy {
 
   // Permisos
   public userPermisos:any;
@@ -54,6 +55,7 @@ export class NotasPorCobrarComponent implements OnInit {
 
   //interfaces
   public dialogOpt?: dialogOptionsVentas;
+  private actualizaVentasSubscription?: Subscription;
 
   constructor(private _ventasService: VentasService, 
               private _cajaService: CajasService, 
@@ -66,6 +68,15 @@ export class NotasPorCobrarComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadUser();
+    this.actualizaVentasSubscription = this._mdlVentaService.actualizaListaVentas$.subscribe(
+      () =>{
+        this.getVentas();
+      }
+    );
+  }
+
+  ngOnDestroy(): void {
+    this.actualizaVentasSubscription?.unsubscribe();
   }
 
   /***Revisamos si el usuario tiene abierto una sesion en caja*/
