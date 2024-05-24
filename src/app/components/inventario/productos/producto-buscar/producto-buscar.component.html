@@ -260,3 +260,94 @@
     accepLabel="Si"
     rejectButtonStyleClass="p-button-text">
 </p-confirmDialog>
+<!-- modal historial producto -->
+<p-dialog
+    header="Header"
+    [(visible)]="mdl_historialProducto"
+    [modal]="true"
+    [style]="{width:'70vw', 'min-width': '35vw'}"
+    [draggable]="true"
+    [resizable]="true"
+    position="top"
+    [dismissableMask]="true">
+    <ng-template pTemplate="header">
+        <h5 class="modal-title" id="modal-title-update-product">Historial</h5>
+    </ng-template>
+    <div *ngFor="let producto of arrHistorialProducto">
+        <div class="row">
+            <div class="col">
+                <label class="form-label">Empleado: <strong>{{producto.nombreEmpleado}}</strong>  Fecha: <strong>{{ producto.created_at | date:'medium' }}</strong></label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-2">
+                <label for="">Clave externa: <strong>{{producto.claveEx}}</strong></label>
+            </div>
+            <div class="col-2">
+                <label for="">Codigo de barras: <strong>{{producto.cbarras}}</strong></label>
+            </div>
+            <div class="col-2">
+                <label for="">Marca: <strong>{{producto.nombreMarca}}</strong></label>
+            </div>
+            <div class="col-2">
+                <label for="">Departamento: <strong>{{producto.nombreMarca}}</strong></label>
+            </div>
+            <div class="col-1">
+                <label for="">StockMin: <strong>{{producto.stockMin}}</strong></label>
+            </div>
+            <div class="col-1">
+                <label for="">StockMax: <strong>{{producto.stockMax}}</strong></label>
+            </div>
+            <div class="col-2">
+                <label for="">Tiempo de entrega: <strong>{{producto.tEntrega}} días</strong></label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <label for="">Descripcion: <strong>{{producto.descripcion}}</strong></label>
+            </div>
+        </div>
+        <hr>
+    </div>
+</p-dialog>
+<!-- modal historial producto precio -->
+<p-dialog
+    header="Header"
+    [(visible)]="mdl_historialProductoPrecio"
+    [modal]="true"
+    [style]="{width:'70vw', 'min-width': '35vw'}"
+    [draggable]="true"
+    [resizable]="true"
+    position="top"
+    [dismissableMask]="true">
+    <ng-template pTemplate="header">
+        <h5 class="modal-title" id="modal-title-update-product">Historial de precios</h5>
+    </ng-template>
+    <div *ngFor="let fecha of fechasHistorial">
+        <label for="">Realizo: <strong> {{arrHistorialPrecio[fecha][0].nombreEmpleado}}</strong> Fecha: <strong>{{arrHistorialPrecio[fecha][0].created_at | date:'medium'}}</strong></label>
+        <table class="table table-sm table-dark">
+            <thead >
+                <tr>
+                    <th>Medida</th>
+                    <th>P1</th>
+                    <th>P2</th>
+                    <th>P3</th>
+                    <th>P4</th>
+                    <th>P5</th>
+                </tr>
+            </thead>
+            <tbody *ngFor="let precio of arrHistorialPrecio[fecha]">
+                <tr>
+                    <td>{{precio.nombreMedida}}</td>
+                    <td>{{ precio.precio1 ? (precio.precio1 | currency:'MXN') : 'N/A'   }}</td>
+                    <td>{{ precio.precio2 ? (precio.precio2 | currency:'MXN') : 'N/A'   }}</td>
+                    <td>{{ precio.precio3 ? (precio.precio3 | currency:'MXN') : 'N/A'   }}</td>
+                    <td>{{ precio.precio4 ? (precio.precio4 | currency:'MXN') : 'N/A'   }}</td>
+                    <td>{{ precio.precio5 ? (precio.precio5 | currency:'MXN') : 'N/A'   }}</td>
+                </tr>
+            </tbody>
+        </table>
+        <hr>
+      </div>
+      
+</p-dialog>

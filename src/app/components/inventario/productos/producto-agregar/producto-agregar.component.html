@@ -83,7 +83,7 @@
       </div>
       <div class="row">
         <!-- Carga de imagen btn -->
-        <div class="col-2">
+        <div class="col-2 d-none">
           <label for="imagen">Imagen</label>
           <p-fileUpload
                   chooseLabel="Seleccione"
@@ -98,7 +98,7 @@
           
         </div>
         <!-- Cuadro imagen -->
-        <div class="col-2">
+        <div class="col-2 d-none">
             <label for="imagen">Vista Previa</label>
 
             <img *ngIf="producto.imagen" src="{{url + 'productos/getImageProduc/' + producto.imagen}}" width="90px" height="90px" >
@@ -120,9 +120,9 @@
           </div>
         </div>
         <!-- Descripcion -->
-        <div class="col-4">
+        <div class="col-8">
           <label for="descripcion" class="form-label">Descripcion *</label>
-          <textarea class="form-control" id="descripcion" rows="2" maxlength="254" 
+          <textarea class="form-control" id="descripcion" rows="1" maxlength="254" 
                     name="descripcion" #descripcion="ngModel" [(ngModel)]="producto.descripcion"
                     (input)="omitirEnter($event)" required >
           </textarea>
@@ -161,16 +161,16 @@
       </div>
       <!-- NoMedidas -->
       <div class="col-4">
-        <label class="form-label" for="noMedidas">No. de medidas *</label>
-        <select class="form-select" name="noMedidas" id="totalMedidas" ngModel #noMedidas="ngModel"  (ngModelChange)="seleccionaNoMedidas($event)" required>
-          <option value="" disabled selected>Seleccione una opcion</option>
+        <label class="form-label" for="noMedida">No. de medidas *</label>
+        <select id="med" class="form-select" name="med"  #med="ngModel"  [(ngModel)]="noMedida" (ngModelChange)="seleccionaNoMedidas($event)" required>
+          <option value="" disabled >Seleccione una opcion</option>
           <option value="1">1</option>
           <option value="2">2</option>
           <option value="3">3</option>
           <option value="4">4</option>
           <option value="5">5</option>
         </select>
-        <div [hidden]="noMedidas.valid || noMedidas.pristine" class="alert alert-danger">
+        <div [hidden]="med.valid || med.pristine" class="alert alert-danger">
           CAMPO REQUERIDO 
         </div>
       </div>
@@ -585,3 +585,6 @@
   </ng-template>
 
 </p-dialog>
+
+<!-- Nuevo modal productos BUSQUEDA -->
+<app-modal-productos></app-modal-productos>

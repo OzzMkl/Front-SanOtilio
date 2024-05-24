@@ -73,8 +73,10 @@ export class ClientesService {
   return this._http.put(this.url + 'clientes/updateCliente/'+idCliente,params,{headers:this.headers});
  }
 
- updateCdireccion(cdireccion:any,idCliente:any):Observable<any>{
-  let json = JSON.stringify(cdireccion);
+ updateCdireccion(cdireccion:any,idCliente:any, empleado:any):Observable<any>{
+  let combinado = {cdireccion: cdireccion, sub: empleado.sub};
+  console.log(combinado)
+  let json = JSON.stringify(combinado);
   let params = 'json='+json;
   return this._http.put(this.url + 'clientes/updateCdireccion/'+idCliente,params,{headers:this.headers});
  }

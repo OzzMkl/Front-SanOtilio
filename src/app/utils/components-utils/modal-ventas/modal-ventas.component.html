@@ -1,0 +1,303 @@
+<app-loading-spinner [isLoading]="isLoadingGeneral"></app-loading-spinner>
+<p-toast></p-toast>
+<p-dialog
+    header="Header" 
+    [(visible)]="isMdlVenta"
+    [modal]="true" 
+    [style]="{ width: '85vw' }" 
+    [draggable]="true" 
+    [resizable]="false"
+    [position]="'top'"
+    [dismissableMask] = "true">
+    <ng-template pTemplate="header">
+        <h5 class="modal-title" id="modal-basic-title">Detalles venta #{{venta!.idVenta}}</h5>
+    </ng-template>
+    <div *ngIf="venta">
+        <div class="row">
+            <div class="col-4">
+                <label class="form-label">Cliente</label>
+                <input type="text" class="form-control" value="{{venta.nombreCliente}}" readonly>
+            </div>
+            <div class="col-2">
+                <label class="form-label">Fecha</label>
+                <input type="text" class="form-control" value="{{venta.created_at | date: 'dd/MM/yyyy'}}" readonly>
+            </div>
+            <div class="col-2">
+                <label class="form-label">Status caja</label>
+                <input type="text" class="form-control" value="{{venta.nombreStatus}}" readonly>
+            </div>
+            <div class="col-2 d-none">
+                <label class="form-label">Status entregas</label>
+                <input type="text" class="form-control" value="{{venta.nombreStatusEntregas}}" readonly>
+            </div>
+
+
+
+            <div class="col">
+                <!-- PERMISO AGREGAR PARA ABONAR/COBRAR -->
+                <button *ngIf="userPermisos.agregar"
+                        class="p-button-rounded p-button-success me-md-2"
+                        pButton
+                        pRipple
+                        type="button"
+                        icon="bi bi-cash-coin"
+                        pTooltip="Cobrar"
+                        tooltipPosition="top"
+                        (click)="openMdlCobro()">
+                </button>
+                <!-- PERMISO EDITAR PARA MOVER A CREDITO -->
+                <button *ngIf="userPermisos.editar && venta.isCredito == false"
+                        class="p-button-rounded p-button-warning me-md-2"
+                        pButton
+                        pRipple
+                        type="button"
+                        icon="bi bi-box-arrow-in-up-right"
+                        pTooltip="Pasar a credito"
+                        tooltipPosition="top"
+                        (click)="confirmCredito(venta.idVenta)">
+                </button>
+                <!-- PERMISO PDF GENERAR PDF -->
+                <button *ngIf="userPermisos.pdf"
+                        class="p-button-rounded p-button-secondary me-md-2"
+                        pButton
+                        pRipple
+                        type="button"
+                        icon="bi bi-file-earmark-pdf"
+                        pTooltip="PDF"
+                        tooltipPosition="top"
+                        (click)="generaPDF_caja(venta.idVenta)">
+                </button>
+                <!-- PERMISO VER PARA VER ABONOS -->
+                <button *ngIf="arr_abonos.length > 0 && userPermisos.ver"
+                        class="p-button-rounded p-button-info me-md-2"
+                        pButton
+                        pRipple
+                        type="button"
+                        icon="pi pi-info-circle"
+                        pTooltip="Abonos"
+                        tooltipPosition="top"
+                        (click)="isMdlAbono = true">
+                </button>
+            </div>
+
+
+
+
+        </div>
+        <div class="row">
+            <div class="col-4">
+                <label class="form-label">Vendedor</label>
+                <input type="text" class="form-control" value="{{venta.nombreEmpleado}}" readonly>
+            </div>
+            <div class="col-2">
+                <label class="form-label">Tipo venta</label>
+                <input type="text" class="form-control" value="{{venta.nombreTipoVenta}}" readonly>
+            </div>
+            <div class="col-2">
+                <label class="form-label">Subtotal</label>
+                <input type="text" class="form-control" value="{{venta.subtotal | currency:'MXN'}}" readonly>
+            </div>
+            <div class="col-2">
+                <label class="form-label">Descuento</label>
+                <input type="text" class="form-control" value="{{venta.descuento | currency:'MXN'}}" readonly>
+            </div>
+            <div class="col-2">
+                <label class="form-label">Total</label>
+                <input type="text" class="form-control" value="{{venta.total | currency:'MXN'}}" readonly>
+            </div>
+        </div>
+        <div class="row" *ngIf="venta.observaciones.length > 2">
+            <div class="col">
+                <label class="form-label">Observaciones</label>
+                <textarea class="form-control" rows="1" value="{{venta.observaciones}}" readonly></textarea>
+            </div>
+        </div>
+        <hr>
+        <div class="table-responsive">
+            <p-table
+                [value]="productos_venta!"
+                styleClass="p-datatable-sm p-datatable-striped"
+                [paginator]="true"
+                [rows]="3"
+                >
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th>CLAVE EXTERNA</th>
+                        <th>DESCRIPCION</th>
+                        <th>MEDIDA</th>
+                        <th>CANTIDAD</th>
+                        <th>PRECIO</th>
+                        <th>DESCUENTO</th>
+                        <th>SUBTOTAL</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-productos>
+                    <tr>
+                        <td>{{productos.claveEx}}</td>
+                        <td>{{productos.descripcion}}</td>
+                        <td class="text-center">{{productos.nombreMedida}}</td>
+                        <td class="text-center">{{productos.cantidad}}</td>
+                        <td class="text-center">{{productos.precio | currency:'MXN'}}</td>
+                        <td class="text-center">{{productos.descuento | currency:'MXN'}}</td>
+                        <td class="text-center">{{productos.total | currency:'MXN'}}</td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+</p-dialog>
+
+<!-- Modal Abonos INDEPENDIENTE-->
+<p-dialog
+    header="Header" 
+    [(visible)]="isMdlAbono"
+    [modal]="true" 
+    [style]="{ width: '50vw' }" 
+    [draggable]="false" 
+    [resizable]="true"
+    [position]="'top'"
+    [dismissableMask] = "true">
+    <ng-template pTemplate="header">
+        <h5 class="modal-title" id="modal-basic-title-abono">Abonos venta #{{venta!.idVenta}}</h5>
+    </ng-template>
+    <div class="table-responsive">
+        <p-table
+            [value]="arr_abonos"
+            styleClass="p-datatable-sm p-datatable-striped">
+        <ng-template pTemplate="header">
+            <tr>
+                <th>ABONO</th>
+                <th>TOTAL ANTERIOR</th>
+                <th>TOTAL ACTUALIZADO</th>
+                <th>FECHA</th>
+                <th>REALIZO</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-abono>
+            <tr>
+                <td>{{abono.abono | currency:'MXN'}}</td>
+                <td>{{abono.totalAnterior | currency:'MXN'}}</td>
+                <td>{{abono.totalActualizado | currency:'MXN'}}</td>
+                <td>{{abono.created_at | date:'dd/MM/yyyy'}}</td>
+                <td>{{abono.nombreEmpleado}}</td>
+            </tr> 
+        </ng-template>
+        </p-table>
+    </div>
+</p-dialog>
+
+<!-- Modal Cobro Venta -->
+<p-dialog
+    header="Header" 
+    [(visible)]="isMdlCobroVenta"
+    [modal]="true" 
+    [style]="{ width: '60vw' }" 
+    [draggable]="false" 
+    [resizable]="true"
+    [position]="'top'"
+    [dismissableMask] = "true"
+    (onShow)="resetVarCobro()">
+    <ng-template pTemplate="header">
+        <h5 class="modal-title" id="modal-basic-title-abono">Cobrar venta #{{venta!.idVenta}}</h5>
+    </ng-template>
+    <div>
+        <form>
+            <div class="row">
+                <div class="col-8">
+                    <div class="col">
+                        <label class="form-label" for="">Tipo de pago</label>
+                        <div>
+                            <p-dropdown
+                                [options]="tipo_pago"
+                                [(ngModel)]="selectedTipoPago"
+                                optionLabel="tipo"
+                                [showClear]="true"
+                                placeholder="Selecciona una opcion"
+                                [style]="{ width: '40%' }"
+                                name="selectedTipoPago">
+                            </p-dropdown>
+                            <input 
+                                type="text" 
+                                pInputText 
+                                [style]="{ width: '60%' }"
+                                name="tp1"
+                                [(ngModel)]="tp1"
+                                oninput="this.value = this.value.replace(/[^\d.]/g, '').replace(/(\..*)\./g, '$1');" 
+                                autocomplete="off"
+                                (change)="calculaCambio()">
+                        </div>
+                    </div>
+                    <div class="col" *ngIf="arr_abonos.length > 0">
+                        <div class="table-responsive">
+                            <p-table
+                                [value]="arr_abonos"
+                                styleClass="p-datatable p-datatable-striped"
+                                [style]="{'font-size':'small'}">
+                                <ng-template pTemplate="header">
+                                    <tr >
+                                        <th>ABONO</th>
+                                        <th>TOTAL ANTERIOR</th>
+                                        <th>TOTAL ACTUALIZADO</th>
+                                        <th>FECHA</th>
+                                    </tr>
+                                </ng-template>
+                                <ng-template pTemplate="body" let-abono>
+                                    <tr>
+                                        <td>{{abono.abono | currency:'MXN'}}</td>
+                                        <td>{{abono.totalAnterior | currency:'MXN'}}</td>
+                                        <td>{{abono.totalActualizado | currency:'MXN'}}</td>
+                                        <td>{{abono.created_at | date:'dd/MM/yyyy'}}</td>
+                                    </tr> 
+                                </ng-template>
+                            </p-table>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-auto" *ngIf="venta">
+                    <h6 class="text-center">OPERACIONES</h6>
+                    <div class="col" >
+                        <label class="form-label" for="">TOTAL NOTA:</label>  
+                        <input class="form-control" type="text" value="{{venta.total | currency:'MXN'}}" disabled>
+                    </div>
+                    <div class="col" *ngIf="arr_abonos.length > 0">
+                        <label class="form-label">TOTAL ABONOS:</label>
+                        <input class="form-control" type="text" value="{{total_abono | currency:'MXN'}}" disabled>
+                    </div>
+                    <div class="col" *ngIf="arr_abonos.length > 0">
+                        <label class="form-label">SALDO ACTUAL:</label>
+                        <input class="form-control" type="text" value="{{total_actualizado | currency:'MXN'}}" disabled>
+                    </div>
+                    <div class="col">
+                        <label class="form-label" for="">PAGO:</label>
+                        <input class="form-control" type="text" value="{{tp1 | currency:'MXN'}}"  disabled>
+                    </div>
+                    <div class="col" *ngIf="!isSaldo ; else elseResta">
+                        <label class="form-label" for="">CAMBIO:</label>
+                        <input class="form-control" type="text" value="{{cambio | currency:'MXN'}}"  disabled>
+                    </div>
+                    <ng-template #elseResta>
+                        <div class="col">
+                            <label class="form-label" for="">RESTA:</label>
+                            <input class="form-control" type="text" value="{{saldo_restante | currency:'MXN'}}"  disabled>
+                        </div>
+                    </ng-template>
+                </div>
+            </div>
+            <div class="row mt-3 justify-content-end">
+                <div class="col-auto">
+                    <button
+                        pButton
+                        pRipple
+                        class="p-button-success me-md-2" 
+                        type="submit" 
+                        [disabled]="isCero"
+                        label="Cobrar"
+                        (click)="confirmCobro()"></button>
+                </div>
+            </div>
+            
+        </form>
+    </div>
+</p-dialog>
+
+<p-confirmDialog [style]="{width: '30vw'}" [baseZIndex]="10000" acceptLabel="Si" rejectButtonStyleClass="p-button-text"></p-confirmDialog>

@@ -220,11 +220,57 @@ export class ProductoService{
         return this._http.get(this.url+'productos/searchProductoMedidaI/'+idProducto,{headers:this.headers});
     }
 
+    /**
+     * 
+     * @param idProducto 
+     * @returns Array
+     * @description
+     * Solicita el idProducto y e consulta en todas las sucursales disponibles
+     * No busca en la nube(hostinger)
+     */
     getExistenciaMultiSucursal(idProducto:number):Observable<any>{
         return this._http.get(this.url+'productos/getExistenciaMultiSucursal/'+idProducto,{headers:this.headers});
     }
 
+    /**
+     * 
+     * @param idProducto number
+     * @returns producto
+     * @description
+     * Se consulta el producto en el catalogo de la nube, si lo encuentra
+     * este regresa la informacion del producto y sus medidas
+     */
     getProductoNUBE(idProducto:number):Observable<any>{
         return this._http.get(this.url+'productos/getProductoNUBE/'+idProducto,{headers:this.headers});
+    }
+
+    getAllProductosNUBE(page: number,type: number, search: string):Observable<any>{
+        return this._http.get(this.url+'productos/getAllProductoNUBE/'+type+'/'+search+'?page='+page,{headers:this.headers});
+    }
+
+    registerProductoByCatalogo(objProducto:any,idEmpleado:number):Observable<any>{
+        let combinado = {
+            'producto': objProducto.Producto,
+            'idEmpleado': idEmpleado,
+            'lista_productosMedida':objProducto.Producto_medidas
+        };
+        let json = JSON.stringify(combinado);
+        let params = 'json='+json;
+        return this._http.post(this.url+'productos/registerProductoByNUBE',params,{headers:this.headers});
+    }
+
+    /**
+     * 
+     * @param idProducto 
+     * @returns 
+     * @description
+     * Obtiene todas las modificaciones que se han realizado al producto
+     */
+    getHistorialProducto(idProducto:number):Observable<any>{
+        return this._http.get(this.url+'productos/getHistorialProducto/'+idProducto,{headers:this.headers});
+    }
+
+    getHistorialProductoPrecio(idProducto:number):Observable<any>{
+        return this._http.get(this.url+'productos/getHistorialProductoPrecio/'+idProducto,{headers:this.headers});
     }
 }

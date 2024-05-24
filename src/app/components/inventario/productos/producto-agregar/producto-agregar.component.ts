@@ -11,6 +11,7 @@ import { EmpleadoService } from 'src/app/services/empleado.service';
 import { ModulosService } from 'src/app/services/modulos.service';
 import { MessageService, ConfirmationService, ConfirmEventType } from 'primeng/api';
 import { SharedMessage } from 'src/app/services/sharedMessage';
+import { MdlProductoService } from 'src/app/services/mdlProductoService';
 
 /*NGBOOTSTRAP */
 import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -19,6 +20,7 @@ import { Producto} from 'src/app/models/producto';
 import { Productos_medidas_new } from 'src/app/models/productos_medidas_new';
 import { SucursalService } from 'src/app/services/sucursal.service';
 import { handleRedirect } from 'src/app/utils/fnUtils';
+import { Subscription } from 'rxjs';
 
 
 @Component({
@@ -83,6 +85,8 @@ export class ProductoAgregarComponent implements OnInit {
   public empresa:any;
   public isAllSuc: boolean = false;
 
+  private sub_producto: Subscription;
+
   constructor(
     private _productoService: ProductoService,
     private _medidaService: MedidaService,
@@ -97,9 +101,14 @@ export class ProductoAgregarComponent implements OnInit {
     private _route: ActivatedRoute,
     private _sucursalService: SucursalService,
     private _sharedMessage: SharedMessage,
+    private _mdlProductoService: MdlProductoService,
 
   ) {
     this.producto = new Producto(0,0,0,1,'',0,'',0,0,'',0,'','',null,1,0);
+    this.sub_producto = this._mdlProductoService.selectedValue$.subscribe(
+      value =>{
+        this.submitByCatalago(value);
+      });
    }
 
   ngOnInit(): void {
@@ -126,6 +135,7 @@ export class ProductoAgregarComponent implements OnInit {
 
   verificaPermisos(idProducto?:number){
     let isPermisosOk = false;
+    //Agregar producto SOLO MATRIZ
     if(!this.modoEdicion && !this.isUpdateLocal && this.sucursal_now.idSuc == 1){
 
       this.userPermisos = this._empleadoService.getPermisosModulo(this.mInv.idModulo, this.mInv.idSubModulo);
@@ -139,7 +149,9 @@ export class ProductoAgregarComponent implements OnInit {
         handleRedirect(this.counter,this._router,this.messageService);
       }
 
-    } else if(this.modoEdicion && !this.isUpdateLocal && this.sucursal_now.idSuc == 1 && idProducto){
+    } 
+    //Editar producto MATRIZ
+    else if(this.modoEdicion && !this.isUpdateLocal && this.sucursal_now.idSuc == 1 && idProducto){
       this.userPermisos = this._empleadoService.getPermisosModulo(this.mInv.idModulo, this.mInv.idSubModulo);
       if(this.userPermisos.editar == 1){
         this.getMedida();
@@ -151,7 +163,9 @@ export class ProductoAgregarComponent implements OnInit {
       } else{
         handleRedirect(this.counter,this._router,this.messageService);
       }
-    } else if(this.modoEdicion && this.isUpdateLocal && this.sucursal_now.idSuc != 1 && idProducto){
+    } 
+    //Editar producto OTRAS SUCURSALES
+    else if(this.modoEdicion && this.isUpdateLocal && this.sucursal_now.idSuc != 1 && idProducto){
       this.userPermisos = this._empleadoService.getPermisosModulo(this.mInv.idModulo, this.mInv.idSubModulo);
       if(this.userPermisos.editar == 1){
         this.getMedida();
@@ -166,15 +180,8 @@ export class ProductoAgregarComponent implements OnInit {
     }
 
     if(!isPermisosOk){
-      let message = {
-        severity:'error',
-        summary:'Permisos insuficientes',
-        detail: 'El usuario no cuenta con los permisos necesarios para editar/agregar un producto',
-        sticky:true,
-      }
-      
-      this._sharedMessage.addMessages(message);
-      this._router.navigate(['./']);
+      this.identity = this._empleadoService.getIdentity();
+      this.openMdlProductos();
     }
   }
 
@@ -675,6 +682,11 @@ export class ProductoAgregarComponent implements OnInit {
     } else{
       // Eliminar del array arrChecksPrecios si existe
       this.arrChecksPrecios = this.arrChecksPrecios.filter(item => item.nombre !== idInput);
+      //Recorremos todas las tablas de rpecios para ponerlos en null
+      this.tabsPrice.forEach(element => {
+          (element as any)['precio'+nivel] = null;
+          (element as any)['porcentaje'+nivel] = null;
+      });
     }
 
     // Ordenar el array por nivel
@@ -1044,5 +1056,58 @@ export class ProductoAgregarComponent implements OnInit {
     this.isAllSuc = this.sucursales.every(suc => suc.isSelected);
   }
 
+  /**
+  * @description
+  * Funcion que abre el modal de productos del componente externo
+  */
+  openMdlProductos():void{
+    this.isLoadingGeneral = true;
+
+    setTimeout(()=>{
+      this.isLoadingGeneral = false;
+      this._mdlProductoService.openMdlProductosDialog(false,true);
+      this.messageService.add({
+        severity:'warn',
+        summary:'Alerta',
+        detail: 'Solo puedes agregar productos desde el catalogo',
+        sticky:true,
+      });
+    },1000);
+    
+  }
+
+  submitByCatalago(producto:any){
+    this._productoService.registerProductoByCatalogo(producto,this.identity.sub).subscribe(
+      response =>{
+        if(response.code == 200 && response.status == 'success'){
+          let message = {
+            severity:'success',
+            summary: 'Registro existoso',
+            detail: response.message,
+          }
+          this._sharedMessage.addMessages(message);
+
+          this._router.navigate(['producto-modulo/producto-buscar']);
+
+        } else if(response.code == 400 && response.status == 'error'){
+          this.messageService.add( {
+            severity:'warn',
+            summary: 'Error',
+            detail: 'El producto ya se encuentra registrado',
+            sticky: true
+          });
+          this.loadUser();
+        }
+      }, error =>{
+        this.messageService.add({
+          severity:'error',
+          summary: 'Error',
+          detail: error.message,
+          sticky: true
+        });
+        console.log(error);
+      }
+    );
+  }
   
 }

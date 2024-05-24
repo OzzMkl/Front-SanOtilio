@@ -174,7 +174,7 @@ export class ClienteEditarComponent implements OnInit {
 
           if(this.listaDirecciones.length > 0){
 
-            this._clienteService.updateCdireccion(this.listaDirecciones,this.clienteEditado.idCliente).subscribe(
+            this._clienteService.updateCdireccion(this.listaDirecciones,this.clienteEditado.idCliente, identity).subscribe(
               response =>{
                 if(response.status == 'success'){
                   this.messageService.add({severity:'success', summary:'Actualizacion exitosa', detail:'La direccion se actualizo correctamente', sticky: true});

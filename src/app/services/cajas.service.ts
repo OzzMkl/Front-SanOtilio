@@ -20,13 +20,27 @@ export class CajasService {
     let params = 'json='+json;
     return this._http.post(this.url+'cajas/aperturaCaja',params,{headers:this.headers});
   }
-  cierreCaja(caja:any):Observable<any>{
-    let json = JSON.stringify(caja);
-    let params = 'json='+json;
-    return this._http.put(this.url+'cajas/cierreCaja',params,{headers:this.headers})
+
+  cierreCaja(idEmpleado:number,caja:any, totales:any, imgChart: string):Observable<any>{
+    const combinado = {
+      idEmpleado: idEmpleado,
+      caja: caja,
+      totales: totales,
+      imgChart: imgChart
+    }
+    let json = JSON.stringify(combinado);
+    let params = 'json='+ encodeURIComponent(json);
+    return this._http.post(this.url+'cajas/cierreCaja',params,{headers:this.headers,responseType:'blob'})
   }
-  cobroVenta(idVenta:number,venta:any, isSaldo:boolean, idempleado:number, tieneAbono:boolean):Observable<any>{
-    let combinado = {...venta, isSaldo: isSaldo, idEmpleado:idempleado, tieneAbono: tieneAbono};
+
+  cobroVenta(idVenta:number,venta:any, isSaldo:boolean, idempleado:number, tieneAbono:boolean, isCredito:boolean):Observable<any>{
+    let combinado = {
+        ...venta, 
+        isSaldo: isSaldo, 
+        idEmpleado:idempleado, 
+        tieneAbono: tieneAbono,
+        isCredito: isCredito,
+      };
     let json = JSON.stringify(combinado);
     let params = 'json='+json;
     return this._http.post(this.url+'cajas/cobroVenta/'+idVenta,params,{headers:this.headers});
@@ -51,6 +65,19 @@ export class CajasService {
     let json = JSON.stringify(objVenta);
     let params = 'json='+json;
     return this._http.post(this.url+'cajas/guardaVentaCredito',params,{headers: this.headers});
+  }
+
+  getPDF_CorteCaja(idEmpleado:number,caja:any, totales:any, imgChart: string):Observable<Blob>{
+    const combinado = {
+      idEmpleado: idEmpleado,
+      caja: caja,
+      totales: totales,
+      imgChart: imgChart
+    }
+    
+    let json = JSON.stringify(combinado);
+    let params = 'json='+json;
+    return this._http.post(this.url+'cajas/generatePDF_CorteCajas',params,{headers: this.headers,responseType:'blob'})
   }
 
   // getTipoMovimiento():Observable<any>{

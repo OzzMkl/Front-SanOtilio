@@ -1,9 +1,10 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
 import { ProductoService } from 'src/app/services/producto.service';
 import { global } from 'src/app/services/global';
 import { Router } from '@angular/router';
 import { EmpleadoService } from 'src/app/services/empleado.service';
 import { ModulosService } from 'src/app/services/modulos.service';
+import { SharedMessage } from 'src/app/services/sharedMessage';
 //primeng
 import { MenuItem, MessageService, ConfirmationService, ConfirmEventType } from 'primeng/api';
 //interfaces
@@ -18,8 +19,9 @@ import { Productos_medidas_new } from 'src/app/models/productos_medidas_new';
   styleUrls: ['./producto-buscar.component.css'],
   providers: [ProductoService, EmpleadoService, MessageService, ConfirmationService]
 })
-export class ProductoBuscarComponent implements OnInit, OnDestroy {
+export class ProductoBuscarComponent implements OnInit, OnDestroy, AfterViewInit {
 
+  fechasHistorial: any;
   //Spinners
   public isLoading:boolean = false;//table
   public isLoadingPrecios:boolean = false;//mostrarPrecios
@@ -43,6 +45,8 @@ export class ProductoBuscarComponent implements OnInit, OnDestroy {
   public claveExt: string ='';
   public isShow: boolean = false;
   public valRadioButton: string = 'nube';
+  public arrHistorialProducto?: Array<any>;
+  public arrHistorialPrecio: any=[];
   /**PAGINATOR */
   public totalPages: any;
   public itemsPerPage:number=0;
@@ -62,6 +66,8 @@ export class ProductoBuscarComponent implements OnInit, OnDestroy {
   //Modales
   public mdl_update: boolean = false;
   public mdl_viewProduct: boolean = false;
+  public mdl_historialProducto: boolean = false;
+  public mdl_historialProductoPrecio: boolean = false;
 
   constructor(
     private _productoService: ProductoService,
@@ -70,10 +76,21 @@ export class ProductoBuscarComponent implements OnInit, OnDestroy {
     private _modulosService: ModulosService,
     private _router: Router,
     private _confirmationService: ConfirmationService,
+    private _sharedMessage: SharedMessage,
   ) { }
 
   ngOnInit(): void {
     this.loadUser();
+  }
+
+  ngAfterViewInit(): void {
+    this._sharedMessage.messages$.subscribe(
+      messages =>{
+        if(messages){
+          this.messageService.add(messages[0]); // Agregar el mensaje al servicio de mensajes de PrimeNG
+        }
+      }
+    )
   }
 
   /**
@@ -168,29 +185,31 @@ export class ProductoBuscarComponent implements OnInit, OnDestroy {
    * retornamos la consulta con las medias e imagen del producto
    */
   mostrarPrecios(idProducto:number){
-    this.isLoadingPrecios = true;
-    this.idProductoMenu = idProducto;
-    this.tblHeaders = [];
-    this.sub_producto = this._productoService.searchProductoMedida(idProducto).subscribe(
-      response =>{
-        if(response.status == 'success'){
-          this.claveExt = response.Producto_cl;
-          this.productosMedida = response.productoMedida;
-          this.existenciasPorMed = response.existencia_por_med;
-          this.imagenPM = response.imagen ? response.imagen : "1650558444no-image.png";
-          //creamos lista de headers de la tabla de precios
-          for(let i = 1; i <= 5; i++){
-            const precioKey = `precio${i}`;
-            if(this.productosMedida[0][precioKey] != null){
-              this.tblHeaders.push(`P${i}`);
+    if(idProducto != this.idProductoMenu){
+      this.isLoadingPrecios = true;
+      this.idProductoMenu = idProducto;
+      this.tblHeaders = [];
+      this.sub_producto = this._productoService.searchProductoMedida(idProducto).subscribe(
+        response =>{
+          if(response.status == 'success'){
+            this.claveExt = response.Producto_cl;
+            this.productosMedida = response.productoMedida;
+            this.existenciasPorMed = response.existencia_por_med;
+            this.imagenPM = response.imagen ? response.imagen : "1650558444no-image.png";
+            //creamos lista de headers de la tabla de precios
+            for(let i = 1; i <= 5; i++){
+              const precioKey = `precio${i}`;
+              if(this.productosMedida[0][precioKey] != null){
+                this.tblHeaders.push(`P${i}`);
+              }
             }
-          }
 
-          this.isLoadingPrecios = false;
-        }
-    }, error =>{
-      console.log(error);
-    });
+            this.isLoadingPrecios = false;
+          }
+      }, error =>{
+        console.log(error);
+      });
+    }
   }
 
   /**
@@ -259,14 +278,24 @@ export class ProductoBuscarComponent implements OnInit, OnDestroy {
       })
     }
 
-    this.menuItems[0].items?.push({
+    this.menuItems[0].items?.push(
+      {
         label: 'Historial',
         styleClass: 'text-white',
         icon: 'pi pi-history text-white',
-        // command: () => {
-        //   this._router.navigate(['./producto-modulo/producto-ver/'+this.idProductoMenu]);
-        // }
-    });
+        command: () => {
+          this.getHistorialProducto();
+        }
+    },
+    {
+      label:'Historial Precio',
+      styleClass:'text-white',
+      icon: 'pi pi-history text-white',
+        command: () => {
+          this.getHistorialPrecios();
+        }
+    }
+  );
   }
 
   /**
@@ -358,6 +387,56 @@ export class ProductoBuscarComponent implements OnInit, OnDestroy {
         }
       }
     });
+  }
+
+  getHistorialProducto(){
+    this.isLoadingGeneral = true;
+    this.sub_producto = this._productoService.getHistorialProducto(this.idProductoMenu!).subscribe(
+      response =>{
+        if(response.code == 200 && response.status == 'success'){
+          this.mdl_historialProducto = true;
+          this.arrHistorialProducto = response.historial_producto;
+          this.isLoadingGeneral = false;
+        }
+      }, error =>{
+        this.isLoadingGeneral = false;
+        this.messageService.add({
+          severity:'error',
+          summary:'Error',
+          detail:'Ocurrio un error al buscar el producto.'
+        })
+        console.log(error)
+      }
+    );
+  }
+
+  getHistorialPrecios(){
+    this.isLoadingGeneral = true;
+    this.sub_producto = this._productoService.getHistorialProductoPrecio(this.idProductoMenu!).subscribe(
+      response =>{
+        if(response.code == 200 && response.status == 'success'){
+          console.log(response)
+          this.arrHistorialPrecio = response.historial_producto_precio;
+
+           // Recorrer el objeto historial_producto_precio
+           this.fechasHistorial = Object.keys(this.arrHistorialPrecio);
+           console.log(this.fechasHistorial)
+
+
+
+          this.mdl_historialProductoPrecio = true;
+          this.isLoadingGeneral = false;
+        }
+      }, error =>{
+        this.isLoadingGeneral = false;
+        this.messageService.add({
+          severity:'error',
+          summary:'Error',
+          detail:'Ocurrio un error al buscar el producto.'
+        })
+        console.log(error)
+      }
+    );
   }
 
   ngOnDestroy(): void {
