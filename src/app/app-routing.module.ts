@@ -76,6 +76,7 @@ import { ClienteGuard } from './guards/cliente.guard';
 import { ProductosGuard } from './guards/productos.guard';
 import { RequisicionGuard } from './guards/requisicion.guard';
 import { CajasGuard } from './guards/cajas.guard';
+import { CompraGuard } from './guards/compra.guard';
 
 
 
@@ -97,7 +98,7 @@ const routes: Routes = [
       {path: 'ordencompra-buscar',component: OrdencompraBuscarComponent},
       {path: 'ordencompra-editar/:idOrd',component: OrdencompraEditarComponent}
     ]},
-  {path: 'compra-modulo',component: CompraModuloComponent,
+  {path: 'compra-modulo',component: CompraModuloComponent, canActivate:[CompraGuard],
     children:
     [
       {path: 'compra-agregar-id/:idOrd', component: CompraAgregarIdComponent},

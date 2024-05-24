@@ -5,6 +5,9 @@ import { Router} from '@angular/router';
 import { Subscription } from 'rxjs';
 import { NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
 import { EmpleadoService } from 'src/app/services/empleado.service';
+import { ModulosService } from 'src/app/services/modulos.service';
+import { handleRedirect } from 'src/app/utils/fnUtils';
+
 
 //primeng
 import { MessageService, ConfirmationService, ConfirmEventType } from 'primeng/api';
@@ -17,7 +20,9 @@ import { MessageService, ConfirmationService, ConfirmEventType } from 'primeng/a
   providers: [CompraService,ConfirmationService,MessageService]
 })
 export class CompraBuscarComponent implements OnInit {
-  public userPermisos:any
+    //Usuario
+    mCom = this._modulosService.modsCompra();
+    public userPermisos:any;
 
   //public proveedores: Array<Proveedor>;
   public compras: Array<any> = [];
@@ -60,15 +65,17 @@ export class CompraBuscarComponent implements OnInit {
     private _modalService: NgbModal,
     private _empleadoService:EmpleadoService,
     private _confirmationService: ConfirmationService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private _modulosService: ModulosService
   ) {}
 
   ngOnInit(): void {
-    this.getComprasR();
     this.loadUser();
   }
 
   //
+  
+
   
   getComprasR(){
     //mostramos el spinner
@@ -328,6 +335,14 @@ export class CompraBuscarComponent implements OnInit {
   }
 
   loadUser(){
+    this.userPermisos = this._empleadoService.getPermisosModulo(this.mCom.idModulo, this.mCom.idSubModulo);
+    console.log(this.userPermisos)
+    //revisamos si el permiso del modulo esta activo si no redireccionamos
+    if( this.userPermisos.ver == 1 ){
+        this.getComprasR();
+    } else{
+      handleRedirect(5, this._router, this.messageService);
+    }
     this.identity = this._empleadoService.getIdentity();
   }
 
