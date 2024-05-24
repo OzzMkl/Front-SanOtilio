@@ -70,7 +70,6 @@ export class NotasPorCobrarComponent implements OnInit, OnDestroy {
     this.loadUser();
     this.actualizaVentasSubscription = this._mdlVentaService.actualizaListaVentas$.subscribe(
       () =>{
-        console.log('aquiandamoss')
         this.getVentas();
       }
     );
