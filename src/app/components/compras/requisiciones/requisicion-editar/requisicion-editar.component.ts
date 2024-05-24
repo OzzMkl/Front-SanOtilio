@@ -220,15 +220,16 @@ export class RequisicionEditarComponent implements OnInit {
     if(this.productosdetailReq.length == 0){
       this.messageService.add({severity:'error', summary:'Error', detail:'No se puede crear la requisicion de compra si no tiene productos'});
     }else{
-      this.requisicion.idStatus = 36;
+      this.requisicion.idStatus = 29;
       this._requisicionservice.updateRequisicion(this.requisicion.idReq,this.requisicion).subscribe(
         response =>{
+          // this.messageService.add({severity:'success', summary:'', detail:'antes de entrar'});
           if(response.status == 'success'){
-            console.log(response.requisicion[0]['idReq']);  
-            this.messageService.add({severity:'success', summary:'Éxito', detail:'Requisicion modificada'});
+            console.log(response);  
+            
             this._requisicionservice.updateProductosReq(this.requisicion.idReq,this.productosdetailReq).subscribe(
                res =>{
-                   //console.log(res);
+                  console.log(res);
                   this.messageService.add({severity:'success', summary:'Éxito', detail:'Productos agregados'});
                   //this.getDetailsReq();
                   this.generaPDF(response.requisicion[0]['idReq']);
