@@ -232,7 +232,7 @@ export class RequisicionEditarComponent implements OnInit {
                   console.log(res);
                   this.messageService.add({severity:'success', summary:'Éxito', detail:'Productos agregados'});
                   //this.getDetailsReq();
-                  this.generaPDF(response.requisicion[0]['idReq']);
+                  this.generaPDF(response.requisicion.idReq);
                   
                },error =>{
                 console.log(<any>error);
