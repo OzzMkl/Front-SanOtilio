@@ -8,6 +8,7 @@ import { Subscription } from 'rxjs';
 import { Producto } from 'src/app/models/producto';
 import { Productos_medidas_new } from 'src/app/models/productos_medidas_new';
 import { dialogOptionsProductos } from 'src/app/models/interfaces/dialogOptions-productos';
+import { Router } from '@angular/router';
 
 interface selectBusqueda {
   id: number;
@@ -64,6 +65,7 @@ export class ModalProductosComponent implements OnInit, OnDestroy {
     private _productoService:ProductoService,
     private _mdlProductoService: MdlProductoService,
     private _sharedMessage: SharedMessage,
+    private _router: Router
   ) { }
 
   ngOnInit(): void {
@@ -72,7 +74,6 @@ export class ModalProductosComponent implements OnInit, OnDestroy {
       this.isOpenMdlMedidas = dialogOptions.openMdlMedidas ?? false;
       this.isCatalagoNube = dialogOptions.isCatalogoNube ?? false;
       this.isAgregarProducto = dialogOptions.isAgregarProducto ?? false;
-
       this.mdlProductos = true;
       this.setOptionsSelect();
       if(this.isCatalagoNube){
@@ -323,9 +324,11 @@ export class ModalProductosComponent implements OnInit, OnDestroy {
       });
   }
 
-  gg(){
+  cancelarAgregar(){
     if(this.isAgregarProducto){
-      console.log('modal cerrado')
+      // let message = {severity:'warn', summary:'Advertencia', detail:'Se cancelo el agregar producto'};
+      //       this._sharedMessage.addMessages(message);
+      this._router.navigate(['producto-modulo/producto-buscar']);
     }
   }
 

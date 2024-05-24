@@ -8,7 +8,7 @@
     [draggable]="true" [resizable]="false"
     [position]="'top'"
     [dismissableMask] = "true"
-    (onHide)="gg()">
+    [closable]="!isAgregarProducto">
     <ng-template pTemplate="header">
         <h5 class="modal-title" id="modal-basic-title">Buscar producto</h5>
     </ng-template>
@@ -57,6 +57,9 @@
         [totalRecords]="totalPages" 
         >
     </p-paginator>
+    <ng-template pTemplate="footer">
+        <button *ngIf="isAgregarProducto" pButton pRipple type="button" label="Cancelar" class="p-button-danger" (click)="cancelarAgregar()"></button>
+    </ng-template>
 </p-dialog>
 
 <!-- modal medidas -->
