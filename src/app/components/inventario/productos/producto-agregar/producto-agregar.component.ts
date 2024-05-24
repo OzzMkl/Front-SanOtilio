@@ -21,6 +21,7 @@ import { Productos_medidas_new } from 'src/app/models/productos_medidas_new';
 import { SucursalService } from 'src/app/services/sucursal.service';
 import { handleRedirect } from 'src/app/utils/fnUtils';
 import { Subscription } from 'rxjs';
+import { dialogOptionsProductos } from 'src/app/models/interfaces/dialogOptions-productos';
 
 
 @Component({
@@ -84,6 +85,7 @@ export class ProductoAgregarComponent implements OnInit {
   public sucursales: Array<any> = [];
   public empresa:any;
   public isAllSuc: boolean = false;
+  public dialogOpt?: dialogOptionsProductos;
 
   private sub_producto: Subscription;
 
@@ -1062,10 +1064,15 @@ export class ProductoAgregarComponent implements OnInit {
   */
   openMdlProductos():void{
     this.isLoadingGeneral = true;
+    this.dialogOpt = {
+      openMdlMedidas: false,
+      isCatalogoNube: true,
+      isAgregarProducto: true
+    };
 
     setTimeout(()=>{
       this.isLoadingGeneral = false;
-      this._mdlProductoService.openMdlProductosDialog(false,true);
+      this._mdlProductoService.openMdlProductosDialog(this.dialogOpt!);
       this.messageService.add({
         severity:'warn',
         summary:'Alerta',

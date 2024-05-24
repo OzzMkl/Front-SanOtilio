@@ -21,6 +21,7 @@ import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 //primeng
 import { MessageService, ConfirmationService, ConfirmEventType } from 'primeng/api';
 import { handleRedirect } from 'src/app/utils/fnUtils';
+import { dialogOptionsProductos } from 'src/app/models/interfaces/dialogOptions-productos';
 
 @Component({
   selector: 'app-punto-de-venta',
@@ -105,6 +106,7 @@ export class PuntoDeVentaComponent implements OnInit, OnDestroy {
   public mdlProductos: boolean = false;
   //input de busqueda claveex
   public idProducto?: number;
+  public dialogOpt?: dialogOptionsProductos;
 
   selectedValue: any;
   //subscriptions
@@ -1021,7 +1023,10 @@ export class PuntoDeVentaComponent implements OnInit, OnDestroy {
    * Funcion que abre el modal de productos del componente externo
    */
   openMdlProductos():void{
-    this._mdlProductoService.openMdlProductosDialog(true);
+    this.dialogOpt = {
+      openMdlMedidas: true,
+    };
+    this._mdlProductoService.openMdlProductosDialog(this.dialogOpt);
   }
 
   /**

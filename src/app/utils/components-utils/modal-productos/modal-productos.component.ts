@@ -7,6 +7,7 @@ import { OverlayPanel } from 'primeng/overlaypanel';
 import { Subscription } from 'rxjs';
 import { Producto } from 'src/app/models/producto';
 import { Productos_medidas_new } from 'src/app/models/productos_medidas_new';
+import { dialogOptionsProductos } from 'src/app/models/interfaces/dialogOptions-productos';
 
 interface selectBusqueda {
   id: number;
@@ -52,6 +53,7 @@ export class ModalProductosComponent implements OnInit, OnDestroy {
   public mdlProductos: boolean = false;
   isOpenMdlMedidas: boolean = false;
   isCatalagoNube: boolean = false;
+  isAgregarProducto: boolean = false;
   @ViewChild('panelMedidasMultiSuc') panelMedidasMultiSuc!: OverlayPanel;
 
   //Subscriptions
@@ -66,9 +68,11 @@ export class ModalProductosComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     
-    this.sub_mdlProductoService = this._mdlProductoService.openMdlProductosDialog$.subscribe((dialogOptions: { openMdlMedidas: boolean, isCatalagoNube: boolean }) => {
-      this.isOpenMdlMedidas = dialogOptions.openMdlMedidas;
-      this.isCatalagoNube = dialogOptions.isCatalagoNube;
+    this.sub_mdlProductoService = this._mdlProductoService.openMdlProductosDialog$.subscribe((dialogOptions: dialogOptionsProductos) => {
+      this.isOpenMdlMedidas = dialogOptions.openMdlMedidas ?? false;
+      this.isCatalagoNube = dialogOptions.isCatalogoNube ?? false;
+      this.isAgregarProducto = dialogOptions.isAgregarProducto ?? false;
+
       this.mdlProductos = true;
       this.setOptionsSelect();
       if(this.isCatalagoNube){
@@ -317,6 +321,10 @@ export class ModalProductosComponent implements OnInit, OnDestroy {
           this.isLoadingExistencia = false;
         }
       });
+  }
+
+  gg(){
+    console.log('modal cerrado')
   }
 
   ngOnDestroy(): void {

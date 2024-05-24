@@ -20,6 +20,7 @@ import { MessageService, ConfirmationService, ConfirmEventType } from 'primeng/a
 import { NgbModal,ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 //Router
 import { Router } from '@angular/router';
+import { dialogOptionsProductos } from 'src/app/models/interfaces/dialogOptions-productos';
 
 
 @Component({
@@ -76,6 +77,7 @@ export class TraspasoAgregarComponent implements OnInit {
   //Modal productos
   public selectedValue : any;
   private subscription : Subscription;
+  public dialogOpt?: dialogOptionsProductos;
   
 
   constructor(
@@ -345,7 +347,10 @@ export class TraspasoAgregarComponent implements OnInit {
    }
     
     openMdlProductos():void{
-      this._mdlProductoService.openMdlProductosDialog(true);
+      this.dialogOpt = {
+        openMdlMedidas: true,
+      };
+      this._mdlProductoService.openMdlProductosDialog(this.dialogOpt);
     }
 
 

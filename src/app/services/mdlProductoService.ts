@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
+import { dialogOptionsProductos } from '../models/interfaces/dialogOptions-productos';
 
 @Injectable({
   providedIn: 'root'
@@ -7,7 +8,7 @@ import { Subject } from 'rxjs';
 
 export class MdlProductoService {
 
-  private openMdlProductosDialogSource = new Subject<{ openMdlMedidas: boolean, isCatalagoNube: boolean }>();
+  private openMdlProductosDialogSource = new Subject<dialogOptionsProductos>();
   private selectedValueSource = new Subject<any>();
 
   openMdlProductosDialog$ = this.openMdlProductosDialogSource.asObservable();
@@ -21,9 +22,8 @@ export class MdlProductoService {
    * @param isCatalagoNube boolean get catagalogo nube
    * 
    */
-  openMdlProductosDialog(openMdlMedidas: boolean = false,isCatalagoNube: boolean = false): void {
-    const dialogOptions = { openMdlMedidas, isCatalagoNube };
-    this.openMdlProductosDialogSource.next(dialogOptions);
+  openMdlProductosDialog(obj:dialogOptionsProductos): void {
+    this.openMdlProductosDialogSource.next(obj);
   }
 
   sendSelectedValue(value: any): void {
