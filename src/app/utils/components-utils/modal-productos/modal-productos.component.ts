@@ -324,7 +324,9 @@ export class ModalProductosComponent implements OnInit, OnDestroy {
   }
 
   gg(){
-    console.log('modal cerrado')
+    if(this.isAgregarProducto){
+      console.log('modal cerrado')
+    }
   }
 
   ngOnDestroy(): void {

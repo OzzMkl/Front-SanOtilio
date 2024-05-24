@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { global } from 'src/app/services/global';
 
@@ -37,7 +37,7 @@ import { dialogOptionsProductos } from 'src/app/models/interfaces/dialogOptions-
     ConfirmationService
   ]
 })
-export class ProductoAgregarComponent implements OnInit {
+export class ProductoAgregarComponent implements OnInit, OnDestroy {
 
   //PERMISOS
   public userPermisos:any = [];
@@ -87,7 +87,9 @@ export class ProductoAgregarComponent implements OnInit {
   public isAllSuc: boolean = false;
   public dialogOpt?: dialogOptionsProductos;
 
+  //Subscriptiones
   private sub_producto: Subscription;
+  private sub_whatever: Subscription = new Subscription();
 
   constructor(
     private _productoService: ProductoService,
@@ -1084,7 +1086,7 @@ export class ProductoAgregarComponent implements OnInit {
   }
 
   submitByCatalago(producto:any){
-    this._productoService.registerProductoByCatalogo(producto,this.identity.sub).subscribe(
+    this.sub_whatever = this._productoService.registerProductoByCatalogo(producto,this.identity.sub).subscribe(
       response =>{
         if(response.code == 200 && response.status == 'success'){
           let message = {
@@ -1115,6 +1117,11 @@ export class ProductoAgregarComponent implements OnInit {
         console.log(error);
       }
     );
+  }
+
+  ngOnDestroy(): void {
+    this.sub_producto.unsubscribe();
+    this.sub_whatever.unsubscribe();
   }
   
 }

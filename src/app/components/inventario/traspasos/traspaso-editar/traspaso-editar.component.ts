@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 //Servicios
@@ -28,7 +28,7 @@ import { dialogOptionsProductos } from 'src/app/models/interfaces/dialogOptions-
   styleUrls: ['./traspaso-editar.component.css'],
   providers:[MessageService,ConfirmationService,ProductoService,EmpleadoService]
 })
-export class TraspasoEditarComponent implements OnInit {
+export class TraspasoEditarComponent implements OnInit, OnDestroy {
   //Modelos
   public empresaSesion: Empresa = new Empresa(0,'','','','','','','','','','','','','','');
   //Datos de traspaso
@@ -688,6 +688,8 @@ export class TraspasoEditarComponent implements OnInit {
 
   //-----------------------------------------------------Eventos-----------------------------------------------------
 
-
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
+  }
 
 }

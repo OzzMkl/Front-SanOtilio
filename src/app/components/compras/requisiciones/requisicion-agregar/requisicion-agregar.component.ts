@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 //Servicios
 import { ProductoService } from 'src/app/services/producto.service';
 import { global } from 'src/app/services/global';
@@ -25,7 +25,7 @@ import { dialogOptionsProductos } from 'src/app/models/interfaces/dialogOptions-
   styleUrls: ['./requisicion-agregar.component.css'],
   providers:[ProductoService, RequisicionService, EmpleadoService,MessageService,ProveedorService]
 })
-export class RequisicionAgregarComponent implements OnInit {
+export class RequisicionAgregarComponent implements OnInit, OnDestroy {
 
   //Datos de la requisicion
   public requisicion: Requisicion;
@@ -604,6 +604,10 @@ export class RequisicionAgregarComponent implements OnInit {
       openMdlMedidas: true,
     };
     this._mdlProductoService.openMdlProductosDialog(this.dialogOpt);
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 
   

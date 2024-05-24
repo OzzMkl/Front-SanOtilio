@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 //Services
 import { SucursalService } from 'src/app/services/sucursal.service';
@@ -29,7 +29,7 @@ import { dialogOptionsProductos } from 'src/app/models/interfaces/dialogOptions-
   styleUrls: ['./traspaso-agregar.component.css'],
   providers:[MessageService,ConfirmationService,ProductoService,EmpleadoService]
 })
-export class TraspasoAgregarComponent implements OnInit {
+export class TraspasoAgregarComponent implements OnInit, OnDestroy {
 
   //modelos
   public traspaso: Traspaso = new Traspaso(0,0,0,0,0,0,0,'',null,null);
@@ -708,6 +708,10 @@ export class TraspasoAgregarComponent implements OnInit {
     //Asignar valor
       this.producto_traspaso.precio = med.precio1;
     //console.log(this.producto_traspaso.precio);    
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 
 }
