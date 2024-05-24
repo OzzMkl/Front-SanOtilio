@@ -52,6 +52,11 @@ export class ModulosService {
     idSubModulo:13
   }
 
+  public pCom: propModulo ={
+    idModulo:3,
+    idSubModulo: 7
+  }
+
   constructor() { }
 
   modsCaja(){
@@ -92,5 +97,9 @@ export class ModulosService {
 
   modsTraspaso(){
     return this.pTras;
+  }
+
+  modsCompra(){
+    return this.pCom;
   }
 }
