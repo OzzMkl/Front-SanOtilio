@@ -563,7 +563,7 @@ export class OrdencompraAgregarComponent implements OnInit {
       this.isLoading = true;
   
   
-      this.getReqSub = this._requisicionservice.getReq('Recibidas','').subscribe(
+      this.getReqSub = this._requisicionservice.getReq('Aceptadas','').subscribe(
         response =>{
           if(response.status == 'success'){
   

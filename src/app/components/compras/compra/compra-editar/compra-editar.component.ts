@@ -8,6 +8,7 @@ import { EmpleadoService } from 'src/app/services/empleado.service';
 import { MedidaService } from 'src/app/services/medida.service';
 import { ImpuestoService } from 'src/app/services/impuesto.service';
 import { CompraService } from 'src/app/services/compra.service';
+import { HttpClient} from '@angular/common/http';
 import { MessageService } from 'primeng/api';
 //modelos
 import { Compra } from 'src/app/models/compra'
@@ -117,6 +118,7 @@ export class CompraEditarComponent implements OnInit {
     private _impuestoService: ImpuestoService,
     public _compraService : CompraService,
     private calendar: NgbCalendar,
+    private _http: HttpClient,
     public _router: Router
   ) {
       this.compra = new Compra(0,null,0,0,0,0,0,0,null,'',false,null); 
@@ -193,13 +195,20 @@ export class CompraEditarComponent implements OnInit {
     }
 
     getAllProducts(){//traemos la informacion de todos los productos para el modal
+      console.log('getAllProducts');
       this._productoService.getProductos().subscribe(
         response =>{
+          console.log(response)
           if(response.status == 'success'){
-            this.productos = response.productos;
+            this.productos = response.productos.data;
             //navegacion paginacion
             this.totalPages = response.productos.total;
+            this.itemsPerPage = response.productos.per_page;
+            this.pageActual = response.productos.current_page;
+            this.next_page = response.productos.next_page_url;
+            this.path = response.productos.path;
             //console.log(response.productos);
+            
           }
         },
         error =>{
@@ -300,9 +309,13 @@ export class CompraEditarComponent implements OnInit {
           //obtener idProdMedida actualizado y asignarlo
           //buscar lpo.nombreMedida en productoVerM, regresar y asignar this.producto_compra.idProdMedida, this.producto_compra.nombreMedida
           this.medidaActualizada = this.productoVerM.find( (x:any) => x.nombreMedida == lpo.nombreMedida);
-          console.log('medidaActualizada',this.medidaActualizada);
-          this.producto_compra.idProdMedida = parseInt(this.medidaActualizada.idProdMedida);
-          this.producto_compra.nombreMedida = this.medidaActualizada.nombreMedida;
+          if(this.medidaActualizada == undefined ){
+
+          }else{
+            console.log('medidaActualizada',this.medidaActualizada);
+            this.producto_compra.idProdMedida = parseInt(this.medidaActualizada.idProdMedida);
+            this.producto_compra.nombreMedida = this.medidaActualizada.nombreMedida;
+          }
           console.log('producto_compra',this.producto_compra)
           
         },error => {
@@ -392,8 +405,10 @@ export class CompraEditarComponent implements OnInit {
             this.messageService.add({severity:'success', summary:'Éxito', detail:'Compra actualizada'});
             console.log(this.Lista_compras);
             console.log(this.identity['sub']);
+            console.log(response);
+            console.log(response.compra['idCompra']);
 
-              this._compraService.updateProductosCompra(response.compra[0]['idCompra'],this.identity['sub'],this.Lista_compras).subscribe(
+              this._compraService.updateProductosCompra(response.compra['idCompra'],this.identity['sub'],this.Lista_compras).subscribe(
                 res =>{
                   if(res.status == 'success'){
                     console.log(res);
@@ -402,7 +417,7 @@ export class CompraEditarComponent implements OnInit {
                     
                   }
                     //this.getLastCompra();
-                    this.createPDF(response.compra[0]['idCompra']);
+                    this.createPDF(response.compra['idCompra']);
                 },error =>{
                   console.log(<any>error);
                   this.messageService.add({severity:'error', summary:'Error', detail:'Fallo al actualizar los productos de la compra'});
@@ -486,6 +501,7 @@ export class CompraEditarComponent implements OnInit {
 
   /*Modal*/
     open(content:any) {
+      // this.getAllProducts();
       this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title', size: 'xl'}).result.then((result) => {
         this.closeResult = `Closed with: ${result}`;
       }, (reason) => {
@@ -570,6 +586,27 @@ export class CompraEditarComponent implements OnInit {
       event.preventDefault();
       //console.log('prevented');
     }
+  }
+
+  getPage(page:number) {
+    //iniciamos spinner
+    // this.isLoading = true;
+
+    this._http.get(this.path+'?page='+page).subscribe(
+      (response:any) => {
+        
+        //asignamos datos a varibale para poder mostrarla en la tabla
+        this.productos = response.productos.data;
+        //navegacion de paginacion
+        this.totalPages = response.productos.total;
+        this.itemsPerPage = response.productos.per_page;
+        this.pageActual = response.productos.current_page;
+        this.next_page = response.productos.next_page_url;
+        this.path = response.productos.path;
+
+        //una vez terminado quitamos el spinner
+        // this.isLoading=false;        
+    })
   }
 
 }

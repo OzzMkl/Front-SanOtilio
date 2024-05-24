@@ -269,11 +269,11 @@ export class TraspasoEditarComponent implements OnInit, OnDestroy {
           console.log('response',response);
           if(response.status == 'success'){
             this.messageService.add({severity:'success', summary:'Éxito', detail:'Traspaso actualizado'});
-            console.log('response.traspaso',response.traspaso);
+            console.log('response.traspaso',response.traspaso.idTraspasoE);
             if(this.tipoTraspaso == 'Recibe'){
-              this.createPDF(response.traspaso,this.tipoTraspaso);
+              this.createPDF(response.traspaso.idTraspasoE,this.tipoTraspaso);
             }else if(this.tipoTraspaso == 'Envia'){
-              this.createPDF(response.traspaso,this.tipoTraspaso);
+              this.createPDF(response.traspaso.idTraspasoE,this.tipoTraspaso);
             }else{}
             //this.createPDF();
           }else{
