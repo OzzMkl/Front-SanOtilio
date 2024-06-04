@@ -23,7 +23,11 @@ export class EmpleadoService{
         let json = JSON.stringify(empleado);
         let params = 'json='+json;
         
-        let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');//mandamos el json con las cabeceras para que obtengamos el token
+        // let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');//mandamos el json con las cabeceras para que obtengamos el token
+        const headers = new HttpHeaders({
+            
+            'Content-Type':'application/x-www-form-urlencoded'
+          });
         return this._http.post(this.url+'login',params, {headers:headers} );
     }
 
