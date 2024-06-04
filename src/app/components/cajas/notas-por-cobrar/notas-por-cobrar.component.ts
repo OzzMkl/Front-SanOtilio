@@ -96,9 +96,9 @@ export class NotasPorCobrarComponent implements OnInit, OnDestroy {
         }
         this.isLoadingGeneral = false;
       }, error =>{
-        // this.isLoadingGeneral = false;
+        this.isLoadingGeneral = false;
         console.log(error);
-        if(error._error){
+        if(error.message){
           this.messageService.add({
             severity:'warn', 
             summary: error.error.message,
