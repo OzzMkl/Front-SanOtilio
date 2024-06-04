@@ -248,14 +248,13 @@ export class ProductoBuscarComponent implements OnInit, OnDestroy, AfterViewInit
   add_optMenu(){
     // Inicializa el arreglo si está vacío
     if (this.menuItems.length === 0) {
-      this.menuItems.push({ label: 'Opciones', styleClass:'text-white', items: [] });
+      this.menuItems.push({ label: 'Opciones', items: [] });
     }
 
     if(this.userPermisos.ver == 1){
       this.menuItems[0].items?.push({
           label: 'Ver',
-          styleClass: 'text-white',
-          icon: 'pi pi-eye text-white',
+          icon: 'pi pi-eye ',
           command: () => {
             this._router.navigate(['./producto-modulo/producto-ver/'+this.idProductoMenu]);
           }
@@ -265,8 +264,7 @@ export class ProductoBuscarComponent implements OnInit, OnDestroy, AfterViewInit
     if(this.userPermisos.editar == 1){
       this.menuItems[0].items?.push({
           label: 'Editar',
-          styleClass: 'text-white',
-          icon: 'pi pi-file-edit text-white',
+          icon: 'pi pi-file-edit ',
           command: () => {
             if(this.sucursal_now && this.sucursal_now.idSuc == 1){
               
@@ -281,16 +279,14 @@ export class ProductoBuscarComponent implements OnInit, OnDestroy, AfterViewInit
     this.menuItems[0].items?.push(
       {
         label: 'Historial',
-        styleClass: 'text-white',
-        icon: 'pi pi-history text-white',
+        icon: 'pi pi-history ',
         command: () => {
           this.getHistorialProducto();
         }
     },
     {
       label:'Historial Precio',
-      styleClass:'text-white',
-      icon: 'pi pi-history text-white',
+      icon: 'pi pi-history',
         command: () => {
           this.getHistorialPrecios();
         }
