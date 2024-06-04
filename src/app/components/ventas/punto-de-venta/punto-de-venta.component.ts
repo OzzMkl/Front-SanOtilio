@@ -603,6 +603,7 @@ export class PuntoDeVentaComponent implements OnInit, OnDestroy {
               this.identity = this._empleadoService.getIdentity();
               this.getTiposVentas();
               this.isLoadingGeneral = false;
+              this.seleccionarCliente(1);
             }
         break;
     }
@@ -947,6 +948,7 @@ export class PuntoDeVentaComponent implements OnInit, OnDestroy {
       //ejecutamos servicio que trae la informacion
       this.sub_venta = this._ventasService.getDetallesVenta(idVenta).subscribe(
         response =>{
+          //console.log(response);
           if(response.status == 'success'){
 
             this.ventag.idVenta = response.venta[0]['idVenta'];
@@ -1082,7 +1084,7 @@ export class PuntoDeVentaComponent implements OnInit, OnDestroy {
   getDetallesCotizacion(idCotiza:number){
     this.sub_venta = this._ventasService.getDetallesCotiza(idCotiza).subscribe(
       response =>{
-        // console.log(response)
+        // console.log(response);
         if(response.status == 'success'){
           
           this.ventag = response.Cotizacion;
@@ -1091,6 +1093,9 @@ export class PuntoDeVentaComponent implements OnInit, OnDestroy {
           this.cliente = [{'rfc':response.Cotizacion.clienteRFC,'nombreTipoC':response.Cotizacion.tipocliente}];
           this.seEnvia = this.ventag.cdireccion ? true : false;
           this.lista_productoVentag = response.productos_cotiza;
+          this.lista_productoVentag.forEach(element => {
+            element.comision = element.precio * 0.03;
+          });
           this.isLoadingGeneral = false;
         }
       }, error =>{
