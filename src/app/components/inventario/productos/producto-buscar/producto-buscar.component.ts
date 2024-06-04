@@ -141,13 +141,13 @@ export class ProductoBuscarComponent implements OnInit, OnDestroy, AfterViewInit
    * Servicio trae la informacion de los productos paginados por la api
    * Tambien busca la informacion
    */
-  getProductos(page:number = 1, type:number = 0, search:string = 'null'){
+  getProductos(page:number = 1, type:number = 0, search:string = 'null',rows:number = 5){
 
     //mostramos el spinner
     this.isLoading = true;
 
     //ejecutamos el servicio
-    this.sub_producto = this._productoService.getProductosNewIndex(page,type,search).subscribe(
+    this.sub_producto = this._productoService.getProductosNewIndex(page,type,search,rows).subscribe(
       response =>{
         if(response.status == 'success' && response.code == 200){
 

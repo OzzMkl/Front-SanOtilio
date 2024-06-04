@@ -39,10 +39,11 @@ export class ModalProductosComponent implements OnInit, OnDestroy {
   public viewProductoMedidas?: Array<Productos_medidas_new>;
   public mdl_viewProduct: boolean = false;
   //Paginator
-  public totalPages: any;
-  pageActual: number = 1;
+  public totalPages: number = 0;
+  public per_page:number = 25;
+  public pageActual: number = 1;
   //Modelos
-  optionsSelect: selectBusqueda[] | any;
+  optionsSelect: selectBusqueda[] = [];
   selectedOpt: selectBusqueda | any;
   valSearch: string = '';
   selectedProduct:any;
@@ -97,7 +98,7 @@ export class ModalProductosComponent implements OnInit, OnDestroy {
     ];
 
     //Seleccionamos por defecto la primera opcion
-    this.selectedOpt = this.optionsSelect[0];
+    this.selectedOpt = this.optionsSelect[1];
   }
 
   /**
@@ -110,11 +111,13 @@ export class ModalProductosComponent implements OnInit, OnDestroy {
    * Servicio trae la informacion de los productos paginados por la api
    * Tambien busca la informacion
    */
-  getProductos(page:number = 1, type:number = 0, search:string = 'null'){
+  getProductos(page:number = 1, type:number = 0, search:string = 'null', rows:number = 25){
+    console.log('ggetproductos')
+    console.log(page,type,search,rows )
     //mostramos el spinner
     this.isLoadingGeneral=true;
     //Ejecutamos servicio
-    this.sub_productoService = this._productoService.getProductosNewIndex(page,type,search).subscribe(
+    this.sub_productoService = this._productoService.getProductosNewIndex(page,type,search,rows).subscribe(
       response =>{
         // console.log(response);
         if(response.code == 200 && response.status == 'success'){
@@ -122,12 +125,14 @@ export class ModalProductosComponent implements OnInit, OnDestroy {
           //Paginacion
           this.totalPages = response.productos.total;
           this.pageActual = response.productos.current_page;
+          this.per_page = response.productos.per_page;
 
           this.isLoadingGeneral=false;
         }
 
       }, error =>{
         console.log(error);
+        this.isLoadingGeneral = false;
       }
     )
   }
@@ -197,12 +202,11 @@ export class ModalProductosComponent implements OnInit, OnDestroy {
    * Cambio de pagina
    */
   onPageChange(event:any) {
-    if(this.isCatalagoNube){
-      this.getProductosNUBE(event.page + 1);
-    } else{
-      this.getProductos(event.page + 1);
-    }
+    this.pageActual = event.page + 1;
+    this.per_page = event.rows;
+    this.onSearch(event.page + 1, event.rows);
   }
+  
 
   /**
    * 
@@ -273,15 +277,15 @@ export class ModalProductosComponent implements OnInit, OnDestroy {
   /**
    * Busqueda
    */
-  onSearch(){
+  onSearch(page: number = 1, rows: number = 25):void{
     if(this.selectedOpt){
-      if(this.valSearch == "" || null){
-        this.getProductos();
+      if(this.valSearch == "" || this.valSearch == null){
+        this.getProductos(page,0,'null',rows);
       } else{
         if(this.isCatalagoNube){
-          this.getProductosNUBE(1,this.selectedOpt.id,this.valSearch);
+          this.getProductosNUBE(page,this.selectedOpt.id,this.valSearch);
         } else{
-          this.getProductos(1,this.selectedOpt.id,this.valSearch);
+          this.getProductos(page,this.selectedOpt.id,this.valSearch,rows);
         }
       }
     } else{
