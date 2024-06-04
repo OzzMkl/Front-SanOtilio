@@ -50,9 +50,12 @@ export class ProductoService{
      * @description
      * Funcion que nos permite buscar en el catalogo de productos y retornamos el resultado paginado por 10 elementos
      */
-    getProductosNewIndex(page: number,type: number, search: string):Observable<any>{
-        return this._http.get(this.url+'productos/newIndex/'+type+'/'+search+'?page='+page,{headers:this.headers});
+    getProductosNewIndex(page: number,type: number, search: string, rows: number):Observable<any>{
+        //Se hace el remplazo de barra '/' por '_d_' y la barra invertida '\' por '_dinv_'
+        const encodedSearch = encodeURIComponent(search.replace(/\//g, '_d_').replace(/\\/g, '_dinv_') );
+        return this._http.get(this.url+'productos/newIndex/'+type+'/'+encodedSearch+'?page='+page+ '&rows=' + rows,{headers:this.headers});
     }
+    
 
     /**
      * Listado de prodcutos deshabilitados (general)
@@ -245,7 +248,9 @@ export class ProductoService{
     }
 
     getAllProductosNUBE(page: number,type: number, search: string):Observable<any>{
-        return this._http.get(this.url+'productos/getAllProductoNUBE/'+type+'/'+search+'?page='+page,{headers:this.headers});
+        //Se hace el remplazo de barra '/' por '_d_' y la barra invertida '\' por '_dinv_'
+        const encodedSearch = encodeURIComponent(search.replace(/\//g, '_d_').replace(/\\/g, '_dinv_') );
+        return this._http.get(this.url+'productos/getAllProductoNUBE/'+type+'/'+encodedSearch+'?page='+page,{headers:this.headers});
     }
 
     registerProductoByCatalogo(objProducto:any,idEmpleado:number):Observable<any>{
