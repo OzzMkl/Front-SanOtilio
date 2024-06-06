@@ -40,7 +40,7 @@ export class ModalProductosComponent implements OnInit, OnDestroy {
   public mdl_viewProduct: boolean = false;
   //Paginator
   public totalPages: number = 0;
-  public per_page:number = 25;
+  public per_page:number = 100;
   public pageActual: number = 1;
   //Modelos
   optionsSelect: selectBusqueda[] = [];
@@ -57,6 +57,7 @@ export class ModalProductosComponent implements OnInit, OnDestroy {
   isCatalagoNube: boolean = false;
   isAgregarProducto: boolean = false;
   @ViewChild('panelMedidasMultiSuc') panelMedidasMultiSuc!: OverlayPanel;
+  @ViewChild('panelPreciosProducto') panelPreciosProducto!: OverlayPanel;
 
   //Subscriptions
   private sub_mdlProductoService: Subscription = new Subscription();
@@ -111,9 +112,7 @@ export class ModalProductosComponent implements OnInit, OnDestroy {
    * Servicio trae la informacion de los productos paginados por la api
    * Tambien busca la informacion
    */
-  getProductos(page:number = 1, type:number = 0, search:string = 'null', rows:number = 25){
-    console.log('ggetproductos')
-    console.log(page,type,search,rows )
+  getProductos(page:number = 1, type:number = 0, search:string = 'null', rows:number = 100){
     //mostramos el spinner
     this.isLoadingGeneral=true;
     //Ejecutamos servicio
@@ -216,7 +215,6 @@ export class ModalProductosComponent implements OnInit, OnDestroy {
    * exitencia calculada e imagen
    */
   onSelectionChange() {
-
     if(this.isOpenMdlMedidas){
       //Mostramos spinner
       this.isLoadingGeneral = true;
@@ -231,7 +229,8 @@ export class ModalProductosComponent implements OnInit, OnDestroy {
             this.medidas = response.productoMedida;
             this.img = response.imagen ? response.imagen : "1650558444no-image.png";
             //Mostramos modal
-            this.mdlMedidas = true;
+            // this.mdlMedidas = true;
+            // this.panelPreciosProducto.show(event);
             
             for(let i = 1; i <= 5; i++){
               const precioKey = `precio${i}`;
@@ -244,6 +243,7 @@ export class ModalProductosComponent implements OnInit, OnDestroy {
             this.isLoadingGeneral = false;
           }
         }, error =>{
+          this.isLoadingGeneral = false;
           console.log(error);
         }
       )
@@ -253,6 +253,48 @@ export class ModalProductosComponent implements OnInit, OnDestroy {
       this.onSelect();
     }
     
+  }
+
+  onKeyDown(event: KeyboardEvent) {
+    if (event.code === "ArrowDown" || event.code === "ArrowUp") {
+      // Evitar el comportamiento predeterminado del navegador para las teclas de flecha
+      event.preventDefault();
+  
+      // Obtener todas las filas de la tabla
+      const rows = document.querySelectorAll('.p-datatable .p-datatable-tbody tr');
+      
+      // Obtener la fila seleccionada actualmente
+      const selectedRowIndex = Array.from(rows).findIndex(row => row.classList.contains('p-highlight'));
+      
+      // Calcular el índice de la siguiente fila a seleccionar
+      let nextRowIndex = 0;
+      if (event.code === "ArrowDown") {
+        nextRowIndex = (selectedRowIndex === rows.length - 1) ? 0 : selectedRowIndex + 1;
+      } else if (event.code === "ArrowUp") {
+        nextRowIndex = (selectedRowIndex === 0) ? rows.length - 1 : selectedRowIndex - 1;
+      }
+      
+      // Eliminar la selección de la fila actual
+      rows[selectedRowIndex].classList.remove('p-highlight');
+      
+      // Seleccionar la siguiente fila
+      rows[nextRowIndex].classList.add('p-highlight');
+      const enterEvent = new KeyboardEvent("keydown", { key: "Enter" });
+      rows[nextRowIndex].dispatchEvent(enterEvent);
+    }
+  }
+
+  /**
+  * 
+  * @param product any
+  * 
+  * @description
+  * Manejador del evento de doble clic en una fila de la tabla.
+  * Realiza la acción deseada con el producto seleccionado.
+  */
+  onRowDoubleClick(product: any) {
+    this.selectedProduct = product;
+    this.onSelect();
   }
 
   /**
@@ -277,7 +319,7 @@ export class ModalProductosComponent implements OnInit, OnDestroy {
   /**
    * Busqueda
    */
-  onSearch(page: number = 1, rows: number = 25):void{
+  onSearch(page: number = 1, rows: number = 100):void{
     if(this.selectedOpt){
       if(this.valSearch == "" || this.valSearch == null){
         this.getProductos(page,0,'null',rows);

@@ -16,3 +16,36 @@
     color: var(--dev-success-color);
     text-align: right;
 } 
+
+
+.search-container {
+    display: flex;
+    flex-grow: 1; /* Allow the container to grow */
+    flex-basis: 0; /* Allow the container to take up the remaining space */
+    align-items: center; /* Align items vertically center */
+}
+
+
+.fixed-header {
+    position: sticky;
+    top: 0;
+    background-color: white;
+    z-index: 10;
+}
+
+.col-small {
+    width: 10% !important;
+    font-weight:600;
+    padding: 1px !important;
+}
+
+.col-small-med {
+    font-weight:600;
+    padding: 1px !important;
+}
+
+.col-large {
+    width: 60% !important;
+    font-weight:600;
+    padding: 1px !important;
+}

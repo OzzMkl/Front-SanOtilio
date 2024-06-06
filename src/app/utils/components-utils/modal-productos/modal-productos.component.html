@@ -6,65 +6,90 @@
     header="Header" 
     [(visible)]="mdlProductos"
     [modal]="true" 
-    [style]="{ width: '85vw'}"
+    [style]="{ 'width': '85vw'}"
     [draggable]="false" 
     [resizable]="true"
     [position]="'top'"
     [dismissableMask] = "true"
-    [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }" 
     [closable]="!isAgregarProducto">
     <ng-template pTemplate="header">
-        <h5 class="modal-title" id="modal-basic-title">Buscar producto</h5>
+        <h5 class="me-2">Buscar producto</h5>
+        <div class="search-container">
+            <p-dropdown 
+                [options]="optionsSelect"
+                [(ngModel)]="selectedOpt"
+                optionLabel="name"
+                [showClear]="true"
+                placeholder="Selecciona una opcion"
+                (ngModelChange)="onSearch()"
+            ></p-dropdown>
+            <input type="text" pInputText [(ngModel)]="valSearch" [style]="{ width: '50%' }" (ngModelChange)="onSearch()">
+        </div>
     </ng-template>
-    <div>
-        <p-dropdown 
-            [options]="optionsSelect"
-            [(ngModel)]="selectedOpt"
-            optionLabel="name"
-            [showClear]="true"
-            placeholder="Selecciona una opcion"
-            [style]="{ width: '30%' }"
-            (ngModelChange)="onSearch()"
-        ></p-dropdown>
-        <input type="text" pInputText [(ngModel)]="valSearch" [style]="{ width: '70%' }" (ngModelChange)="onSearch()">
-    </div>
+
     <p-table
         [value]="productos"
+        [scrollable]="false" 
+        scrollHeight="250px" 
+        [resizableColumns]="true"
         selectionMode="single"
         [(selection)]="selectedProduct"
         dataKey="idProducto"
         styleClass="p-datatable-sm"
-        [style]="{'font-size':'small'}"
+        [style]="{'font-size':'small', 'color':'black'}"
+        (onRowSelect)="onSelectionChange()"
+        (keydown)="onKeyDown($event)"
         >
-        <!-- (onRowSelect)="onSelectionChange()" -->
         <ng-template pTemplate="header">
-            <tr>
-                <th style="width:15%">Clave externa</th>
-                <th style="width:15%">Codigo de barras</th>
-                <th style="width:40%">Descripcion</th>
-                <th style="width:15%">Marca</th>
-                <th style="width:15%">Departamento</th>
+            <tr class="fixed-header">
+                <th>Clave externa</th>
+                <th>Codigo de barras</th>
+                <th>Descripcion</th>
+                <th>Marca</th>
+                <th>Departamento</th>
             </tr>
         </ng-template>
         <ng-template pTemplate="body" let-productos>
-            <tr [pSelectableRow]="productos">
-                <td>{{ productos.claveEx }}</td>
-                <td>{{ productos.cbarras }}</td>
-                <td>{{ productos.descripcion }}</td>
-                <td>{{ productos.nombreMarca }}</td>
-                <td>{{ productos.nombreDep }}</td>
+            <tr [pSelectableRow]="productos" (dblclick)="onRowDoubleClick(productos)">
+                <td class="col-small">{{ productos.claveEx }}</td>
+                <td class="col-small">{{ productos.cbarras }}</td>
+                <td class="col-large">{{ productos.descripcion }}</td>
+                <td class="col-small">{{ productos.nombreMarca }}</td>
+                <td class="col-small">{{ productos.nombreDep }}</td>
             </tr>
         </ng-template>
     </p-table>
-    <!-- [first]="(pageActual - 1) * per_page" -->
     <p-paginator
         (onPageChange)="onPageChange($event)"        
         [rows]="per_page" 
         [totalRecords]="totalPages"
-        [rowsPerPageOptions]="[25, 50, 75, 100]"
         >
     </p-paginator>
-    <ng-template pTemplate="footer">
+    <!-- Nueva tabla de precios -->
+        <div class="row">
+            <div *ngFor="let tabMed of existencias" class="col-2">
+                <table class="table table-bordered" [style]="{'font-size':'small'}">
+                    <thead>
+                        <tr>
+                            <th class="col-small-med">{{tabMed.exisCal}}</th>
+                            <th class="col-small-med">{{tabMed.nombreMedida}}</th>
+                        </tr>
+                        <tr>
+                            <th class="col-small-med">Porcentaje</th>
+                            <th class="col-small-med">Precio</th>
+                        </tr>
+                    </thead>
+                    <tbody *ngFor="let precios of tabMed.precios">
+                        <tr>
+                            <td class="col-small-med">{{precios.porcentaje | number:'1.2-2'}}</td>
+                            <td class="col-small-med">{{precios.precio | currency:'MXN'}}</td>
+                        </tr>
+                        
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    <ng-template pTemplate="footer" *ngIf="isAgregarProducto">
         <button *ngIf="isAgregarProducto" pButton pRipple type="button" label="Cancelar" class="p-button-danger" (click)="cancelarAgregar()"></button>
     </ng-template>
 </p-dialog>
