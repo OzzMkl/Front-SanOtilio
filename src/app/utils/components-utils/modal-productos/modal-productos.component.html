@@ -39,6 +39,7 @@
         [style]="{'font-size':'small', 'color':'black'}"
         (onRowSelect)="onSelectionChange()"
         (keydown)="onKeyDown($event)"
+        (keyup)="onKeyUp($event)"
         >
         <ng-template pTemplate="header">
             <tr class="fixed-header">

@@ -58,7 +58,12 @@ export class ModalProductosComponent implements OnInit, OnDestroy {
   isCatalagoNube: boolean = false;
   isAgregarProducto: boolean = false;
   @ViewChild('panelMedidasMultiSuc') panelMedidasMultiSuc!: OverlayPanel;
-  @ViewChild('panelPreciosProducto') panelPreciosProducto!: OverlayPanel;
+
+  timeoutId: any;
+  isKeyPressed: boolean = false;
+  stopMovement: boolean = false;
+  movementStartTime?: number;
+
 
   //Subscriptions
   private sub_mdlProductoService: Subscription = new Subscription();
@@ -258,32 +263,68 @@ export class ModalProductosComponent implements OnInit, OnDestroy {
 
   onKeyDown(event: KeyboardEvent) {
     if (event.code === "ArrowDown" || event.code === "ArrowUp") {
-      // Evitar el comportamiento predeterminado del navegador para las teclas de flecha
-      event.preventDefault();
-  
-      // Obtener todas las filas de la tabla
-      const rows = document.querySelectorAll('.p-datatable .p-datatable-tbody tr');
-      
-      // Obtener la fila seleccionada actualmente
-      const selectedRowIndex = Array.from(rows).findIndex(row => row.classList.contains('p-highlight'));
-      
-      // Calcular el índice de la siguiente fila a seleccionar
-      let nextRowIndex = 0;
-      if (event.code === "ArrowDown") {
-        nextRowIndex = (selectedRowIndex === rows.length - 1) ? 0 : selectedRowIndex + 1;
-      } else if (event.code === "ArrowUp") {
-        nextRowIndex = (selectedRowIndex === 0) ? rows.length - 1 : selectedRowIndex - 1;
-      }
-      
-      // Eliminar la selección de la fila actual
-      rows[selectedRowIndex].classList.remove('p-highlight');
-      
-      // Seleccionar la siguiente fila
-      rows[nextRowIndex].classList.add('p-highlight');
-      const enterEvent = new KeyboardEvent("keydown", { key: "Enter" });
-      rows[nextRowIndex].dispatchEvent(enterEvent);
+        // Evitar el comportamiento predeterminado del navegador para las teclas de flecha
+        event.preventDefault();
+
+        // Verificar si ya está presionada la tecla
+        if (!this.isKeyPressed) {
+            this.isKeyPressed = true;
+            this.movementStartTime = Date.now();
+        }
+
+        // Configurar el temporizador para detener el movimiento después de 2 segundos
+        if (!this.timeoutId) {
+            this.timeoutId = setTimeout(() => {
+                this.stopMovement = true;
+            }, 800);
+        }
+
+        // Si se ha alcanzado el tiempo límite, no hacer nada
+        if (this.stopMovement) return;
+
+        // Obtener todas las filas de la tabla
+        const rows = document.querySelectorAll('.p-datatable .p-datatable-tbody tr');
+        
+        // Verificar si hay filas en la tabla
+        if (rows.length === 0) return;
+
+        // Obtener la fila seleccionada actualmente
+        const selectedRowIndex = Array.from(rows).findIndex(row => row.classList.contains('p-highlight'));
+
+        // Calcular el índice de la siguiente fila a seleccionar
+        let nextRowIndex = 0;
+        if (event.code === "ArrowDown") {
+            nextRowIndex = (selectedRowIndex === rows.length - 1 || selectedRowIndex === -1) ? 0 : selectedRowIndex + 1;
+        } else if (event.code === "ArrowUp") {
+            nextRowIndex = (selectedRowIndex === 0 || selectedRowIndex === -1) ? rows.length - 1 : selectedRowIndex - 1;
+        }
+
+        // Eliminar la selección de la fila actual si hay una seleccionada
+        if (selectedRowIndex !== -1) {
+            rows[selectedRowIndex].classList.remove('p-highlight');
+        }
+
+        // Seleccionar la siguiente fila
+        rows[nextRowIndex].classList.add('p-highlight');
+
+        // Despachar el evento "Enter" a la siguiente fila seleccionada
+        const enterEvent = new KeyboardEvent("keydown", { key: "Enter" });
+        rows[nextRowIndex].dispatchEvent(enterEvent);
     }
   }
+
+  onKeyUp(event: KeyboardEvent) {
+    if (event.code === "ArrowDown" || event.code === "ArrowUp") {
+        this.isKeyPressed = false;
+        this.stopMovement = false;
+
+        // Limpiar el temporizador
+        clearTimeout(this.timeoutId);
+        this.timeoutId = null;
+    }
+  }
+
+
 
   /**
   * 
