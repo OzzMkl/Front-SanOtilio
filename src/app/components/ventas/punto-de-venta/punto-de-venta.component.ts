@@ -1051,6 +1051,7 @@ export class PuntoDeVentaComponent implements OnInit, OnDestroy {
    * @description
    * Valida que la laista de productos no este vacia
    * Valida que se tenga un cliente (idCliente)
+   * Valida que si el tipo de venta es "Firma" no tiene que ser cliente eventual (1)
    */
   validacionSubmit(): boolean{
     let validate = false;
@@ -1069,6 +1070,14 @@ export class PuntoDeVentaComponent implements OnInit, OnDestroy {
           severity:'warn', 
           summary:'Alerta', 
           detail:'No puedes generar una venta sin cliente!'
+        });
+    } else if(this.ventag.idTipoVenta > 3 && this.ventag.idCliente === 1){
+      validate = true;
+        this.messageService.add({
+          severity:'warn', 
+          summary:'Alerta', 
+          detail:'No puedes generar una venta con tipo de venta "FIRMA" si el cliente es "CLIENTE EVENTUAL"',
+          sticky: true,
         });
     }
 
