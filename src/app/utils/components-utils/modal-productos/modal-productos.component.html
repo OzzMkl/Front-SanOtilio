@@ -68,8 +68,14 @@
     <!-- Nueva tabla de precios -->
         <div class="row">
             <div *ngFor="let tabMed of existencias" class="col-2">
-                <table class="table table-bordered" [style]="{'font-size':'small'}">
-                    <thead>
+                <p-table
+                    [value]="tabMed.precios"
+                    selectionMode="single"
+                    [(selection)]="selectedMedida"
+                    styleClass="p-datatable-sm"
+                    [style]="{'font-size':'small', 'color':'black'}"
+                    >
+                    <ng-template pTemplate="header">
                         <tr>
                             <th class="col-small-med">{{tabMed.exisCal}}</th>
                             <th class="col-small-med">{{tabMed.nombreMedida}}</th>
@@ -78,15 +84,14 @@
                             <th class="col-small-med">Porcentaje</th>
                             <th class="col-small-med">Precio</th>
                         </tr>
-                    </thead>
-                    <tbody *ngFor="let precios of tabMed.precios">
-                        <tr>
-                            <td class="col-small-med">{{precios.porcentaje | number:'1.2-2'}}</td>
-                            <td class="col-small-med">{{precios.precio | currency:'MXN'}}</td>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-precios>
+                        <tr [pSelectableRow]="precios" >
+                            <td class="col-small">{{ precios.porcentaje | number:'1.2-2'}}</td>
+                            <td class="col-small">{{ precios.precio | currency:'MXN'}}</td>
                         </tr>
-                        
-                    </tbody>
-                </table>
+                    </ng-template>
+                </p-table>
             </div>
         </div>
     <ng-template pTemplate="footer" *ngIf="isAgregarProducto">

@@ -47,6 +47,7 @@ export class ModalProductosComponent implements OnInit, OnDestroy {
   selectedOpt: selectBusqueda | any;
   valSearch: string = '';
   selectedProduct:any;
+  selectedMedida:any;
   public url:string = global.url;//
   public img: string = '';//
   public tblHeaders: Array<any> = []
