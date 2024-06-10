@@ -22,6 +22,7 @@ import { ClientesService } from 'src/app/services/clientes.service';
 import { EmpleadoService } from 'src/app/services/empleado.service';
 import { ModulosService } from 'src/app/services/modulos.service';
 import { HttpClient} from '@angular/common/http';
+import { SharedMessage } from 'src/app/services/sharedMessage';
 //ngbootstrap
 import { NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
 //primeng
@@ -68,10 +69,20 @@ export class ClienteBuscarComponent implements OnInit {
                 private modalService: NgbModal, 
                 private messageService: MessageService,
                 private _http: HttpClient,
-                private _router: Router ) { }
+                private _router: Router,
+                private _sharedMessage: SharedMessage, ) { }
 
   ngOnInit(): void {
     this.loadUser();
+    setTimeout(()=>{
+      this._sharedMessage.messages$.subscribe(
+        messages =>{
+          if(messages){
+            this.messageService.add(messages[0]); // Agregar el mensaje al servicio de mensajes de PrimeNG
+          }
+        }
+      )
+    },500);
   }
 
   loadUser(){

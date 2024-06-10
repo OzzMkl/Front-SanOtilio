@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 //servicio
 import { ClientesService } from 'src/app/services/clientes.service';
 import { EmpleadoService } from 'src/app/services/empleado.service';
@@ -40,6 +41,9 @@ export class ClienteAgregarComponent implements OnInit {
   //contador para redireccion al no tener permisos
   counter: number = 5;
   timerId:any;
+  //
+  public mdlDireccion: boolean = false;
+  public strDireccion: string = '';
   
 
   constructor( private _clienteService: ClientesService,
@@ -52,7 +56,7 @@ export class ClienteAgregarComponent implements OnInit {
               ) { 
 
     this.cliente = new Cliente (0,'','','','','',0,1,1);
-    this.cdireccion = new Cdireccion (0,'Mexico','Puebla','','','','','','',0,'',0,1,'');
+    this.cdireccion = new Cdireccion (0,'Mexico','Puebla','TEHUACAN','','','','','',null,'',null,1,'');
     
   }
 
@@ -107,28 +111,25 @@ export class ClienteAgregarComponent implements OnInit {
     this._clienteService.postCliente(this.cliente,identity).subscribe( 
       response =>{
 
-        //console.log(this.cliente)
         if(response.status == 'success'){
-          let message = {severity:'success', summary:'Registro exitoso', detail: 'Cliente registrado correctamente'}
-          this._sharedMessage.addMessages(message);
 
-          if(this.checkDireccion == true && this.cdireccion.ciudad != '' && this.cdireccion.colonia != '' && this.cdireccion.calle != ''
-          && this.cdireccion.numExt != '' && this.cdireccion.cp != 0 && this.cdireccion.referencia != '' && this.cdireccion.telefono != 0){
+          if(this.checkDireccion == true && this.cdireccion.colonia != '' && this.cdireccion.calle != '' && this.cdireccion.telefono != 0){
 
             this._clienteService.postCdireccion(this.cdireccion,identity.sub).subscribe( 
               response=>{
-                let messageCdir = {severity:'success', summary:'Registro exitoso', detail:'La direccion se registro correctamente'};
+                let messageCdir = {severity:'success', summary:'Registro exitoso', detail:'Cliente y direccion registrados correctamente'};
                 this._sharedMessage.addMessages(messageCdir);
-                this.modalService.dismissAll();
+                this._router.navigate(['./cliente-modulo/cliente-buscar']);
 
               },error=>{
                 console.log(error);
                 this.messageService.add({severity:'error', summary:'Algo salio mal', detail:error.error.message, sticky: true});
               });
           } else{
-            let messageCdir = {severity:'warn', summary:'Advertencia', detail:'No se registro ninguna direccion'}
+            let messageCdir = {severity:'success', summary:'Registro exitoso', detail:'Cliente registrado correctamente, sin direccion'}
             this._sharedMessage.addMessages(messageCdir);
             this.modalService.dismissAll();
+            this._router.navigate(['./cliente-modulo/cliente-buscar']);
           }
             
         }else{
@@ -143,7 +144,7 @@ export class ClienteAgregarComponent implements OnInit {
   // Modal
   open(content:any) {//abre modal
     if(this.checkDireccion == true){
-      this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title', size: 'xl'}).result.then((result) => {
+      this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title', size: 'sm'}).result.then((result) => {
         this.closeResult = `Closed with: ${result}`;
       }, (reason) => {
         this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
@@ -162,6 +163,18 @@ export class ClienteAgregarComponent implements OnInit {
   }
 
   validateFormCdireccion(){
+    
+    if(this.cdireccion.calle.length > 1 && this.cdireccion.colonia.length > 1 && this.cdireccion.telefono){
+      this.mdlDireccion = false;
+
+      this.cdireccion.numExt = this.cdireccion.numExt.length > 1 ? this.cdireccion.numExt :'S/N';
+      this.strDireccion = 'CALLE '+this.cdireccion.calle+
+                          ', #'+ this.cdireccion.numExt+
+                          ', COLONIA '+ this.cdireccion.colonia+
+                          ' --- TELEFONO: '+ this.cdireccion.telefono;
+    } else{
+      this.checkDireccion = false;
+    }
 
   }
 }
