@@ -9,9 +9,9 @@ export class Cdireccion{//Modelo de cliente
         public entreCalles: string,
         public numExt: string,
         public numInt: string,
-        public cp: number,
+        public cp: number | null,
         public referencia: string,
-        public telefono: number,
+        public telefono: number | null,
         public idZona: number,
         //extras
         public nombreZona: string
