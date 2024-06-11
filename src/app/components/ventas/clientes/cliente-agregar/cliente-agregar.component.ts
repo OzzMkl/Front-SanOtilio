@@ -1,6 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 //servicio
 import { ClientesService } from 'src/app/services/clientes.service';
 import { EmpleadoService } from 'src/app/services/empleado.service';
@@ -13,6 +12,7 @@ import { Cdireccion} from 'src/app/models/cdireccion'
 import { NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
 //primeng
 import { MessageService } from 'primeng/api';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-cliente-agregar',
@@ -20,7 +20,7 @@ import { MessageService } from 'primeng/api';
   styleUrls: ['./cliente-agregar.component.css'],
   providers:[ClientesService, MessageService]
 })
-export class ClienteAgregarComponent implements OnInit {
+export class ClienteAgregarComponent implements OnInit, OnDestroy {
 
   //variables servicios
   public tipocliente :any;
@@ -44,6 +44,9 @@ export class ClienteAgregarComponent implements OnInit {
   //
   public mdlDireccion: boolean = false;
   public strDireccion: string = '';
+  public currentUrl: string = '';
+  //subscription
+  private whatever?: Subscription;
   
 
   constructor( private _clienteService: ClientesService,
@@ -53,6 +56,7 @@ export class ClienteAgregarComponent implements OnInit {
                private messageService: MessageService,
                private _router: Router,
                private _sharedMessage:SharedMessage,
+               private _route: ActivatedRoute,
               ) { 
 
     this.cliente = new Cliente (0,'','','','','',0,1,1);
@@ -81,6 +85,7 @@ export class ClienteAgregarComponent implements OnInit {
           },1000);
         } else{
           this.getTipocliente();
+          this.getUrl();
         }
   }
 
@@ -94,7 +99,6 @@ export class ClienteAgregarComponent implements OnInit {
   }
 
   guardarCliente(form:any){//guardamos la informacion capturada del cliente
-
     var identity = this._empleadoService.getIdentity();
     
     if(this.isCompany == true ){
@@ -119,7 +123,10 @@ export class ClienteAgregarComponent implements OnInit {
               response=>{
                 let messageCdir = {severity:'success', summary:'Registro exitoso', detail:'Cliente y direccion registrados correctamente'};
                 this._sharedMessage.addMessages(messageCdir);
-                this._router.navigate(['./cliente-modulo/cliente-buscar']);
+                this.modalService.dismissAll();
+                if(this.currentUrl == 'cliente-agregar'){
+                  this._router.navigate(['./cliente-modulo/cliente-buscar']);
+                }
 
               },error=>{
                 console.log(error);
@@ -129,7 +136,9 @@ export class ClienteAgregarComponent implements OnInit {
             let messageCdir = {severity:'success', summary:'Registro exitoso', detail:'Cliente registrado correctamente, sin direccion'}
             this._sharedMessage.addMessages(messageCdir);
             this.modalService.dismissAll();
-            this._router.navigate(['./cliente-modulo/cliente-buscar']);
+            if(this.currentUrl == 'cliente-agregar'){
+              this._router.navigate(['./cliente-modulo/cliente-buscar']);
+            }
           }
             
         }else{
@@ -176,5 +185,13 @@ export class ClienteAgregarComponent implements OnInit {
       this.checkDireccion = false;
     }
 
+  }
+
+  getUrl(){
+    this.currentUrl = this._route.snapshot.url.join('/');
+  }
+
+  ngOnDestroy(): void {
+    this.whatever?.unsubscribe();
   }
 }

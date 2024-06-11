@@ -104,6 +104,7 @@ export class PuntoDeVentaComponent implements OnInit, OnDestroy {
   @ViewChild('mMotivoEdicion',{static:true}) mitempalte!: TemplateRef<any>;
   //modales
   public mdlProductos: boolean = false;
+  public mdlDireccion: boolean = false;
   //input de busqueda claveex
   public idProducto?: number;
   public dialogOpt?: dialogOptionsProductos;
@@ -134,8 +135,8 @@ export class PuntoDeVentaComponent implements OnInit, OnDestroy {
     //declaramos modelos
     this.ventag = new Ventag(0,0,1,'',1,0,null,0,0,0,0,'','',0);
     this.modeloCliente = new Cliente (0,'','','','','',0,1,1);
-    this.cdireccion = new Cdireccion (0,'MEXICO','PUEBLA','','','','','','',0,'',0,1,'');
-    this.nuevaDir = new Cdireccion (0,'MEXICO','PUEBLA','','','','','','',0,'',0,1,'');
+    this.cdireccion = new Cdireccion (0,'MEXICO','PUEBLA','TEHUACAN','','','','','',null,'',null,1,'');
+    this.nuevaDir = new Cdireccion (0,'MEXICO','PUEBLA','TEHUACAN','','','','','',null,'',null,1,'');
     this.productoVentag = new Producto_ventasg(0,0,'',0,0,0,0,0,'','',0,0,true,0,false);
     this.lista_productoVentag = [];
     this.sub_producto = this._mdlProductoService.selectedValue$.subscribe(
@@ -325,51 +326,13 @@ export class PuntoDeVentaComponent implements OnInit, OnDestroy {
    * Carga la direccion seleccionada a la propiedad venta.cdireccion
    */
   seleccionarDireccion(direccion:any){
-    this.ventag.cdireccion=direccion;
+    direccion.numExt = direccion.numExt.length > 1 ? direccion.numExt :'S/N';
+    this.ventag.cdireccion='CALLE '+direccion.calle+
+                          ', #'+ direccion.numExt+
+                          ', COLONIA '+ direccion.colonia+
+                          ' --- TELEFONO: '+ direccion.telefono;
   }
 
-  //accion de guardar el nuevo cliente del modal
-  guardarCliente(){
-    //asignamos variables de usuario
-    var identity = this._empleadoService.getIdentity();
-    //Revisamo si fue marcada el checkbox
-      if(this.isCompany == true ){
-        this.modeloCliente.aMaterno ='';
-        this.modeloCliente.aPaterno='';
-      }
-      //revimos el check de rfc
-      if(this.isRFC == false){
-        this.modeloCliente.rfc = 'XAXX010101000';
-      }
-      this.sub_cliente = this._clienteService.postCliente(this.modeloCliente,identity).subscribe( 
-        response =>{
-          if(response.status == 'success'){
-            this.messageService.add({severity:'success', summary:'Registro exitoso', detail: 'Cliente registrado correctamente'});
-            //revisamos que los campos de la direccion vengan completos
-            if(this.checkDireccion == true && this.cdireccion.ciudad != '' && this.cdireccion.colonia != '' && this.cdireccion.calle != ''
-                && this.cdireccion.numExt != '' && this.cdireccion.cp != 0 && this.cdireccion.referencia != '' && this.cdireccion.telefono != 0){
-
-                this.sub_cliente = this._clienteService.postCdireccion(this.cdireccion,identity).subscribe( 
-                response=>{
-                  this.messageService.add({severity:'success', summary:'Registro exitoso', detail:'La direccion se registro correctamente'});
-                  //console.log(response);
-                },error=>{
-                  console.log(error);
-                  this.messageService.add({severity:'error', summary:'Algo salio mal', detail:error.error.message, sticky: true});
-                });
-            }else{
-              this.messageService.add({severity:'warn', summary:'Advertencia', detail:'No se registro ninguna direccion, faltan rellenar campos'});
-            }
-          } else{
-            console.log('Algo salio mal');
-            console.log(response);
-          }
-        },error=>{
-          console.log(error);
-      });
-    
-    
-  }
 
   //guarda una nueva direccion
   guardarNuevaDireccion(){
@@ -381,6 +344,7 @@ export class PuntoDeVentaComponent implements OnInit, OnDestroy {
           this.isLoadingGeneral = true;
           this.messageService.add({severity:'success', summary:'Registro exitoso', detail: 'Direccion registrada correctamente'});
           this.getDireccionCliente(this.nuevaDir.idCliente);
+          this.mdlDireccion = false;
         } else{
           this.messageService.add({severity:'error', summary:'Error', detail: 'Fallo al guardar la direccion',sticky:true});
           console.log(response)
@@ -768,11 +732,7 @@ export class PuntoDeVentaComponent implements OnInit, OnDestroy {
   }
 
   modalAgregarDireccion(content:any){
-    this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title', size: 'xl'}).result.then((result) => {
-      this.closeResult = `Closed with: ${result}`;
-    }, (reason) => {
-      this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-    });
+    this.mdlDireccion = true;
   }
 
   modalAlertaExistencia(content:any){
