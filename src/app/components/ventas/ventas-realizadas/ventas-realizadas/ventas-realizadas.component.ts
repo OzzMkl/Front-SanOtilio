@@ -1,36 +1,30 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 //Servicios
 import { VentasService } from 'src/app/services/ventas.service';
 import { EmpleadoService } from 'src/app/services/empleado.service';
-import { CajasService } from 'src/app/services/cajas.service';
 import { SharedMessage } from 'src/app/services/sharedMessage';
-//NGBOOTSTRAP-modal
-import { NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
+import { MdlVentaService } from 'src/app/services/mdl-venta-service.service';
 //primeng
-import { MessageService, ConfirmationService, ConfirmEventType } from 'primeng/api';
+import { MessageService} from 'primeng/api';
+//modelos
+import { dialogOptionsVentas } from 'src/app/models/interfaces/dialogOptions-ventas';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-ventas-realizadas',
   templateUrl: './ventas-realizadas.component.html',
   styleUrls: ['./ventas-realizadas.component.css'],
-  providers:[MessageService,ConfirmationService]
+  providers:[MessageService]
 })
-export class VentasRealizadasComponent implements OnInit {
+export class VentasRealizadasComponent implements OnInit, OnDestroy {
 
   //variables servicios
   public ventas:any;
-  public detallesVenta:any;
-  public productosDVenta:any;
   public userPermisos:any//loaduser
-  public abonos_ventas:any; //getAbonosVentasg
-  public total_abono:number = 0;
-  public total_actualizado: number = 0;
+  public identity: any;//loadUser
   //spinner de carga
   public isLoading:boolean = false;
-  //
-  public motivoCancelacion: string = '';
-  public identity: any;//loadUser
   //paginator
   public totalPages:any;
   public page:any;
@@ -43,8 +37,6 @@ export class VentasRealizadasComponent implements OnInit {
   buscaFolio=''
   buscaNombreCliente='';
   buscaNombreEmpleado='';
-  //cerrar modal
-  closeResult = '';
   //PERMISOS
   private idModulo: number = 6;
   private idSubmodulo: number = 17;
@@ -56,19 +48,26 @@ export class VentasRealizadasComponent implements OnInit {
   public nombreClienteMdlMotivo: string = '';
 
   public isLoadingGeneral: boolean = true;
+  //interfaces
+  public dialogOpt?: dialogOptionsVentas;
+  //subscription
+  private actualizaVentasSubscription?: Subscription;
 
   constructor( private _ventasService: VentasService,
-                private _cajaService: CajasService,
-                private modalService: NgbModal, 
                 private _empleadoService: EmpleadoService,
                 private messageService: MessageService,
-                private _confirmationService: ConfirmationService,
                 private _router:Router,
                 private _sharedMessage: SharedMessage,
+                private _mdlVentaService: MdlVentaService,
                 ) { }
 
   ngOnInit(): void {
     this.loadUser();
+    this.actualizaVentasSubscription = this._mdlVentaService.actualizaListaVentas$.subscribe(
+      () =>{
+        this.getVentas();
+      }
+    );
     setTimeout(()=>{
       this._sharedMessage.messages$.subscribe(
         messages =>{
@@ -80,11 +79,16 @@ export class VentasRealizadasComponent implements OnInit {
     },500);
     
   }
+
+  ngOnDestroy(): void {
+    this.actualizaVentasSubscription?.unsubscribe();
+  }
+
   getVentas(){
     this.isLoading = true;
     this._ventasService.getIndexVentas().subscribe(
       response =>{
-        console.log(response);
+        // console.log(response);
         if(response.status == 'success'){
           this.ventas = response.Ventas
           this.isLoading = false;
@@ -94,50 +98,6 @@ export class VentasRealizadasComponent implements OnInit {
         console.log(error);
       }
     )
-  }
-  getDetallesVenta(venta:any){
-    this.isLoadingGeneral = true;
-
-    if(venta.isCredito){
-      this._ventasService.getDetallesVentaCredito(venta.idVenta).subscribe(
-        response =>{
-          console.log(response);
-          if(response.status == 'success'){
-            this.detallesVenta = response.venta_credito;
-            this.productosDVenta = response.productos_ventascre;
-            this.isLoadingGeneral = false;
-          }
-        }, error =>{
-          this.isLoadingGeneral = false;
-          console.log(error);
-        }
-      );
-    } else{
-      this._ventasService.getDetallesVenta(venta.idVenta).subscribe(
-        response =>{
-          if(response.status == 'success'){
-            // console.log(response);
-            this.detallesVenta = response.venta;
-            this.productosDVenta = response.productos_ventasg;
-            //console.log(this.detallesVenta[0])
-            this.isLoadingGeneral = false;
-          }
-        },error =>{
-          console.log(error);
-        });
-      this.getAbonosVentasg(venta.idVenta);
-    }
-
-  }
-
-  getAbonosVentasg(idVenta:number){
-    this._cajaService.abonosVentasg(idVenta).subscribe(
-      response =>{
-          this.abonos_ventas = response.abonos;
-          this.total_abono = response.total_abono;
-          this.total_actualizado = response.total_actualizado;
-          // console.log(this.abonos_ventas);
-      });
   }
 
   //ponemos vacio al cambiar entre tipo de busqueda
@@ -165,126 +125,14 @@ export class VentasRealizadasComponent implements OnInit {
       this.getVentas();
     }
   }
-  // Metodos del  modal
-  open(content:any) {//abrir modal
-    this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title', size: 'xl'});
-  }
-  //Abre motal de motivo de cancelacion
-  openModalMotivo(content:any,idVenta:number,nombreCliente:string){
-    this.idVentaMdlMotivo = 0;
-    this.motivoCancelacion ='';
-    this.idVentaMdlMotivo = idVenta;
-    this.nombreClienteMdlMotivo = nombreCliente;
-    this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title', size: 'md', backdrop:'static'});
-  }
 
-  almacenaMotivo(){
-    if(this.motivoCancelacion.length >= 10){
-      // revisamos si tiene abonos
-        // console.log(this.abonos_ventas)
-        if(this.abonos_ventas.length > 0){
-          this.confirmCancelacionAbono(this.idVentaMdlMotivo, this.abonos_ventas.length,this.total_abono,this.nombreClienteMdlMotivo);
-        } else{
-          //segudo cuadro de confirmacion
-          this.confirmCancelacion();
-        }
-        
-      //notificamos
-      this.messageService.add({severity:'success', summary:'Realizado', detail: 'El motivo fue capturado.'});
-    } else {
-      this.messageService.add({severity:'error', summary:'Advertencia', detail: 'El motivo de cancelación tiene que contener minimo 10 caracteres.'});
+  openMdlVenta(venta:any):void{
+    this.dialogOpt = {
+      idVenta: venta.idVenta,
+      modulo: 'ventas',
+      submodulo: venta.isCredito ? 'ventas-credito' : 'ventas-realizadas-buscar',
     }
-  }
-
-  confirmCancelacion() {
-    this._confirmationService.confirm({
-        message: '¿Esta seguro(a) que desea cancelar la venta?',
-        header: 'Advertencia',
-        icon: 'pi pi-exclamation-triangle',
-        accept: () => {
-            this.cancelaVenta();
-        },
-        reject: (type:any) => {
-            switch(type) {
-                case ConfirmEventType.REJECT:
-                    this.messageService.add({severity:'warn', summary:'Cancelado', detail:'Confirmacion de cancelacion cancelada.'});
-                break;
-                case ConfirmEventType.CANCEL:
-                    this.messageService.add({severity:'warn', summary:'Cancelado', detail:'Confirmacion de cancelacion cancelada.'});
-                break;
-            }
-        }
-    });
-  }
-
-  confirmCancelacionAbono(idVentaMotivo:number, lengthAbono:number, total_abono:number,nombreClienteMotivo:string){
-    this._confirmationService.confirm({
-      message: 'La venta '+idVentaMotivo+' tiene '+lengthAbono+' abono(s). <br>'+
-                'Se sumara como credito disponible la cantidad de <strong>$'+total_abono+'</strong>'+ 
-                ' al cliente <strong>'+nombreClienteMotivo+'</strong><br>'+
-                '¿Esta seguro(a) que desea continuar?',
-      header: 'Advertencia',
-      icon: 'pi pi-exclamation-triangle',
-      accept: () => {
-          this.cancelaVenta();
-      },
-      reject: (type:any) => {
-          switch(type) {
-              case ConfirmEventType.REJECT:
-                  this.messageService.add({severity:'warn', summary:'Cancelado', detail:'Confirmacion de cancelacion cancelada.'});
-              break;
-              case ConfirmEventType.CANCEL:
-                  this.messageService.add({severity:'warn', summary:'Cancelado', detail:'Confirmacion de cancelacion cancelada.'});
-              break;
-          }
-      }
-    });
-  }
-
-  confirmEdicionAbono(){
-    /**
-     * cerrar modal
-     * y mandar modal que se cerro
-     * Si tiene abonos se ejecuta confirm si no
-     */
-    this._confirmationService.confirm({
-      message: '¿Esta seguro(a) que desea cancelar la venta?',
-      header: 'Advertencia',
-      icon: 'pi pi-exclamation-triangle',
-      accept: () => {
-          this.cancelaVenta();
-      },
-      reject: (type:any) => {
-          switch(type) {
-              case ConfirmEventType.REJECT:
-                  this.messageService.add({severity:'warn', summary:'Cancelado', detail:'Confirmacion de cancelacion cancelada.'});
-              break;
-              case ConfirmEventType.CANCEL:
-                  this.messageService.add({severity:'warn', summary:'Cancelado', detail:'Confirmacion de cancelacion cancelada.'});
-              break;
-          }
-      }
-  });
-  }
-
-  cancelaVenta(){
-    //Sustituimos todos los permisos por solo los permisos del modulo
-    //Esto con la finalidad de no enviar informacion innecesaria
-    let identityMod ={
-      ... this.identity,
-      'permisos': this.userPermisos
-    }
-    this._ventasService.cancelaVenta(this.detallesVenta[0].idVenta, identityMod, this.motivoCancelacion).subscribe(
-      response =>{
-        if(response.status == 'success'){
-          this.messageService.add({severity:'success', summary:'Exito', detail:response.message});
-          this.modalService.dismissAll();
-          this.getVentas();
-        }
-        //console.log(response);
-      }, error =>{
-        console.log(error)
-      });
+    this._mdlVentaService.openMdlVentaDialog(this.dialogOpt);
   }
 
 }

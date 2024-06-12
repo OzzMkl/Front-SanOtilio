@@ -27,6 +27,7 @@ export class ModalVentasComponent implements OnInit, OnDestroy {
   //Permisos
   public userPermisos:any;
   public mCaja?: propModulo;
+  public mVentas?: propModulo;
   public identity: any;
   //Spinner
   public isLoadingGeneral: boolean = false;
@@ -34,11 +35,13 @@ export class ModalVentasComponent implements OnInit, OnDestroy {
   public isMdlVenta: boolean = false;
   public isMdlAbono: boolean = false;
   public isMdlCobroVenta: boolean = false;
+  public isMdlMotivoCancelacion: boolean = false;
   /*** MODELOS ***/
   dialogOptions:any;
   //modelos-venta
   public venta?: Ventag;
   public productos_venta?: Array<Producto_ventasg>;
+  public strMotivoCancelacion?: string;
   //modelos-abonos
   public arr_abonos: Array<abono> = [];
   public total_abono: number = 0;
@@ -94,6 +97,19 @@ export class ModalVentasComponent implements OnInit, OnDestroy {
           } else if(dialogOptions.submodulo == 'ventas-credito'){
             this.mCaja = this._modulosService.modsCreditos();
             this.userPermisos = this._empleadoService.getPermisosModulo(this.mCaja.idModulo,this.mCaja.idSubModulo);
+            this.identity = this._empleadoService.getIdentity();
+            this.getVentaCredito(dialogOptions.idVenta);
+          }
+        break;
+      case 'ventas':
+          if(dialogOptions.submodulo == 'ventas-realizadas-buscar'){
+            this.mVentas = this._modulosService.modsPuntodeVenta();
+            this.userPermisos = this._empleadoService.getPermisosModulo(this.mVentas.idModulo,this.mVentas.idSubModulo);
+            this.identity = this._empleadoService.getIdentity();
+            this.getVenta(dialogOptions.idVenta);
+          } else if(dialogOptions.submodulo == 'ventas-credito'){
+            this.mVentas = this._modulosService.modsCreditos();
+            this.userPermisos = this._empleadoService.getPermisosModulo(this.mVentas.idModulo,this.mVentas.idSubModulo);
             this.identity = this._empleadoService.getIdentity();
             this.getVentaCredito(dialogOptions.idVenta);
           }
@@ -437,6 +453,131 @@ export class ModalVentasComponent implements OnInit, OnDestroy {
         });
       }
     );
+  }
+
+  // OPERACIONES VENTAS
+
+  /**
+   * 
+   * @param venta : Ventasg
+   * @description
+   * Recibimos los datos de la venta y abre modal para ingresar motivo de cancelacion
+   */
+  openMdlMotivoCancelacion(venta:Ventag){
+    this.strMotivoCancelacion = '';
+    this.isMdlMotivoCancelacion = true;
+  }
+
+  /**
+   * @description
+   * Verifica que el motivo tenga mas de 10 caracteres
+   * Verifica si la nota contiene abonos
+   */
+  almacenaMotivoCancelacion():void{
+    if(this.strMotivoCancelacion && this.strMotivoCancelacion.length >=10){
+      if(this.arr_abonos.length > 0){
+        if(this.venta){
+          this.confirmCancelacionVentaConAbono(this.venta?.idVenta,this.arr_abonos.length,this.total_abono,this.venta?.nombreCliente);
+        }
+      } else{
+        this.confirmCancelacionVenta();
+      }
+      //notificamos
+      this.messageService.add({
+        severity:'success', 
+        summary:'Realizado', 
+        detail: 'El motivo fue capturado.'
+      });
+    } else{
+      this.messageService.add({
+        severity:'error', 
+        summary:'Advertencia', 
+        detail: 'El motivo de cancelación tiene que contener minimo 10 caracteres.'
+      });
+    }
+  }
+
+  /**
+   * @description
+   * Pide que se confirme nuevamente la cancelacion de la venta
+   */
+  confirmCancelacionVenta():void{
+    this._confirmationService.confirm({
+        message: '¿Esta seguro(a) que desea cancelar la venta?',
+        header: 'Advertencia',
+        icon: 'pi pi-exclamation-triangle',
+        accept: () => {
+            this.cancelaVenta();
+        },
+        reject: (type:any) => {
+            switch(type) {
+                case ConfirmEventType.REJECT:
+                    this.messageService.add({severity:'warn', summary:'Cancelado', detail:'Confirmacion de cancelacion cancelada.'});
+                break;
+                case ConfirmEventType.CANCEL:
+                    this.messageService.add({severity:'warn', summary:'Cancelado', detail:'Confirmacion de cancelacion cancelada.'});
+                break;
+            }
+        }
+    });
+  }
+
+  /**
+   * 
+   * @param idVentaMotivo : number (idVenta a cancelar)
+   * @param lengthAbono : number (cuantos abonos tiene)
+   * @param total_abono : number (cantidad total abonada)
+   * @param nombreClienteMotivo : string (nombre del cliente a abonar)
+   */
+  confirmCancelacionVentaConAbono(idVentaMotivo:number, lengthAbono:number, total_abono:number,nombreClienteMotivo:string){
+    this._confirmationService.confirm({
+      message: 'La venta #<strong>'+idVentaMotivo+'</strong> tiene '+lengthAbono+' abono(s). <br>'+
+                'Se sumara como credito disponible la cantidad de <strong>$'+total_abono+'</strong>'+ 
+                ' al cliente <strong>'+nombreClienteMotivo+'</strong><br>'+
+                '¿Esta seguro(a) que desea continuar?',
+      header: 'Advertencia',
+      icon: 'pi pi-exclamation-triangle',
+      accept: () => {
+          this.cancelaVenta();
+      },
+      reject: (type:any) => {
+          switch(type) {
+              case ConfirmEventType.REJECT:
+                  this.messageService.add({severity:'warn', summary:'Cancelado', detail:'Confirmacion de cancelacion cancelada.'});
+              break;
+              case ConfirmEventType.CANCEL:
+                  this.messageService.add({severity:'warn', summary:'Cancelado', detail:'Confirmacion de cancelacion cancelada.'});
+              break;
+          }
+      }
+    });
+  }
+
+  /**
+   * @description
+   * Funcion que realiza la cancelacion de la venta
+   */
+  cancelaVenta(){
+    //Sustituimos todos los permisos por solo los permisos del modulo
+    //Esto con la finalidad de no enviar informacion innecesaria
+    let identityMod ={
+      ... this.identity,
+      'permisos': this.userPermisos
+    }
+    if(this.venta && this.strMotivoCancelacion){
+      this._ventasService.cancelaVenta(this.venta?.idVenta, identityMod, this.strMotivoCancelacion).subscribe(
+        response =>{
+          if(response.status == 'success'){
+            this.messageService.add({severity:'success', summary:'Exito', detail:response.message});
+            this.isMdlMotivoCancelacion = false;
+            this.isMdlVenta = false;
+            this._mdlVentaService.actualizarVentas();
+          }
+          //console.log(response);
+        }, error =>{
+          console.log(error)
+        });
+    }
   }
 
 

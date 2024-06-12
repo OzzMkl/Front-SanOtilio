@@ -34,8 +34,8 @@
 
 
             <div class="col">
-                <!-- PERMISO AGREGAR PARA ABONAR/COBRAR -->
-                <button *ngIf="userPermisos.agregar"
+                <!-- PERMISO CAJAS AGREGAR PARA ABONAR/COBRAR -->
+                <button *ngIf="mCaja && userPermisos.agregar"
                         class="p-button-rounded p-button-success me-md-2"
                         pButton
                         pRipple
@@ -45,8 +45,8 @@
                         tooltipPosition="top"
                         (click)="openMdlCobro()">
                 </button>
-                <!-- PERMISO EDITAR PARA MOVER A CREDITO -->
-                <button *ngIf="userPermisos.editar && venta.isCredito == false"
+                <!-- PERMISO CAJAS EDITAR PARA MOVER A CREDITO -->
+                <button *ngIf="mCaja && userPermisos.editar && venta.isCredito == false"
                         class="p-button-rounded p-button-warning me-md-2"
                         pButton
                         pRipple
@@ -56,8 +56,8 @@
                         tooltipPosition="top"
                         (click)="confirmCredito(venta.idVenta)">
                 </button>
-                <!-- PERMISO PDF GENERAR PDF -->
-                <button *ngIf="userPermisos.pdf"
+                <!-- PERMISO CAJAS PDF GENERAR PDF -->
+                <button *ngIf="mCaja && userPermisos.pdf"
                         class="p-button-rounded p-button-secondary me-md-2"
                         pButton
                         pRipple
@@ -67,8 +67,30 @@
                         tooltipPosition="top"
                         (click)="generaPDF_caja(venta.idVenta)">
                 </button>
+                <!-- PERMISO VENTAS EDITAR -->
+                <button *ngIf="mVentas && userPermisos.editar"
+                        class="p-button-rounded p-button-warning me-md-2"
+                        pButton
+                        pRipple
+                        type="button"
+                        icon="bi bi-pencil-square"
+                        pTooltip="Editar venta"
+                        tooltipPosition="top"
+                        [routerLink]="['../../punto-de-venta-editar',venta.idVenta]">
+                </button>
+                <!-- PERMISO VENTAS CANCELAR -->
+                <button *ngIf="mVentas && userPermisos.cancelar"
+                        class="p-button-rounded p-button-danger me-md-2"
+                        pButton
+                        pRipple
+                        type="button"
+                        icon="pi pi-trash"
+                        pTooltip="Editar venta"
+                        tooltipPosition="top"
+                        (click)="openMdlMotivoCancelacion(venta)">
+                </button>
                 <!-- PERMISO VER PARA VER ABONOS -->
-                <button *ngIf="arr_abonos.length > 0 && userPermisos.ver"
+                <button *ngIf="mCaja && arr_abonos.length > 0 && userPermisos.ver"
                         class="p-button-rounded p-button-info me-md-2"
                         pButton
                         pRipple
@@ -298,6 +320,52 @@
             
         </form>
     </div>
+</p-dialog>
+
+<p-dialog
+    header="Header"
+    [(visible)]="isMdlMotivoCancelacion"
+    [modal]="true"
+    [style]="{'width':'42vw'}"
+    [draggable]="false"
+    [resizable]="false"
+    [position]="'top'"
+    [dismissableMask]="true">
+    <ng-template pTemplate="header">
+        <h5>Ingrese el motivo de cancelacion para la venta #{{venta?.idVenta}}</h5>
+    </ng-template>
+    <div>
+        <textarea class="form-control"
+                    name="motivoCancelacion"
+                    id="motivoCancelacion"
+                    rows="2"
+                    [(ngModel)]="strMotivoCancelacion">
+        </textarea>
+    </div>
+    <ng-template pTemplate="footer">
+        <div class="row justify-content-between">
+            <div class="col" [style]="{'text-align':'left !important'}">
+                <button
+                    class="p-button-rounded p-button-danger"
+                    pButton
+                    pRipple
+                    type="button"
+                    label="Cancelar"
+                    (click)="isMdlMotivoCancelacion = false">
+                </button>
+            </div>
+            <div class="col">
+                <button
+                    class="p-button-rounded p-button-success"
+                    pButton
+                    pRipple
+                    type="button"
+                    label="Guardar"
+                    (click)="almacenaMotivoCancelacion()"
+                ></button>
+            </div>
+        </div>
+    </ng-template>
 </p-dialog>
 
 <p-confirmDialog [style]="{width: '30vw'}" [baseZIndex]="10000" acceptLabel="Si" rejectButtonStyleClass="p-button-text"></p-confirmDialog>
