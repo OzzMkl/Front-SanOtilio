@@ -108,7 +108,7 @@ export class ProductoAgregarComponent implements OnInit, OnDestroy {
     private _mdlProductoService: MdlProductoService,
 
   ) {
-    this.producto = new Producto(0,0,0,1,'',0,'',0,0,'',0,'','',null,1,0);
+    this.producto = new Producto(0,0,0,9,'',0,'',0,0,'',0,'','',null,1,0);
     this.sub_producto = this._mdlProductoService.selectedValue$.subscribe(
       value =>{
         this.submitByCatalago(value);
