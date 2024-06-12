@@ -43,7 +43,6 @@ import { FilterProveedoresPipe } from './pipes/filter-proveedores.pipe';
 import { FilterProductPipe } from './pipes/filter-products.pipe';
 import { FilterProductModalPipe } from './pipes/filter-productsModal.pipe';
 
-import { NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
 
 import { ClasificacionModuloComponent } from './components/inventario/taxonomia/clasificacion-modulo/clasificacion-modulo.component';
 import { DepartamentoVerComponent } from './components/inventario/taxonomia/clasificaciones/departamentos/departamento-ver/departamento-ver.component';
@@ -100,6 +99,7 @@ import { TraspasoAgregarComponent } from './components/inventario/traspasos/tras
 import { TraspasoBuscarComponent } from './components/inventario/traspasos/traspaso-buscar/traspaso-buscar.component';
 import { TraspasoEditarComponent } from './components/inventario/traspasos/traspaso-editar/traspaso-editar.component';
 import { ComponentsUtilsModule } from './utils/components-utils/components-utils.component';
+import { BooleanToYesNoPipe } from './pipes/boolean-to-yes-no.pipe';
 
 
 
@@ -175,6 +175,7 @@ import { ComponentsUtilsModule } from './utils/components-utils/components-utils
     TraspasoAgregarComponent,
     TraspasoBuscarComponent,
     TraspasoEditarComponent,
+    BooleanToYesNoPipe,
     
   ],
   imports: [

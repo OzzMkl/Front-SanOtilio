@@ -38,10 +38,11 @@
                     <th scope="col">VENDEDOR</th>
                     <th scope="col">TIPO VENTA</th>
                     <th scope="col">TOTAL</th>
+                    <th scope="col">CREDITO</th>
                 </tr>
             </thead>                           <!-- Se agrega filtro de cotizaciones para clientes-->
             <tbody *ngFor="let venta of ventas | filterCotizacionesNomC: buscaNombreCliente | filterIdventa: buscaFolio | filterVendedor: buscaNombreEmpleado | paginate:{id:'paginationVentas',itemsPerPage: 10, currentPage: pageActual}">
-                <tr (click)="open(mDetallesVenta)" (click)="getDetallesVenta(venta.idVenta)">
+                <tr (click)="open(mDetallesVenta)" (click)="getDetallesVenta(venta)">
                     <th scope="row">{{venta.idVenta}}</th>
                     <th scope="row">{{venta.created_at | date: 'dd/MM/yyyy'}}</th>
                     <!-- <th scope="row">{{venta.nombreCliente}}</th> -->
@@ -49,6 +50,7 @@
                     <th scope="row">{{venta.nombreEmpleado.length > 40 ? (venta.nombreEmpleado | slice:0:25) + '...' : venta.nombreEmpleado }}</th>
                     <th scope="row">{{venta.nombreTipoventa}}</th>
                     <th scope="row">{{venta.total | currency:'MXN'}}</th>
+                    <th scope="row">{{venta.isCredito | booleanToYesNo}}</th>
                 </tr>
             </tbody>
         </table>

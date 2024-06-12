@@ -84,7 +84,7 @@ export class VentasRealizadasComponent implements OnInit {
     this.isLoading = true;
     this._ventasService.getIndexVentas().subscribe(
       response =>{
-        // console.log(response);
+        console.log(response);
         if(response.status == 'success'){
           this.ventas = response.Ventas
           this.isLoading = false;
@@ -95,21 +95,39 @@ export class VentasRealizadasComponent implements OnInit {
       }
     )
   }
-  getDetallesVenta(idVenta:number){
+  getDetallesVenta(venta:any){
     this.isLoadingGeneral = true;
-    this._ventasService.getDetallesVenta(idVenta).subscribe(
-      response =>{
-        if(response.status == 'success'){
-          // console.log(response);
-          this.detallesVenta = response.venta;
-          this.productosDVenta = response.productos_ventasg;
-          //console.log(this.detallesVenta[0])
+
+    if(venta.isCredito){
+      this._ventasService.getDetallesVentaCredito(venta.idVenta).subscribe(
+        response =>{
+          console.log(response);
+          if(response.status == 'success'){
+            this.detallesVenta = response.venta_credito;
+            this.productosDVenta = response.productos_ventascre;
+            this.isLoadingGeneral = false;
+          }
+        }, error =>{
           this.isLoadingGeneral = false;
+          console.log(error);
         }
-      },error =>{
-        console.log(error);
-      });
-      this.getAbonosVentasg(idVenta);
+      );
+    } else{
+      this._ventasService.getDetallesVenta(venta.idVenta).subscribe(
+        response =>{
+          if(response.status == 'success'){
+            // console.log(response);
+            this.detallesVenta = response.venta;
+            this.productosDVenta = response.productos_ventasg;
+            //console.log(this.detallesVenta[0])
+            this.isLoadingGeneral = false;
+          }
+        },error =>{
+          console.log(error);
+        });
+      this.getAbonosVentasg(venta.idVenta);
+    }
+
   }
 
   getAbonosVentasg(idVenta:number){
