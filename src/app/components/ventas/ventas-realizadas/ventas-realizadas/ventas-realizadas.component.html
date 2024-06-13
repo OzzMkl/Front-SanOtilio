@@ -1,62 +1,62 @@
 <p-toast></p-toast>
 <app-loading-spinner [isLoading]="isLoadingGeneral"></app-loading-spinner>
-<div class="container">
-    <h3 class="text-center">Ver ventas</h3>
-</div>
 <div class="container-fluid">
-    <div class="input-group mb-2">
-        <div class="col-2">
-            <select class="form-select" name="tipoBusqueda" [(ngModel)]="tipoBusqueda" (ngModelChange)="seleccionTipoBusqueda($event)">
-                <option value="1" selected># Folio</option>
-                <option value="2">Cliente</option>
-                <option value="3">Vendedor</option>
-            </select>
-        </div>
-        <div class="col" *ngIf="tipoBusqueda == 1">
-            <input class="form-control" type="text" name="buscaFolio" placeholder="Buscar . . ." [(ngModel)]="buscaFolio" pattern="[0-9]+">
-        </div>
-        <div class="col" *ngIf="tipoBusqueda == 2">
-            <input class="form-control" type="text" name="buscaNombreCliente" placeholder="Buscar . . ." [(ngModel)]="buscaNombreCliente" >
-        </div>
-        <div class="col" *ngIf="tipoBusqueda == 3">
-            <input class="form-control" type="text" name="buscaNombreEmpleado" placeholder="Buscar . . ." [(ngModel)]="buscaNombreEmpleado">
-        </div>
+    <h3 class="text-center">Ver ventas</h3>
+    <div>
+        <p-dropdown
+                [options]="optionsSelect"
+                [(ngModel)]="selectedOpt"
+                [showClear]="true"
+                placeholder="Selecciona una opcion"
+                [style]="{ width: '15%' }"
+                optionLabel="name"
+                (ngModelChange)="onSearch()"
+        ></p-dropdown>
+        <p-dropdown
+                [options]="optionsSelect2"
+                [(ngModel)]="selectedOpt2"
+                [showClear]="true"
+                placeholder="Selecciona una opcion"
+                [style]="{ width: '15%' }"
+                optionLabel="name"
+                (ngModelChange)="onSearch()"
+        ></p-dropdown>
+        <input type="text" pInputText [(ngModel)]="valSearch" [style]="{ width: '70%' }" (ngModelChange)="onSearch()">
     </div>
     <br>
-    <div class="text-center text-primary" *ngIf="isLoading">
-        <div class="spinner-border" role="status" >
-            <span class="visually-hidden">Loading...</span>
-          </div>
-    </div>
-    <div class="table-responsive" *ngIf="!isLoading">
-        <table class="table table-dark table-hover">
-            <thead>
-                <tr>
-                    <th scope="col">FOLIO</th>
-                    <th scope="col">FECHA</th>
-                    <th scope="col">CLIENTE</th>
-                    <th scope="col">VENDEDOR</th>
-                    <th scope="col">TIPO VENTA</th>
-                    <th scope="col">TOTAL</th>
-                    <th scope="col">CREDITO</th>
-                </tr>
-            </thead>                           <!-- Se agrega filtro de cotizaciones para clientes-->
-            <tbody *ngFor="let venta of ventas | filterCotizacionesNomC: buscaNombreCliente | filterIdventa: buscaFolio | filterVendedor: buscaNombreEmpleado | paginate:{id:'paginationVentas',itemsPerPage: 10, currentPage: pageActual}">
-                <!-- <tr (click)="open(mDetallesVenta)" (click)="getDetallesVenta(venta)"> -->
-                <tr (click)="openMdlVenta(venta)">
-                    <th scope="row">{{venta.idVenta}}</th>
-                    <th scope="row">{{venta.created_at | date: 'dd/MM/yyyy'}}</th>
-                    <!-- <th scope="row">{{venta.nombreCliente}}</th> -->
-                    <th scope="row">{{ venta.nombreCliente.length > 40 ? (venta.nombreCliente | slice:0:25) + '...' : venta.nombreCliente }}</th>
-                    <th scope="row">{{venta.nombreEmpleado.length > 40 ? (venta.nombreEmpleado | slice:0:25) + '...' : venta.nombreEmpleado }}</th>
-                    <th scope="row">{{venta.nombreTipoventa}}</th>
-                    <th scope="row">{{venta.total | currency:'MXN'}}</th>
-                    <th scope="row">{{venta.isCredito | booleanToYesNo}}</th>
-                </tr>
-            </tbody>
-        </table>
-        <pagination-controls id="paginationVentas" (pageChange)="pageActual = $event"></pagination-controls>
-    </div>
+    <p-table
+        [value]="ventas"
+        styleClass="p-datatable-sm"
+        [scrollable]="true"
+        scrollHeight="380px"
+        selectionMode="single"
+        [(selection)]="selectedVenta"
+        dataKey="idVenta"
+        (onRowSelect)="onRowSelect($event)"
+        >
+        <ng-template pTemplate="header">
+            <tr>
+                <th>FOLIO</th>
+                <th>FECHA</th>
+                <th>CLIENTE</th>
+                <th>VENDEDOR</th>
+                <th>TIPO VENTA</th>
+                <th>TOTAL</th>
+                <th>CREDITO</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-venta let-rowIndex="rowIndex">
+            <tr [pSelectableRow]="venta" (dblclick)="openMdlVenta(venta)">
+                <td>{{venta.idVenta}}</td>
+                <td>{{venta.created_at | date: 'dd/MM/yyyy'}}</td>
+                <td>{{venta.nombreCliente.length > 40 ? (venta.nombreCliente | slice:0:25) + '...' : venta.nombreCliente }}</td>
+                <td>{{venta.nombreEmpleado.length > 40 ? (venta.nombreEmpleado | slice:0:25) + '...' : venta.nombreEmpleado}}</td>
+                <td>{{venta.nombreTipoventa}}</td>
+                <td>{{venta.total | currency:'MXN'}}</td>
+                <td>{{venta.isCredito | booleanToYesNo}}</td>
+            </tr>
+        </ng-template>
+    </p-table>
 </div>
 
 <app-modal-ventas></app-modal-ventas>
