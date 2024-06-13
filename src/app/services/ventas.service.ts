@@ -65,8 +65,8 @@ export class VentasService {
   }
 
   //VENTAS
-  getIndexVentas():Observable<any>{
-    return this._http.get(this.url+'ventas/indexVentas', {headers:this.headers} );
+  getIndexVentas(search:string = '', type:number = 1, isCredito:number = 1):Observable<any>{
+    return this._http.get(this.url+'ventas/indexVentas'+'?search='+search+'&type='+type+'&isCredito='+isCredito, {headers:this.headers} );
   }
 
   getDetallesVenta(idVenta:any):Observable<any>{
