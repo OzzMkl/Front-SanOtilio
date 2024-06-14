@@ -74,7 +74,7 @@
             <div *ngIf="isModificaPrecio == false; else blockModificaPrecio">
                 <select class="form-select" name="precio" id="precio" #precio="ngModel" [(ngModel)]="productoVentag.precio" (change)="calculaSubtotalPP()">
                     <ng-container *ngFor="let precio of preciosArray">
-                        <option  *ngIf="precio != null" [value]="precio">{{precio}}</option>
+                        <option  *ngIf="precio != null" [value]="precio">{{precio | currency:'MXN'}}</option>
                     </ng-container>
                 </select>
             </div>
