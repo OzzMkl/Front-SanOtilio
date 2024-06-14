@@ -3,7 +3,7 @@
     <app-loading-spinner [isLoading]="isLoadingGeneral"></app-loading-spinner>
     <!-- DATOS CLIENTE -->
     <div>
-        <h4 class="text-center">DATOS DEL CLIENTE</h4>
+        <h5 class="text-center">DATOS DEL CLIENTE</h5>
         <div class="row align-items-start" >
             <div class="col-4">
                 <label class="form-label" for="">Buscar cliente</label>
@@ -46,7 +46,7 @@
     <hr>
     <!-- PRODUCTOS -->
     <div class="row align-items-start">
-        <h4 class="text-center">AGREGAR PRODUCTO</h4>
+        <h5 class="text-center">AGREGAR PRODUCTO</h5>
         <div class="col-2">
             <label class="form-label" for="">Buscar producto</label>
                 <div class="input-group">
@@ -121,8 +121,8 @@
     <hr>
     <!-- LISTA PRODUCTOS -->
     <div>
-        <h4 class="text-center">LISTA DE PRODUCTOS</h4>
-        <table class="table table-dark table-hover">
+        <h5 class="text-center">LISTA DE PRODUCTOS</h5>
+        <table class="table table-sm table-dark table-hover">
             <thead>
                 <tr>
                     <th scope="col">CLAVE EXTERNA</th>
@@ -151,7 +151,7 @@
     <hr>
     <!-- FINAL VENTA -->
     <div class="row">
-        <div class="col-10">
+        <div class="col-6">
             <label class="form-label">Observaciones</label>
             <textarea class="form-control" rows="3" maxlength="250" 
                         name="observaciones" #observaciones="ngModel"
@@ -160,77 +160,77 @@
                         (keydown)="contadorCaracteres($event)">
             </textarea>
             <span> {{contador}}/250</span>
-            <br>
-
-            <div class="row">
-                <div class="col-2">
-                    <label for="">Subtotal</label>
-                    <input class="form-control" type="text" value="{{ventag.subtotal | currency:'MXN'}}" readonly>
-                </div>
-                <div class="col-2">
-                    <label for="">Descuento</label>
-                    <input class="form-control" type="text" value="{{ventag.descuento | currency:'MXN'}}" readonly>
-                </div>
-                <div class="col-2">
-                    <label for="">Total</label>
-                    <input class="form-control" type="text" value="{{ventag.total | currency:'MXN'}}" readonly>
-                </div>
-                <div class="col-3">
-                    <label class="form-label" for="">Tipo venta</label>
-                    <select class="form-select" name="tipoventa" id="tipoventa" #tipoventa="ngModel" [(ngModel)]="ventag.idTipoVenta" ngModel required>
-                        <ng-container *ngFor="let tipoV of tipo_venta">
-                            <option *ngIf="ventag.idCliente == 1 && 
-                                            (tipoV.idTipoVenta == 1 || tipoV.idTipoVenta == 2 || tipoV.idTipoVenta == 3)" value="{{tipoV.idTipoVenta}}">{{tipoV.nombre}}</option>
-                            <option *ngIf="ventag.idCliente != 1"value="{{tipoV.idTipoVenta}}">{{tipoV.nombre}}</option>
-                        </ng-container>
-                    </select>
-                </div>
-                <div class="col-2">
-                    <label class="form-label" for="">¿Pago con tarjeta?</label>
-                    <div class="col-md-5 offset-md-5">
-                        <input class="form-check-input" type="checkbox" name="PagoConTarjeta" id="PagoConTarjeta" [(ngModel)]="PagoConTarjeta" (ngModelChange)="sumaPorcentajeComi($event)">
-                    </div>
+        </div>
+        <div class="col-2">
+            <div class="col-12">
+                <label class="form-label" for="">Tipo venta</label>
+                <select class="form-select" name="tipoventa" id="tipoventa" #tipoventa="ngModel" [(ngModel)]="ventag.idTipoVenta" ngModel required>
+                    <ng-container *ngFor="let tipoV of tipo_venta">
+                        <option *ngIf="ventag.idCliente == 1 && 
+                                        (tipoV.idTipoVenta == 1 || tipoV.idTipoVenta == 2 || tipoV.idTipoVenta == 3)" value="{{tipoV.idTipoVenta}}">{{tipoV.nombre}}</option>
+                        <option *ngIf="ventag.idCliente != 1"value="{{tipoV.idTipoVenta}}">{{tipoV.nombre}}</option>
+                    </ng-container>
+                </select>
+            </div>
+            <div class="col-12">
+                <label class="form-label" for="">¿Pago con tarjeta?</label>
+                <div class="col-md-5 offset-md-5">
+                    <input class="form-check-input" type="checkbox" name="PagoConTarjeta" id="PagoConTarjeta" [(ngModel)]="PagoConTarjeta" (ngModelChange)="sumaPorcentajeComi($event)">
                 </div>
             </div>
         </div>
-        <div class="col-2">
-            
-            <div class="col d-flex justify-content-center">
-                
-                <button class="p-button-rounded p-button-secondary mt-3 w-75"
-                        pButton
-                        pRipple
-                        type="button"
-                        severity="secondary"
-                        icon="pi pi-file-pdf"
-                        (click)="modoEdicionCotizacion ? updateCotizacion() : modalAlertaExistencia(mAlertaExistencia) "
-                        label="Cotizacion">
-                </button>
+        <div class="col-4">
+            <div class="row mt-1">
+                <label for="ventagSubtotal" class="col-sm-4 col-form-label" [style]="{'font-weight':'600'}">Subtotal</label>
+                <div class="col-sm-8">
+                    <input id="ventagSubtotal" class="form-control" type="text" value="{{ventag.subtotal | currency:'MXN'}}" readonly>
+                </div>
             </div>
-            <p-confirmDialog [style]="{width: '50vw'}" [baseZIndex]="10000" acceptLabel="Si" rejectButtonStyleClass="p-button-text"></p-confirmDialog>
-            <br>
-            <div class="col d-flex justify-content-center">
-                <button class="p-button-rounded p-button-success w-75"
-                        pButton
-                        pRipple
-                        type="button"
-                        icon="bi bi-receipt-cutoff"
-                        severity="success"
-                        (click)="confirmVenta()"
-                        label="Ticket">
-                </button>
+            <div class="row mt-1">
+                <label for="ventagDescuento" class="col-sm-4 col-form-label" [style]="{'font-weight':'600'}">Descuento</label>
+                <div class="col-sm-8">
+                    <input id="ventagDescuento" class="form-control" type="text" value="{{ventag.descuento | currency:'MXN'}}" readonly>
+                </div>
             </div>
-            <br>
-            <div class="col d-none">
-                <button class="btn btn-info form-control"><i class="bi bi-truck"></i> Pedido</button>
+            <div class="row mt-1">
+                <label for="ventagTotal" class="col-sm-4 col-form-label" [style]="{'font-weight':'600'}">Total</label>
+                <div class="col-sm-8">
+                    <input id="ventagTotal" class="form-control" type="text" value="{{ventag.total | currency:'MXN'}}" readonly>
+                </div>
+            </div>
+            <div class="row mt-1">
+                <div class="col-sm-6 justify-content-center">
+                    <button class="p-button-rounded p-button-secondary w-75"
+                            pButton
+                            pRipple
+                            type="button"
+                            severity="secondary"
+                            icon="pi pi-file-pdf"
+                            (click)="modoEdicionCotizacion ? updateCotizacion() : modalAlertaExistencia(mAlertaExistencia) "
+                            label="Cotizacion">
+                    </button>
+                </div>
+                <div class="col-sm-6 justify-content-center">
+                    <button class="p-button-rounded p-button-success w-75"
+                            pButton
+                            pRipple
+                            type="button"
+                            icon="bi bi-receipt-cutoff"
+                            severity="success"
+                            (click)="confirmVenta()"
+                            label="Ticket">
+                    </button>
+                </div>
+                <!-- <br>
+                <div class="col d-none">
+                    <button class="btn btn-info form-control"><i class="bi bi-truck"></i> Pedido</button>
+                </div> -->
             </div>
         </div>
     </div>
-
-    
 </div>
 
-
+<p-confirmDialog [style]="{width: '50vw'}" [baseZIndex]="10000" acceptLabel="Si" rejectButtonStyleClass="p-button-text"></p-confirmDialog>
 
 <!-- Modal buscar clientes-->
 <ng-template #content let-modal>
