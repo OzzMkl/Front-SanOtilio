@@ -178,7 +178,11 @@
                 <div class="col-3">
                     <label class="form-label" for="">Tipo venta</label>
                     <select class="form-select" name="tipoventa" id="tipoventa" #tipoventa="ngModel" [(ngModel)]="ventag.idTipoVenta" ngModel required>
-                        <option *ngFor="let tipoV of tipo_venta" value="{{tipoV.idTipoVenta}}">{{tipoV.nombre}}</option>
+                        <ng-container *ngFor="let tipoV of tipo_venta">
+                            <option *ngIf="ventag.idCliente == 1 && 
+                                            (tipoV.idTipoVenta == 1 || tipoV.idTipoVenta == 2 || tipoV.idTipoVenta == 3)" value="{{tipoV.idTipoVenta}}">{{tipoV.nombre}}</option>
+                            <option *ngIf="ventag.idCliente != 1"value="{{tipoV.idTipoVenta}}">{{tipoV.nombre}}</option>
+                        </ng-container>
                     </select>
                 </div>
                 <div class="col-2">

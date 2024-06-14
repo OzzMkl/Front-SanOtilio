@@ -156,8 +156,6 @@ export class PuntoDeVentaComponent implements OnInit, OnDestroy {
     )
   }
 
-  
-
   getTiposVentas(){
     this.sub_venta = this._ventasService.getTipoVenta().subscribe(
       response =>{
@@ -297,9 +295,12 @@ export class PuntoDeVentaComponent implements OnInit, OnDestroy {
    * Trae detalles del cliente
    * @param idCliente 
    */
-  seleccionarCliente(idCliente:any){
-    this.ventag.cdireccion = '';
-    this.seEnvia = false;
+  seleccionarCliente(idCliente:any, isDetalles:boolean = false){
+    if(!isDetalles){
+      this.ventag.cdireccion = '';
+      this.seEnvia = false;
+    }
+
     this.isLoadingGeneral = true;
 
     this.sub_cliente = this._clienteService.getDetallesCliente(idCliente).subscribe(
@@ -605,7 +606,7 @@ export class PuntoDeVentaComponent implements OnInit, OnDestroy {
         'permisos': this.userPermisos
       }
 
-      this.ventag.seEnviap = this.seEnvia;
+      this.ventag.seEnvia = this.seEnvia;
       this.sub_venta = this._ventasService.postCotizaciones(this.ventag, this.lista_productoVentag, identityMod).subscribe( 
         response=>{
           if(response.status == 'success'){
@@ -655,7 +656,7 @@ export class PuntoDeVentaComponent implements OnInit, OnDestroy {
         'permisos': this.userPermisos
       }
       //Agregamos propiedad de envio
-      Object.assign( this.ventag, {seEnvia: this.seEnvia});
+      this.ventag.seEnvia = this.seEnvia;
 
       this.sub_venta = this._ventasService.postVenta(this.ventag, this.lista_productoVentag, identityMod).subscribe(
         response =>{
@@ -908,7 +909,7 @@ export class PuntoDeVentaComponent implements OnInit, OnDestroy {
       //ejecutamos servicio que trae la informacion
       this.sub_venta = this._ventasService.getDetallesVenta(idVenta).subscribe(
         response =>{
-          //console.log(response);
+          // console.log(response);
           if(response.status == 'success'){
 
             this.ventag.idVenta = response.venta[0]['idVenta'];
@@ -921,6 +922,9 @@ export class PuntoDeVentaComponent implements OnInit, OnDestroy {
             this.ventag.subtotal = response.venta[0]['subtotal'];
             this.ventag.descuento = response.venta[0]['descuento'];
             this.ventag.total = response.venta[0]['total'];
+            this.ventag.seEnvia = response.venta[0]['seEnvia'];
+            this.seEnvia = this.ventag.seEnvia;
+
             //cargamos productos
             this.lista_productoVentag = response.productos_ventasg;
 
@@ -928,8 +932,7 @@ export class PuntoDeVentaComponent implements OnInit, OnDestroy {
               element.comision = element.precio * 0.03;
             });
             //cargamos cliente
-            this.seleccionarCliente(this.ventag.idCliente);
-
+            this.seleccionarCliente(this.ventag.idCliente, true);
 
             this.messageService.add({severity:'success', summary:'Realizado', detail: 'Informacion cargada exitosamente.'});
             this.isLoadingGeneral = false;
@@ -959,7 +962,7 @@ export class PuntoDeVentaComponent implements OnInit, OnDestroy {
       ... this.identity,
       'permisos': this.userPermisos
     }
-
+    // console.log(this.ventag)
     this.sub_venta = this._ventasService.putVenta(this.ventag.idVenta, this.ventag, this.lista_productoVentag, identityMod, this.motivoEdicion).subscribe(
       response =>{
         if(response.status == 'success'){

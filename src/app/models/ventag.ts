@@ -15,7 +15,7 @@ export class Ventag{//Modelo de las medidas aqui asignamos todas las variables d
         public nombreCliente:string,
         public cdireccion: string,
         public idCotiza: number,
-        public seEnviap: boolean = false,
+        public seEnvia: boolean = false,
         public created_at?: Date,
         public updated_at?: Date,
         public nombreTipoVenta?: string,
