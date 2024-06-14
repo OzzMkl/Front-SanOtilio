@@ -29,17 +29,15 @@
 
     <p-table
         [value]="productos"
+        styleClass="p-datatable-sm"
         [scrollable]="false" 
         scrollHeight="250px" 
         [resizableColumns]="true"
         selectionMode="single"
         [(selection)]="selectedProduct"
         dataKey="idProducto"
-        styleClass="p-datatable-sm"
+        (onRowSelect)="onRowSelect($event)"
         [style]="{'font-size':'small', 'color':'black'}"
-        (onRowSelect)="onSelectionChange()"
-        (keydown)="onKeyDown($event)"
-        (keyup)="onKeyUp($event)"
         >
         <ng-template pTemplate="header">
             <tr class="fixed-header">

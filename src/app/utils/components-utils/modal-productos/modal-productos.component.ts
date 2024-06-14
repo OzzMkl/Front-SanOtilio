@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy, HostListener } from '@angular/core';
 import { ProductoService } from 'src/app/services/producto.service';
 import { global } from 'src/app/services/global';
 import { MdlProductoService } from 'src/app/services/mdlProductoService';
@@ -51,6 +51,7 @@ export class ModalProductosComponent implements OnInit, OnDestroy {
   public url:string = global.url;//
   public img: string = '';//
   public tblHeaders: Array<any> = []
+  currentRowIndex: number = 0;
   //modales
   public mdlMedidas: boolean = false;
   public mdlProductos: boolean = false;
@@ -261,71 +262,6 @@ export class ModalProductosComponent implements OnInit, OnDestroy {
     
   }
 
-  onKeyDown(event: KeyboardEvent) {
-    if (event.code === "ArrowDown" || event.code === "ArrowUp") {
-        // Evitar el comportamiento predeterminado del navegador para las teclas de flecha
-        event.preventDefault();
-
-        // Verificar si ya está presionada la tecla
-        if (!this.isKeyPressed) {
-            this.isKeyPressed = true;
-            this.movementStartTime = Date.now();
-        }
-
-        // Configurar el temporizador para detener el movimiento después de 2 segundos
-        if (!this.timeoutId) {
-            this.timeoutId = setTimeout(() => {
-                this.stopMovement = true;
-            }, 800);
-        }
-
-        // Si se ha alcanzado el tiempo límite, no hacer nada
-        if (this.stopMovement) return;
-
-        // Obtener todas las filas de la tabla
-        const rows = document.querySelectorAll('.p-datatable .p-datatable-tbody tr');
-        
-        // Verificar si hay filas en la tabla
-        if (rows.length === 0) return;
-
-        // Obtener la fila seleccionada actualmente
-        const selectedRowIndex = Array.from(rows).findIndex(row => row.classList.contains('p-highlight'));
-
-        // Calcular el índice de la siguiente fila a seleccionar
-        let nextRowIndex = 0;
-        if (event.code === "ArrowDown") {
-            nextRowIndex = (selectedRowIndex === rows.length - 1 || selectedRowIndex === -1) ? 0 : selectedRowIndex + 1;
-        } else if (event.code === "ArrowUp") {
-            nextRowIndex = (selectedRowIndex === 0 || selectedRowIndex === -1) ? rows.length - 1 : selectedRowIndex - 1;
-        }
-
-        // Eliminar la selección de la fila actual si hay una seleccionada
-        if (selectedRowIndex !== -1) {
-            rows[selectedRowIndex].classList.remove('p-highlight');
-        }
-
-        // Seleccionar la siguiente fila
-        rows[nextRowIndex].classList.add('p-highlight');
-
-        // Despachar el evento "Enter" a la siguiente fila seleccionada
-        const enterEvent = new KeyboardEvent("keydown", { key: "Enter" });
-        rows[nextRowIndex].dispatchEvent(enterEvent);
-    }
-  }
-
-  onKeyUp(event: KeyboardEvent) {
-    if (event.code === "ArrowDown" || event.code === "ArrowUp") {
-        this.isKeyPressed = false;
-        this.stopMovement = false;
-
-        // Limpiar el temporizador
-        clearTimeout(this.timeoutId);
-        this.timeoutId = null;
-    }
-  }
-
-
-
   /**
   * 
   * @param product any
@@ -417,6 +353,50 @@ export class ModalProductosComponent implements OnInit, OnDestroy {
       // let message = {severity:'warn', summary:'Advertencia', detail:'Se cancelo el agregar producto'};
       //       this._sharedMessage.addMessages(message);
       this._router.navigate(['producto-modulo/producto-buscar']);
+    }
+  }
+
+  @HostListener('window:keydown', ['$event'])
+  handleKeyboardEvent(event: KeyboardEvent) {
+    if (event.key === 'ArrowDown') {
+      this.navigateTable('down');
+    } else if (event.key === 'ArrowUp') {
+      this.navigateTable('up');
+    } else if(event.key === 'Enter'){
+      event.preventDefault();
+      if (this.currentRowIndex >= 0 && this.currentRowIndex < this.productos.length) {
+        this.selectedProduct = this.productos[this.currentRowIndex];
+        this.onSelect();
+      }
+    }
+  }
+
+  navigateTable(direction: string) {
+    if (direction === 'down' && this.currentRowIndex < this.productos.length - 1) {
+      this.currentRowIndex++;
+    } else if (direction === 'up' && this.currentRowIndex > 0) {
+      this.currentRowIndex--;
+    }
+    this.selectedProduct = this.productos[this.currentRowIndex];
+    this.scrollToRow(this.currentRowIndex);
+    if(this.selectedProduct){
+      this.onSelectionChange();
+    }
+  }
+
+  scrollToRow(index: number) {
+    const row = document.querySelector(`.ui-table-scrollable-body table tbody tr:nth-child(${index + 1})`);
+    if (row) {
+      row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }
+
+  onRowSelect(event: any): void {
+    const selectedVentaId = event.data.idProducto;
+    this.currentRowIndex = this.productos.findIndex(prod => prod.idProducto === selectedVentaId);
+
+    if(event.originalEvent.type === 'click'){
+      this.onSelectionChange();
     }
   }
 
