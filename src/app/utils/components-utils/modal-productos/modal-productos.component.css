@@ -33,19 +33,4 @@
     z-index: 10;
 }
 
-.col-small {
-    width: 10% !important;
-    font-weight:600;
-    padding: 1px !important;
-}
 
-.col-small-med {
-    font-weight:600;
-    padding: 1px !important;
-}
-
-.col-large {
-    width: 60% !important;
-    font-weight:600;
-    padding: 1px !important;
-}
