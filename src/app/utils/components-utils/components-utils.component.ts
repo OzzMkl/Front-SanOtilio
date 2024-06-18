@@ -6,6 +6,7 @@ import { LoadingSpinnerComponent } from './loading-spinner/loading-spinner.compo
 import { ModalProductosComponent } from './modal-productos/modal-productos.component';
 import { ModalVentasComponent } from './modal-ventas/modal-ventas.component';
 import { InputExternalKeySearchComponent } from './input-external-key-search/input-external-key-search.component';
+import { ModalClientesComponent } from './modal-clientes/modal-clientes.component';
 
 @NgModule({
     declarations: [
@@ -13,12 +14,14 @@ import { InputExternalKeySearchComponent } from './input-external-key-search/inp
         ModalProductosComponent,
         ModalVentasComponent,
         InputExternalKeySearchComponent,
+        ModalClientesComponent,
     ],
     exports: [
         LoadingSpinnerComponent,
         ModalProductosComponent,
         ModalVentasComponent,
         InputExternalKeySearchComponent,
+        ModalClientesComponent,
     ],
     imports : [
         PrimengModule,
