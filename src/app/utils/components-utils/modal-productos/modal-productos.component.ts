@@ -358,11 +358,11 @@ export class ModalProductosComponent implements OnInit, OnDestroy {
 
   @HostListener('window:keydown', ['$event'])
   handleKeyboardEvent(event: KeyboardEvent) {
-    if (event.key === 'ArrowDown') {
+    if (event.key === 'ArrowDown' && this.mdlProductos == true) {
       this.navigateTable('down');
-    } else if (event.key === 'ArrowUp') {
+    } else if (event.key === 'ArrowUp' && this.mdlProductos == true) {
       this.navigateTable('up');
-    } else if(event.key === 'Enter'){
+    } else if(event.key === 'Enter' && this.mdlProductos == true){
       event.preventDefault();
       if (this.currentRowIndex >= 0 && this.currentRowIndex < this.productos.length) {
         this.selectedProduct = this.productos[this.currentRowIndex];
