@@ -64,10 +64,6 @@
                 <option *ngFor="let pm of productos_medidas" value="{{pm.idProdMedida}}" >{{pm.nombreMedida}}</option>
             </select>
         </div>
-        <div [ngClass]="{'col-1': PagoConTarjeta, 'col-2': !PagoConTarjeta}">
-            <label class="form-label">Cantidad</label>
-            <input class="form-control" type="number" min="0" name="cantidad" #cantidad="ngModel" [(ngModel)]="productoVentag.cantidad" (change)="calculaSubtotalPP()">
-        </div>
         <div class="col-2">
             <label class="form-label">Precio</label>
                 <input class="offset-md-1 form-check-input" type="checkbox" pTooltip="Modificar precio" tooltipPosition="top" [(ngModel)]="isModificaPrecio" (ngModelChange)="habilitaInputPrecio($event)">
@@ -84,6 +80,10 @@
             </ng-template>
 
             <!-- <input class="form-control" type="number" min="{{productoVentag.precioMinimo}}" name="precio" #precio="ngModel" [(ngModel)]="productoVentag.precio" (change)="calculaSubtotalPP()" > -->
+        </div>
+        <div [ngClass]="{'col-1': PagoConTarjeta, 'col-2': !PagoConTarjeta}">
+            <label class="form-label">Cantidad</label>
+            <input class="form-control" type="number" min="0" name="cantidad" #cantidad="ngModel" [(ngModel)]="productoVentag.cantidad" (change)="calculaSubtotalPP()">
         </div>
         <div class="col-2" *ngIf="PagoConTarjeta">
             <label class="form-label" for="">Comision</label>
