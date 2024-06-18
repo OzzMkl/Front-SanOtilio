@@ -761,9 +761,9 @@ export class ProductoAgregarComponent implements OnInit, OnDestroy {
     let btnType = btn.getAttribute('data-type');
     //Obtemos la longitud del array de precios activos
     let currLengthCheksPrice = this.arrChecksPrecios.length;
-    
+
     //Verificamos que el atributo disabled no este en true, Que exista el atributo notab y no sea igual a 1
-    if(btn.getAttribute('ng-reflect-disabled') == 'false' && btnNoTab != null && btnNoTab != '1'){
+    if(!btn.disabled && btnNoTab != null && btnNoTab != '1'){
       //Revisamos que el por lo menos haya un precio activo
       if(currLengthCheksPrice > 0){
         //Convertimos la porpiedad del notab a numero
