@@ -1,10 +1,8 @@
 <p-toast></p-toast>
 <app-loading-spinner [isLoading]="isLoadingGeneral"></app-loading-spinner>
-<div class="container">
+<div class="container-fluid">
     <h3 class="text-center">Buscar Productos</h3>
-</div>
-    <!--CUADRO DE BUSQUEDA-->
-    <div class="container-fluid">
+    <div class="me-2">
         <p-dropdown 
             [options]="optionsSelect"
             [(ngModel)]="selectedOpt"
@@ -16,116 +14,79 @@
         ></p-dropdown>
         <input type="text" pInputText [(ngModel)]="valSearch" [style]="{ width: '75%' }" (ngModelChange)="onSearch()">
     </div>
-    <!--FIN CUADRO DE BUSQUEDA-->
-    <br>
-    <!-- SPINNER  -->
-    <div class="text-center text-primary" *ngIf="isLoading">
-        <div class="spinner-border" role="status" >
-            <span class="visually-hidden">Loading...</span>
-          </div>
-    </div>
-    <!-- FIN SPINNER  -->
-    <!-- CONTENEDOR TABLE -->
-    <div class="container-fluid" *ngIf="!isLoading">
-        
-        <!-- TABLA -->
-        <table class="table table-sm table-dark table-hover" >
-            <thead>
-                <tr>
-                    <th scope="col">CLAVE EXTERNA</th>
-                    <th scope="col">CODIGO BARRAS</th>
-                    <th scope="col">DESCRIPCION</th>
-                    <th scope="col">MARCA</th>
-                    <th scope="col">DEPARTAMENTO</th> 
-                    <th scope="col">ACCION</th>
-                </tr>
-            </thead>
-            <tbody *ngFor="let pr of productos | paginate: { itemsPerPage:itemsPerPage, currentPage: pageActual, totalItems:totalPages }">
-                <tr (click)="mostrarPrecios(pr.idProducto)" >
-                    <th scope="row" >{{pr.claveEx}}</th>
-                    <th scope="row">{{pr.cbarras}}</th>
-                    <th scope="row">{{pr.descripcion}}</th>
-                    <th scope="row">{{pr.nombreMarca}}</th>
-                    <th scope="row">{{pr.nombreDep}}</th> 
-                    <th scope="row"> 
-                        <button pButton class="p-button-rounded p-button-text  p-button-icon-mov" icon="pi pi-cog text-white" (click)="menu.toggle($event)">
-                        </button>
-                        <p-menu #menu id="config_menu" [model]="menuItems" [popup]="true"></p-menu>
-                    </th>
-                </tr>
-            </tbody>
-        </table>
-        <!-- FIN TABLA -->
-        <!-- CONTROLES DE PAGINACION -->
-        <pagination-controls 
-            (pageChange)="onPageChange($event)"
-            previousLabel="Anterior"
-            nextLabel="Siguiente" >
-        </pagination-controls>
-        <!-- FIN CONTROLES DE PAGINACION -->
-    </div>
-
-    <!-- tabla precios por medida -->
-    <div class="container" *ngIf="productosMedida.length > 0">
-        <!-- SPINNER  -->
-        <div class="text-center text-primary" *ngIf="isLoadingPrecios">
-            <div class="spinner-border" role="status" >
-                <span class="visually-hidden">Loading...</span>
-            </div>
+    <p-table
+        [value]="productos"
+        styleClass="p-datatable-sm mt-3"
+        [scrollable]="false" 
+        scrollHeight="43vh" 
+        [resizableColumns]="true"
+        selectionMode="single"
+        [(selection)]="selectedProduct"
+        dataKey="idProducto"
+        (onRowSelect)="onRowSelect($event)"
+        [style]="{'font-size':'small', 'color':'black'}"
+        [(contextMenuSelection)]="selectedProduct" 
+        [contextMenu]="contextMenu">
+        <ng-template pTemplate="header">
+            <tr>
+                <th>Clave externa</th>
+                <th>Codigo de barras</th>
+                <th>Descripcion</th>
+                <th>Marca</th>
+                <th>Departamento</th>
+                <!-- <th>Accion</th> -->
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-producto>
+            <tr [pSelectableRow]="producto" [pContextMenuRow]="selectedProduct"  (contextmenu)="setIdProductoMenu(producto.idProducto)">
+                <td class="col-xsmall">{{ producto.claveEx }}</td>
+                <td class="col-xsmall">{{ producto.cbarras }}</td>
+                <td class="col-large">{{ producto.descripcion }}</td>
+                <td class="col-xsmall">{{ producto.nombreMarca }}</td>
+                <td class="col-xsmall">{{ producto.nombreDep }}</td>
+                <!-- <td scope="col-xsmall text-center" [style]="{'padding':'auto','display':'flex','align-items':'center','justify-content':'center'}"> 
+                    <i class="pi pi-cog p-button-icon-mov" pRipple (click)="menu.toggle($event)"></i>
+                </td> -->
+            </tr>
+        </ng-template>
+    </p-table>
+    <!-- <p-menu #menu id="config_menu" [model]="menuItems" [popup]="true"></p-menu> -->
+    <p-contextMenu #contextMenu [model]="menuItems"></p-contextMenu>
+    <p-paginator
+        (onPageChange)="onPageChange($event)"        
+        [rows]="per_page" 
+        [totalRecords]="totalPages"
+        >
+    </p-paginator>
+    <div class="row">
+        <div *ngFor="let tabMed of existenciasPorMed" class="col-2">
+            <p-table
+                [value]="tabMed.precios"
+                selectionMode="single"
+                [(selection)]="selectedMedida"
+                styleClass="p-datatable-sm"
+                [style]="{'font-size':'small', 'color':'black'}"
+                >
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th class="col-small-med">{{tabMed.exisCal}}</th>
+                        <th class="col-small-med">{{tabMed.nombreMedida}}</th>
+                    </tr>
+                    <tr>
+                        <th class="col-small-med">Porcentaje</th>
+                        <th class="col-small-med">Precio</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-precios>
+                    <tr [pSelectableRow]="precios" >
+                        <td class="col-small">{{ precios.porcentaje | number:'1.2-2'}}</td>
+                        <td class="col-small">{{ precios.precio | currency:'MXN'}}</td>
+                    </tr>
+                </ng-template>
+            </p-table>
         </div>
-        <div class=" row justify-content-center" *ngIf="!isLoadingPrecios">
-            <div class="col-2">
-                <img src="{{url + 'productos/getImageProduc/' + this.imagenPM}}" [style]="{width: '100px'}">
-            </div>
-            <!-- TABLA DE PRECIOS -->
-            <div class="col-5 text-center">
-                <table class="table table-sm table-secondary">
-                    <thead>
-                        <tr>
-                            <th colspan="6"><h5 class="fw-bold">{{claveExt}}</h5></th>
-                        </tr>
-                        <tr>
-                            <th scope="col">MEDIDA</th>
-                            <th scope="col" *ngFor="let tblHead of tblHeaders">
-                                {{tblHead}}
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody *ngFor="let pm of productosMedida" >
-                        <tr>
-                            <th>{{pm.nombreMedida}}</th>
-                            <th [ngClass]="pm.precio1 ? '':'d-none'" >{{pm.precio1 | currency:'MXN'}}</th>
-                            <th [ngClass]="pm.precio2 ? '':'d-none'" >{{pm.precio2 | currency:'MXN'}}</th>
-                            <th [ngClass]="pm.precio3 ? '':'d-none'" >{{pm.precio3 | currency:'MXN'}}</th>
-                            <th [ngClass]="pm.precio4 ? '':'d-none'" >{{pm.precio4 | currency:'MXN'}}</th>
-                            <th [ngClass]="pm.precio5 ? '':'d-none'" >{{pm.precio5 | currency:'MXN'}}</th>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <!-- TABLA EXISTENCIA -->
-            <div class="col-auto text-center">
-                <table class="table table-sm table-secondary">
-                    <thead>
-                        <tr>
-                            <th colspan="2"><h5 class="fw-bold">{{claveExt}}</h5></th>
-                        </tr>
-                        <tr>
-                            <th>EXISTENCIA</th>
-                            <th>MEDIDA</th>
-                        </tr>
-                    </thead>
-                    <tbody *ngFor="let e of existenciasPorMed">
-                        <tr>
-                            <th scope="col">{{e.exisCal}}</th>
-                            <th scope="col">{{e.nombreMedida}}</th>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-        
     </div>
+</div>
         
     <!-- FIN CONTENEDOR TABLE -->
 <!-- Modal Actualizacion -->

@@ -32,6 +32,7 @@ import { PaginatorModule } from 'primeng/paginator';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { ChartModule } from 'primeng/chart';
+import { ContextMenuModule } from 'primeng/contextmenu';
 
 
 @NgModule({
@@ -67,6 +68,7 @@ import { ChartModule } from 'primeng/chart';
     OverlayPanelModule,
     RadioButtonModule,
     ChartModule,
+    ContextMenuModule,
   ],
   imports: [
     CommonModule,

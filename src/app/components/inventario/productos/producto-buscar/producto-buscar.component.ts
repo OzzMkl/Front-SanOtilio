@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewInit, HostListener } from '@angular/core';
 import { ProductoService } from 'src/app/services/producto.service';
 import { global } from 'src/app/services/global';
 import { Router } from '@angular/router';
@@ -23,7 +23,6 @@ export class ProductoBuscarComponent implements OnInit, OnDestroy, AfterViewInit
 
   fechasHistorial: any;
   //Spinners
-  public isLoading:boolean = false;//table
   public isLoadingPrecios:boolean = false;//mostrarPrecios
   public isLoadingGeneral:boolean = false;//selectedOptEdit
   //Servicios
@@ -33,13 +32,16 @@ export class ProductoBuscarComponent implements OnInit, OnDestroy, AfterViewInit
   optionsSelect!: selectBusqueda[];
   selectedOpt!: selectBusqueda;
   valSearch: string = '';
+  selectedProduct:any;
+  selectedMedida:any;
+  currentRowIndex: number = 0;
   public viewProducto?: Producto;
   public viewProductoMedidas?: Array<Productos_medidas_new>;
   public tblHeadersNUBE: Array<any> = [];
   public tblHeaders: Array<any> = [];
   public url:string = global.url;
   public productos: Array<any> = [];
-  public productosMedida: Array<any> = [];
+  // public productosMedida: Array<any> = [];
   public existenciasPorMed: Array<any> = [];
   public imagenPM: string = "1650558444no-image.png";
   public claveExt: string ='';
@@ -48,9 +50,9 @@ export class ProductoBuscarComponent implements OnInit, OnDestroy, AfterViewInit
   public arrHistorialProducto?: Array<any>;
   public arrHistorialPrecio: any=[];
   /**PAGINATOR */
-  public totalPages: any;
-  public itemsPerPage:number=0;
-  pageActual: number = 0;
+  public totalPages: number = 0;
+  public per_page: number = 100;
+  pageActual: number = 1;
   //PERMISOS
   public userPermisos:any = [];
   public mInv = this._modulosService.modsInventario();
@@ -141,10 +143,10 @@ export class ProductoBuscarComponent implements OnInit, OnDestroy, AfterViewInit
    * Servicio trae la informacion de los productos paginados por la api
    * Tambien busca la informacion
    */
-  getProductos(page:number = 1, type:number = 0, search:string = 'null',rows:number = 5){
+  getProductos(page:number = 1, type:number = 0, search:string = 'null',rows:number = 100){
 
     //mostramos el spinner
-    this.isLoading = true;
+    this.isLoadingGeneral = true;
 
     //ejecutamos el servicio
     this.sub_producto = this._productoService.getProductosNewIndex(page,type,search,rows).subscribe(
@@ -156,14 +158,15 @@ export class ProductoBuscarComponent implements OnInit, OnDestroy, AfterViewInit
 
           //navegacion paginacion
           this.totalPages = response.productos.total;
-          this.itemsPerPage = response.productos.per_page;
           this.pageActual = response.productos.current_page;
+          this.per_page = response.productos.per_page;
           
           //una vez terminado de cargar quitamos el spinner
-          this.isLoading = false;
+          this.isLoadingGeneral = false;
         }
       },
       error =>{
+        this.isLoadingGeneral = false
         console.log(error);
       }
     );
@@ -175,62 +178,20 @@ export class ProductoBuscarComponent implements OnInit, OnDestroy, AfterViewInit
    * Cambio de pagina
    */
   onPageChange(event:any) {
-    this.getProductos(event);
-  }
-
-  /**
-   * Recinimos el id y lo buscamos en el sewrvicio
-   * @param idProducto
-   * 
-   * retornamos la consulta con las medias e imagen del producto
-   */
-  mostrarPrecios(idProducto:number){
-    if(idProducto != this.idProductoMenu){
-      this.isLoadingPrecios = true;
-      this.idProductoMenu = idProducto;
-      this.tblHeaders = [];
-      this.sub_producto = this._productoService.searchProductoMedida(idProducto).subscribe(
-        response =>{
-          if(response.status == 'success'){
-            this.claveExt = response.Producto_cl;
-            this.productosMedida = response.productoMedida;
-            this.existenciasPorMed = response.existencia_por_med;
-            this.imagenPM = response.imagen ? response.imagen : "1650558444no-image.png";
-            //creamos lista de headers de la tabla de precios
-            for(let i = 1; i <= 5; i++){
-              const precioKey = `precio${i}`;
-              if(this.productosMedida[0][precioKey] != null){
-                this.tblHeaders.push(`P${i}`);
-              }
-            }
-
-            this.isLoadingPrecios = false;
-          }
-      }, error =>{
-        console.log(error);
-      });
-    }
+    this.pageActual = event.page + 1;
+    this.per_page = event.rows;
+    this.onSearch(event.page + 1, event.rows);
   }
 
   /**
    * Busqueda
    */
-  onSearch(){
+  onSearch(page: number = 1, rows: number = 100):void{
     if(this.selectedOpt){
       if(this.valSearch == "" || null){
-        this.getProductos();
+        this.getProductos(page,0,'null',rows);
       } else{
-        switch(this.selectedOpt.id){
-          case 1 : //ClaveExter
-            this.getProductos(1,this.selectedOpt.id,this.valSearch);
-            break;
-          case 2 ://Descripcion
-            this.getProductos(1,this.selectedOpt.id,this.valSearch);
-            break;
-          case 3 : //codigodebarras
-            this.getProductos(1,this.selectedOpt.id,this.valSearch);
-            break;
-        }
+        this.getProductos(page,this.selectedOpt.id,this.valSearch,rows);
       }
     } else{
       //cargamos mensaje
@@ -435,7 +396,81 @@ export class ProductoBuscarComponent implements OnInit, OnDestroy, AfterViewInit
     );
   }
 
+  @HostListener('window:keydown', ['$event'])
+  handleKeyboardEvent(event: KeyboardEvent) {
+    if (event.key === 'ArrowDown') {
+      this.navigateTable('down');
+    } else if (event.key === 'ArrowUp') {
+      this.navigateTable('up');
+    } else if(event.key === 'Enter'){
+      event.preventDefault();
+      if (this.currentRowIndex >= 0 && this.currentRowIndex < this.productos.length) {
+        this.selectedProduct = this.productos[this.currentRowIndex];
+        // this.onSelect();
+      }
+    }
+  }
+
+  navigateTable(direction: string) {
+    if (direction === 'down' && this.currentRowIndex < this.productos.length - 1) {
+      this.currentRowIndex++;
+    } else if (direction === 'up' && this.currentRowIndex > 0) {
+      this.currentRowIndex--;
+    }
+    this.selectedProduct = this.productos[this.currentRowIndex];
+    this.scrollToRow(this.currentRowIndex);
+    if(this.selectedProduct){
+      this.onSelectionChange();
+    }
+  }
+
+  scrollToRow(index: number) {
+    const row = document.querySelector(`.ui-table-scrollable-body table tbody tr:nth-child(${index + 1})`);
+    if (row) {
+      row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }
+
+  onRowSelect(event: any): void {
+    const selectedVentaId = event.data.idProducto;
+    this.currentRowIndex = this.productos.findIndex(prod => prod.idProducto === selectedVentaId);
+
+    if(event.originalEvent.type === 'click'){
+      this.onSelectionChange();
+    }
+  }
+
+  onSelectionChange() {
+      //Mostramos spinner
+      this.isLoadingGeneral = true;
+      this.idProductoMenu = this.selectedProduct.idProducto;
+      this.tblHeaders = [];
+
+      this._productoService.searchProductoMedida(this.selectedProduct.idProducto).subscribe(
+        response =>{
+          // console.log(response);
+          if(response.code == 200 && response.status == 'success'){
+            //Asignamos valores
+            this.existenciasPorMed = response.existencia_por_med;
+            // this.productosMedida = response.productoMedida;
+            this.imagenPM = response.imagen ? response.imagen : "1650558444no-image.png";
+            
+            //Ocultamos spinner
+            this.isLoadingGeneral = false;
+          }
+        }, error =>{
+          this.isLoadingGeneral = false;
+          console.log(error);
+        }
+      )
+    
+  }
+
   ngOnDestroy(): void {
     this.sub_producto?.unsubscribe();
+  }
+
+  setIdProductoMenu(idProducto:number){
+    this.idProductoMenu = idProducto;
   }
 }
