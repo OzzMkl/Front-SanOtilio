@@ -8,7 +8,7 @@
             <div class="col-4">
                 <label class="form-label" for="">Buscar cliente</label>
                     <div class="input-group">
-                        <span class="input-group-addon" id="sizing-addon2"><i class="bi-search" style="font-size: 1.5rem; color: black; left: 0;" (click)="open(content,0)"></i></span>
+                        <span class="input-group-addon" id="sizing-addon2"><i class="bi-search" style="font-size: 1.5rem; color: black; left: 0;" (click)="openMdlClientes()"></i></span>
                         <input class="form-control" type="text" name="nomreCliente" #nombreCliente="ngModel" [(ngModel)]="ventag.nombreCliente" readonly >
                     </div>
             </div>
@@ -39,7 +39,7 @@
             <div class="col">
                 <label class="form-label">Direccion del cliente</label>
                 <!-- <input type="text" class="form-control" value="{{ventag.dirCliente}}" readonly> -->
-                <textarea class="form-control" value="{{ventag.cdireccion}}" readonly></textarea>
+                <textarea class="form-control" rows="1" value="{{ventag.cdireccion}}" readonly></textarea>
             </div>
         </div>
     </div>
@@ -231,57 +231,6 @@
 </div>
 
 <p-confirmDialog [style]="{width: '50vw'}" [baseZIndex]="10000" acceptLabel="Si" rejectButtonStyleClass="p-button-text"></p-confirmDialog>
-
-<!-- Modal buscar clientes-->
-<ng-template #content let-modal>
-    <div class="modal-header">
-      <h4 class="modal-title" id="modal-basic-title">Buscar cliente</h4>
-      <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
-    </div>
-    <div class="modal-body">
-            <div class="col">
-                <input type="search" class="form-control" name="nombreCliente" placeholder="buscar por nombre" (keyup)="searchNombreClienteS($event)">
-            </div>
-            <div class="text-center text-primary" *ngIf="isLoadingClientes">
-                <!-- <div class="spinner-border" role="status" >
-                    <span class="visually-hidden">Loading...</span>
-                  </div> -->
-                  <br>
-                  <p-progressSpinner [style]="{width: '50px', height: '50px'}" strokeWidth="4"></p-progressSpinner>
-            </div>
-            <br>
-            <div class="table-responsive" *ngIf="!isLoadingClientes">
-                <table class="table table-sm table-dark table-hover">
-                    <thead>
-                        <tr>
-                            <th scope="col">NOMBRE</th>
-                            <th scope="col">RFC</th>
-                            <th scope="col">TELEFONO</th>
-                            <th scope="col">TIPO CLIENTE</th>
-                        </tr>
-                    </thead>
-                    <tbody *ngFor="let c of clientes | paginate:{id:'pagCliente',itemsPerPage: itemsPerPage, currentPage: pageActual, totalItems:totalPagesClientes}">
-                        <tr (click)="seleccionarCliente(c.idCliente)" (click)="modal.dismiss('Cross click')">
-                            <th scope="row">{{ c.nombreCliente.length > 40 ? (c.nombreCliente | slice:0:25) + '...' : c.nombreCliente }}</th>
-                            
-                            <th scope="row">{{c.rfc}}</th>
-                            <th scope="row">{{c.telefono}}</th>
-                            <th scope="row">{{c.nombreTipoC}}</th>
-                        </tr>
-                    </tbody>
-                </table>
-                <pagination-controls 
-                        id="pagCliente" 
-                        (pageChange)="getPageClientes(pageActual = $event)"
-                        previousLabel="Anterior"
-                        nextLabel="Siguiente" >
-                </pagination-controls>
-            </div>
-    </div>
-    <!-- <div class="modal-footer">
-      <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Guardar</button>
-    </div> -->
-</ng-template>
 
 <!-- Modal agregar cliente-->
 <ng-template #content2 let-modal>
@@ -548,4 +497,6 @@
 
 <!-- Nuevo modal productos -->
 <app-modal-productos></app-modal-productos>
+<!-- Nuevo modal productos -->
+<app-modal-clientes></app-modal-clientes>
 

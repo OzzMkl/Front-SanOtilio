@@ -1,4 +1,4 @@
 export interface dialogOptionsClientes {
-    idCliente: number;
+    idCliente?: number;
 
   }

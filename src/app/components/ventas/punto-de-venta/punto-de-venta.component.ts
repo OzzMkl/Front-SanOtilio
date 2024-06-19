@@ -11,6 +11,7 @@ import { ModulosService } from 'src/app/services/modulos.service';
 import { global } from 'src/app/services/global';
 import { SharedMessage } from 'src/app/services/sharedMessage';
 import { MdlProductoService } from 'src/app/services/mdlProductoService';
+import { MdlClienteService } from 'src/app/services/mdlClienteService';
 //modelos
 import { Ventag } from 'src/app/models/ventag';
 import { Cliente } from 'src/app/models/cliente';
@@ -22,6 +23,7 @@ import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { MessageService, ConfirmationService, ConfirmEventType } from 'primeng/api';
 import { handleRedirect } from 'src/app/utils/fnUtils';
 import { dialogOptionsProductos } from 'src/app/models/interfaces/dialogOptions-productos';
+import { dialogOptionsClientes } from 'src/app/models/interfaces/dialogOptions-clientes';
 
 @Component({
   selector: 'app-punto-de-venta',
@@ -108,6 +110,7 @@ export class PuntoDeVentaComponent implements OnInit, OnDestroy {
   //input de busqueda claveex
   public idProducto?: number;
   public dialogOpt?: dialogOptionsProductos;
+  public dialogOptCliente?: dialogOptionsClientes;
 
   selectedValue: any;
   //subscriptions
@@ -131,6 +134,7 @@ export class PuntoDeVentaComponent implements OnInit, OnDestroy {
     private _sharedMessage: SharedMessage,
     private _route: ActivatedRoute,
     private _mdlProductoService: MdlProductoService,
+    private _mdlClientesService: MdlClienteService,
     ) {
     //declaramos modelos
     this.ventag = new Ventag(0,0,1,'',1,0,null,0,0,0,0,'','',0);
@@ -139,10 +143,17 @@ export class PuntoDeVentaComponent implements OnInit, OnDestroy {
     this.nuevaDir = new Cdireccion (0,'MEXICO','PUEBLA','TEHUACAN','','','','','',null,'',null,1,'');
     this.productoVentag = new Producto_ventasg(0,0,'',0,0,0,0,0,'','',0,0,true,0,false);
     this.lista_productoVentag = [];
+
     this.sub_producto = this._mdlProductoService.selectedValue$.subscribe(
       value =>{
         this.seleccionarProducto(value.idProducto);
       });
+
+    this.sub_cliente = _mdlClientesService.selectedValue$.subscribe(
+      value => {
+        this.seleccionarCliente(value.idCliente)
+      }
+    )
    }
 
   ngOnInit(): void { 
@@ -166,97 +177,6 @@ export class PuntoDeVentaComponent implements OnInit, OnDestroy {
         console.log(error);
       }
     );
-  }
-
-  /**
-   * Trae la informacion de los clientes
-   */
-  getClientes(){
-    //iniciamos spinner
-    this.isLoadingClientes = true;
-    //ejecutamosservicio
-    this.sub_cliente = this._clienteService.getAllClientes().subscribe( 
-      response =>{
-        if(response.status == 'success'){
-
-          this.clientes = response.clientes.data;
-          //console.log(this.clientes);
-
-          //navegacion de paginacion
-          this.totalPagesClientes = response.clientes.total;
-          this.itemsPerPage = response.clientes.per_page;
-          this.pageActual = response.clientes.current_page;
-          this.next_page = response.clientes.next_page_url;
-          this.path = response.clientes.path;
-
-          //una vez terminado de cargar quitamos el spinner
-          this.isLoadingClientes = false;
-        }
-      },error =>{
-      console.log(error);
-    });
-  }
-
-   /**
-   * 
-   * @param page
-   * Es el numero de pagina a la cual se va acceder
-   * @description
-   * De acuerdo al numero de pagina recibido lo concatenamos a
-   * la direccion para "ir" a esa direccion y traer la informacion
-   * no retornamos ya que solo actualizamos las variables a mostrar
-   */
-  getPageClientes(page:number){
-    //iniciamos spinner
-    this.isLoadingClientes = true;
-
-    this.sub_whatever = this._http.get(this.path+'?page='+page).subscribe(
-      (response:any) => {
-        //console.log(response);
-        this.clientes = response.clientes.data;
-        //navegacion paginacion
-        this.totalPagesClientes = response.clientes.total;
-        this.itemsPerPage = response.clientes.per_page;
-        this.pageActual = response.clientes.current_page;
-        this.next_page = response.clientes.next_page_url;
-        this.path = response.clientes.path
-
-        //una vez terminado quitamos el spinner
-        this.isLoadingClientes=false;
-      })
-  }
-
-  /**
-   * Buscar clientes por nombre
-   * @param nombreCliente 
-   */
-  searchNombreClienteS(nombreCliente: any){
-    //iniciamos spinner
-    this.isLoadingClientes = true;
-    if(nombreCliente.target.value == ''){
-      this.getClientes();
-    } else {
-      //declaramos la palabra
-      let nomCliente = nombreCliente.target.value;
-
-      //generamos conulta
-      this.sub_cliente = this._clienteService.searchNombreCliente(nomCliente).subscribe(
-        response => {
-          if(response.status == 'success'){
-            this.clientes = response.clientes.data;
-            
-            //navegacion de paginacion
-            this.totalPagesClientes = response.clientes.total;
-            this.itemsPerPage = response.clientes.per_page;
-            this.pageActual = response.clientes.current_page;
-            this.next_page = response.clientes.next_page_url;
-            this.path = response.clientes.path;
-
-            //una vez terminado de cargar quitamos el spinner
-            this.isLoadingClientes = false;
-          }
-        } );
-    }
   }
 
   /**
@@ -679,7 +599,6 @@ export class PuntoDeVentaComponent implements OnInit, OnDestroy {
 
   // Metodos del  modal
   open(content:any,type:number) {//abrir modal aplica para la mayoria de los modales
-    this.getClientes();
     if(type == 1){
       this.getTipocliente();
     }
@@ -717,7 +636,7 @@ export class PuntoDeVentaComponent implements OnInit, OnDestroy {
   modalSeEnvia(content:any){//abre modal para seleccionaar direccion del cliente
     //si el chek de se envia es true abrimos modal
     if(this.seEnvia == true){
-      //this.getClientes();
+      
       this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title', size: 'xl'}).result.then((result) => {
         this.closeResult = `Closed with: ${result}`;
       }, (reason) => {
@@ -1116,6 +1035,17 @@ export class PuntoDeVentaComponent implements OnInit, OnDestroy {
         console.log(error);
       }
     );
+  }
+
+  /**
+  * @description
+  * Funcion que abre el modal de clientes del componente externo
+  */
+  openMdlClientes():void{
+    this.dialogOptCliente = {
+      idCliente: 0
+    };
+    this._mdlClientesService.openMdlProductosDialog(this.dialogOptCliente);
   }
 
   /**

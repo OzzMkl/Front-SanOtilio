@@ -60,11 +60,6 @@ export class ModalProductosComponent implements OnInit, OnDestroy {
   isAgregarProducto: boolean = false;
   @ViewChild('panelMedidasMultiSuc') panelMedidasMultiSuc!: OverlayPanel;
 
-  timeoutId: any;
-  isKeyPressed: boolean = false;
-  stopMovement: boolean = false;
-  movementStartTime?: number;
-
 
   //Subscriptions
   private sub_mdlProductoService: Subscription = new Subscription();
@@ -211,8 +206,7 @@ export class ModalProductosComponent implements OnInit, OnDestroy {
     this.pageActual = event.page + 1;
     this.per_page = event.rows;
     this.onSearch(event.page + 1, event.rows);
-  }
-  
+  } 
 
   /**
    * 
