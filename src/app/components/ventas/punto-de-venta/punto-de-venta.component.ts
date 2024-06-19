@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, TemplateRef, OnDestroy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router, ActivatedRoute } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 //servicio
 import { ClientesService } from 'src/app/services/clientes.service';
 import { ProductoService } from 'src/app/services/producto.service';
@@ -24,6 +24,7 @@ import { MessageService, ConfirmationService, ConfirmEventType } from 'primeng/a
 import { handleRedirect } from 'src/app/utils/fnUtils';
 import { dialogOptionsProductos } from 'src/app/models/interfaces/dialogOptions-productos';
 import { dialogOptionsClientes } from 'src/app/models/interfaces/dialogOptions-clientes';
+import { debounceTime } from 'rxjs/operators';
 
 @Component({
   selector: 'app-punto-de-venta',
@@ -118,6 +119,8 @@ export class PuntoDeVentaComponent implements OnInit, OnDestroy {
   private sub_whatever?: Subscription;
   private sub_cliente?: Subscription;
   private sub_venta?: Subscription;
+  private sub_searchCliente?: Subscription;
+  private searchTerms = new Subject<string>();
 
   constructor( 
     //declaramos servicios
@@ -158,13 +161,22 @@ export class PuntoDeVentaComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void { 
     this.loadUser();
+
     this.sub_whatever = this._sharedMessage.messages$.subscribe(
       messages =>{
         if(messages){
           this.messageService.add(messages[0]);
         }
       }
-    )
+    );
+
+    this.sub_searchCliente = this.searchTerms.pipe(
+      debounceTime(300)
+    ).subscribe( term =>{
+      if(term.length >= 3){
+        this.openMdlClientes();
+      }
+    });
   }
 
   getTiposVentas(){
@@ -1043,9 +1055,14 @@ export class PuntoDeVentaComponent implements OnInit, OnDestroy {
   */
   openMdlClientes():void{
     this.dialogOptCliente = {
-      idCliente: 0
+      idCliente: 0,
+      search: this.ventag.nombreCliente,
     };
     this._mdlClientesService.openMdlProductosDialog(this.dialogOptCliente);
+  }
+
+  checkInputLength():void{
+    this.searchTerms.next(this.ventag.nombreCliente);
   }
 
   /**
@@ -1057,5 +1074,6 @@ export class PuntoDeVentaComponent implements OnInit, OnDestroy {
     this.sub_whatever?.unsubscribe();
     this.sub_cliente?.unsubscribe();
     this.sub_venta?.unsubscribe();
+    this.sub_searchCliente?.unsubscribe();
   }
 }

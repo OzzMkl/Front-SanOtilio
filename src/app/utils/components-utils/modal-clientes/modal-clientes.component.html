@@ -21,7 +21,7 @@
                 placeholder="Selecciona una opcion"
                 (ngModelChange)="onSearch()"
             ></p-dropdown>
-            <input type="text" pInputText [(ngModel)]="valSearch" [style]="{ width: '50%' }" (ngModelChange)="onSearch()">
+            <input type="text" pInputText [(ngModel)]="valSearch" [style]="{ width: '50%' }" (ngModelChange)="onSearch()" autocomplete="off" autofocus>
         </div>
     </ng-template>
     <p-table

@@ -9,7 +9,7 @@
                 <label class="form-label" for="">Buscar cliente</label>
                     <div class="input-group">
                         <span class="input-group-addon" id="sizing-addon2"><i class="bi-search" style="font-size: 1.5rem; color: black; left: 0;" (click)="openMdlClientes()"></i></span>
-                        <input class="form-control" type="text" name="nomreCliente" #nombreCliente="ngModel" [(ngModel)]="ventag.nombreCliente" readonly >
+                        <input class="form-control" type="text" name="nomreCliente" #nombreCliente="ngModel" [(ngModel)]="ventag.nombreCliente" autocomplete="off" (ngModelChange)="checkInputLength()">
                     </div>
             </div>
             <div class="col-1">

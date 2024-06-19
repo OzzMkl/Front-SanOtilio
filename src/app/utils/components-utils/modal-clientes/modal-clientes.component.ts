@@ -45,8 +45,9 @@ export class ModalClientesComponent implements OnInit, OnDestroy {
     this.sub_mdlClienteService = this._mdlClienteService.openMdlClientesDialog$.subscribe(
       (dialogOptions: dialogOptionsClientes) =>{
         this.mdlClientes = true;
+        this.valSearch = dialogOptions.search ?? '';
         this.setOptionsSelect();
-        this.getClientes();
+        this.getClientes(1,1,this.valSearch);
       });
   }
 
