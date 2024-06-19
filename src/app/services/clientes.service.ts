@@ -22,6 +22,14 @@ export class ClientesService {
     return this._http.get(this.url+'clientes/index', {headers:this.headers} );
   }
 
+getClientesNewIndex(page:number, type:number, search: string):Observable<any>{
+  return this._http.get(this.url+
+                        'clientes/index'+
+                        '?search='+search+
+                        '&type='+type+
+                        '&page='+page, {headers:this.headers} );
+}
+
  getTipocliente():Observable<any> {
   return this._http.get(this.url+'clientes/indexTipocliente', {headers:this.headers} );
  }
