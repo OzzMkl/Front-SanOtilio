@@ -62,3 +62,18 @@
   padding: 1px !important;
 }
 
+.search-container {
+  display: flex;
+  flex-grow: 1; /* Allow the container to grow */
+  flex-basis: 0; /* Allow the container to take up the remaining space */
+  align-items: center; /* Align items vertically center */
+}
+
+
+.fixed-header {
+  position: sticky;
+  top: 0;
+  background-color: white;
+  z-index: 10;
+}
+
