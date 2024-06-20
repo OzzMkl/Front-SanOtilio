@@ -255,7 +255,7 @@ export class CompraEditarComponent implements OnInit {
 
   /**Servicios */
     getProvee(){
-      this._proveedorService.getProveedores().subscribe(
+      this._proveedorService.getProveedores(1,'',[29],1).subscribe(
         response => {
           if(response.status == 'success'){
             this.proveedoresLista = response.proveedores;

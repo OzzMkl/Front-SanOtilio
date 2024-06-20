@@ -20,8 +20,15 @@ export class ProveedorService{
         let params = 'json='+json;
         return this._http.post(this.url+'proveedor/register',params, {headers:this.headers} );
     }
-    getProveedores():Observable<any>{
-        return this._http.get(this.url+'proveedor/index', {headers:this.headers} );
+    getProveedores(type:number, search:string, status:Array<any>, page:number):Observable<any>{
+        return this._http.get(this.url+
+                                'proveedor/index'+
+                                '?search='+search+
+                                '&type='+type+
+                                '&status='+status+
+                                '&page='+page,
+                                {headers:this.headers} 
+                            );
     }
     getProveedoresSelect():Observable<any>{
         return this._http.get(this.url+'proveedor/ObtenerLista', {headers:this.headers} );

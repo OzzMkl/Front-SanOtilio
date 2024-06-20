@@ -89,11 +89,11 @@ export class ProveedorBuscarComponent implements OnInit {
   /**
    * Lista de proveedores habilidatos
    */
-  getProve(){
+  getProve(page:number = 1, type:number = 1, search:string = '', status:Array<any> = [29]){
     //mostramos el spinner
     this.isLoading = true;
     //ejecutamas servicio
-    this.getProveedorSub = this._proveedorService.getProveedores().subscribe(
+    this.getProveedorSub = this._proveedorService.getProveedores(type,search,status,page).subscribe(
       response =>{
         if(response.status == 'success'){
 
