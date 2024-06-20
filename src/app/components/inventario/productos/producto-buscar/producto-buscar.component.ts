@@ -130,7 +130,7 @@ export class ProductoBuscarComponent implements OnInit, OnDestroy, AfterViewInit
       {id:3, name:'Codigo de barras'},
     ];
     //Seleccionamos por defecto la primera opcion
-    this.selectedOpt = this.optionsSelect[0];
+    this.selectedOpt = this.optionsSelect[1];
   }
 
   /**
@@ -171,6 +171,7 @@ export class ProductoBuscarComponent implements OnInit, OnDestroy, AfterViewInit
       }
     );
   }
+
   /**
    * 
    * @param event 
@@ -202,6 +203,7 @@ export class ProductoBuscarComponent implements OnInit, OnDestroy, AfterViewInit
       });
     }
   }
+
   /**
    * @description
    * Agrega los elementos al menu deacuerdo a los permisos del usuario
