@@ -1,19 +1,3 @@
-/**
- *  @fileoverview Logica del componente proveedor-buscar
- *                muestra campo para buscar proveedores
- *                muestra tabla con los proveedores habilitados paginados
- * 
- *  @version 1.0
- * 
- *  @autor Oziel pacheco<ozielpacheco.m@gmail.com>
- *  @copyright Materiales San Otilio
- * 
- *  @History
- * 
- *  -Primera version escrita por Oziel Pacheco
- *  -Se agrega la paginacion (Oziel - 23-02-2022)
- * 
- */
 import { Component, OnInit } from '@angular/core';
 import { HttpClient} from '@angular/common/http';
 import { Router} from '@angular/router';
@@ -24,6 +8,7 @@ import { EmpleadoService } from 'src/app/services/empleado.service';
 import { ModulosService } from 'src/app/services/modulos.service';
 //primeng
 import { MessageService } from 'primeng/api';
+import { selectBusqueda } from 'src/app/models/interfaces/selectBusqueda';
 
 @Component({
   selector: 'app-proveedor-buscar',
@@ -32,9 +17,17 @@ import { MessageService } from 'primeng/api';
   providers: [ProveedorService,EmpleadoService, MessageService]
 })
 export class ProveedorBuscarComponent implements OnInit {
+
+  //Spinner
+  public isLoadingGeneral: boolean = false;
  
   //Variable donde almacenaremos la data del api
   public proveedores: Array<any> = [];
+  optionsSelect!: selectBusqueda[];
+  optionsSelectStatus!: selectBusqueda[];
+  selectedOpt!: selectBusqueda;
+  selectedOptStatus!: selectBusqueda;
+  valSearch: string = '';
   /**PAGINATOR */
   public totalPages: any;
   public path: any;
@@ -83,13 +76,34 @@ export class ProveedorBuscarComponent implements OnInit {
           },1000);
         } else{
           this.getProve();
+          this.setOptionsSelect();
         }
+  }
+
+  /**
+  * @description
+  * Carga el array a mostrar del dropdown de busqueda
+  */
+  setOptionsSelect(){
+    this.optionsSelect = [
+      {id:1, name:'Nombre'},
+      {id:2, name:'RFC'}
+    ];
+    this.optionsSelectStatus = [
+      {id:1, name:'Mostrar activos e incativos', valueExtra: [55,56]},
+      {id:2, name:'Mosotrar solo activos', valueExtra: [55]},
+      {id:3, name:'Mostrar solo inactivos', valueExtra: [56]},
+    ];
+
+    //Seleccionamos por defecto la primera opcion
+    this.selectedOpt = this.optionsSelect[0];
+    this.selectedOptStatus = this.optionsSelectStatus[1];
   }
 
   /**
    * Lista de proveedores habilidatos
    */
-  getProve(page:number = 1, type:number = 1, search:string = '', status:Array<any> = [29]){
+  getProve(page:number = 1, type:number = 1, search:string = '', status:Array<any> = [55],rows:number = 100){
     //mostramos el spinner
     this.isLoading = true;
     //ejecutamas servicio
@@ -117,6 +131,26 @@ export class ProveedorBuscarComponent implements OnInit {
         console.log(error);
       }
     );
+  }
+
+  /**
+  * Busqueda
+  */
+  onSearch(page: number = 1, rows: number = 100):void{
+    if(this.selectedOpt && this.selectedOptStatus){
+      if(this.valSearch == "" || null){
+        this.getProve(page,1,'',this.selectedOptStatus.valueExtra,rows);
+      } else{
+        this.getProve(page,this.selectedOpt.id,this.valSearch,this.selectedOptStatus.valueExtra,rows);
+      }
+    } else{
+      //cargamos mensaje
+      this.messageService.add({
+        severity:'warn', 
+        summary:'Alerta', 
+        detail:'Favor de seleccionar una opcion para buscar'
+      });
+    }
   }
 
   /**

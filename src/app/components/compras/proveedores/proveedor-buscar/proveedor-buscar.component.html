@@ -1,7 +1,5 @@
 <p-toast></p-toast>
-<div class="container">
-    <h3 class="text-center">Buscar Proveedores</h3>
-</div>
+<app-loading-spinner [isLoading]="isLoadingGeneral"></app-loading-spinner>
 <div class="container-fluid">
     <div  *ngIf="proveedores">
         <!--CUADRO DE BUSQUEDA-->
@@ -20,15 +18,6 @@
             </div>
         </div>
         <br>
-
-        <!-- SPINNER  -->
-        <div class="text-center text-primary" *ngIf="isLoading">
-            <div class="spinner-border" role="status" >
-                <span class="visually-hidden">Loading...</span>
-            </div>
-        </div>
-        <!-- FIN SPINNER  -->
-
         <!--  -->
         <table class="table table-dark table-hover" *ngIf="!isLoading">
             <thead>
@@ -65,4 +54,63 @@
                 nextLabel="Siguiente" >
         </pagination-controls>
     </div>
+</div>
+
+<div class="container-fluid">
+    <h3 class="text-center">Buscar Proveedores</h3>
+    <div class="me-2">
+        <p-dropdown 
+            [options]="optionsSelect"
+            [(ngModel)]="selectedOpt"
+            optionLabel="name"
+            [showClear]="true"
+            placeholder="Selecciona una opcion"
+            [style]="{ width: '15%' }"
+            (ngModelChange)="onSearch()"
+        ></p-dropdown>
+        <p-dropdown 
+            [options]="optionsSelectStatus"
+            [(ngModel)]="selectedOptStatus"
+            optionLabel="name"
+            [showClear]="true"
+            placeholder="Selecciona una opcion"
+            [style]="{ width: '15%' }"
+            (ngModelChange)="onSearch()"
+        ></p-dropdown>
+        <input type="text" pInputText [(ngModel)]="valSearch" [style]="{ width: '70%' }" (ngModelChange)="onSearch()">
+    </div>
+    <p-table
+        [value]="proveedores"
+        styleClass="p-datatable-sm mt-3"
+        [scrollable]="false" 
+        scrollHeight="43vh" 
+        [resizableColumns]="true"
+        selectionMode="single"
+    >
+    <ng-template pTemplate="header">
+        <tr>
+            <th>Nombre</th>
+            <th>RFC</th>
+            <th>Direccion</th>
+            <th>Telefono</th>
+            <th>Credito dias</th>
+            <th>Credito cantidad</th>
+            <th>Contacto</th>
+            <th>Telefono contacto</th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-proveedor>
+        <tr [pSelectableRow]="proveedor">
+            <td>{{proveedor.nombre}}</td>
+            <td>{{proveedor.rfc}}</td>
+            <td>{{proveedor.rfc }}</td>
+            <td>{{proveedor.telefono}}</td>
+            <td>{{proveedor.creditoDias }}</td>
+            <td>{{proveedor.creditoCantidad }}</td>
+            <td>{{proveedor.contactos[0].nombre }}</td>
+            <td>{{proveedor.contactos[0].telefono }}</td>
+        </tr>
+    </ng-template>
+
+    </p-table>
 </div>
