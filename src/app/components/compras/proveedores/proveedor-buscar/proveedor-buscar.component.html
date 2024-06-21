@@ -1,62 +1,6 @@
 <p-toast></p-toast>
 <app-loading-spinner [isLoading]="isLoadingGeneral"></app-loading-spinner>
 <div class="container-fluid">
-    <div  *ngIf="proveedores">
-        <!--CUADRO DE BUSQUEDA-->
-        <div class="input-group mb-2">
-            <div class="col-2">
-                <select class="form-select" name="tipoBusqueda" [(ngModel)]="tipoBusqueda">
-                    <option value="1">Nombre</option>
-                    <option value="2">RFC</option>
-                </select>
-            </div>
-            <div class="col" *ngIf="tipoBusqueda == 1">
-                <input type="search" class="form-control" name="searchNomProv" placeholder="Buscar ..." (keyup)="getSearchNombreProv($event)" >
-            </div>
-            <div class="col" *ngIf="tipoBusqueda == 2">
-                <input type="search" class="form-control" name="searchRfcProve" placeholder="Buscar ..." (keyup)="getSearchRfcProv($event)">
-            </div>
-        </div>
-        <br>
-        <!--  -->
-        <table class="table table-dark table-hover" *ngIf="!isLoading">
-            <thead>
-                <tr>
-                    <th scope="col">NOMBRE</th>
-                    <th scope="col">RFC</th>
-                    <th scope="col">DIRECCION</th>
-                    <th scope="col">TELEFONO</th>
-                    <th scope="col">CREDITO DIAS</th>
-                    <th scope="col">CREDITO CANTIDAD</th>
-                    <th scope="col">CONTACTO</th>
-                    <th scope="col">TELEFONO CONTACTO</th>
-                    <!-- <th scope="col">ACCION</th> -->
-            </tr>
-            </thead>
-            <tbody *ngFor="let p of proveedores | paginate:{id:'pagProveedor',itemsPerPage: itemsPerPage, currentPage: pageActual, totalItems:totalPages}">
-                <tr (click)="selected(p.idProveedor)">
-                    <th scope="row">{{p.nombre}}</th>
-                    <th scope="row">{{p.rfc}}</th>
-                    <th scope="row">{{p.estado}} {{p.ciudad}} {{p.cpostal}} {{p.colonia}} {{p.calle}} {{p.numero}}</th>
-                    <th scope="row">{{p.telefono}}</th>
-                    <th scope="row">{{p.creditoDias}}</th>
-                    <th scope="row">{{p.creditoCantidad | currency:'MXN'}}</th>
-                    <th scope="row">{{p.nombreCon}}</th>
-                    <th scope="row">{{p.telefonoCon}}</th>
-                    <!-- <th scope="row"> <input type="button" value="Ver" [routerLink]="['../proveedorVer',p.idProveedor]" class="btn btn-warning"/></th> -->
-                </tr>
-            </tbody>
-        </table>
-        <pagination-controls 
-                id="pagProveedor" 
-                (pageChange)="getPage(pageActual = $event)"
-                previousLabel="Anterior"
-                nextLabel="Siguiente" >
-        </pagination-controls>
-    </div>
-</div>
-
-<div class="container-fluid">
     <h3 class="text-center">Buscar Proveedores</h3>
     <div class="me-2">
         <p-dropdown 
@@ -65,7 +9,7 @@
             optionLabel="name"
             [showClear]="true"
             placeholder="Selecciona una opcion"
-            [style]="{ width: '15%' }"
+            
             (ngModelChange)="onSearch()"
         ></p-dropdown>
         <p-dropdown 
@@ -74,10 +18,9 @@
             optionLabel="name"
             [showClear]="true"
             placeholder="Selecciona una opcion"
-            [style]="{ width: '15%' }"
             (ngModelChange)="onSearch()"
         ></p-dropdown>
-        <input type="text" pInputText [(ngModel)]="valSearch" [style]="{ width: '70%' }" (ngModelChange)="onSearch()">
+        <input type="text" pInputText [(ngModel)]="valSearch" [style]="{ 'min-width': '50%' }" (ngModelChange)="onSearch()">
     </div>
     <p-table
         [value]="proveedores"
@@ -86,31 +29,33 @@
         scrollHeight="43vh" 
         [resizableColumns]="true"
         selectionMode="single"
-    >
-    <ng-template pTemplate="header">
-        <tr>
-            <th>Nombre</th>
-            <th>RFC</th>
-            <th>Direccion</th>
-            <th>Telefono</th>
-            <th>Credito dias</th>
-            <th>Credito cantidad</th>
-            <th>Contacto</th>
-            <th>Telefono contacto</th>
-        </tr>
-    </ng-template>
-    <ng-template pTemplate="body" let-proveedor>
-        <tr [pSelectableRow]="proveedor">
-            <td>{{proveedor.nombre}}</td>
-            <td>{{proveedor.rfc}}</td>
-            <td>{{proveedor.rfc }}</td>
-            <td>{{proveedor.telefono}}</td>
-            <td>{{proveedor.creditoDias }}</td>
-            <td>{{proveedor.creditoCantidad }}</td>
-            <td>{{proveedor.contactos[0].nombre }}</td>
-            <td>{{proveedor.contactos[0].telefono }}</td>
-        </tr>
-    </ng-template>
-
+        [(selection)]="selectedProveedor"
+        dataKey="idProveedor"
+        (onRowSelect)="onRowSelect($event)"
+        [style]="{'font-size':'small', 'color':'black'}">
+        <ng-template pTemplate="header">
+            <tr>
+                <th>Nombre</th>
+                <th>RFC</th>
+                <th>Direccion</th>
+                <th>Telefono</th>
+                <th>Credito dias</th>
+                <th>Contacto</th>
+                <th>Telefono contacto</th>
+                <th>Estado</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-proveedor>
+            <tr [pSelectableRow]="proveedor" (dblclick)="onRowDoubleClick(proveedor)">
+                <td class="col-medium-2">{{proveedor.nombre}}</td>
+                <td class="col-small">{{proveedor.rfc}}</td>
+                <td class="col-small">{{proveedor.rfc }}</td>
+                <td class="col-small">{{proveedor.telefono}}</td>
+                <td class="col-small">{{proveedor.creditoDias }}</td>
+                <td class="col-small">{{proveedor.contactos[0].nombre }}</td>
+                <td class="col-small">{{proveedor.contactos[0].telefono }}</td>
+                <td class="col-small">{{proveedor.idStatus == 55 ? 'Activo' : 'Inactivo'}}</td>
+            </tr>
+        </ng-template>
     </p-table>
 </div>

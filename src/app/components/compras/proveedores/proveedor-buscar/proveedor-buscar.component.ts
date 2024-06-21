@@ -1,5 +1,4 @@
-import { Component, OnInit } from '@angular/core';
-import { HttpClient} from '@angular/common/http';
+import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { Router} from '@angular/router';
 import { Subscription } from 'rxjs';
 //SERVICIOS
@@ -9,6 +8,7 @@ import { ModulosService } from 'src/app/services/modulos.service';
 //primeng
 import { MessageService } from 'primeng/api';
 import { selectBusqueda } from 'src/app/models/interfaces/selectBusqueda';
+import { handleRedirect } from 'src/app/utils/fnUtils';
 
 @Component({
   selector: 'app-proveedor-buscar',
@@ -16,43 +16,35 @@ import { selectBusqueda } from 'src/app/models/interfaces/selectBusqueda';
   styleUrls: ['./proveedor-buscar.component.css'],
   providers: [ProveedorService,EmpleadoService, MessageService]
 })
-export class ProveedorBuscarComponent implements OnInit {
+export class ProveedorBuscarComponent implements OnInit, OnDestroy {
 
   //Spinner
   public isLoadingGeneral: boolean = false;
  
   //Variable donde almacenaremos la data del api
   public proveedores: Array<any> = [];
-  optionsSelect!: selectBusqueda[];
-  optionsSelectStatus!: selectBusqueda[];
-  selectedOpt!: selectBusqueda;
-  selectedOptStatus!: selectBusqueda;
-  valSearch: string = '';
+  public selectedProveedor: any;
+  public optionsSelect!: selectBusqueda[];
+  public optionsSelectStatus!: selectBusqueda[];
+  public selectedOpt!: selectBusqueda;
+  public selectedOptStatus!: selectBusqueda;
+  public valSearch: string = '';
+  public currentRowIndex: number = 0;
   /**PAGINATOR */
   public totalPages: any;
-  public path: any;
-  public next_page: any;
-  public prev_page: any;
-  public itemsPerPage:number=0;
-  pageActual: number = 0;
-  public tipoBusqueda: number = 1;
-  //Spinner
-  public isLoading: boolean = false;
+  public per_page: any;
+  public pageActual: number = 0;
   //subscription
   private getProveedorSub : Subscription = new Subscription;
   //PERMISOS
   public userPermisos:any = [];
   public mProv = this._modulosService.modsProveedores();
-  //contador para redireccion al no tener permisos
-  counter: number = 5;
-  timerId:any;
 
   constructor(
     private _proveedorService: ProveedorService,
     private _empleadoService:EmpleadoService,
     private _modulosService: ModulosService,
     private messageService: MessageService,
-    private _http: HttpClient,
     private _router: Router ) { }
 
   ngOnInit(): void {
@@ -65,18 +57,11 @@ export class ProveedorBuscarComponent implements OnInit {
   loadUser(){
     this.userPermisos = this._empleadoService.getPermisosModulo(this.mProv.idModulo, this.mProv.idSubModulo);
         //revisamos si el permiso del modulo esta activo si no redireccionamos
-        if( this.userPermisos.ver != 1 ){
-          this.timerId = setInterval(()=>{
-            this.counter--;
-            if(this.counter === 0){
-              clearInterval(this.timerId);
-              this._router.navigate(['./']);
-            }
-            this.messageService.add({severity:'error', summary:'Acceso denegado', detail: 'El usuario no cuenta con los permisos necesarios, redirigiendo en '+this.counter+' segundos'});
-          },1000);
-        } else{
+        if( this.userPermisos.ver == 1 ){
           this.getProve();
           this.setOptionsSelect();
+        } else{
+          handleRedirect(5,this._router,this.messageService);
         }
   }
 
@@ -105,7 +90,7 @@ export class ProveedorBuscarComponent implements OnInit {
    */
   getProve(page:number = 1, type:number = 1, search:string = '', status:Array<any> = [55],rows:number = 100){
     //mostramos el spinner
-    this.isLoading = true;
+    this.isLoadingGeneral = true;
     //ejecutamas servicio
     this.getProveedorSub = this._proveedorService.getProveedores(type,search,status,page).subscribe(
       response =>{
@@ -116,18 +101,21 @@ export class ProveedorBuscarComponent implements OnInit {
 
           //navegacion paginacion
           this.totalPages = response.proveedores.total;
-          this.itemsPerPage = response.proveedores.per_page;
+          this.per_page = response.proveedores.per_page;
           this.pageActual = response.proveedores.current_page;
-          this.next_page = response.proveedores.next_page_url;
-          this.path = response.proveedores.path
           
           //una vez terminado de cargar quitamos el spinner
-          this.isLoading = false;
-          
+          this.isLoadingGeneral = false;
           //console.log(response.proveedores);
         }
       },
       error =>{
+        this.isLoadingGeneral = false;
+        this.messageService.add({
+          severity:'error',
+          summary: 'Error',
+          detail:'Ocurrio un error al buscar los datos.'
+        })
         console.log(error);
       }
     );
@@ -155,38 +143,73 @@ export class ProveedorBuscarComponent implements OnInit {
 
   /**
    * 
-   * @param page
-   * Es el numero de pagina a la cual se va acceder
+   * @param event KeyboardEvent
    * @description
-   * De acuerdo al numero de pagina recibido lo concatenamos a
-   * la direccion para "ir" a esa direccion y traer la informacion
-   * no retornamos ya que solo actualizamos las variables a mostrar
+   * Escucha los eventos relacionados a la tecla precionada, y realiza desplazamiento
+   * entre los datos, con enter ingresamos al valor seleccionado
    */
-  getPage(page:number){
-    //iniciamos spinner
-    this.isLoading = true;
-
-    this._http.get(this.path+'?page='+page).subscribe(
-      (response:any) => {
-        //asignamos a varibale para mostrar
-        this.proveedores = response.proveedores.data;
-
-        //navegacion paginacion
-        this.totalPages = response.proveedores.total;
-        this.itemsPerPage = response.proveedores.per_page;
-        this.pageActual = response.proveedores.current_page;
-        this.next_page = response.proveedores.next_page_url;
-        this.path = response.proveedores.path
-        
-        //una vez terminado de cargar quitamos el spinner
-        this.isLoading = false;
-        
-    })
+  @HostListener('window:keydown', ['$event'])
+  handleKeyboardEvent(event: KeyboardEvent) {
+    if (event.key === 'ArrowDown') {
+      this.navigateTable('down');
+    } else if (event.key === 'ArrowUp') {
+      this.navigateTable('up');
+    } else if(event.key === 'Enter'){
+      event.preventDefault();
+      if (this.currentRowIndex >= 0 && this.currentRowIndex < this.proveedores.length) {
+        this.selectedProveedor = this.proveedores[this.currentRowIndex];
+        this.onSelect();
+      }
+    }
   }
 
-  selected(idProveedor:any){
-    let id = idProveedor;
-    this._router.navigate(['./proveedor-modulo/proveedorVer/'+id]);
+  /**
+   * 
+   * @param direction string
+   * @description
+   * Recibe a donde se movera y pinta la seleccion
+   */
+  navigateTable(direction: string) {
+    if (direction === 'down' && this.currentRowIndex < this.proveedores.length - 1) {
+      this.currentRowIndex++;
+    } else if (direction === 'up' && this.currentRowIndex > 0) {
+      this.currentRowIndex--;
+    }
+    this.selectedProveedor = this.proveedores[this.currentRowIndex];
+    this.scrollToRow(this.currentRowIndex);
+  }
+
+  scrollToRow(index: number) {
+    const row = document.querySelector(`.ui-table-scrollable-body table tbody tr:nth-child(${index + 1})`);
+    if (row) {
+      row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }
+
+  onRowSelect(event: any): void {
+    const selectedProveedorId = event.data.idProveedor;
+    this.currentRowIndex = this.proveedores.findIndex(proveedor => proveedor.idProveedor === selectedProveedorId);
+  }
+
+  /**
+  * 
+  * @param proveedor any
+  * 
+  * @description
+  * Manejador del evento de doble clic en una fila de la tabla.
+  * Realiza la acción deseada con el proveedor seleccionado.
+  */
+  onRowDoubleClick(proveedor: any) {
+    this.selectedProveedor = proveedor;
+    this.onSelect();
+  }
+
+  /**
+  * @description
+  * Cierra modales y manda el valor seleccionado
+  */
+  onSelect():void{
+    this._router.navigate(['./proveedor-modulo/proveedorVer/'+this.selectedProveedor.idProveedor]);
   }
 
   /**
@@ -194,93 +217,6 @@ export class ProveedorBuscarComponent implements OnInit {
    */
   ngOnDestroy(): void {
     this.getProveedorSub.unsubscribe();
-  }
-
-  /**
-   * 
-   * @param nombreProveedor 
-   * Recibimos el evento del input
-   * @description
-   * Recibe los valores del evento (keyup), luego busca y actualiza
-   * 
-   */
-  getSearchNombreProv(nombreProveedor:any){
-     //mostramos el spinner
-     this.isLoading = true;
-     let nomProv = nombreProveedor.target.value;
-     if(nomProv == '' || nomProv == null){
-      this.getProve();
-     } else{
-      //ejecutamas servicio
-     this._proveedorService.searchNombreProveedor(nomProv).subscribe(
-      response =>{
-        if(response.status == 'success'){
-
-          //asignamos a varibale para mostrar
-          this.proveedores = response.proveedores.data;
-
-          //navegacion paginacion
-          this.totalPages = response.proveedores.total;
-          this.itemsPerPage = response.proveedores.per_page;
-          this.pageActual = response.proveedores.current_page;
-          this.next_page = response.proveedores.next_page_url;
-          this.path = response.proveedores.path
-          
-          //una vez terminado de cargar quitamos el spinner
-          this.isLoading = false;
-          
-          //console.log(response.proveedores);
-        }
-      },
-      error =>{
-        console.log(error);
-      }
-    );
-     }
-  }
-
-  /**
-   * 
-   * @param rfc 
-   * Recibimos el evento del input
-   * @description
-   * Recibe los valores del evento (keyup), luego busca y actualiza
-   * 
-   */
-  getSearchRfcProv(rfc:any){
-    //mostramos el spinner
-    this.isLoading = true;
-    let rfcProv = rfc.target.value;
-
-    if(rfcProv == '' || rfcProv == null){
-     this.getProve();
-    } else{
-     //ejecutamas servicio
-    this._proveedorService.searchRfcProveedor(rfcProv).subscribe(
-     response =>{
-       if(response.status == 'success'){
-
-         //asignamos a varibale para mostrar
-         this.proveedores = response.proveedores.data;
-
-         //navegacion paginacion
-         this.totalPages = response.proveedores.total;
-         this.itemsPerPage = response.proveedores.per_page;
-         this.pageActual = response.proveedores.current_page;
-         this.next_page = response.proveedores.next_page_url;
-         this.path = response.proveedores.path
-         
-         //una vez terminado de cargar quitamos el spinner
-         this.isLoading = false;
-         
-         //console.log(response.proveedores);
-       }
-     },
-     error =>{
-       console.log(error);
-     }
-   );
-    }
   }
 
 }
