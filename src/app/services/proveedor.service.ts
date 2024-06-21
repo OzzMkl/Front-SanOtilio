@@ -20,6 +20,7 @@ export class ProveedorService{
         let params = 'json='+json;
         return this._http.post(this.url+'proveedor/register',params, {headers:this.headers} );
     }
+
     getProveedores(type:number, search:string, status:Array<any>, page:number):Observable<any>{
         return this._http.get(this.url+
                                 'proveedor/index'+
@@ -30,12 +31,11 @@ export class ProveedorService{
                                 {headers:this.headers} 
                             );
     }
+
     getProveedoresSelect():Observable<any>{
         return this._http.get(this.url+'proveedor/ObtenerLista', {headers:this.headers} );
     }
-    getProveedoresDes():Observable<any>{
-        return this._http.get(this.url+'proveedor/proveedoresDes', {headers:this.headers} );
-    }
+
     getProveedoresVer(idProveedor:any):Observable<any>{
         return this._http.get(this.url+'proveedor/'+idProveedor, {headers:this.headers} );
     }
@@ -47,51 +47,10 @@ export class ProveedorService{
     getNcps(idProveedor:any):Observable<any>{
         return this._http.get(this.url+'proveedor/getNCP/'+idProveedor, {headers:this.headers} );
     }
-    // updateStatus( prove:any, idProveedor:any):Observable<any>{
-    //     let json = JSON.stringify(prove);
-    //     let params = 'json='+json;
-    //     return this._http.put(this.url + 'proveedor/updatestatus/'+idProveedor,params,{headers:this.headers});
-    // }
+
     updateStatus(idProveedor:number,idUsuario:number):Observable<any>{
         let json = JSON.stringify(idUsuario);
         let params = 'json='+json; 
         return this._http.put(this.url+'proveedor/updatestatus/'+idProveedor,params,{headers:this.headers})
     }
-    /**
-     * Busca los proveedores por su nombre
-     * Solo con status 29 HABILITADOS
-     * @param nombreProveedor 
-     * @returns 
-     */
-    searchNombreProveedor(nombreProveedor:string):Observable<any>{
-        return this._http.get(this.url+'proveedor/searchNombreProveedor/'+nombreProveedor,{headers:this.headers});
-    }
-    /**
-     * Busca los proveedores por su RFC
-     * Solo con status 29 HABILITADOS
-     * @param nombreProveedor 
-     * @returns 
-     */
-    searchRfcProveedor(rfc:string):Observable<any>{
-        return this._http.get(this.url+'proveedor/searchRFCProveedor/'+rfc,{headers:this.headers});
-    }
-     /**
-     * Busca los proveedores por su nombre
-     * Solo con status 30 INHABILITADOS
-     * @param nombreProveedor 
-     * @returns 
-     */
-     searchNombreProveedorI(nombreProveedor:string):Observable<any>{
-        return this._http.get(this.url+'proveedor/searchNombreProveedorI/'+nombreProveedor,{headers:this.headers});
-    }
-    /**
-     * Busca los proveedores por su RFC
-     * Solo con status 30 INHABILITADOS
-     * @param nombreProveedor 
-     * @returns 
-     */
-    searchRfcProveedorI(rfc:string):Observable<any>{
-        return this._http.get(this.url+'proveedor/searchRFCProveedorI/'+rfc,{headers:this.headers});
-    }
-
 }
