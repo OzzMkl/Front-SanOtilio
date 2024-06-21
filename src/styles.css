@@ -39,12 +39,13 @@
   padding: 1px !important;
 }
 .col-medium {
+  flex-grow: 1 !important;
   width: 20% !important;
   font-weight:600;
   padding: 1px !important;
 }
 .col-medium-2 {
-  flex-grow: 1.5 !important;
+  flex-grow: 1.2 !important;
   width: 25% !important;
   font-weight:600;
   padding: 1px !important;

@@ -13,7 +13,7 @@
                     <th scope="col">Nombre</th>
                 </tr>
             </thead>
-            <tbody *ngFor="let pr of marca | filterProveedores:fpv | paginate:{itemsPerPage: 15, currentPage: pageActual}">
+            <tbody *ngFor="let pr of marca | paginate:{itemsPerPage: 15, currentPage: pageActual}">
                 <tr>
                     <th scope="row">{{pr.idMarca}}</th>
                     <th scope="row">{{pr.nombre}}</th>

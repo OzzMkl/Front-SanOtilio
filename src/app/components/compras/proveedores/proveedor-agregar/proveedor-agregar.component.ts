@@ -20,7 +20,7 @@ import { MessageService } from 'primeng/api';
 })
 export class ProveedorAgregarComponent implements OnInit, OnDestroy {
 
-  public proveedor: Proveedor= new Proveedor(0,'','','','','','','','','','',0,0,29,'','','','','','','','','');//Modelo del proveedor
+  public proveedor: Proveedor= new Proveedor(0,'','','','','','','','','','',0,0,55,'','','','','','','','','');//Modelo del proveedor
   public banco: Array<Banco> = [];//Array de modelos del objeto banco
   public checkContacto: boolean = false;
   public checkNcp: boolean = false;
