@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { Router} from '@angular/router';
-import { Subscription } from 'rxjs';
+import { Subscription, Subject } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
 //SERVICIOS
 import { ProveedorService } from 'src/app/services/proveedor.service';
 import { EmpleadoService } from 'src/app/services/empleado.service';
@@ -36,6 +37,8 @@ export class ProveedorBuscarComponent implements OnInit, OnDestroy {
   public pageActual: number = 0;
   //subscription
   private getProveedorSub : Subscription = new Subscription;
+  private sub_searchTerms: Subscription = new Subscription;
+  private searchTerms = new Subject<string>();
   //PERMISOS
   public userPermisos:any = [];
   public mProv = this._modulosService.modsProveedores();
@@ -49,6 +52,20 @@ export class ProveedorBuscarComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.loadUser();
+
+    this.sub_searchTerms = this.searchTerms.pipe(debounceTime(300)).subscribe(
+          term =>{
+            if (this.selectedOpt && this.selectedOptStatus) {
+                this.getProve(1, this.selectedOpt.id, term, this.selectedOptStatus.valueExtra, 100);
+            } 
+            else {
+              this.messageService.add({
+                severity:'warn', 
+                summary:'Alerta', 
+                detail:'Favor de seleccionar una opcion para buscar'
+              });
+            }
+      });
   }
 
   /**
@@ -124,21 +141,8 @@ export class ProveedorBuscarComponent implements OnInit, OnDestroy {
   /**
   * Busqueda
   */
-  onSearch(page: number = 1, rows: number = 100):void{
-    if(this.selectedOpt && this.selectedOptStatus){
-      if(this.valSearch == "" || null){
-        this.getProve(page,1,'',this.selectedOptStatus.valueExtra,rows);
-      } else{
-        this.getProve(page,this.selectedOpt.id,this.valSearch,this.selectedOptStatus.valueExtra,rows);
-      }
-    } else{
-      //cargamos mensaje
-      this.messageService.add({
-        severity:'warn', 
-        summary:'Alerta', 
-        detail:'Favor de seleccionar una opcion para buscar'
-      });
-    }
+  onSearch():void{
+    this.searchTerms.next(this.valSearch);
   }
 
   /**
@@ -217,6 +221,7 @@ export class ProveedorBuscarComponent implements OnInit, OnDestroy {
    */
   ngOnDestroy(): void {
     this.getProveedorSub.unsubscribe();
+    this.sub_searchTerms.unsubscribe();
   }
 
 }
