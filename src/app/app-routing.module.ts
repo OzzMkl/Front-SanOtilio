@@ -27,7 +27,6 @@ import { CompraEditarComponent } from './components/compras/compra/compra-editar
 
 import { ProveedorAgregarComponent } from './components/compras/proveedores/proveedor-agregar/proveedor-agregar.component';
 import { ProveedorModuloComponent } from './components/compras/proveedores/proveedor-modulo/proveedor-modulo.component';
-import { ProveedorDeshabilitadosComponent } from './components/compras/proveedores/proveedor-deshabilitados/proveedor-deshabilitados.component';
 import { ProveedorBuscarComponent } from './components/compras/proveedores/proveedor-buscar/proveedor-buscar.component';
 import { ProveedorModificarComponent } from './components/compras/proveedores/proveedor-modificar/proveedor-modificar.component';
 import { ProveedorVerComponent } from './components/compras/proveedores/proveedor-ver/proveedor-ver.component';
@@ -112,7 +111,6 @@ const routes: Routes = [
     children:
     [
       {path: 'agregarProveedor',component: ProveedorAgregarComponent},
-      {path: 'proveedorDeshabilitado',component: ProveedorDeshabilitadosComponent},
       {path: 'proveedorBuscar',component: ProveedorBuscarComponent},
       {path: 'proveedorEditar',component: ProveedorModificarComponent},
       {path: 'proveedorVer/:idProveedor',component: ProveedorVerComponent}

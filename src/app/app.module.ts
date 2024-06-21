@@ -32,14 +32,12 @@ import { EmpleadoEditarComponent } from './components/empleado-editar/empleado-e
 
 import { ProveedorAgregarComponent } from './components/compras/proveedores/proveedor-agregar/proveedor-agregar.component';
 import { ProveedorModuloComponent } from './components/compras/proveedores/proveedor-modulo/proveedor-modulo.component';
-import { ProveedorDeshabilitadosComponent } from './components/compras/proveedores/proveedor-deshabilitados/proveedor-deshabilitados.component';
 import { ProveedorBuscarComponent } from './components/compras/proveedores/proveedor-buscar/proveedor-buscar.component';
 import { ProveedorModificarComponent } from './components/compras/proveedores/proveedor-modificar/proveedor-modificar.component';
 import { ProveedorVerComponent } from './components/compras/proveedores/proveedor-ver/proveedor-ver.component';
 import { ProductoAgregarComponent } from './components/inventario/productos/producto-agregar/producto-agregar.component';
 import { ProductoModuloComponent } from './components/inventario/productos/producto-modulo/producto-modulo.component';
 import { ProductoBuscarComponent } from './components/inventario/productos/producto-buscar/producto-buscar.component';
-import { FilterProveedoresPipe } from './pipes/filter-proveedores.pipe';
 import { FilterProductPipe } from './pipes/filter-products.pipe';
 import { FilterProductModalPipe } from './pipes/filter-productsModal.pipe';
 
@@ -112,14 +110,12 @@ import { BooleanToYesNoPipe } from './pipes/boolean-to-yes-no.pipe';
     EmpleadoEditarComponent,
     ProveedorAgregarComponent,
     ProveedorModuloComponent,
-    ProveedorDeshabilitadosComponent,
     ProveedorBuscarComponent,
     ProveedorModificarComponent,
     ProveedorVerComponent,
     ProductoAgregarComponent,
     ProductoModuloComponent,
     ProductoBuscarComponent,
-    FilterProveedoresPipe,
     FilterProductPipe,
     FilterProductModalPipe,
     ClasificacionModuloComponent,
