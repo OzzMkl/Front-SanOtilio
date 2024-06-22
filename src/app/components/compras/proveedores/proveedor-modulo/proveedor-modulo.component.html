@@ -1,11 +1,19 @@
 <p-toast></p-toast>
-<div class="container-fluid">
-    <br>
+<div class="container-fluid mt-2">
+    
     <div class="row justify-content-between">
-        <div class="col-5">
-            <h2>Modulo de proveedores</h2>
+        <div class="col-10">
+            <p-breadcrumb
+                class="max-w-full"
+                [model]="items"
+                [home]="home"
+                [style]="{'font-size':'small'}">
+
+            </p-breadcrumb>
+            
         </div>
-        <div class="col-auto">
+        
+        <div class="col-2">
             
                 <button class="p-button-rounded p-button-success me-md-2" 
                         pButton 

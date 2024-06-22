@@ -33,6 +33,7 @@ import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { ChartModule } from 'primeng/chart';
 import { ContextMenuModule } from 'primeng/contextmenu';
+import { BreadcrumbModule } from 'primeng/breadcrumb';
 
 
 @NgModule({
@@ -69,6 +70,7 @@ import { ContextMenuModule } from 'primeng/contextmenu';
     RadioButtonModule,
     ChartModule,
     ContextMenuModule,
+    BreadcrumbModule,
   ],
   imports: [
     CommonModule,
