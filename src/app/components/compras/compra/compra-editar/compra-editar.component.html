@@ -51,7 +51,7 @@
                 <br>
             </div>  
             
-            <div class="col-2"> 
+            <div class="col-2" hidden="true"> 
                 <label class="form-label" for="facturableCheck">¿Es facturable?</label>
                 <br>
                 <input class="form-check-input" type="checkbox" value="false"  name="facturable" [(ngModel)]="facturableCheck" id="facturableCheck">
@@ -79,8 +79,16 @@
                 <div class="col-4">
                     <label class="form-label" for="">Buscar producto</label>
                     <div class="input-group">
-                        <span class="input-group-addon" id="sizing-addon2"><i class="bi-search" style="font-size: 1.5rem; color: black; left: 0;" (click)="open(content)"></i> </span>
-                        <input class="form-control" type="text" ngbTooltip="Solo busca por clave externa" name="claveEx" #claveEx="ngModel" [(ngModel)]="producto_compra.claveexterna" (keydown)="consultarProducto($event)">
+                        <!-- <span class="input-group-addon" id="sizing-addon2"><i class="bi-search" style="font-size: 1.5rem; color: black; left: 0;" (click)="open(content)"></i> </span>
+                        <input class="form-control" type="text" ngbTooltip="Solo busca por clave externa" name="claveEx" #claveEx="ngModel" [(ngModel)]="producto_compra.claveexterna" (keydown)="consultarProducto($event)"> -->
+                        <app-input-external-key-search 
+                        (idProductoObtenido)="handleIdProductoObtenido($event)"
+                        [claveExterna]="producto_compra.claveexterna">
+                        <span class="input-group-addon" id="sizing-addon2"><i class="bi-search" style="font-size: 1.5rem; color: black; left: 0;" (click)="openMdlProductos()"></i> </span>
+
+                        </app-input-external-key-search>
+                    <input class="form-control d-none" type="text" ngbTooltip="Solo busca por clave externa" name="claveEx" #claveEx="ngModel" [(ngModel)]="producto_compra.claveexterna" readonly>
+                    
                     </div>
                 </div>
                 <div class="col-1">
@@ -294,3 +302,5 @@
     <hr class="my-0">
     <button class="btn btn-primary btn-sm m-2 float-start" (click)="model = today; d.close()">Hoy</button>
 </ng-template> -->
+
+<app-modal-productos></app-modal-productos>

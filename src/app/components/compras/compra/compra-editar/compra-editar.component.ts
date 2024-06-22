@@ -10,6 +10,8 @@ import { ImpuestoService } from 'src/app/services/impuesto.service';
 import { CompraService } from 'src/app/services/compra.service';
 import { HttpClient} from '@angular/common/http';
 import { MessageService } from 'primeng/api';
+import { Subscription } from 'rxjs';
+import { MdlProductoService } from 'src/app/services/mdlProductoService';
 //modelos
 import { Compra } from 'src/app/models/compra'
 import { Producto_compra } from 'src/app/models/producto_compra';
@@ -17,6 +19,8 @@ import { Producto_compra } from 'src/app/models/producto_compra';
 import { NgbDateStruct, NgbModal,ModalDismissReasons, NgbCalendar } from '@ng-bootstrap/ng-bootstrap';
 //Router
 import { Router } from '@angular/router';
+import { dialogOptionsProductos } from 'src/app/models/interfaces/dialogOptions-productos';
+
 
 
 @Component({
@@ -103,6 +107,11 @@ export class CompraEditarComponent implements OnInit {
   //contadores para los text area
   conta: number =0;
 
+  //Modal productos
+  public selectedValue : any;
+  private subscription : Subscription;
+  public dialogOpt?: dialogOptionsProductos;
+
 
 
   constructor(
@@ -113,7 +122,7 @@ export class CompraEditarComponent implements OnInit {
     public _empleadoService : EmpleadoService,
     private _route: ActivatedRoute,
     private modalService: NgbModal,
-
+    private _mdlProductoService: MdlProductoService,
     private _medidaService: MedidaService,
     private _impuestoService: ImpuestoService,
     public _compraService : CompraService,
@@ -125,7 +134,9 @@ export class CompraEditarComponent implements OnInit {
       this.producto_compra = new Producto_compra(0,0,0,0,0,0,null,0,null,null,null,null,null,0,null);
       this.Lista_compras = [];
       this.url = global.url;
-    
+      this.subscription = _mdlProductoService.selectedValue$.subscribe(
+        value => [this.getProd(value)]
+      )
    }
 
   ngOnInit(): void {
@@ -255,7 +266,7 @@ export class CompraEditarComponent implements OnInit {
 
   /**Servicios */
     getProvee(){
-      this._proveedorService.getProveedores(1,'',[29],1).subscribe(
+      this._proveedorService.getProveedores(1,'',[55],1).subscribe(
         response => {
           if(response.status == 'success'){
             this.proveedoresLista = response.proveedores;
@@ -306,17 +317,26 @@ export class CompraEditarComponent implements OnInit {
           this.producto_compra.cantidad = lpo.cantidad;
           this.productoVerM = response.productos_medidas;//informacion completa de productos_medidas para recorrerlo atraves del html
           console.log('productoVerM',this.productoVerM);
-          //obtener idProdMedida actualizado y asignarlo
-          //buscar lpo.nombreMedida en productoVerM, regresar y asignar this.producto_compra.idProdMedida, this.producto_compra.nombreMedida
-          this.medidaActualizada = this.productoVerM.find( (x:any) => x.nombreMedida == lpo.nombreMedida);
-          if(this.medidaActualizada == undefined ){
-
+          if(lpo.nombreMedida){
+            // console.log('CON NOMBREMEDIDA');
+            //obtener idProdMedida actualizado y asignarlo
+            //buscar lpo.nombreMedida en productoVerM, regresar y asignar this.producto_traspaso.idProdMedida, this.producto_compra.nombreMedida
+            this.medidaActualizada = this.productoVerM.find( (x:any) => x.nombreMedida == lpo.nombreMedida);
+            if(this.medidaActualizada == undefined ){
+  
+            }else{
+              // console.log('medidaActualizada',this.medidaActualizada);
+              this.producto_compra.idProdMedida = parseInt(this.medidaActualizada.idProdMedida);
+              this.producto_compra.nombreMedida = this.medidaActualizada.nombreMedida;
+            }
           }else{
-            console.log('medidaActualizada',this.medidaActualizada);
-            this.producto_compra.idProdMedida = parseInt(this.medidaActualizada.idProdMedida);
-            this.producto_compra.nombreMedida = this.medidaActualizada.nombreMedida;
+            // console.log('SIN NOMBREMEDIDA');
+            //console.log(this.productoVerM[0]['idProdMedida']);
+            this.producto_compra.idProdMedida = this.productoVerM[0]['idProdMedida'];
+            this.producto_compra.nombreMedida = this.productoVerM[0]['nombreMedida'];
+  
           }
-          console.log('producto_compra',this.producto_compra)
+          this.isSearch = false;
           
         },error => {
           //console.log(error);
@@ -470,31 +490,33 @@ export class CompraEditarComponent implements OnInit {
         this.compra.total = Math.round((this.compra.total + Number.EPSILON) * 100 ) / 100 ;
         console.log('Subtotal: ',this.compra.subtotal);
         console.log('Total: ',this.compra.total);
-  
-        //Reset variables 
-        this.productoVer=[];
-        this.productoVerM=[];
-        this.producto_compra.claveexterna = '';
-        this.producto_compra.cantidad = 0 ;
-        this.producto_compra.precio = 0 ;
-        this.producto_compra.idImpuesto = 0 ;
-        this.producto_compra.valorImpuesto = 0 ;
-        this.producto_compra.subtotal = 0 ;
-        this.producto_compra.caducidad = '' ;
-        this.producto_compra.idProdMedida = 0;
-        if(this.test == true){
-          this.modelP.day = 0;
-          this.modelP.month = 0;
-          this.modelP.year = 0;
-          this.test = false;
-        }
+
+        this.resetVariables();
   
       }
-  
-  
-  
+
       console.log('lista de compras',this.Lista_compras);
       
+    }
+
+    resetVariables(){
+       //Reset variables 
+       this.productoVer=[];
+       this.productoVerM=[];
+       this.producto_compra.claveexterna = '';
+       this.producto_compra.cantidad = 0 ;
+       this.producto_compra.precio = 0 ;
+       this.producto_compra.idImpuesto = 0 ;
+       this.producto_compra.valorImpuesto = 0 ;
+       this.producto_compra.subtotal = 0 ;
+       this.producto_compra.caducidad = '' ;
+       this.producto_compra.idProdMedida = 0;
+       if(this.test == true){
+         this.modelP.day = 0;
+         this.modelP.month = 0;
+         this.modelP.year = 0;
+         this.test = false;
+       }
     }
 
   /** */
@@ -608,5 +630,25 @@ export class CompraEditarComponent implements OnInit {
         // this.isLoading=false;        
     })
   }
+
+  openMdlProductos():void{
+    this.dialogOpt = {
+      openMdlMedidas: true,
+    };
+    this._mdlProductoService.openMdlProductosDialog(this.dialogOpt);
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
+  }
+
+  handleIdProductoObtenido(idProducto:any){
+    console.log('handleIdProductoObtenido',idProducto);
+    if(idProducto){
+      this.getProd(idProducto);
+    }else{
+      this.resetVariables();
+    }
+   }
 
 }
