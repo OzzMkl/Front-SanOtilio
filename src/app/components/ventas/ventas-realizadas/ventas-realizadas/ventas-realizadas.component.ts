@@ -49,11 +49,13 @@ export class VentasRealizadasComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.loadUser();
+
     this.actualizaVentasSubscription = this._mdlVentaService.actualizaListaVentas$.subscribe(
       () => {
         this.getVentas();
       }
     );
+
     setTimeout(() => {
       this._sharedMessage.messages$.subscribe(
         messages => {
@@ -63,6 +65,7 @@ export class VentasRealizadasComponent implements OnInit, OnDestroy {
         }
       );
     }, 500);
+    
   }
 
   ngOnDestroy(): void {

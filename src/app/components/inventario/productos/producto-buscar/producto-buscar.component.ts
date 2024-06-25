@@ -1,17 +1,20 @@
 import { Component, OnInit, OnDestroy, AfterViewInit, HostListener } from '@angular/core';
-import { ProductoService } from 'src/app/services/producto.service';
-import { global } from 'src/app/services/global';
 import { Router } from '@angular/router';
-import { EmpleadoService } from 'src/app/services/empleado.service';
-import { ModulosService } from 'src/app/services/modulos.service';
+import { Subscription, Subject } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
+//Servicios propios
+import { global } from 'src/app/services/global';
 import { SharedMessage } from 'src/app/services/sharedMessage';
+import { ModulosService } from 'src/app/services/modulos.service';
+import { EmpleadoService } from 'src/app/services/empleado.service';
+import { ProductoService } from 'src/app/services/producto.service';
 //primeng
 import { MenuItem, MessageService, ConfirmationService, ConfirmEventType } from 'primeng/api';
 //interfaces
-import { selectBusqueda } from 'src/app/models/interfaces/selectBusqueda';
-import { Subscription } from 'rxjs';
 import { Producto } from 'src/app/models/producto';
+import { selectBusqueda } from 'src/app/models/interfaces/selectBusqueda';
 import { Productos_medidas_new } from 'src/app/models/productos_medidas_new';
+import { handleRedirect } from 'src/app/utils/fnUtils';
 
 @Component({
   selector: 'app-producto-buscar',
@@ -31,6 +34,8 @@ export class ProductoBuscarComponent implements OnInit, OnDestroy, AfterViewInit
   public identity: any;
   optionsSelect!: selectBusqueda[];
   selectedOpt!: selectBusqueda;
+  public optionsSelectStatus!: selectBusqueda[];
+  public selectedOptStatus!: selectBusqueda;
   valSearch: string = '';
   selectedProduct:any;
   selectedMedida:any;
@@ -65,6 +70,9 @@ export class ProductoBuscarComponent implements OnInit, OnDestroy, AfterViewInit
   public idProductoMenu?: number;
   //subscriptions
   private sub_producto?: Subscription;
+  private sub_searchTerms?: Subscription;
+  private sub_sharedMessage?: Subscription;
+  private searchTerms = new Subject<string>();
   //Modales
   public mdl_update: boolean = false;
   public mdl_viewProduct: boolean = false;
@@ -93,6 +101,20 @@ export class ProductoBuscarComponent implements OnInit, OnDestroy, AfterViewInit
         }
       }
     )
+
+    this.sub_searchTerms = this.searchTerms.pipe(debounceTime(300)).subscribe(
+      term =>{
+        if(this.selectedOpt && this.selectedOptStatus){
+          this.pageActual=1;
+          this.getProductos(this.pageActual,this.selectedOpt.id,term,100,this.selectedOptStatus.valueExtra);
+        } else{
+          this.messageService.add({
+            severity:'warn', 
+            summary:'Alerta', 
+            detail:'Favor de seleccionar una opcion para buscar'
+          });
+        }
+      });
   }
 
   /**
@@ -100,22 +122,14 @@ export class ProductoBuscarComponent implements OnInit, OnDestroy, AfterViewInit
    */
   loadUser(){
     this.userPermisos = this._empleadoService.getPermisosModulo(this.mInv.idModulo, this.mInv.idSubModulo);
-    
         //revisamos si el permiso del modulo esta activo si no redireccionamos
-        if( this.userPermisos.ver != 1 ){
-          this.timerId = setInterval(()=>{
-            this.counter--;
-            if(this.counter === 0){
-              clearInterval(this.timerId);
-              this._router.navigate(['./']);
-            }
-            this.messageService.add({severity:'error', summary:'Acceso denegado', detail: 'El usuario no cuenta con los permisos necesarios, redirigiendo en '+this.counter+' segundos'});
-          },1000);
-        } else{
+        if( this.userPermisos.ver == 1 ){
           this.identity = this._empleadoService.getIdentity();
           this.setOptionsSelect();
           this.getProductos();
           this.add_optMenu();
+        } else{
+          handleRedirect(5,this._router,this.messageService);
         }
   }
 
@@ -129,8 +143,15 @@ export class ProductoBuscarComponent implements OnInit, OnDestroy, AfterViewInit
       {id:2, name:'Descripcion'},
       {id:3, name:'Codigo de barras'},
     ];
+
+    this.optionsSelectStatus = [
+      {id:1, name:'Mostrar activos e incativos', valueExtra: [31,32]},
+      {id:2, name:'Mosotrar solo activos', valueExtra: [31]},
+      {id:3, name:'Mostrar solo inactivos', valueExtra: [32]},
+    ];
     //Seleccionamos por defecto la primera opcion
     this.selectedOpt = this.optionsSelect[1];
+    this.selectedOptStatus = this.optionsSelectStatus[1];
   }
 
   /**
@@ -143,13 +164,13 @@ export class ProductoBuscarComponent implements OnInit, OnDestroy, AfterViewInit
    * Servicio trae la informacion de los productos paginados por la api
    * Tambien busca la informacion
    */
-  getProductos(page:number = 1, type:number = 0, search:string = 'null',rows:number = 100){
+  getProductos(page:number = 1, type:number = 1, search:string = '',rows:number = 100,status:string = '31'){
 
     //mostramos el spinner
     this.isLoadingGeneral = true;
 
     //ejecutamos el servicio
-    this.sub_producto = this._productoService.getProductosNewIndex(page,type,search,rows).subscribe(
+    this.sub_producto = this._productoService.getProductosNewIndex(page,type,search,rows,status).subscribe(
       response =>{
         if(response.status == 'success' && response.code == 200){
 
@@ -181,27 +202,22 @@ export class ProductoBuscarComponent implements OnInit, OnDestroy, AfterViewInit
   onPageChange(event:any) {
     this.pageActual = event.page + 1;
     this.per_page = event.rows;
-    this.onSearch(event.page + 1, event.rows);
-  }
-
-  /**
-   * Busqueda
-   */
-  onSearch(page: number = 1, rows: number = 100):void{
-    if(this.selectedOpt){
-      if(this.valSearch == "" || null){
-        this.getProductos(page,0,'null',rows);
-      } else{
-        this.getProductos(page,this.selectedOpt.id,this.valSearch,rows);
-      }
+    if(this.selectedOpt && this.selectedOptStatus){
+      this.getProductos(this.pageActual,this.selectedOpt.id,this.valSearch,100,this.selectedOptStatus.valueExtra);
     } else{
-      //cargamos mensaje
       this.messageService.add({
         severity:'warn', 
         summary:'Alerta', 
         detail:'Favor de seleccionar una opcion para buscar'
       });
     }
+  }
+
+  /**
+   * Busqueda
+   */
+  onSearch():void{
+    this.searchTerms.next(this.valSearch);
   }
 
   /**
@@ -448,7 +464,7 @@ export class ProductoBuscarComponent implements OnInit, OnDestroy, AfterViewInit
       this.idProductoMenu = this.selectedProduct.idProducto;
       this.tblHeaders = [];
 
-      this._productoService.searchProductoMedida(this.selectedProduct.idProducto).subscribe(
+      this.sub_producto = this._productoService.searchProductoMedida(this.selectedProduct.idProducto).subscribe(
         response =>{
           // console.log(response);
           if(response.code == 200 && response.status == 'success'){
@@ -470,6 +486,8 @@ export class ProductoBuscarComponent implements OnInit, OnDestroy, AfterViewInit
 
   ngOnDestroy(): void {
     this.sub_producto?.unsubscribe();
+    this.sub_searchTerms?.unsubscribe();
+    this.sub_sharedMessage?.unsubscribe();
   }
 
   setIdProductoMenu(idProducto:number){

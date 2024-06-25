@@ -8,10 +8,19 @@
             optionLabel="name"
             [showClear]="true"
             placeholder="Selecciona una opcion"
-            [style]="{ width: '25%' }"
+            [style]="{ width: '15%' }"
             (ngModelChange)="onSearch()"
         ></p-dropdown>
-        <input type="text" pInputText [(ngModel)]="valSearch" [style]="{ width: '75%' }" (ngModelChange)="onSearch()">
+        <p-dropdown 
+            [options]="optionsSelectStatus"
+            [(ngModel)]="selectedOptStatus"
+            optionLabel="name"
+            [showClear]="true"
+            placeholder="Selecciona una opcion"
+            [style]="{ width: '15%' }"
+            (ngModelChange)="onSearch()"
+        ></p-dropdown>
+        <input type="text" pInputText [(ngModel)]="valSearch" [style]="{ width: '70%' }" (ngModelChange)="onSearch()">
     </div>
     <p-table
         [value]="productos"
@@ -52,7 +61,7 @@
     <!-- <p-menu #menu id="config_menu" [model]="menuItems" [popup]="true"></p-menu> -->
     <p-contextMenu #contextMenu [model]="menuItems"></p-contextMenu>
     <p-paginator
-        (onPageChange)="onPageChange($event)"        
+        (onPageChange)="onPageChange($event)"
         [rows]="per_page" 
         [totalRecords]="totalPages"
         >

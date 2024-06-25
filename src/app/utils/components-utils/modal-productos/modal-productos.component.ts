@@ -114,11 +114,11 @@ export class ModalProductosComponent implements OnInit, OnDestroy {
    * Servicio trae la informacion de los productos paginados por la api
    * Tambien busca la informacion
    */
-  getProductos(page:number = 1, type:number = 0, search:string = 'null', rows:number = 100){
+  getProductos(page:number = 1, type:number = 0, search:string = 'null', rows:number = 100,status:string = '31'){
     //mostramos el spinner
     this.isLoadingGeneral=true;
     //Ejecutamos servicio
-    this.sub_productoService = this._productoService.getProductosNewIndex(page,type,search,rows).subscribe(
+    this.sub_productoService = this._productoService.getProductosNewIndex(page,type,search,rows,status).subscribe(
       response =>{
         // console.log(response);
         if(response.code == 200 && response.status == 'success'){

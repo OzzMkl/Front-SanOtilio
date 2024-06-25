@@ -10,9 +10,29 @@
             </p-breadcrumb>
         </div>
         <div class="col-2">
-            <button *ngIf="userPermisos.agregar == 1" type="button" value="Agregar" class="btn btn-success me-md-2" [routerLink]="['producto-agregar']" style="box-sizing: border-box;" ngbTooltip="AGREGAR"><i class="bi bi-plus-circle"></i><br></button>
-            <button *ngIf="userPermisos.ver == 1" type="button" value="Buscar" class="btn btn-primary me-md-2" [routerLink]="['producto-buscar']"  style="box-sizing: border-box;" ngbTooltip="BUSCAR"><i class="bi bi-search"></i><br></button>
-            <button *ngIf="userPermisos.ver == 1" type="button" value="Deshabilitados" class="btn btn-danger me-md-2" [routerLink]="['producto-deshabilitado']" style="box-sizing: border-box;" ngbTooltip="BUSCAR DESHABILITADOS"><i class="bi bi-search"></i><br></button>
+            <button 
+                    class="p-button-rounded p-button-success me-md-2" 
+                    pButton
+                    pRipple
+                    type="button" 
+                    icon="pi pi-plus-circle"
+                    [routerLink]="['producto-agregar']" 
+                    *ngIf="userPermisos.agregar == 1" 
+                    pTooltip="Agregar"
+                    tooltipPosition="top">
+            </button>
+            <button 
+                    class="p-button-rounded me-md-2"
+                    pButton
+                    pRipple
+                    type="button" 
+                    icon="pi pi-search"
+                    [routerLink]="['producto-buscar']"  
+                    *ngIf="userPermisos.ver == 1"
+                    pTooltip="Buscar"
+                    tooltipPosition="top"
+                    >
+            </button>
         </div>
     </div>
 </div>
