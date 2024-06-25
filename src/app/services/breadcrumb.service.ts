@@ -72,16 +72,21 @@ export class BreadcrumbService implements OnDestroy {
           let item: MenuItem | undefined;
 
           // Add breadcrumb items based on the current URL
+          //PROVEEDORES
           if (url === 'proveedorBuscar') {
             item = { label: 'Buscar proveedor', icon: 'pi pi-search me-1', routerLink: 'proveedorBuscar' };
           } else if (url === 'agregarProveedor') {
             item = { label: 'Agregar proveedor', icon: 'pi pi-user-plus me-1', routerLink: 'agregarProveedor' };
           }
-
+          //INVENTARIO-PRODUCTOS
           else if(url == 'producto-buscar'){
             item = { label: 'Buscar producto', icon: 'pi pi-search me-1', routerLink: 'producto-buscar' };
           } else if(url == 'producto-agregar'){
             item = { label: 'Agregar producto', icon: 'pi pi-plus-circle me-1', routerLink: 'producto-buscar' };
+          }
+          //VENTAS
+          else if(url == 'ventas-realizadas-buscar'){
+            item = { label: 'Buscar venta', icon: 'pi pi-search me-1', routerLink: 'producto-buscar' };
           }
 
           // Add styleClass 'fw-bold' to the last item
