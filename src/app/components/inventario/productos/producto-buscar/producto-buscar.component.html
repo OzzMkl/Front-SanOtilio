@@ -8,7 +8,7 @@
             optionLabel="name"
             [showClear]="true"
             placeholder="Selecciona una opcion"
-            [style]="{ width: '15%' }"
+            [style]="{ 'width': '15%'}"
             (ngModelChange)="onSearch()"
         ></p-dropdown>
         <p-dropdown 
@@ -17,31 +17,31 @@
             optionLabel="name"
             [showClear]="true"
             placeholder="Selecciona una opcion"
-            [style]="{ width: '15%' }"
+            [style]="{ 'width': '15%' }"
             (ngModelChange)="onSearch()"
         ></p-dropdown>
-        <input type="text" pInputText [(ngModel)]="valSearch" [style]="{ width: '70%' }" (ngModelChange)="onSearch()">
+        <input type="text" pInputText [(ngModel)]="valSearch" [style]="{ 'width': '70%' }" (ngModelChange)="onSearch()">
     </div>
     <p-table
         [value]="productos"
-        styleClass="p-datatable-sm mt-3"
+        styleClass="p-datatable-sm mt-1"
         [scrollable]="false" 
-        scrollHeight="43vh" 
+        scrollHeight="40vh" 
         [resizableColumns]="true"
         selectionMode="single"
         [(selection)]="selectedProduct"
         dataKey="idProducto"
         (onRowSelect)="onRowSelect($event)"
-        [style]="{'font-size':'small', 'color':'black'}"
+        [style]="{'font-size':'small', 'color':'black','z-index':'0'}"
         [(contextMenuSelection)]="selectedProduct" 
         [contextMenu]="contextMenu">
         <ng-template pTemplate="header">
-            <tr>
-                <th>Clave externa</th>
-                <th>Codigo de barras</th>
-                <th>Descripcion</th>
-                <th>Marca</th>
-                <th>Departamento</th>
+            <tr class="fixed-header">
+                <th class="col-xsmall">Clave externa</th>
+                <th class="col-xsmall">Codigo de barras</th>
+                <th class="col-large">Descripcion</th>
+                <th class="col-xsmall">Marca</th>
+                <th class="col-xsmall">Departamento</th>
                 <!-- <th>Accion</th> -->
             </tr>
         </ng-template>
@@ -77,12 +77,12 @@
                 >
                 <ng-template pTemplate="header">
                     <tr>
-                        <th class="col-small-med">{{tabMed.exisCal | number:'1.2-2'}}</th>
-                        <th class="col-small-med">{{tabMed.nombreMedida}}</th>
+                        <th class="col-small">{{tabMed.exisCal | number:'1.2-2'}}</th>
+                        <th class="col-small">{{tabMed.nombreMedida}}</th>
                     </tr>
                     <tr>
-                        <th class="col-small-med">Porcentaje</th>
-                        <th class="col-small-med">Precio</th>
+                        <th class="col-small">Porcentaje</th>
+                        <th class="col-small">Precio</th>
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-precios>
