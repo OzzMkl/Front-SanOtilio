@@ -22,12 +22,11 @@
         ></p-dropdown>
         <input type="text" pInputText [(ngModel)]="valSearch" [style]="{ width: '70%' }" (ngModelChange)="onSearch()">
     </div>
-    <br>
     <p-table
         [value]="ventas"
-        styleClass="p-datatable-sm"
+        styleClass="p-datatable-sm mt-1"
         [scrollable]="true"
-        scrollHeight="59vh"
+        scrollHeight="63vh"
         [resizableColumns]="true"
         selectionMode="single"
         [(selection)]="selectedVenta"
