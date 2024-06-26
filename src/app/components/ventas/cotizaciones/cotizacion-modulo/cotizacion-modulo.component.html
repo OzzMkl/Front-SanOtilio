@@ -1,16 +1,37 @@
 <p-toast></p-toast>
-<div class="container">
-    <br>
+<div class="container-fluid mt-2">
     <div class="row justify-content-between">
-        <div class="col-5">
-            <h2>Modulo de cotizaciones</h2>
+        <div class="col-10">
+            <p-breadcrumb
+                class="max-w-full"
+                [model]="items"
+                [home]="home"
+                [style]="{'font-size':'small'}"
+            ></p-breadcrumb>
         </div>
-        <div class="col-4">
-            <button *ngIf="userPermisos.agregar == 1" type="button" value="Agregar" class="btn btn-success me-md-2" [routerLink]="['../punto-de-venta']" style="box-sizing: border-box;" ngbTooltip="AGREGAR"><i class="bi bi-plus-circle"></i><br></button>
-            <button *ngIf="userPermisos.ver == 1" type="button" value="Buscar" class="btn btn-primary" [routerLink]="['cotizacion-buscar']"  style="box-sizing: border-box;" ngbTooltip="BUSCAR"><i class="bi bi-search"></i><br></button>
+        <div class="col-2">
+            <button class="p-button-rounded p-button-success me-md-2"
+                    pButton 
+                    pRipple 
+                    type="button"  
+                    icon="pi pi-plus-circle"
+                    [routerLink]="['../punto-de-venta']" 
+                    *ngIf="userPermisos.agregar == 1" 
+                    pTooltip="Realizar cotizacion" 
+                    tooltipPosition="top">
+            </button>
+            <button class="p-button-rounded me-md-2" 
+                    icon="pi pi-search"
+                    pButton 
+                    pRipple 
+                    type="button" 
+                    [routerLink]="['cotizacion-buscar']"
+                    *ngIf="userPermisos.ver == 1" 
+                    pTooltip="Cotizaciones realizadas" 
+                    tooltipPosition="top">
+            </button>
         </div>
     </div>
 </div>
 <hr>
-<br>
 <router-outlet></router-outlet>

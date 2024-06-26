@@ -82,11 +82,14 @@ export class BreadcrumbService implements OnDestroy {
           else if(url == 'producto-buscar'){
             item = { label: 'Buscar producto', icon: 'pi pi-search me-1', routerLink: 'producto-buscar' };
           } else if(url == 'producto-agregar'){
-            item = { label: 'Agregar producto', icon: 'pi pi-plus-circle me-1', routerLink: 'producto-buscar' };
+            item = { label: 'Agregar producto', icon: 'pi pi-plus-circle me-1', routerLink: 'producto-agregar' };
           }
           //VENTAS
           else if(url == 'ventas-realizadas-buscar'){
-            item = { label: 'Buscar venta', icon: 'pi pi-search me-1', routerLink: 'producto-buscar' };
+            item = { label: 'Buscar venta', icon: 'pi pi-search me-1', routerLink: 'ventas-realizadas-buscar' };
+          }
+          else if(url == 'cotizacion-buscar'){
+            item = { label: 'Buscar cotizacion', icon: 'pi pi-search me-1', routerLink: 'cotizacion-buscar' };
           }
 
           // Add styleClass 'fw-bold' to the last item

@@ -40,7 +40,7 @@ export class VentasRealizadasModuloComponent implements OnInit, OnDestroy {
       },{
         label: 'Ventas',
         icon: 'pi pi-shopping-cart me-1',
-        routerLink: 'proveedorBuscar',
+        routerLink: 'ventas-realizadas-buscar',
       }],
       (items: MenuItem[]) => this.items = items
     );
