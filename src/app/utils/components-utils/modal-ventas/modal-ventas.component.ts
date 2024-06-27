@@ -28,6 +28,7 @@ export class ModalVentasComponent implements OnInit, OnDestroy {
   public userPermisos:any;
   public mCaja?: propModulo;
   public mVentas?: propModulo;
+  public mVentas_correAcuenta?: propModulo;
   public identity: any;
   //Spinner
   public isLoadingGeneral: boolean = false;
@@ -115,8 +116,8 @@ export class ModalVentasComponent implements OnInit, OnDestroy {
             this.getVentaCredito(dialogOptions.idVenta);
 
           } else if( dialogOptions.submodulo == 'ventas-corre-a-cuenta'){
-            this.mVentas = this._modulosService.modsVentas_CorreAcuenta();
-            this.userPermisos = this._empleadoService.getPermisosModulo(this.mVentas.idModulo,this.mVentas.idSubModulo);
+            this.mVentas_correAcuenta = this._modulosService.modsVentas_CorreAcuenta();
+            this.userPermisos = this._empleadoService.getPermisosModulo(this.mVentas_correAcuenta.idModulo,this.mVentas_correAcuenta.idSubModulo);
             this.identity = this._empleadoService.getIdentity();
             this.getVentaCorreAcuenta(dialogOptions.idVenta);
           }
