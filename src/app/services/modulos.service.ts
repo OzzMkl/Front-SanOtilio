@@ -20,6 +20,11 @@ export class ModulosService {
     idSubModulo: 2,
   }
 
+  public pVentas_CorreACuenta: propModulo = {
+    idModulo: 6,
+    idSubModulo: 32
+  }
+
   public pInv: propModulo ={
                 idModulo: 5,
                 idSubModulo: 13
@@ -110,5 +115,9 @@ export class ModulosService {
 
   modsCompra(){
     return this.pCom;
+  }
+
+  modsVentas_CorreAcuenta(){
+    return this.pVentas_CorreACuenta;
   }
 }
