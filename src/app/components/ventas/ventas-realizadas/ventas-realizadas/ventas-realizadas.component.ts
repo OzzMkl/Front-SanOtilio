@@ -148,10 +148,17 @@ export class VentasRealizadasComponent implements OnInit, OnDestroy {
 
   openMdlVenta(venta:any):void{
     this.selectedVenta = venta;
+    let strSubmodulo;
+    if(this.selectedVenta.idTipoVenta == 7){
+      strSubmodulo = 'ventas-corre-a-cuenta';
+    } else{
+      strSubmodulo = this.selectedVenta.isCredito ? 'ventas-credito' : 'ventas-realizadas-buscar';
+    }
+
     this.dialogOpt = {
       idVenta: this.selectedVenta.idVenta,
       modulo: 'ventas',
-      submodulo: this.selectedVenta.isCredito ? 'ventas-credito' : 'ventas-realizadas-buscar',
+      submodulo: strSubmodulo,
     }
     this._mdlVentaService.openMdlVentaDialog(this.dialogOpt);
   }

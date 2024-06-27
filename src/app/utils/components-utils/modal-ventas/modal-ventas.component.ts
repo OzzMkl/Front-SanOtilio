@@ -107,11 +107,18 @@ export class ModalVentasComponent implements OnInit, OnDestroy {
             this.userPermisos = this._empleadoService.getPermisosModulo(this.mVentas.idModulo,this.mVentas.idSubModulo);
             this.identity = this._empleadoService.getIdentity();
             this.getVenta(dialogOptions.idVenta);
+
           } else if(dialogOptions.submodulo == 'ventas-credito'){
             this.mVentas = this._modulosService.modsCreditos();
             this.userPermisos = this._empleadoService.getPermisosModulo(this.mVentas.idModulo,this.mVentas.idSubModulo);
             this.identity = this._empleadoService.getIdentity();
             this.getVentaCredito(dialogOptions.idVenta);
+
+          } else if( dialogOptions.submodulo == 'ventas-corre-a-cuenta'){
+            this.mVentas = this._modulosService.modsVentas_CorreAcuenta();
+            this.userPermisos = this._empleadoService.getPermisosModulo(this.mVentas.idModulo,this.mVentas.idSubModulo);
+            this.identity = this._empleadoService.getIdentity();
+            this.getVentaCorreAcuenta(dialogOptions.idVenta);
           }
         break;
       default:
@@ -163,6 +170,23 @@ export class ModalVentasComponent implements OnInit, OnDestroy {
       }
     );
     this.getAbonosVentas(idVenta);
+  }
+
+  getVentaCorreAcuenta(idVenta:number){
+    this.isLoadingGeneral = true;
+    this.sub_ventasService = this._ventasService.getDetallesVentaCorreAcuenta(idVenta).subscribe(
+      response =>{
+        if(response.code == 200 && response.status == 'success'){
+          this.venta = response.venta_correAcuenta;
+          this.productos_venta = response.productos_ventas_correAcuenta;
+          this.isLoadingGeneral = false;
+          this.isMdlVenta = true;
+        }
+      }, error =>{
+        console.log(error);
+        this.isLoadingGeneral = false;
+      }
+    );
   }
 
   /**
