@@ -1,5 +1,4 @@
 import { Component, OnInit, ViewChild, TemplateRef, OnDestroy } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Subject, Subscription } from 'rxjs';
 //servicio
@@ -8,13 +7,11 @@ import { ProductoService } from 'src/app/services/producto.service';
 import { VentasService } from 'src/app/services/ventas.service';
 import { EmpleadoService } from 'src/app/services/empleado.service';
 import { ModulosService } from 'src/app/services/modulos.service';
-import { global } from 'src/app/services/global';
 import { SharedMessage } from 'src/app/services/sharedMessage';
 import { MdlProductoService } from 'src/app/services/mdlProductoService';
 import { MdlClienteService } from 'src/app/services/mdlClienteService';
 //modelos
 import { Ventag } from 'src/app/models/ventag';
-import { Cliente } from 'src/app/models/cliente';
 import { Cdireccion } from 'src/app/models/cdireccion';
 import { Producto_ventasg } from 'src/app/models/productoVentag';
 //NGBOOTSTRAP-modal
@@ -46,50 +43,22 @@ export class PuntoDeVentaComponent implements OnInit, OnDestroy {
   public preciosArray: Array<any> = [];//muestraPrecios
   public identity: any;//loadUser
   public tipo_venta: Array<any> = []; //getTiposVentas
-  public productoEG:any;
-  public claveExt : string = '';//mostrarPrecios
-  public prod_med: Array<any> = [];//mostrarPrecios
-  public existenciasPorMed: Array<any> = [];//mostrarPrecios
-  public imagenPM: string = '';//mostrarPrecios
-  public isImage: boolean = false;//mostrarPrecios
-  public idp: number = 0;//mostrarPrecios
-  public url:string = global.url;//mostrarPrecios
   /**PAGINATOR */
   public itemsPerPage: number = 0;
-  public totalPages: any;
-  public totalPagesClientes: any;
-  public path: any;
-  public page: any;
-  public next_page: any;
-  public prev_page: any;
-  pageActual: number = 1;
-  pageActual2: number = 1;
   pageActual3: number = 1;
-  //pipes de busqueda en modal
-  buscarCliente ='';//modal cliente
-  seleccionado:string = 'uno';//para cambiar entre pipes de buscarProducto
-  buscar = '';//modal de buscar producto
   //modelos
   public ventag: Ventag;
-  public modeloCliente: Cliente;
   public cdireccion: Cdireccion;
   public nuevaDir: Cdireccion;
   public productoVentag: Producto_ventasg;
   public lista_productoVentag: Array<Producto_ventasg>;
   //variables html checks
   public seEnvia: boolean = false;
-  public isCompany: boolean = false;
-  public isCredito: boolean = false;
   public isModificaPrecio: boolean = false;
-  public isRFC: boolean = false;
-  public checkDireccion: boolean = false;
   public PagoConTarjeta: boolean = false;
 
-  //public descuentoVenta:number = 0;
-  //public subtotalVenta:number =0;
   public isSearch: boolean = true;
   public isLoadingGeneral: boolean = false;
-  public isLoadingClientes: boolean = false;
   //contadores para los text area
   contador: number =0;
   //PERMISOS
@@ -108,12 +77,12 @@ export class PuntoDeVentaComponent implements OnInit, OnDestroy {
   //modales
   public mdlProductos: boolean = false;
   public mdlDireccion: boolean = false;
+  public mdlAcuentaDeUnaNota: boolean = false;
   //input de busqueda claveex
   public idProducto?: number;
   public dialogOpt?: dialogOptionsProductos;
   public dialogOptCliente?: dialogOptionsClientes;
 
-  selectedValue: any;
   //subscriptions
   private sub_producto: Subscription;
   private sub_whatever?: Subscription;
@@ -131,7 +100,6 @@ export class PuntoDeVentaComponent implements OnInit, OnDestroy {
     private _empleadoService : EmpleadoService,
     private _modulosService: ModulosService,
     private _router:Router,
-    private _http: HttpClient,
     private _confirmationService: ConfirmationService,
     private messageService: MessageService,
     private _sharedMessage: SharedMessage,
@@ -141,7 +109,6 @@ export class PuntoDeVentaComponent implements OnInit, OnDestroy {
     ) {
     //declaramos modelos
     this.ventag = new Ventag(0,0,1,'',1,0,null,0,0,0,0,'','',0);
-    this.modeloCliente = new Cliente (0,'','','','','',0,1,1);
     this.cdireccion = new Cdireccion (0,'MEXICO','PUEBLA','TEHUACAN','','','','','',null,'',null,1,'');
     this.nuevaDir = new Cdireccion (0,'MEXICO','PUEBLA','TEHUACAN','','','','','',null,'',null,1,'');
     this.productoVentag = new Producto_ventasg(0,0,'',0,0,0,0,0,'','',0,0,true,0,false);
@@ -620,20 +587,6 @@ export class PuntoDeVentaComponent implements OnInit, OnDestroy {
       this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
     });
   }
-  
-  /**
-   * Abre modal de agregar direccion
-   * @param content 
-   */
-  openModalDirec(content:any){
-    if(this.checkDireccion == true){
-      this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title', size: 'xl'}).result.then((result) => {
-        this.closeResult = `Closed with: ${result}`;
-      }, (reason) => {
-        this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-      });
-    }
-  }
 
   private getDismissReason(reason: any): string {//cerrarmodal
     if (reason === ModalDismissReasons.ESC) {
@@ -1063,6 +1016,17 @@ export class PuntoDeVentaComponent implements OnInit, OnDestroy {
 
   checkInputLength():void{
     this.searchTerms.next(this.ventag.nombreCliente);
+  }
+
+  /**
+   * @description
+   * Verifica si el idTipoVenta es igual a 8 (a cuenta de una nota)
+   * Si es verdadero abrimos modal
+   */
+  selectAcuentaDeUnaNota(){
+    if(this.ventag.idTipoVenta == 8){
+      this.mdlAcuentaDeUnaNota = true;
+    }
   }
 
   /**
