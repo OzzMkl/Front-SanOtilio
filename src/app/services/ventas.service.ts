@@ -130,5 +130,12 @@ export class VentasService {
   getDetallesVentaCredito(idVenta:number):Observable<any>{
     return this._http.get(this.url+'ventas/getDetallesVentaCredito/'+idVenta,{headers:this.headers});
   }
+
+  getDetallesVentaCorreAcuenta(idVenta:number):Observable<any>{
+    return this._http.get(this.url+
+      'ventas/getDetallesVentaCorreAcuenta/'+idVenta,
+      {headers:this.headers}
+    );
+  }
 }
 
