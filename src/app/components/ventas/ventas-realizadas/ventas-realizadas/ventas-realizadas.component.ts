@@ -1,5 +1,7 @@
 import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
+import { Subscription, Subject } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
 // Servicios
 import { VentasService } from 'src/app/services/ventas.service';
 import { EmpleadoService } from 'src/app/services/empleado.service';
@@ -9,7 +11,6 @@ import { MdlVentaService } from 'src/app/services/mdl-venta-service.service';
 import { MessageService } from 'primeng/api';
 // Modelos
 import { dialogOptionsVentas } from 'src/app/models/interfaces/dialogOptions-ventas';
-import { Subscription } from 'rxjs';
 import { selectBusqueda } from 'src/app/models/interfaces/selectBusqueda';
 
 @Component({
@@ -30,15 +31,19 @@ export class VentasRealizadasComponent implements OnInit, OnDestroy {
   valSearch?: string;
   selectedVenta: any;
   currentRowIndex: number = 0;
+  public dialogOpt?: dialogOptionsVentas;
   //spinner
   public isLoadingGeneral: boolean = true;
-  //
+  //permisos
   private idModulo: number = 6;
   private idSubmodulo: number = 17;
+  //contadores
   counter: number = 5;
   timerId: any;
-  public dialogOpt?: dialogOptionsVentas;
+  //subscriptions
   private actualizaVentasSubscription?: Subscription;
+  private sub_searchTerms?: Subscription;
+  private searchTerms = new Subject<string>();
 
   constructor(private _ventasService: VentasService,
               private _empleadoService: EmpleadoService,
@@ -66,10 +71,24 @@ export class VentasRealizadasComponent implements OnInit, OnDestroy {
       );
     }, 500);
     
+    this.sub_searchTerms = this.searchTerms.pipe(debounceTime(300)).subscribe(
+      terms =>{
+        if(this.selectedOpt && this.selectedOpt2){
+          this.getVentas(terms,this.selectedOpt.id,this.selectedOpt2.id);
+        } else{
+          this.messageService.add({
+            severity:'warn', 
+            summary:'Alerta', 
+            detail:'Favor de seleccionar una opcion para buscar'
+          });
+        }
+      }
+    );
   }
 
   ngOnDestroy(): void {
     this.actualizaVentasSubscription?.unsubscribe();
+    this.sub_searchTerms?.unsubscribe();
   }
 
   loadUser() {
@@ -90,8 +109,8 @@ export class VentasRealizadasComponent implements OnInit, OnDestroy {
     }
   }
 
-  getVentas(search: string = '', type: number = 1, isCredito: number = 1) {
-    this._ventasService.getIndexVentas(search,type,isCredito).subscribe(
+  getVentas(search: string = '', type: number = 1, showVenta: number = 1) {
+    this._ventasService.getIndexVentas(search,type,showVenta).subscribe(
       response => {
         if (response.status == 'success') {
           this.ventas = response.Ventas;
@@ -117,22 +136,14 @@ export class VentasRealizadasComponent implements OnInit, OnDestroy {
       { id: 1, name: 'Ver todas las ventas' },
       { id: 2, name: 'Ver ventas sin credito' },
       { id: 3, name: 'Ver ventas a credito' },
+      { id: 4, name: 'Ver ventas principales de corre a cuenta' },
     ];
     this.selectedOpt = this.optionsSelect[0];
     this.selectedOpt2 = this.optionsSelect2[0];
   }
 
   onSearch(): void {
-    if (this.selectedOpt && this.selectedOpt2) {
-      
-      this.getVentas(this.valSearch, this.selectedOpt.id, this.selectedOpt2.id);
-    } else {
-      this.messageService.add({
-        severity: 'warn',
-        summary: 'Alerta',
-        detail: 'Favor de seleccionar una opcion para buscar'
-      });
-    }
+    this.searchTerms.next(this.valSearch);
   }
 
   openMdlVenta(venta:any):void{
