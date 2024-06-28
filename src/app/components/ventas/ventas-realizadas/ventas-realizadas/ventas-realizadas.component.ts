@@ -44,6 +44,7 @@ export class VentasRealizadasComponent implements OnInit, OnDestroy {
   private actualizaVentasSubscription?: Subscription;
   private sub_searchTerms?: Subscription;
   private searchTerms = new Subject<string>();
+  private sub_ventas?: Subscription;
 
   constructor(private _ventasService: VentasService,
               private _empleadoService: EmpleadoService,
@@ -89,6 +90,7 @@ export class VentasRealizadasComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.actualizaVentasSubscription?.unsubscribe();
     this.sub_searchTerms?.unsubscribe();
+    this.sub_ventas?.unsubscribe();
   }
 
   loadUser() {
@@ -110,7 +112,9 @@ export class VentasRealizadasComponent implements OnInit, OnDestroy {
   }
 
   getVentas(search: string = '', type: number = 1, showVenta: number = 1) {
-    this._ventasService.getIndexVentas(search,type,showVenta).subscribe(
+    this.isLoadingGeneral = true;
+
+    this.sub_ventas = this._ventasService.getIndexVentas(search,type,showVenta).subscribe(
       response => {
         if (response.status == 'success') {
           this.ventas = response.Ventas;
