@@ -26,5 +26,6 @@ export class Ventag{//Modelo de las medidas aqui asignamos todas las variables d
         public tipocliente?: string,
         public nombreEmpleado?: string,
         public isCredito: boolean = false,
+        public idVentaCorre?: number,
     ){}
 }
