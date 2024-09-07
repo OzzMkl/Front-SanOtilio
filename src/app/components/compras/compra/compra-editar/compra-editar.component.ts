@@ -632,7 +632,7 @@ export class CompraEditarComponent implements OnInit {
   }
 
   openMdlProductos():void{
-    this.dialogOpt = {
+    this.dialogOpt = { 
       openMdlMedidas: true,
     };
     this._mdlProductoService.openMdlProductosDialog(this.dialogOpt);

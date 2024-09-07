@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Subscription } from 'rxjs';
 //Servicios
 import { ProductoService } from 'src/app/services/producto.service';
 import { global } from 'src/app/services/global';
@@ -8,6 +9,7 @@ import { EmpleadoService } from 'src/app/services/empleado.service';
 import { HttpClient} from '@angular/common/http';
 import {MessageService} from 'primeng/api';
 import { ProveedorService } from 'src/app/services/proveedor.service';
+import { MdlProductoService } from 'src/app/services/mdlProductoService';
 //Modelos
 import { Requisicion } from 'src/app/models/requisicion';
 import { Producto_requisicion } from 'src/app/models/producto_requisicion';
@@ -16,6 +18,7 @@ import { NgbModal, ModalDismissReasons, NgbDateStruct} from '@ng-bootstrap/ng-bo
 //Router
 import { Router } from '@angular/router';
 import { timer } from 'rxjs';
+import { dialogOptionsProductos } from 'src/app/models/interfaces/dialogOptions-productos';
 
 @Component({
   selector: 'app-requisicion-editar',
@@ -68,6 +71,7 @@ export class RequisicionEditarComponent implements OnInit {
   public detailReq: any;
   public productosdetailReq: any;
   public medidasLista:any; //Lista de medidas de un producto en especifico
+  public medidaActualizada:any;
 
   //contador para el text area
   conta: number =0;
@@ -75,6 +79,11 @@ export class RequisicionEditarComponent implements OnInit {
   //Servicio de proveedores
   public proveedoresLista:any;
   public proveedorVer:any;
+
+  //nuevo modal de productos
+  public selectedValue : any;
+  private subscription : Subscription;
+  public dialogOpt?: dialogOptionsProductos;
 
   constructor(
     private _http: HttpClient,
@@ -85,12 +94,18 @@ export class RequisicionEditarComponent implements OnInit {
     public _empleadoService : EmpleadoService,
     private _route: ActivatedRoute,
     private _proveedorService: ProveedorService,
-    public _router: Router
+    public _router: Router,
+    private _mdlProductoService: MdlProductoService
+
   ) { 
       this.requisicion = new Requisicion(0,0,'',0,0,0,null);
       this.producto_requisicion = new Producto_requisicion(0,0,0,0,0,null,'','','');
       this.Lista_compras = [];
       this.url = global.url;
+
+      this.subscription = _mdlProductoService.selectedValue$.subscribe(
+        value => [this.getProd(value)]
+      )
     }
 
   ngOnInit(): void {
@@ -149,24 +164,45 @@ export class RequisicionEditarComponent implements OnInit {
   * @description
   * Trae la informacion de uin producto en especifico
   */
-  getProd(idProducto:any){
-    this._productoService.getProdverDos(idProducto).subscribe(
+  getProd(producto:any){
+    this._productoService.getProdverDos(producto.idProducto).subscribe(
       response =>{
         this.productoVer = response.producto;//informacion completa del producto para recorrerlo atraves del html
         this.producto_requisicion.descripcion = this.productoVer[0]['descripcion'];//asignamos variables
         this.producto_requisicion.claveEx = this.productoVer[0]['claveEx'];
         this.producto_requisicion.idProducto = this.productoVer[0]['idProducto'];
-        //this.producto_orden.nombreMedida = this.productoVer[0]['nombreMedida'];
+        this.producto_requisicion.cantidad = producto.cantidad;
+
         this.medidasLista = response.productos_medidas;
-        console.log(this.productoVer);
-        console.log(this.medidasLista);
-        //Si el producto tiene una sola medida se asigna directo
-        //if(this.medidasLista.length == 1){ this.producto_orden.idProdMedida = this.medidasLista[0].idProdMedida }
+        console.log('response', response);
+
+        if(producto.nombreMedida){
+          // console.log('CON NOMBREMEDIDA');
+          //obtener idProdMedida actualizado y asignarlo
+          //buscar lpo.nombreMedida en medidasLista, regresar y asignar this.producto_requisicion.idProdMedida, this.producto_compra.nombreMedida
+          this.medidaActualizada = this.medidasLista.find( (x:any) => x.nombreMedida == producto.nombreMedida);
+          if(this.medidaActualizada == undefined ){
+
+          }else{
+            // console.log('medidaActualizada',this.medidaActualizada);
+            this.producto_requisicion.idProdMedida = parseInt(this.medidaActualizada.idProdMedida);
+            this.producto_requisicion.nombreMedida = this.medidaActualizada.nombreMedida;
+          }
+        }else{
+          // console.log('SIN NOMBREMEDIDA');
+          //console.log(this.medidasLista[0]['idProdMedida']);
+          this.producto_requisicion.idProdMedida = this.medidasLista[0]['idProdMedida'];
+          this.producto_requisicion.nombreMedida = this.medidasLista[0]['nombreMedida'];
+
+        }
+
+
       },error => {
         console.log(error);
       }
     );
   }
+  
 
   /**
   * @param idProdMedida
@@ -255,10 +291,11 @@ export class RequisicionEditarComponent implements OnInit {
   }
 
   editarProductoO(p_d:any){//metodo para editar la lista de compras
+    this.resetVariables();
     console.log('p_d',p_d);
     this.productosdetailReq = this.productosdetailReq.filter((item: { idProducto: any; }) => item.idProducto !== p_d.idProducto);//eliminamos el producto
     //consultamos la informacion para motrar el producto nuevamente
-    this.getProd(p_d.idProducto);
+    this.getProd(p_d);
   
   
   
@@ -558,6 +595,23 @@ export class RequisicionEditarComponent implements OnInit {
           console.log(error)
       }
     )
+  }
+
+  /*******************MODAL DE PRODUCTOS****************** */
+  handleIdProductoObtenido(idProducto:any){
+    
+    if(idProducto){
+      this.getProd(idProducto);
+    }else{
+      this.resetVariables();
+    }
+  }
+    
+  openMdlProductos():void{
+    this.dialogOpt = {
+      openMdlMedidas: true,
+    };
+      this._mdlProductoService.openMdlProductosDialog(this.dialogOpt);
   }
 
   

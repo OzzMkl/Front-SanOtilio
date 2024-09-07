@@ -11,6 +11,8 @@ import { ImpuestoService } from 'src/app/services/impuesto.service';
 import { CompraService } from 'src/app/services/compra.service';
 import { HttpClient} from '@angular/common/http';
 import {MessageService} from 'primeng/api';
+import { Subscription } from 'rxjs';
+import { MdlProductoService } from 'src/app/services/mdlProductoService';
 //modelos
 import { Ordencompra } from 'src/app/models/orden_compra';
 import { Producto_orden } from 'src/app/models/producto_orden';
@@ -20,6 +22,7 @@ import { Producto_compra } from 'src/app/models/producto_compra';
 import { NgbDateStruct, NgbModal,ModalDismissReasons, NgbCalendar } from '@ng-bootstrap/ng-bootstrap';
 //Router
 import { Router } from '@angular/router';
+import { dialogOptionsProductos } from 'src/app/models/interfaces/dialogOptions-productos';
 
 
 @Component({
@@ -123,6 +126,10 @@ export class CompraAgregarIdComponent implements OnInit {
   //contadores para los text area
   conta: number =0;
   
+  //Modal productos
+  public selectedValue : any;
+  private subscription : Subscription;
+  public dialogOpt?: dialogOptionsProductos;
 
   constructor(
     //declaracion de servicios
@@ -139,7 +146,8 @@ export class CompraAgregarIdComponent implements OnInit {
     private _impuestoService: ImpuestoService,
     public _compraService : CompraService,
     private calendar: NgbCalendar,
-    public _router: Router
+    public _router: Router,
+    private _mdlProductoService: MdlProductoService
 
 
   ) {
@@ -151,6 +159,10 @@ export class CompraAgregarIdComponent implements OnInit {
     this.producto_compra = new Producto_compra(0,0,0,0,0,0,0,null,0,null,null,null,null,0,null);
     this.Lista_compras = [];
     this.url = global.url;
+
+    this.subscription = _mdlProductoService.selectedValue$.subscribe(
+      value => [this.getProd(value)]
+    )
 
 
   }
@@ -464,31 +476,45 @@ export class CompraAgregarIdComponent implements OnInit {
     );
   }
 
-  getProd(lpo:any){//consultar producto y rellenar el formulario de producto
-    console.log('getProd(lpo)',lpo);
+  getProd(producto:any){//consultar producto y rellenar el formulario de producto
+    console.log('getProd(lpo)',producto);
     this.resetVariables();
-    this._productoService.getProdverDos(lpo.idProducto).subscribe(
+    this._productoService.getProdverDos(producto.idProducto).subscribe(
       response =>{
         this.productoVer = response.producto;//informacion completa del producto para recorrerlo atraves del html
         console.log('productoVer',this.productoVer);
         this.producto_compra.descripcion = this.productoVer[0]['descripcion'];//asignamos variables
         this.producto_compra.claveexterna = this.productoVer[0]['claveEx'];
         this.producto_compra.idProducto = this.productoVer[0]['idProducto'];
-        this.producto_compra.cantidad = lpo.cantidad;
+        this.producto_compra.cantidad = producto.cantidad;
         this.productoVerM = response.productos_medidas;//informacion completa de productos_medidas para recorrerlo atraves del html
         console.log('productoVerM',this.productoVerM);
         //obtener idProdMedida actualizado y asignarlo
         //buscar lpo.nombreMedida en productoVerM, regresar y asignar this.producto_compra.idProdMedida, this.producto_compra.nombreMedida
-        this.medidaActualizada = this.productoVerM.find( (x:any) => x.nombreMedida == lpo.nombreMedida);
-        if(this.medidaActualizada == undefined ){
+        if(producto.nombreMedida){
+          // console.log('CON NOMBREMEDIDA');
+          //obtener idProdMedida actualizado y asignarlo
+          //buscar lpo.nombreMedida en medidasLista, regresar y asignar this.producto_requisicion.idProdMedida, this.producto_compra.nombreMedida
+          this.medidaActualizada = this.productoVerM.find( (x:any) => x.nombreMedida == producto.nombreMedida);
+          if(this.medidaActualizada == undefined ){
 
+          }else{
+            // console.log('medidaActualizada',this.medidaActualizada);
+            this.producto_compra.idProdMedida = parseInt(this.medidaActualizada.idProdMedida);
+            this.producto_compra.nombreMedida = this.medidaActualizada.nombreMedida;
+          }
         }else{
-          console.log('medidaActualizada',this.medidaActualizada);
-          this.producto_compra.idProdMedida = parseInt(this.medidaActualizada.idProdMedida);
-          this.producto_compra.nombreMedida = this.medidaActualizada.nombreMedida;
+          // console.log('SIN NOMBREMEDIDA');
+          //console.log(this.medidasLista[0]['idProdMedida']);
+          this.producto_compra.idProdMedida = this.productoVerM[0]['idProdMedida'];
+          this.producto_compra.nombreMedida = this.productoVerM[0]['nombreMedida'];
+
         }
         
-        console.log('producto_compra',this.producto_compra)
+        console.log('producto_compra',this.producto_compra);
+
+        this.isSearch = false;
+
         
       },error => {
         //console.log(error);
@@ -819,6 +845,20 @@ export class CompraAgregarIdComponent implements OnInit {
        }
   }
 
-  
+  handleIdProductoObtenido(idProducto:any){
+    
+    if(idProducto){
+      this.getProd(idProducto);
+    }else{
+      this.resetVariables();
+    }
+  }
+    
+  openMdlProductos():void{
+    this.dialogOpt = {
+      openMdlMedidas: true,
+    };
+      this._mdlProductoService.openMdlProductosDialog(this.dialogOpt);
+  }
 
 }

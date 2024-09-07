@@ -56,9 +56,11 @@
                 <div class="col-4">
                     <label class="form-label" for="">Buscar producto</label>
                     <div class="input-group">
-                        <span class="input-group-addon" id="sizing-addon2"><i class="bi-search" style="font-size: 1.5rem; color: black; left: 0;" (click)="open(content)"></i> </span>
-                        <input readonly class="form-control" type="text" ngbTooltip="Solo busca por clave externa" name="claveEx" #claveEx="ngModel" [(ngModel)]="producto_orden.claveEx" readonly>
-                        
+                        <app-input-external-key-search
+                            (idProductoObtenido)="handleIdProductoObtenido($event)"
+                            [claveExterna]="producto_orden.claveEx">
+                            <span class="input-group-addon" id="sizing-addon2"><i class="bi-search" style="font-size: 1.5rem; color: black; left: 0;" (click)="openMdlProductos()"></i> </span>
+                        </app-input-external-key-search>
                     </div>
                 </div>
                 <div class="col-2">
@@ -262,6 +264,7 @@
     </div> -->
 </ng-template>
 
+<app-modal-productos></app-modal-productos>
 
 
 

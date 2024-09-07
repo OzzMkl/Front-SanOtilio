@@ -201,13 +201,13 @@ export class RequisicionAgregarComponent implements OnInit, OnDestroy {
         this.producto_requisicion.idProducto = this.productoVer[0]['idProducto'];
         //this.producto_orden.nombreMedida = this.productoVer[0]['nombreMedida'];
         this.medidasLista = response.productos_medidas;
-        console.log(this.productoVer);
-        console.log('req');
-        console.log(this.producto_requisicion);
-        console.log(this.medidasLista);
+        // console.log(this.productoVer);
+        // console.log('req');
+        // console.log(this.producto_requisicion);
+        // console.log(this.medidasLista);
         //Si el producto tiene una sola medida se asigna directo
         //if(this.medidasLista.length == 1){ this.producto_orden.idProdMedida = this.medidasLista[0].idProdMedida }
-        console.log(this.productoVer[0]['imagen']);
+        // console.log(this.productoVer[0]['imagen']);
         if(this.productoVer[0]['imagen'] == "" || this.productoVer[0]['imagen'] == null){
           this.productoVer[0]['imagen'] = "1650558444no-image.png";
         }

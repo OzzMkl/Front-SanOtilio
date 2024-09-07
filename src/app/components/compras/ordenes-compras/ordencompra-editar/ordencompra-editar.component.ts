@@ -8,6 +8,8 @@ import { OrdendecompraService } from 'src/app/services/ordendecompra.service';
 import { EmpleadoService } from 'src/app/services/empleado.service';
 import { HttpClient} from '@angular/common/http';
 import { MessageService } from 'primeng/api';
+import { Subscription } from 'rxjs';
+import { MdlProductoService } from 'src/app/services/mdlProductoService';
 //modelos
 import { Ordencompra } from 'src/app/models/orden_compra';
 import { Producto_orden } from 'src/app/models/producto_orden';
@@ -15,6 +17,7 @@ import { Producto_orden } from 'src/app/models/producto_orden';
 import { NgbDateStruct, NgbModal,ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 //Router
 import { Router } from '@angular/router';
+import { dialogOptionsProductos } from 'src/app/models/interfaces/dialogOptions-productos';
 
 @Component({
   selector: 'app-ordencompra-editar',
@@ -76,6 +79,11 @@ pageActual2: number = 0;
 //contadores para los text area
   conta: number =0;
 
+//Modal productos
+  public selectedValue : any;
+  private subscription : Subscription;
+  public dialogOpt?: dialogOptionsProductos;
+
   constructor(
     //declaracion de servicios
     private _proveedorService: ProveedorService,
@@ -86,11 +94,15 @@ pageActual2: number = 0;
     public _empleadoService : EmpleadoService,
     private _route: ActivatedRoute,
     private modalService: NgbModal,
-    public _router: Router
+    public _router: Router,
+    private _mdlProductoService: MdlProductoService
     ) {
     this.orden_compra = new Ordencompra (0,null,0,'',null,0,null,null);
     this.productosOrden = new Producto_orden(0,0,0,0,'','','');
     this.lista_productosorden = [];
+    this.subscription = _mdlProductoService.selectedValue$.subscribe(
+      value => [this.getProd(value)]
+    )
     
    }
 
@@ -149,6 +161,7 @@ pageActual2: number = 0;
     
   }
   editarProducto(lpo:any){//metodo para editar la lista de compras
+    this.resetVariables();
     console.log(lpo);
     this.lista_productosorden = this.lista_productosorden.filter((item) => item.idProducto !== lpo.idProducto);//eliminamos el producto
     //consultamos la informacion para motrar el producto nuevamente
@@ -275,29 +288,43 @@ pageActual2: number = 0;
       }
     );
   }
-  getProd(lpo:any){//servicio para obtener detalles del producto a traves de su id
-    console.log(lpo);
-    this._productoService.getProdverDos(lpo.idProducto).subscribe(
+  getProd(producto:any){//servicio para obtener detalles del producto a traves de su id
+    console.log(producto);
+    this._productoService.getProdverDos(producto.idProducto).subscribe(
       response =>{
         this.productoVer = response.producto;//informacion completa del producto para recorrerlo atraves del html
         this.productosOrden.descripcion = this.productoVer[0]['descripcion'];//asignamos variables
         this.productosOrden.claveEx = this.productoVer[0]['claveEx'];
         this.productosOrden.idProducto = this.productoVer[0]['idProducto'];
         this.productoVerM = response.productos_medidas;//informacion completa de productos_medidas para recorrerlo atraves del html
-        this.productosOrden.cantidad = lpo.cantidad;
+        this.productosOrden.cantidad = producto.cantidad;
         console.log('productoVer',this.productoVer);
         console.log('productoVerM',this.productoVerM);
 
         //obtener idProdMedida actualizado y asignarlo
         //buscar lpo.nombreMedida en productoVerM, regresar y asignar this.producto_compra.idProdMedida, this.producto_compra.nombreMedida
-        this.medidaActualizada = this.productoVerM.find( (x:any) => x.nombreMedida == lpo.nombreMedida);
-        if(this.medidaActualizada == undefined ){
+        if(producto.nombreMedida){
+          // console.log('CON NOMBREMEDIDA');
+          //obtener idProdMedida actualizado y asignarlo
+          //buscar lpo.nombreMedida en medidasLista, regresar y asignar this.producto_requisicion.idProdMedida, this.producto_compra.nombreMedida
+          this.medidaActualizada = this.productoVerM.find( (x:any) => x.nombreMedida == producto.nombreMedida);
+          if(this.medidaActualizada == undefined ){
 
+          }else{
+            // console.log('medidaActualizada',this.medidaActualizada);
+            this.productosOrden.idProdMedida = parseInt(this.medidaActualizada.idProdMedida);
+            this.productosOrden.nombreMedida = this.medidaActualizada.nombreMedida;
+          }
         }else{
-          console.log('medidaActualizada',this.medidaActualizada);
-          this.productosOrden.idProdMedida = parseInt(this.medidaActualizada.idProdMedida);
-          this.productosOrden.nombreMedida = this.medidaActualizada.nombreMedida;
+          // console.log('SIN NOMBREMEDIDA');
+          //console.log(this.medidasLista[0]['idProdMedida']);
+          this.productosOrden.idProdMedida = this.productoVerM[0]['idProdMedida'];
+          this.productosOrden.nombreMedida = this.productoVerM[0]['nombreMedida'];
+
         }
+
+        this.isSearch = false;
+        
         
         
       },error => {
@@ -531,6 +558,23 @@ pageActual2: number = 0;
       event.preventDefault();
       //console.log('prevented');
      }
+  }
+
+
+  handleIdProductoObtenido(idProducto:any){
+    
+    if(idProducto){
+      this.getProd(idProducto);
+    }else{
+      this.resetVariables();
+    }
+  }
+    
+  openMdlProductos():void{
+    this.dialogOpt = {
+      openMdlMedidas: true,
+    };
+      this._mdlProductoService.openMdlProductosDialog(this.dialogOpt);
   }
 
 }

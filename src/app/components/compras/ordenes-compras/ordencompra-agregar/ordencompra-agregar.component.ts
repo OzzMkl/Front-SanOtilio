@@ -9,6 +9,7 @@ import { ProveedorService } from 'src/app/services/proveedor.service';
 import { ProductoService } from 'src/app/services/producto.service';
 import { HttpClient} from '@angular/common/http';
 import { Subscription } from 'rxjs';
+import { MdlProductoService } from 'src/app/services/mdlProductoService';
 //Modelos
 import { Ordencompra } from 'src/app/models/orden_compra';
 import { Producto_orden } from 'src/app/models/producto_orden';
@@ -19,6 +20,7 @@ import { NgbModal, ModalDismissReasons, NgbDateStruct} from '@ng-bootstrap/ng-bo
 //pdf
 //Router
 import { Router } from '@angular/router';
+import { dialogOptionsProductos } from 'src/app/models/interfaces/dialogOptions-productos';
 
 
 
@@ -96,6 +98,12 @@ export class OrdencompraAgregarComponent implements OnInit {
   //contadores para los text area
   conta: number =0;
 
+  //Modal productos
+  public selectedValue : any;
+  private subscription : Subscription;
+  public dialogOpt?: dialogOptionsProductos;
+  public medidaActualizada:any;
+
   constructor( private _proveedorService: ProveedorService,
       private _http: HttpClient,
       private modalService: NgbModal,
@@ -104,12 +112,16 @@ export class OrdencompraAgregarComponent implements OnInit {
       private _ordencompraService: OrdendecompraService,
       public _empleadoService : EmpleadoService,
       public _requisicionservice : RequisicionService,
-      public _router: Router
-    ) {
+      public _router: Router,
+      private _mdlProductoService: MdlProductoService
+  ) {
     this.orden_compra = new Ordencompra(0,null,0,'',null,0,0,null);
     this.producto_orden = new Producto_orden(0,0,0,0,'','','');
     this.Lista_compras = [];
     this.url = global.url;
+    this.subscription = _mdlProductoService.selectedValue$.subscribe(
+      value => [this.getProd(value)]
+    )
     
    }
 
@@ -275,19 +287,43 @@ export class OrdencompraAgregarComponent implements OnInit {
       }
     );
   }
-  getProd(idProducto:any){
-    this._productoService.getProdverDos(idProducto).subscribe(
+  getProd(producto:any){
+    this._productoService.getProdverDos(producto.idProducto).subscribe(
       response =>{
         this.productoVer = response.producto;//informacion completa del producto para recorrerlo atraves del html
         this.producto_orden.descripcion = this.productoVer[0]['descripcion'];//asignamos variables
         this.producto_orden.claveEx = this.productoVer[0]['claveEx'];
         this.producto_orden.idProducto = this.productoVer[0]['idProducto'];
-        //this.producto_orden.nombreMedida = this.productoVer[0]['nombreMedida'];
+        this.producto_orden.cantidad = producto.cantidad;
         this.medidasLista = response.productos_medidas;
-        console.log(this.productoVer);
-        console.log(this.medidasLista);
-        //Si el producto tiene una sola medida se asigna directo
-        //if(this.medidasLista.length == 1){ this.producto_orden.idProdMedida = this.medidasLista[0].idProdMedida }
+        // console.log(this.productoVer);
+        // console.log(this.medidasLista);
+
+        if(producto.nombreMedida){
+          // console.log('CON NOMBREMEDIDA');
+          //obtener idProdMedida actualizado y asignarlo
+          //buscar lpo.nombreMedida en medidasLista, regresar y asignar this.producto_requisicion.idProdMedida, this.producto_compra.nombreMedida
+          this.medidaActualizada = this.medidasLista.find( (x:any) => x.nombreMedida == producto.nombreMedida);
+          if(this.medidaActualizada == undefined ){
+
+          }else{
+            // console.log('medidaActualizada',this.medidaActualizada);
+            this.producto_orden.idProdMedida = parseInt(this.medidaActualizada.idProdMedida);
+            this.producto_orden.nombreMedida = this.medidaActualizada.nombreMedida;
+          }
+        }else{
+          // console.log('SIN NOMBREMEDIDA');
+          //console.log(this.medidasLista[0]['idProdMedida']);
+          this.producto_orden.idProdMedida = this.medidasLista[0]['idProdMedida'];
+          this.producto_orden.nombreMedida = this.medidasLista[0]['nombreMedida'];
+
+        }
+
+
+        this.isSearch = false;
+
+
+
       },error => {
         console.log(error);
       }
@@ -511,13 +547,9 @@ export class OrdencompraAgregarComponent implements OnInit {
 
  editarProductoO(p_d:any){//metodo para editar la lista de compras
   console.log('p_d',p_d);
-  this.producto_orden.cantidad = p_d.cantidad;
   this.Lista_compras = this.Lista_compras.filter((item) => item.idProducto !== p_d.idProducto);//eliminamos el producto
   //consultamos la informacion para motrar el producto nuevamente
-  this.getProd(p_d.idProducto);
-
-
-
+  this.getProd(p_d);
   this.isSearch = false;
 } 
 
@@ -671,6 +703,22 @@ export class OrdencompraAgregarComponent implements OnInit {
           console.log(error);
         }
       )
+    }
+
+    handleIdProductoObtenido(idProducto:any){
+    
+      if(idProducto){
+        this.getProd(idProducto);
+      }else{
+        this.resetVariables();
+      }
+    }
+      
+    openMdlProductos():void{
+      this.dialogOpt = {
+        openMdlMedidas: true,
+      };
+        this._mdlProductoService.openMdlProductosDialog(this.dialogOpt);
     }
 
 
