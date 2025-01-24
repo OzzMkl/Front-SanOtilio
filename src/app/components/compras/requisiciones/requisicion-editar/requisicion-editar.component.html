@@ -13,6 +13,7 @@
                         </div>
                     </div>
                     <div>
+                        <hr>
                         <h4 class="text-center">PROVEEDOR</h4>
                         <div class="col-5">
                             <label for="idProveedor" class="form-label">Seleccionar proveedor</label>
@@ -39,7 +40,7 @@
                 </div>
                 <div class="col-2">
                     <label class="form-label" for="cantidadProducto">Cantidad</label>
-                    <input class="form-control" type="number" name="cantidadProducto" id="cantidadProducto"  #cantidadProducto="ngModel" [(ngModel)]="producto_requisicion.cantidad">
+                    <input class="form-control" min="1" type="number" name="cantidadProducto" id="cantidadProducto"  #cantidadProducto="ngModel" [(ngModel)]="producto_requisicion.cantidad">
                 </div>
                 <div class="col-3">
                     <label for="medida" class="form-label">Seleccionar Medida</label>

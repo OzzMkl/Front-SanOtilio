@@ -173,8 +173,8 @@ pageActual2: number = 0;
 
     
 
-    if(this.productosOrden.cantidad <= 0){
-      this.messageService.add({severity:'error', summary:'Error', detail:'No se pueden agregar productos con cantidad igual o menor a 0'});
+    if(this.productosOrden.cantidad == undefined|| this.productosOrden.cantidad <= 0){
+      this.messageService.add({severity:'error', summary:'Error', detail:'Cantidad no valida'});
     }else if(this.productosOrden.idProducto == 0){
       this.messageService.add({severity:'error', summary:'Error', detail:'Ese producto no existe'});
     }else if( this.lista_productosorden.find( x => x.idProducto == this.productosOrden.idProducto)){

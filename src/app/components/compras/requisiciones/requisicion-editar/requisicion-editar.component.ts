@@ -105,7 +105,9 @@ export class RequisicionEditarComponent implements OnInit {
 
       this.subscription = _mdlProductoService.selectedValue$.subscribe(
         value => [this.getProd(value)]
+        //aq
       )
+      console.log("valor", this.selectedValue)
     }
 
   ngOnInit(): void {
@@ -167,14 +169,16 @@ export class RequisicionEditarComponent implements OnInit {
   getProd(producto:any){
     this._productoService.getProdverDos(producto.idProducto).subscribe(
       response =>{
+        
         this.productoVer = response.producto;//informacion completa del producto para recorrerlo atraves del html
         this.producto_requisicion.descripcion = this.productoVer[0]['descripcion'];//asignamos variables
         this.producto_requisicion.claveEx = this.productoVer[0]['claveEx'];
         this.producto_requisicion.idProducto = this.productoVer[0]['idProducto'];
         this.producto_requisicion.cantidad = producto.cantidad;
-
+        
         this.medidasLista = response.productos_medidas;
         console.log('response', response);
+        this.isSearch = false;
 
         if(producto.nombreMedida){
           // console.log('CON NOMBREMEDIDA');
@@ -189,13 +193,14 @@ export class RequisicionEditarComponent implements OnInit {
             this.producto_requisicion.nombreMedida = this.medidaActualizada.nombreMedida;
           }
         }else{
-          // console.log('SIN NOMBREMEDIDA');
+          // console.log('SIN NOMBREMEDIDA');ee
           //console.log(this.medidasLista[0]['idProdMedida']);
           this.producto_requisicion.idProdMedida = this.medidasLista[0]['idProdMedida'];
           this.producto_requisicion.nombreMedida = this.medidasLista[0]['nombreMedida'];
 
         }
-
+      
+      
 
       },error => {
         console.log(error);
@@ -332,7 +337,7 @@ export class RequisicionEditarComponent implements OnInit {
     this.dato=event.target.value;
     //console.log(this.dato)
     this.getProd(this.dato);
-    this.isSearch = false;
+    // this.isSearch = false;
     //console.log(this.producto_orden);
   }
 
@@ -458,8 +463,11 @@ export class RequisicionEditarComponent implements OnInit {
   * y deshabilita el boton de agregar
   */
   consultarProductoModal(dato:any){
+    // this.resetVariables();
+    console.log("consultarProductoModal");
     this.getProd(dato);
     this.isSearch = false;
+    console.log("aa");
   }
 
   /**
@@ -598,14 +606,17 @@ export class RequisicionEditarComponent implements OnInit {
   }
 
   /*******************MODAL DE PRODUCTOS****************** */
-  handleIdProductoObtenido(idProducto:any){
-    
-    if(idProducto){
-      this.getProd(idProducto);
-    }else{
-      this.resetVariables();
+  handleIdProductoObtenido(idProducto: any) {
+    console.log('handleIdProductoObtenido called with idProducto:', idProducto);
+    if (idProducto) {
+        this.getProd(idProducto);
+        this.isSearch = false; // Update isSearch to false
+        console.log('isSearch set to false');
+    } else {
+        this.resetVariables();
+        console.log('resetVariables called');
     }
-  }
+}
     
   openMdlProductos():void{
     this.dialogOpt = {

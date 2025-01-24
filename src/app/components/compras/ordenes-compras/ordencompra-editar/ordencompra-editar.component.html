@@ -79,7 +79,7 @@
                     </div>
                     <div class="col-2">
                         <label class="form-label" for="cantidadProducto">Cantidad</label>
-                        <input class="form-control" type="number" name="cantidadProducto" id="cantidadProducto"  #cantidadProducto="ngModel" [(ngModel)]="productosOrden.cantidad">
+                        <input class="form-control" min="1" type="number" name="cantidadProducto" id="cantidadProducto"  #cantidadProducto="ngModel" [(ngModel)]="productosOrden.cantidad">
                     </div>
                     <div class="col-3">
                         <label for="medida" class="form-label">Seleccionar Medida</label>

@@ -143,8 +143,9 @@ export class OrdencompraAgregarComponent implements OnInit {
     this.buscarProductoCbar = 0;
   }
   capturar(datos:any){//Agregar a lista de compras
-    if(this.producto_orden.cantidad <= 0){
-      this.messageService.add({severity:'error', summary:'Error', detail:'No se pueden agregar productos con cantidad igual o menor a 0'});
+    console.log(datos);
+    if(this.producto_orden.cantidad == undefined || this.producto_orden.cantidad <= 0){
+      this.messageService.add({severity:'error', summary:'Error', detail:'Cantidad no válida'});
     }else if(this.producto_orden.idProducto == 0){
       this.messageService.add({severity:'error', summary:'Error', detail:'Ese producto no existe'});
     }else if( this.Lista_compras.find( x => x.idProducto == this.producto_orden.idProducto)){
@@ -297,6 +298,7 @@ export class OrdencompraAgregarComponent implements OnInit {
         this.producto_orden.cantidad = producto.cantidad;
         this.medidasLista = response.productos_medidas;
         // console.log(this.productoVer);
+        // console.log(this.producto_orden);
         // console.log(this.medidasLista);
 
         if(producto.nombreMedida){
