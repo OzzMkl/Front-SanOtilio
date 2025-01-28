@@ -198,7 +198,7 @@ export class TraspasoBuscarComponent implements OnInit {
       this.closeResult = `Closed with: ${result}`;
     }, (reason) => {
       this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-      this.tipoBusqueda = 'Envia';
+      // this.tipoBusqueda = 'Envia';
     });
   }
 
