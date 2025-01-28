@@ -24,7 +24,11 @@
                         <option *ngFor="let sucRec of sucursales" [value]="sucRec.idSuc" >{{sucRec.nombre}}</option>
                     </select>
                 </div> -->
-                <div [ngClass]="classInput">
+                <div [ngClass]="classInput" *ngIf="detallesTraspaso.sucursalE == detallesTraspaso.sucursalR">
+                    <label class="form-label" for="">Tipo</label>
+                    <input class="form-control" type="text" value="Uso interno" name="" id="" readonly>
+                </div>
+                <div [ngClass]="classInput" *ngIf="detallesTraspaso.sucursalE != detallesTraspaso.sucursalR">
                     <label class="form-label" for="">Tipo</label>
                     <input class="form-control" type="text" value="{{tipoTraspaso}}" name="" id="" readonly>
                 </div>

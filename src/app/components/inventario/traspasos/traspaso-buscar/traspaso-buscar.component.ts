@@ -198,6 +198,7 @@ export class TraspasoBuscarComponent implements OnInit {
       this.closeResult = `Closed with: ${result}`;
     }, (reason) => {
       this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+      this.tipoBusqueda = 'Envia';
     });
   }
 
@@ -231,6 +232,9 @@ export class TraspasoBuscarComponent implements OnInit {
           this.observaciones = this.detallesTraspaso[0].observaciones;
           //console.log('response',this.detallesTraspaso[0].idStatus);
           console.log('traspaso',this.detallesTraspaso);
+          // if(this.detallesTraspaso[0].sucursalE == this.detallesTraspaso[0].sucursalR){
+          //   this.tipoBusqueda = 'Uso interno';}
+          
           // console.log('productos',this.productosDT);
 
         }else{ console.log('Algo salio mal'); }
