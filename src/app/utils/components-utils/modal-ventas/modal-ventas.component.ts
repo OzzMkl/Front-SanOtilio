@@ -94,12 +94,12 @@ export class ModalVentasComponent implements OnInit, OnDestroy {
             this.mCaja = this._modulosService.modsCaja();
             this.userPermisos = this._empleadoService.getPermisosModulo(this.mCaja.idModulo,this.mCaja.idSubModulo);
             this.identity = this._empleadoService.getIdentity();
-            this.getVenta(dialogOptions.idVenta);
+            this.getVenta(dialogOptions.idVenta, dialogOptions.modulo);
           } else if(dialogOptions.submodulo == 'ventas-credito'){
             this.mCaja = this._modulosService.modsCreditos();
             this.userPermisos = this._empleadoService.getPermisosModulo(this.mCaja.idModulo,this.mCaja.idSubModulo);
             this.identity = this._empleadoService.getIdentity();
-            this.getVentaCredito(dialogOptions.idVenta);
+            this.getVentaCredito(dialogOptions.idVenta, dialogOptions.modulo);
           }
         break;
       case 'ventas':
@@ -107,13 +107,13 @@ export class ModalVentasComponent implements OnInit, OnDestroy {
             this.mVentas = this._modulosService.modsPuntodeVenta();
             this.userPermisos = this._empleadoService.getPermisosModulo(this.mVentas.idModulo,this.mVentas.idSubModulo);
             this.identity = this._empleadoService.getIdentity();
-            this.getVenta(dialogOptions.idVenta);
+            this.getVenta(dialogOptions.idVenta, dialogOptions.modulo);
 
           } else if(dialogOptions.submodulo == 'ventas-credito'){
             this.mVentas = this._modulosService.modsCreditos();
             this.userPermisos = this._empleadoService.getPermisosModulo(this.mVentas.idModulo,this.mVentas.idSubModulo);
             this.identity = this._empleadoService.getIdentity();
-            this.getVentaCredito(dialogOptions.idVenta);
+            this.getVentaCredito(dialogOptions.idVenta, dialogOptions.modulo);
 
           } else if( dialogOptions.submodulo == 'ventas-corre-a-cuenta'){
             this.mVentas_correAcuenta = this._modulosService.modsVentas_CorreAcuenta();
@@ -139,7 +139,7 @@ export class ModalVentasComponent implements OnInit, OnDestroy {
    * @description
    * Obtiene la informacion detallada de la venta
    */
-  getVenta(idVenta:number){
+  getVenta(idVenta:number, modulo: string){
     this.isLoadingGeneral = true;
     this.sub_ventasService = this._ventasService.getDetallesVenta(idVenta).subscribe(
       response =>{
@@ -153,10 +153,12 @@ export class ModalVentasComponent implements OnInit, OnDestroy {
       },error =>{
         console.log(error);
       });
-    this.getAbonosVentas(idVenta);
+      if(modulo == 'cajas'){
+        this.getAbonosVentas(idVenta);
+      }
   }
 
-  getVentaCredito(idVenta:number){
+  getVentaCredito(idVenta:number, modulo: string){
     this.isLoadingGeneral = true;
     this.sub_ventasService = this._ventasService.getDetallesVentaCredito(idVenta).subscribe(
       response =>{
@@ -170,7 +172,9 @@ export class ModalVentasComponent implements OnInit, OnDestroy {
         console.log(error);
       }
     );
-    this.getAbonosVentas(idVenta);
+    if(modulo == 'cajas'){
+      this.getAbonosVentas(idVenta);
+    }
   }
 
   getVentaCorreAcuenta(idVenta:number){
