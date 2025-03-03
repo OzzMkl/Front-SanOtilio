@@ -49,6 +49,7 @@ export class TraspasoEditarComponent implements OnInit, OnDestroy {
   public classInput: string = 'col-1';
   public medidaActualizada:any;
   public isHidden:boolean = true;
+  public stockDisponible: boolean = false;
   //spinner
   public isLoading:boolean = false;
   //Contadores para los text area
@@ -568,34 +569,53 @@ export class TraspasoEditarComponent implements OnInit, OnDestroy {
     // if(this.producto_compra.caducidad)
     console.log('capturar',datos.idProdMedida);
 
-    if(this.producto_traspaso.cantidad <= 0){
-      this.messageService.add({severity:'error', summary:'Error', detail:'No se pueden agregar productos con cantidad igual o menor a 0'});
-    }else if(datos.idProdMedida == 0){
-      this.messageService.add({severity:'error', summary:'Error', detail:'Falta agregar la medida'});
-    }else if(this.producto_traspaso.precio < 0 ){
-      this.messageService.add({severity:'error', summary:'Error', detail:'No se pueden agregar productos con precio menor a 0'});
-    }else if(this.producto_traspaso.subtotal < 0){
-      this.messageService.add({severity:'error', summary:'Error', detail:'No se pueden agregar productos con subtotal menor a 0'});
-    }
-    else if(this.producto_traspaso.idProducto == 0){
-      this.messageService.add({severity:'error', summary:'Error', detail:'Ese producto no existe'});
-    }else if( this.lista_producto_traspaso.find( x => x.idProducto == this.producto_traspaso.idProducto)){
-      //verificamos si la lista de productos del traspaso ya contiene el producto buscandolo por idProducto
-      this.messageService.add({severity:'error', summary:'Error', detail:'Ese producto ya esta en la lista'});
-    }else{
+    //Asignar idProdMedida y nombreMedida antes de capturar
+    this.medidaActualizada = this.productoVerM.find( (x:any) => x.idProdMedida == datos.idProdMedida);
+    this.producto_traspaso.idProdMedida = parseInt(this.medidaActualizada.idProdMedida);
+    this.producto_traspaso.nombreMedida = this.medidaActualizada.nombreMedida;
 
-      //Asignar idProdMedida y nombreMedida antes de capturar
-      this.medidaActualizada = this.productoVerM.find( (x:any) => x.idProdMedida == datos.idProdMedida);
-      this.producto_traspaso.idProdMedida = parseInt(this.medidaActualizada.idProdMedida);
-      this.producto_traspaso.nombreMedida = this.medidaActualizada.nombreMedida;
+    this._productoService.getExistenciaG(datos.idProducto,this.producto_traspaso.idProdMedida,datos.cantidad).subscribe(
+      response=>{
+        console.log('response',response);
+        this.stockDisponible = response.disponibilidad;
+        console.log('disponibilidad',response.disponibilidad);
+        if(this.stockDisponible == false){
+          this.messageService.add({severity:'error', summary:'Alerta', detail:'El producto no cuenta con suficiente stock, disminuya la cantidad'});
+          return;
+        }
+        else if(this.producto_traspaso.cantidad <= 0){
+          this.messageService.add({severity:'error', summary:'Error', detail:'No se pueden agregar productos con cantidad igual o menor a 0'});
+        }else if(datos.idProdMedida == 0){
+          this.messageService.add({severity:'error', summary:'Error', detail:'Falta agregar la medida'});
+        }else if(this.producto_traspaso.precio < 0 ){
+          this.messageService.add({severity:'error', summary:'Error', detail:'No se pueden agregar productos con precio menor a 0'});
+        }else if(this.producto_traspaso.subtotal < 0){
+          this.messageService.add({severity:'error', summary:'Error', detail:'No se pueden agregar productos con subtotal menor a 0'});
+        }
+        else if(this.producto_traspaso.idProducto == 0){
+          this.messageService.add({severity:'error', summary:'Error', detail:'Ese producto no existe'});
+        }else if( this.lista_producto_traspaso.find( x => x.idProducto == this.producto_traspaso.idProducto)){
+          //verificamos si la lista de productos del traspaso ya contiene el producto buscandolo por idProducto
+          this.messageService.add({severity:'error', summary:'Error', detail:'Ese producto ya esta en la lista'});
+        }else{
 
-      this.lista_producto_traspaso.push({...this.producto_traspaso}); 
-      //Reset variables
-      this.resetVariables(); 
+          
 
-    }
-    console.log('lista de produstos traspaso',this.lista_producto_traspaso);
+          this.lista_producto_traspaso.push({...this.producto_traspaso}); 
+          //Reset variables
+          this.resetVariables(); 
+
+        }
+        console.log('lista de produstos traspaso',this.lista_producto_traspaso);
     
+      }, error =>{
+        this.messageService.add({severity:'error', summary:'Error', detail:'Ocurrio un error al verificar la existencia'});
+        console.log(error);
+      }
+
+      
+    );   
+
   }
 
   resetVariables(){
@@ -606,7 +626,7 @@ export class TraspasoEditarComponent implements OnInit, OnDestroy {
     this.producto_traspaso.precio = 0 ;
     this.producto_traspaso.subtotal = 0 ;
     this.producto_traspaso.idProdMedida = 0;
-
+    this.stockDisponible = false;
 
   }
 
