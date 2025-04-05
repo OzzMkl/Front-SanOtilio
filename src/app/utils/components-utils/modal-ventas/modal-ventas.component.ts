@@ -100,6 +100,11 @@ export class ModalVentasComponent implements OnInit, OnDestroy {
             this.userPermisos = this._empleadoService.getPermisosModulo(this.mCaja.idModulo,this.mCaja.idSubModulo);
             this.identity = this._empleadoService.getIdentity();
             this.getVentaCredito(dialogOptions.idVenta, dialogOptions.modulo);
+          } else if (dialogOptions.submodulo == 'ventas-corre-a-cuenta'){
+            this.mCaja = this._modulosService.modsVentas_CorreAcuenta();
+            this.userPermisos = this._empleadoService.getPermisosModulo(this.mCaja.idModulo,this.mCaja.idSubModulo);
+            this.identity = this._empleadoService.getIdentity();
+            this.getVentaCorreAcuenta(dialogOptions.idVenta);
           }
         break;
       case 'ventas':
@@ -416,9 +421,10 @@ export class ModalVentasComponent implements OnInit, OnDestroy {
 
       let tieneAbono = this.arr_abonos.length > 0 ? true : false;
       let isCredito = this.venta?.isCredito ?? false;
-      // console.log(this.caja_movimiento);
+      console.log(this.caja_movimiento);
       this.sub_cajaService = this._cajaService.cobroVenta(this.venta!.idVenta, this.caja_movimiento, this.isSaldo,this.identity.sub,tieneAbono,isCredito).subscribe(
         response => {
+          
           //si la respuesta es correcta
           if(response.status == 'success'){
             //recargamos la tabla con las notas

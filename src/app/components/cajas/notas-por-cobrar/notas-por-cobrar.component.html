@@ -40,7 +40,7 @@
                 </tr>
             </thead>                           <!-- Se agrega filtro de cotizaciones para clientes-->
             <tbody *ngFor="let venta of ventas | filterCotizacionesNomC: buscaNombreCliente | filterIdventa: buscaFolio | filterVendedor: buscaNombreEmpleado | paginate:{id:'paginationVentas',itemsPerPage: 10, currentPage: pageActual}">
-                <tr (click)="openMdlVenta(venta.idVenta)">
+                <tr (click)="openMdlVenta(venta)">
                     <th scope="row">{{venta.idVenta}}</th>
                     <th scope="row">{{venta.created_at | date: 'dd/MM/yyyy'}}</th>
                     <th scope="row">{{ venta.nombreCliente.length > 40 ? (venta.nombreCliente | slice:0:25) + '...' : venta.nombreCliente }}</th>

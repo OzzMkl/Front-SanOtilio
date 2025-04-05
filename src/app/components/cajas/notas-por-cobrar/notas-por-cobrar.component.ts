@@ -187,12 +187,13 @@ export class NotasPorCobrarComponent implements OnInit, OnDestroy {
     this.buscaNombreEmpleado='';
   }
 
-  openMdlVenta(idVenta:number):void{
+  openMdlVenta(idVenta:any):void{
+    //console.log(idVenta);
     
     this.dialogOpt = {
-      idVenta: idVenta,
+      idVenta: idVenta.idVenta,
       modulo: 'cajas',
-      submodulo: 'ventas-realizadas',
+      submodulo: idVenta.idTipoVenta == 7 ? 'ventas-corre-a-cuenta' : 'ventas-realizadas',
       vCaja: this.vCaja
     }
     this._mdlVentaService.openMdlVentaDialog(this.dialogOpt)
